@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>문자열 String</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <h1>백틱스를 사용하면 좋은점</h1>
+                <p id="haptic"></p>
+                <p id="die"></p>
+                <h4>escpae 이스케이프 문자 \ </h4>
+                <code>
+                    \n : 다음 줄로 이동 (엔터) ★ ★ ★ <br/>
+                    \t : 일정 간격 띄우기 (Tab 키) ★ ★ ★ <br/>
+                    \b \f 
+                </code>
+               
+            </div>
+            <div class="col-md-3">
+                <h1>templates</h1>
+                 <p>Interpolation 보간법:<code>${...}</code> 
+                    🔥 값을 문자열 안에 끼워 넣는 것</p>
+                
+                <h2>현업개발에서 종종 나오는 구문</h2>
+                <section id="ul"></section>
+
+                <p> my name is <span class="text-success" id="name"></span></p>
+                <p> $ {} 안에서 계산도 됨 
+                <span class="text-primary" id="total"></span></p>
+            </div>
+            <div class="col-md-3">
+                <h1>methods</h1>
+               
+                <p>
+                    -🔥length : 문자열의 길이구하기 (ex) 비밀번호는 8글자 이상 같은 글자 수 제한 체크
+                    -charAt() : 지정된 문자열에서 지정된 인덱스 문자를 리턴
+                    -charCodeAt() : 지정된 문자열에서 지정된 인덱스 문자코드(UTF-16[0~65535])를 리턴(문자 고유 번호 찾기)
+                    -concat() : 두개 이상의 문자열을 연결
+                    -문자열 부분 추출 <br>
+                    <code> slice(start, end) substring(start, end) substr(start,end)</code>
+                    <br/>
+                    <mark> 🔥 slice(start, end) (문자열 자르기) 🔥  <br>
+                    글이 너무 길 때 뒷부분을 싹둑 자르고 "..." 붙여서 줄임말 만들 때 <br>
+                    주의! slice(시작인덱스, 끝인덱스)에서 끝인덱스 바로 직전까지만 잘라옵니다. </mark>
+                    -toUpperCase() : 대문자로 (ex) 검색이 잘 되게 하려면, 두 값을 모두 소문자(혹은 대문자)로 통일해서 비교
+                    -toLowerCase() : 소문자로
+                    -isWellFormed() : 문자열의 형식이 올바른지 판단(true,false) 형식 체크
+                    -🔥trim(): 문자열 양쪽 끝에 공백 제거 (ex) 로그인창에 아이디를 입력 공백들제거
+                    -🔥padStart() : 문자열 시작부분에 패딩을 추가 : padStart(원하는총길이, "채울글자")
+                    -🔥padEnd() : 끝나는 부분에 패딩을 추가 
+                    (ex) 날짜나 시간이 한 자리 수면 앞에 0을 붙여서 05월, 09초처럼 맞추고 싶을 때 아주 유용
+                    -🔥replace() : 문자열에서 지정된 값을 다른 값으로 바꾼다: 특정 글자를 다른 글자로 치환
+                </p>
+
+            </div>
+            <div class="col-md-3">
+                <h1>reference</h1>
+                <h4>🔥indexOf(): 처음나타나는 위치를 반환하고 <br/>
+                    해당문자열을 찾지못하는 경우 -1을 반환한다.
+                    (ex) 특정 글자가 "포함되어 있는지" 확인할 때
+                    이 글자가 있냐 없냐'를 따질 때 indexOf를 가장 많이 씁니다.
+                    > -1 (또는 !== -1) 구문을 써서 포함 여부를 체크
+                    indexOf() !== -1 대신, 더 직관적인 includes():true/false라는 메서드도 정말 많이 씁니다.
+                </h4>
+                <mark id="find"></mark>
+            
+
+            </div>
+        </div>
+    </div>
+    <script src="js/string.js"></script>
+</body>
+</html>

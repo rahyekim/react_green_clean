@@ -1,0 +1,86 @@
+
+//margin/padding 기본 여백 제거
+//박스 크기 계산 통일 (border-box)
+//버튼 기본 스타일 제거
+//이미지 아래 여백 문제 해결
+//height: 100% = 화면 전체 높이를 기준으로 레이아웃 잡기 위해
+
+/*
+margin/padding 제거
+box-sizing 통일
+list 스타일 제거
+이미지 overflow 방지
+*/
+// width:100% - height:auto  //width는 강제 리사이징이라 height:auto로 비율 보호
+// max-width: 자연스러운 반응형 이지만 height:auto 혹시모를깨짐방지..
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;  // body는 내용만큼 높이가짐, 내용적으면 짧게끝남 -> 브라우저화면 전체높이를 기준잡음
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
+
+ul,ol {
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+    color:inherit;
+}
+
+/*이미지 정렬 기본*/
+img{
+    max-width: 100%; //이미지가 부모보다 커지는 걸(박스뚫고나가는거) 방지-“작으면 그대로, 크면 줄여”
+    display: block;
+}
+
+button{
+    border:none;
+    background: none; // 배경전체설정(큰개념) 내부적으로 -image, -position, -repeat , -color
+    cursor: pointer;
+}
+
+input, textarea{
+    border: none; //박스일부공간차지
+    font-family: inherit;
+}
+
+//현대형 -> 글자 더 부드럽게 보이게
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+///
+/// 
+img, picture, video, canvas, svg { //svg:햄버거아이콘 화살표 등등..
+  display: block; // inline요소였어서 아래에 미세한 공백 생김 방지
+  max-width: 100%; //👍거의 필수급 이미지가 부모보다 커지는 걸 방지
+}
+
+input, button, textarea, select { //👉 브라우저마다 기본 폰트가 다름
+  font: inherit; 
+}
+
+
+/*
+position: absolute가 켜지는 순간
+원래 서 있던 줄(레이아웃)에서 붕 떠오르는 "공중부양 상태"가 됨
+
+붕 떠올랐기 때문에, 이제 기준점(보통 나를 감싸고 있는 태그)을 기준으로 
+좌표(top, left)를 잡아서 원하는 위치에 강제로 고정할 수 있게 됩니다.
+
+화면 전체의 100%가 아니라, "나를 감싸고 있는 부모(Header) 높이의 100%"
+
+top: 0; 이라고 쓰면 ➔ 부모(Header)의 가장 윗면에 대가리를 맞춥니다. (헤더 글자들을 가려버리겠죠?)
+
+top: 50%; 라고 쓰면 ➔ 부모(Header)의 정중앙부터 메뉴가 시작됩니다.
+
+top: 100%; 라고 쓰면 ➔ 부모(Header)의 높이가 끝나는 가장 아랫면(100% 지점)에 메뉴의 대가리를 딱 맞춥니다.
+*/

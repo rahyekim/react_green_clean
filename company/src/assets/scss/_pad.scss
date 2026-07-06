@@ -1,0 +1,26 @@
+@media ( min-width: 768px ){
+    body{
+        max-width: 788px;
+        margin: 0 auto;
+
+        .gallery-row{
+            display: flex;
+            flex-wrap: wrap;
+
+            .col-md-one-half{
+                width: 50%;
+                
+            }
+        }
+        header{
+            ul{ 
+                display: flex ;
+                justify-content: center;
+            }
+        }
+            
+
+    }
+       
+}
+

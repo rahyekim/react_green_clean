@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <title>조건문</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-md-4">
+                <mark id="true1"></mark>
+                <mark id="true2"></mark>
+                <mark id="true3"></mark>
+                <mark id="true4"></mark>
+                <mark id="true5"></mark>
+                <mark id="true6"></mark>
+                <mark id="true7"></mark>
+                <h1>true, false, comparisons</h1>
+                <p> 0 존재하지않아서 값이 없음 => false</p>
+                <p> 1 존재하니까 => true </p>
+                <p>
+                    8=='8' 숫자8과 문자8 같음
+                    8 === '8' 타입까지 고려하여 엄격하게 true false 따짐 
+                    반대급부 8!=7 => 틀린것이 true진실
+                    8!=8 => 거짓
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h1>Logical 연산자</h1>
+                <mark id="log"></mark>
+                <p>
+                    - AND && 
+                    : 두개의 조건이 충족하면 참 
+                    - OR ||
+                    : 둘 중에 하나만 성립하면 참  
+                    - NOT ! 아니면 참
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h1>js 논리구조 테스트</h1>
+                <div class="input-group">
+                <input type="number" id="scoreinput" 
+                placeholder="점수를 입력하세요"
+                class="form-control">
+                <button onclick="checkGrade()" class="btn btn-success">확인</button>
+                </div>
+
+                <p>여기에 결과가 나옵니다 => <br> <mark id="result"></mark></p>
+               
+            </div>
+        </div>
+        <div class="row g-5">
+            <div class="col-md-4">
+                <h1>조건문</h1>
+                <mark id="hour"></mark> <br/>
+                <pre>
+            - 조건문을 사용하면 각 조건에 따라 다른 동작을 수행할 수 있다
+            - 조건이 참인지 거짓인지에 따라 다른 코드를 실행합니다
+            - if
+            - if...else
+            - if...else if...else
+            - if elif else (파이썬)
+            - switch 조건이 많을때
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <h1>switch</h1>
+                <p> if가 중첩되면 코드가 보기 어렵다 그럴때 (선택지 많을때) 스위치사용</p>
+                <mark id="whatday"></mark>
+                <h3>syntax</h3>
+                <code>
+                    switch(expression){
+                        case x:
+                        break;
+                        case y:
+                        break;
+                        default;
+                    }
+                </code>
+            </div>
+            <div class="col-md-4">
+                <h1>삼항 연산자</h1>
+                <mark id="age"></mark><br>
+                <code>
+                    (condition) ? True expression : False expression
+                </code>
+            </div>
+
+        </div>
+    </div>
+    <script src="js/condition.js"></script>
+</body>
+</html>

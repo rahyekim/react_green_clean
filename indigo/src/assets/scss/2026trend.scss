@@ -1,0 +1,73 @@
+@charset "utf-8"; /* 글자 깨짐 방지 */
+
+/* 웹폰트 불러오기*/
+@import url('https://fonts.googleapis.com/css?family=Montserrat|PT+Serif');
+
+/* 1. 모든 태그 여백 초기화 및 박스 사이즈 고정 (★핵심) */
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, 
+blockquote, pre, a, img, ul, li, ol, dl, dt, dd, 
+form, fieldset, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary, time, mark, audio, video, input, textarea, button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%; /*전부 다 가장 기본이 되는 일반 글자 크기(100%)로 
+                        똑같이 통일(16px) 기본글자크기 크게로 바꿀때 같이커져야해서 16px라고 명시하진않음*/
+    vertical-align: baseline;
+    background: transparent;
+    /* 패딩과 테두리가 늘어나도 전체 크기가 유지되도록 강제 고정 */
+    box-sizing: border-box; 
+}
+
+/* 2. 리스트 점 제거 (★실무 필수) */
+ul, ol, li {
+    list-style: none;
+}
+
+/* 3. 기본 바디 세팅 */
+body {
+    font-family: 'Montserrat', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    line-height: 1.4; /* 1은 너무 답답해서 보통 1.4~1.6을 씁니다 */
+    color: #333; /* 기본 글자색 */
+}
+
+/* 4. 링크 스타일 초기화 */
+a {
+    color: inherit; /* 부모 글자색 따라가기 */
+    text-decoration: none;
+}
+
+/* 5. 이미지 미세 여백 제거 */
+img {
+    vertical-align: top;
+}
+
+/* 6. 고집 센 인풋, 텍스트에어리어 갱생시키기 */
+input, textarea, button {
+    font-family: inherit; /* 부모 폰트 강제 상속 */
+    font-size: inherit;   /* 부모 글자 크기 강제 상속 */
+    color: inherit;       /* 부모 색상 강제 상속 */
+    appearance: none;     /* 브라우저 기본 성형 디자인 압수 */
+    -webkit-appearance: none; /*애플ㅅ끼들..고집겁나쎗음..
+                            고집불통인 아이폰 사파리 구형 버전 때문 이중안전장치 */
+    outline: none;        /* 클릭했을 때 파란 테두리 생기는 것 방지 */
+}
+
+/* 7. 플레이스홀더 색상 (요즘은 최신 브라우저용 한 줄이면 거의 끝납니다) */
+::placeholder {
+    color: #3f51b5;
+    opacity: 1; /* 파이어폭스 대응 - opacity: 0.54반투명필터씌우려고함*/
+}
+
+
+//📄 _reset.scss (무조건 지우고 초기화하는 내용만!)
+
+//📄 _base.scss (우리 사이트만의 폰트, 색상, 레이아웃 기본값!)
+
+
+/**
+border: 0 은 평소 상자가 가지고 있는 *진짜 테두리 디자인*을 지우는 것이고,
+outline: none은 인풋창이나 버튼을 클릭했을 때 강조되면서 튀어나오는
+ '자석 같은 외곽선'을 지우는 것입니다! 
+ 둘은 완전히 별개의 선 */

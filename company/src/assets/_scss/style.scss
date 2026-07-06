@@ -1,0 +1,137 @@
+@use "reset" ; 
+// 초기화 css 불러옴 : 이렇게 하는 이유 코드를 자유롭게 추가하기 위해 
+//_파일명 : _ 쓰면 컴파일안됨 -> 파일쪼개기+모듈화
+@use "pad";
+@use "pc";
+
+html {
+    font-size: 1rem; //1rem = 16px
+}
+body{   
+        max-width: 1200px;
+        
+        margin-left:auto; margin-right: auto; // margin: 0 auto; 가운데정렬
+        background-color: #e6f4f8;
+}
+        img { 
+            /*이프로젝트에서 img 태그가4개들어가는데 각각의 크기가 다르기때문에
+            기본크기를 잡아주는것이다.*/
+            width: 100%; //가로크기는 100
+            max-width: 100%; 
+            /* 최대크기가 100% 브러우저가 면적이 변동될때 가로폭을 맞춤 : 유동픽셀
+            꽉채우되, 절대 넘치지는 마.. 부모안에서만(pixel이 더클경우)
+            반대가 min-width: 100% 고정픽셀 */
+            height: auto; //가로비율에 맞춰 세로를 자동조절 (이미지는 가로세로비율이잇음)
+            vertical-align: middle; //세로정렬을 가운데로
+        }   
+        header{
+          padding: 36px;
+          font-weight: bold;
+          
+            .style-logo{
+                width: 12rem; //12rem = 192px
+                display: block; // 해당 element가 무조건한줄차지 
+                margin: 0 auto; /* margin-left: auto; 
+                                  margin-right: auto;*/
+            }
+            .style-nav{
+                ul{
+                    li{
+                        a{
+                            color:#2f322a;
+                            text-align: center;
+                            display: block;
+                            text-transform: uppercase;
+                            padding: 0.5rem; // 8px
+
+                        }
+
+                    }
+                }
+            }
+        }
+
+        .hero{ //백그라운드로 이미지 
+            // text-align: center;
+            background-image: url(img/hero.jpg); //public은 절대경로
+            background-size: cover; 
+            //박스 전체를 이미지로 빈틈없이 꽉 채우기
+            padding: 20px 20px 50px 20px ;// 상 우 하 좌 
+            /* 사방 -> 위아래 좌우 -> 위 좌우 아래 -> 상 우 하 좌 */
+            color: #fff;
+            //background-position: center;
+            background-repeat: no-repeat; 
+            /*배경이미지 꽉채우기 세트 4개
+            -image, -size , -repeat , -position */
+        }
+     
+        .button{
+            border: 2px #fff solid ;
+            padding: 0.5rem 2rem; // 위아래 좌우 
+            color: whitesmoke;
+            border-radius: 1rem;
+        }
+        h1 {
+            font-size: 57px;
+            text-transform: uppercase;
+            font-weight: 200;
+            margin-bottom: 60px;
+        }
+        h2 {
+            font-size: 30px;
+            text-transform: uppercase;
+            font-weight: 200;
+            margin-bottom: 23px;
+        }
+        h3 {
+            font-size: 30px;
+            text-transform: uppercase;
+            font-weight: 200;
+            margin-bottom: 35px;
+        }
+        h4 {
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: 200;
+            margin-bottom: 35px;
+        }
+        p {
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-bottom: 35px;
+        }
+        .info-box-tan{
+            background-color: #b9a88e;
+            color: #fff;
+            padding: 30px 20px 60px;
+            text-align: center;
+        }
+        .info-box-dark{
+            background-color: #b9aa;
+            color: #fff;
+            padding: 30px 20px 60px;
+            text-align: center;
+        }
+
+        footer{
+            .footer-text{
+                font-size: 13px;
+                margin-bottom: 5px;
+                margin-top: 10px;
+                text-align: center;
+                padding: 1rem;
+                
+            }
+        }
+
+        .row:before, .row:after {
+            content:"";
+            display: table;
+        }
+        .row:after{
+            clear:both;
+        }
+
+
+

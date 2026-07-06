@@ -1,0 +1,71 @@
+
+@use "./variables" as *;
+
+
+.container {  //가운데정렬용
+    width: 90%;
+    max-width: 1132px;  //너무커지는거방지 디자인깨짐
+    margin: 0 auto; //가운데정렬 display:flex 사용전에 쓰던거
+
+    &:after {
+        display: block;
+        content: "";
+        clear:both;
+    }
+}
+
+.cfixed:after{
+    display: block;
+    content: "";
+    clear:both;
+}
+
+.blind{
+    // 독보적으로 나오게함...-> 짜부시킴(widthheight:0)-> 던져버림(-9999)... 
+    position:absolute; // 
+    width: 0;
+    height: 0;
+    text-indent: -9999px; //들여쓰기 : 왼쪽으로 가버림 절대안나옴...
+    overflow: hidden; //혹시 흘러나오면 숨켜...
+    line-height: 0; // 줄간격 행간... 지독하다...
+}
+
+.sec-tit{
+    font-size: 42px;
+    color: $primary; 
+    font-weight: normal;
+    letter-spacing: -0.03rem; // 한글만 자간 마이너스 사용...다른나라는 0
+}
+
+.divider {
+    width: 80%;
+    max-width: 1132px;
+    margin: 0 auto;
+    margin-top: 77px;
+    background-color: #eee;
+
+    //@media 쿼리.... 
+    @media all and (min-width: $bp-tablet){
+        margin-top: 124px;
+    }
+}
+
+.m-divider {
+    width: 20px;
+    margin: 0 auto;
+    margin-top: 77px;
+    background-color: $primary;
+
+    @media all and (min-width: $bp-tablet){
+        margin-top: 124px;
+    }
+}
+
+
+ul, ol, li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}

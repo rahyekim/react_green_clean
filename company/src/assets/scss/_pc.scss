@@ -1,0 +1,27 @@
+@media ( min-width: 1024px){
+
+    body{
+        max-width:1200px;
+        margin: 0 auto;
+
+        .gallery-row{
+            .col-lg-one-fourth{
+                width: 25%
+            }
+        }
+        header{
+            .row{
+                padding: 0 30px;
+                display:flex;
+                justify-content: space-between;
+                .style-logo{
+                    margin: 0 !important;
+
+                }
+            }
+
+        }
+        
+        
+    }
+}

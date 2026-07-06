@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set 집합</title>
+</head>
+<body>
+    <h1>🔹집합 new Set() 🔹</h1>
+    <pre>
+    python에 list tuple dictionary set 있다
+    ㄴ 자바스크립트에 array가 있는데 set 개념이 생김
+    📍 new Set() : 빈집합을 생성하고 이를 사용하여 add()값을 추가
+    ⭐ 중복 ❌을 허용하지 않는다. 고유한
+    ⭐ Set은 배열❌ 아님 -> length(배열 전용 개념) ❌
+    ⭐ Set의 길이는 ✔️size 
+    ⭐ ✔️순서 있음(넣은 순서대로 정렬됨) ❌index 없음
+    📍 집합 안의 값을 꺼내려면 배열로변환 Array.from() 하거나 for of 이용
+    </pre>
+    <p id="set"></p>
+
+    <h1>🔸집합 Method 🔸</h1>
+    <pre>
+    ⭐⭐⭐ has(): 지정된 값에 존재하는지...#존재여부확인
+    📍 배열의includes()역할이나 🔥속도가 압도적!🔥
+
+    ⭐⭐ union(): 두 집합의 합집합 
+    📍 예전엔 [...setA, ...setB] 이랬는데 setA.union(setB) 깔끔해짐
+
+    ⭐ intersection(): 두 집합의 교집합 ➡️ 동시에 들어있는 공통 요소만 쏙
+    
+    ⭐ forEach(): 🚨각 요소에 대해서 호출... ⚠️중간에 break나 return으로 멈출 수 없습니다.
+    <hr>
+    🔸 values(): 값들
+    🔸 keys() : 세트와 맵을 호환하기 위함
+    🔸 entries() : [값, 값]
+    
+    <hr>
+    👉 difference(): #앞의 집합에서 뒤의 집합 요소를 싹 빼버리는 연산
+        #전체유저.difference(탈퇴한유저) ➡️ 현재 활동 중인 유저만 남기기!
+
+    👉 symemetricDifference(): 교집합 부분을 제외➡️ 서로에게만 있는 순수한 요소들만 합치는 연산
+    
+    👉 isSubsetOf(): #부분집합 확인 #이 집합이 저 집합에 완전히 포함되니?
+    내가선택한옵션들.isSubsetOf(필수옵션들) ➡️ 유저가 필수 조건을 다 선택했는지 검증할 때
+    🔸 isSupersetOf(): true인자 
+    🔸 isDisjoinFrom(): 공통되는 요소가 없으면 true, 있으면 false
+<hr>
+
+    ✅ for...of는 배열, Set, 문자열처럼 “순서 있는 데이터”를 하나씩 꺼낼 때 쓰는 반복문
+    🚨 for...of 👉 값 자체 
+    🚨 for...in 👉 index(키)
+        <hr>
+    💡 for 문 : #중간탈출-특정조건에서break #인덱스를 내마음대로 쥐고흔들어야할때(i+=2 두칸씩뜀, i--거꾸로)
+    💡 forEach #배열(Array)전용 #중간탈출불가 # 배열의 모든 요소를 하나씩 꺼내서 어떤작업(함수실행)을 하고싶을때
+                #단순반복작업 🚨break 나 return으로 멈출수없음🚨 #async/await 에러유발
+    💡 for...of #가장현대적강력루프 #가장최근문법인만큼 for문과 forEach장점을 합쳐놓음 
+                #Iterable(반복가능객체) #Set/Map가능 #가독성끝판왕 #break가능 #async/await
+                📌배열뿐만 아니라 Set, Map, 문자열 등 순회가 가능한 모든 객체(Iterable)에 다씀 //숫자X
+                일반객체x -> 대신 Object.keys(obj) 이렇게 사용가능
+    </pre>
+<hr>
+        📢배열버전
+        myArray.forEach((value, index)=> { ... })
+
+        📢집합버전
+        mySet.forEach((value)=> {...})
+    <pre> 
+        Array (배열) : “순서 + 목록 + UI 데이터”
+        Array = “UI용 기본 데이터 구조”
+        화면에 보여줄 데이터
+        순서가 중요한 경우 const steps = ["이용약관", "정보입력", "완료"];
+        반복 작업: users.map(u => u), users.forEach(u => console.log(u))
+        정렬 / 필터 : arr.sort(), arr.filter()
+
+        Set — “중복 제거 + 존재 체크”
+        “중복 없는 데이터 관리용”
+        ✔ 1. 중복 제거 (가장 중요)
+        const arr = [1,1,2,3,3];
+        const unique = [...new Set(arr)];
+        2. 로또 / 랜덤 / 번호 생성 
+        3. “이미 있는지 체크” (빠름)
+        const visited = new Set();
+        visited.add("A"); -> visited.has("A"); // true
+        4. 좋아요 / 찜 / 방문 기록=> 중복 좋아요 방지
+    </pre>
+
+    <pre>
+        const arr = [1,1,2,3,3];
+        const unique =  [...new Set(arr)]
+        ⚠️... (스프레드 연산자): 상자를 뜯어서 내용물을 바닥에 펼치는 행위
+    괄호 안에 묶여 있는 알맹이들을 바깥으로 낱개로 촤르륵 펼쳐주는(Spread) 역할
+        ⚠️[ ]: 펼쳐진 알맹이들을 다시 예쁜 배열로 감싸줍니다.
+        바구니(배열)에 다시 차곡차곡 담는 과정
+
+
+    <h2>✅ 입력 검증할 때 (true/false)</h2>
+
+    arr.some(...)   // 하나라도 만족하면 true
+    arr.every(...)  // 전부 만족해야 true
+
+    ------------------------------------------
+
+    arr.filter(...) // 만족하는 것만 새 배열 => 조건에 맞는거 전부반환(배열)
+    arr.find(...)   // 처음 만족하는  ✔️값 하나만 반환 
+    arr.map(...)    // 변환된 새 배열
+ 
+    </pre>
+    <script src="js/set.js"></script>
+    
+</body>
+</html>
+
+

@@ -1,0 +1,9 @@
+//@use "./variables" as *;
+
+
+//메인컬러...
+$primary: #3f51b5;
+
+ //breakpoint(화면 크기 바뀔때 디자인 바뀌는 기준점)
+$bp-tablet: 768px;  //태블릿 시작 기준 (768px)  768px~1132px = 태블릿
+$bp-pc: 1132px; //PC 화면 기준 (1132px) 1132px 이상 = PC

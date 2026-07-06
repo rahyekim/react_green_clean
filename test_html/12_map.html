@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>maps</title>
+</head>
+<body>
+    <h1>🔹 new Map() : 🏷️이름표(Key)가 붙은 📦보관함(Value) 🔹 </h1>
+    <pre>
+    자바스크립트의 [맵]은 다른프로그래밍 언어[파이선]의 딕셔너리 와
+    유사하게 key - value 쌍의 모음을 저장할수 있는 객체
+    만드는 법 new Map([])
+    메서드
+    .set(): 요소를 추가
+    .get(): 특정키에 값을 가져옴
+    .size(): 요소의 개수를 리턴
+    .delete(): 요소를 삭제
+    .clear(): 껍데기는 남겨놓고 안에 내용만 없애줌 (전체 초기화) 껍데기 맵은 존재 .size=>0
+    .has(): 키가 존재하면 true를 반환
+    .forEach(): 맵의 각 키/ 값에 대해 쌍으로 콜백함수 호출
+    .entries(): 키 값이 저장된 반복자 객체를 리턴
+    .keys(): 키값만 반환
+    .values(): 값만 나오게
+    
+    </pre>
+    <pre>
+        만드는 법: 빈 보관함 생성
+        const userRoles = new Map();
+
+        자바스크립트 forEach 세계관에서는 
+        진짜 알맹이(Value)가 무조건 상전이라 
+        forEach(⚠️value,key) 1등(첫 번째 매개변수)으로 나온다!"
+    </pre>
+    <pre> 
+        <h3>⚠️ 일반 객체({})가 있는데 굳이 Map을 왜 써요?</h3>
+        ✅글자(String)가 아닌 것도...객체나 숫자, 함수 자체.. 이름표(Key)로 쓸 수 있어요.
+        ✅개수(size)를 바로 알 수 있음. 객체는 length안되잖음...size 한 방으로 관리편해짐
+    </pre>
+    <pre>
+        🚨 .map() 
+        # 배열을 🔄가공하는 함수 (Method)
+        # 배열 뒤에만 붙음 array.map()
+        # 배열의 모든 요소를 일괄 변경해서 새 배열 생성(개수는 같지만 가공되어새로태어남 )
+
+    </pre>
+    <script src="js/map.js"></script>
+</body>
+</html>

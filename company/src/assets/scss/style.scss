@@ -1,0 +1,91 @@
+@use "reset";
+@use "pad";
+@use "pc";
+//순서중요 reset-> pad 768px-> pc 1024px
+html {
+    font-size: 16px;
+
+    body{
+            
+    background-color: antiquewhite;
+
+        header{
+            padding: 30px 20px;
+            .row{
+            
+                .style-logo{
+                width: 12rem; //대중적이고 안정적인 중간 크기(사람들이 글자크기키워볼때 같이 커짐)
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 25px;
+                }
+                .style-nav{
+                li{
+                    display: block;
+                    text-align: center;
+                    // margin-bottom: 10px;
+                    text-transform: uppercase;
+                    padding: 8px;
+                }
+            }
+        
+        }
+    
+        }
+        main{
+            img{
+                width:100%;
+                max-width: 100%;
+                height:auto;
+                display: block;//img는 inline이라 gap이생김..block해줘야틈안생김
+            }
+            .hero{
+                background-image: url(/img/hero.jpg);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                
+                padding: 30px 20px;
+
+                text-align: center;
+                color:aliceblue;
+            }
+            .info-box-tan{
+
+                text-align: center;
+                color: honeydew;
+                background-color: cadetblue;
+                padding: 30px 20px;
+            }
+            .info-box-dark{
+                text-align: center;
+                color:aliceblue;
+                background-color:darkgray;
+                padding: 30px 20px;
+
+            }
+
+            h3, h2, h1, p {
+                margin-bottom: 15px;
+            }
+
+            .button{
+                border: 2px solid azure;
+                border-radius: 10px;
+                padding: 5px 10px;
+                color:azure;
+            }
+        }
+        footer{
+            text-align: center;
+            padding: 12px;
+            color:gray;
+            background-color: whitesmoke;
+            line-height: 1.5;
+            
+        }
+    
+    }
+   
+}

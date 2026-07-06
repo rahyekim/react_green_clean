@@ -1,0 +1,27 @@
+# Node
+node_modules/
+
+# Python environments
+**/venv/
+**/env/
+**/mini/
+**/__pycache__/
+*.pyc
+**/PyCharm*/
+
+# IDE
+**/.idea/
+**/.classpath
+**/.project
+**/.settings/
+
+# Eclipse
+**/eclipse/
+
+# binaries
+*.dll
+*.jar
+*.zip
+
+# OS
+.DS_Store

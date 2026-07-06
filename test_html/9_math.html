@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수학 객체 Math</title>
+</head>
+<body>
+    <!--JS가 미리 제공, 정확한 x 값을 상수로 넣어둠-->
+    <h1>Constant 상수</h1>
+    <p>한 번 정해지면 바뀌지 않는 값 (ex) const PI = 3.14;</p>
+    <pre>
+    - 기하학 및 기본 상수 -
+    Math.E [오일러의 수, 약 2.718] : 자연로그의 밑이고 복리계산이나 확률분포 성장계산할때 중요
+    ⭐ Math.PI [원주율 약3.14159]: 원의 둘레를 지름으로 나눈값 , 웹사이트에서 원형 그래프를 그리거나 각도계산을 할때 필수
+         ㄴ 원, 각도, 그래프, 애니메이션에서 가끔 사용
+    Math.SQRT2 [루트2, 약 1,414]: 2의 제곱근 1:1 비율인 정사각형의 대각선 길이를 구할때 사용
+    Math.SQRT1_2 [루트 0.5, 약 0.707]: 
+    - 로그 (Logarithm) 상수 [데이터의 단위가 너무 크거나 급격한 변화를 다룰때] -
+    Math.LN2 : 2의 자연로그
+    Math.LN10 : 10의 자연로그
+    Math.LOG2E : 밑이 2인 e의 로그값(컴퓨터과학 비트단위 등에 쓰임)
+    Math.LOG10E : 밑이 10인 e의 로그값
+
+    수학에서 밑(base)이라는 단어는 기초가 되는 아래쪽 숫자 거듭제곱과 로그에서 핵심적인 역할을 함.
+
+    1.거듭제곱의 밑
+    2. 2<sup>3</sup> 2를 3번 곱함
+    밑: 아래에 크게 써있는 숫자 2가 밑 무엇을 곱할 것인가.
+    지수(exponent): 위에 작게 써있는것
+
+    2.Logarithm
+    log<sub>2</sub>8
+    </pre>
+    
+    <h1> 정수 Number to Integer</h1>
+    <h3>숫자의 소수점을 처리하는 숫자 다듬기 5총사</h3>
+    <pre> ⭐필수
+        📍 Math.PI       // 원주율
+        📍 Math.random() // 랜덤
+        📍 Math.floor()  // 내림
+        📍 Math.ceil()   // 올림
+        📍 Math.round()  // 반올림
+
+        Math.sqrt(x)     // 제곱근
+        📍Math.abs(x)      // 절댓값 양수
+        📍 Math.max(a,b,c)  // 최대값
+        📍 Math.min(a,b,c)  // 최소값
+    </pre>
+    <p> Math.trunc(x) // 버림, 정수부분만 필요할때(price) 가끔사용 </p>
+
+    <h1>Math.random()</h1>
+    <pre>
+        📌 Math.random() : 0 이상 ~ 1 미만(소수점) 무작위생성
+        
+        ⚠️절대1은 안나옴!
+
+        Math.random() * 10 👉 0~ 9.99999 ✔️ 소수점생김
+        Math.floor(Math.random() * 10) +1  👉 1 ~ 10
+        Math.floor(Math.random() * 10) 👉 0 ~ 9
+        Math.floor(Math.random() * 11) + 5 -> // 5~15
+
+        💬 배열에서 랜덤 뽑기 (랜덤 배너)
+
+    </pre>
+    <h3>⭐Math.floor(Math.random() * 개수) + (시작값)⭐</h3>
+    <span>개수 = 배열변수.length</span>
+
+    <h1>Math.sign(x)</h1>
+    <p>
+        숫자의 부호(sign)가 무엇인지 딱잘라 말해주는 도구
+        정확히 얼마인지 중요하지 않고 -음수 0 +양수 만 확인하고싶을때
+        결과값은 항상 -1, 0 , 1 세가지중하나만 나옴
+
+        Math.sign(-5) -> -1
+
+        게임에서 캐릭터가 오른쪽or왼쪽 가는지 확인할때
+    </p>
+    <p>
+        Math.pow(): 거듭제곱
+        Math.pow(8,2)
+    </p>
+    
+    <p id="math">예시</p>
+    
+    
+    <script src="js/math.js"></script>
+</body>
+</html>

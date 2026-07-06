@@ -1,0 +1,64 @@
+@use './variables' as *;
+
+.promotion-section{
+
+    margin-top: 68px; 
+
+    @media all and (min-width: $bp-tablet){
+
+    }
+
+    .promo-list{
+
+        li{
+            margin-top: 52px;
+            text-align: center;
+
+            @media all and (min-width: $bp-tablet){
+                
+                float:left;
+                width:23.046875% ; //177px / 전체768px 중 이 박스가 177px차지
+                margin-left: 2.604166666666667%; //20px /768px 박스사이간격
+                /*
+                옛날 방식 (float 기반 그리드)에서는:
+                px 쓰면 반응형 깨짐
+                그래서 디자인을 %로 변환해서 씀*/
+                margin-top:0;
+
+            }
+
+            @media all and (min-width: $bp-pc){
+                width:22.67491%;
+                margin-left: 1.7667%; 
+
+            }
+
+            &:first-child{
+                margin-left: 0;
+                
+                @media all and (min-width: $bp-tablet){
+                   
+                }
+            }
+
+            img{ 
+                height: 52px;
+
+            }
+            h3{
+                margin: 29px 0 20px 0;
+                color: $primary;
+                font-weight: 500;
+
+            }
+            p{
+                font-size: 14px;
+                font-family: 'PT Serif';
+                color: #616161;
+                line-height: 1.5;
+
+            }
+
+        }
+    }
+}

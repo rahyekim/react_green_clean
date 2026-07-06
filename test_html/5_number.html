@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <title>숫자</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container-fluid">
+        
+        <div class="row">
+            <div class="col-md-3">
+                <h1>e5: 0이 5개 00000 / e-5 </h1>
+                <mark id="e"></mark>
+                <p>
+                    대부분 프로그래밍 언어는 다양한 숫자 유형이 있다. <br>
+                    정수 <br>
+                    byte(8bit), short(16bit), int(32bit), long(64bit) <br>
+                    실수(정수+소수+무리수)<br>
+                    float(32bit) double(64bit)<br>
+                    but <br>
+                    javascript numbers are always <b>double(64bit floating point)</b><br>
+                    🔥JavaScript의 숫자는 전부 “double(64bit 부동소수점)” 하나만 쓴다🔥
+                    이유: 편하게 쓰려고 + 웹 중심 언어라서
+                    타입 신경 안 쓰게 만들고 싶었음
+                    개발 속도 빠르게
+                    브라우저용이라 단순하게 설계
+                <h2>💡부동소수점 (floating point)= 소수점 위치를 고정하지 않고 
+                    2진수로 “근사값”을 저장하는 방식</h2>
+                    
+                </p>
+            </div>
+            <div class="col-md-3">
+                <h1>Integer Precision 정수정밀도 (큰 숫자 문제)</h1>
+                <h3>정수를 정확하게 표현할 수 있는 한계 범위</h3>
+                <p>
+                    javascript는 2<sup>53-1</sup>부터 
+                    javascript는 -2<sup>53-1</sup>의 정수만 완전하게 표현합니다.
+                    이 범위를 넘으면 정확도 깨짐 
+                    모든 정수를 끝까지 정확하게 저장 못함, 너무 커서 정확하게 표현 못함
+                    -> “근사값 저장” 대충저장ㅋㅋ => 정확한 계산을 원할때 BigInt 사용
+                </p>
+                
+                <mark id="int"></mark>
+            </div>
+            <div class="col-md-3">
+                <h1>Floating Precision (작은 숫자 문제 = 소수 (0.1 + 0.2)) </h1>
+                
+                <p>0.1, 0.2를 2진수로 정확히 못 표현함, “가까운 값”으로 저장됨 >근사값</p>
+                <mark id="float"></mark> <br>
+                곱해주면 good:<mark id="floating"></mark>
+                <p>
+                    2진수 구조 때문에 일부 소수가 정확히 표현되지 않는다=> 소수연산 부정확
+                    1.toFixed()    = 화면 표시용 (문자열)
+                    2. Math.round() = 숫자 반올림용
+                    3. 정수 계산 = 실무에서 가장 안전한 방법 ex) 10.99달러-> 1099달러로 저장.
+
+                    반올림 공식 소수 n자리까지 반올림:
+                    100 곱하기 → 123.456
+                    Math.round() → 123
+                    100 나누기 → 1.23
+                    
+                    소수 1자리 → *10 후 /10
+                    소수 2자리 → *100 후 /100
+                    소수 3자리 → *1000 후 /1000
+                </p>
+            </div>
+            <div class="col-md-3">
+                <h1>으음...</h1>
+                
+                <code id="minmax"></code>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>시대가 바뀌고 금융/ID 블록체인 빅데이터등 정밀한 큰 숫자가 필요해짐</h2>
+                <h1>BigInt: 정수 전용 무한 정밀도 타입</h1>
+                <p> 사용법: n이라는 정수 리터럴을 붙이거나 BigInt("")</p>
+               
+                <mark id="bigint"></mark>
+            </div>
+        </div>    
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <h1>문자열과 숫자를 더할 경우는? <small id="small"></small></h1>
+            </div>
+            <div class="col-md-3">
+                <h1> NaN 숫자가 아님 Not a Number </h1>
+                <p id="nan"></p>
+                <mark>NaN 은 number 숫자 타입이다. NaN / undefined / null 차이 (시험 단골) ...</mark>
+            </div>
+            <div class="col-md-3">
+                <h1>infinity(양의 무한대) 나 -infinity(음의 무한대)는 
+                    계산 가능 결과가 최대값을 벗어나는 경우 반환:
+                    숫자가 너무 커서 컴퓨터가 감당이 안 돼" (수학적 한계 초과)</h1>
+                <mark id="mu"></mark>
+            </div>
+            <div class="col-md-3">
+                <h1>16진수(Hexadecimal) </h1>
+                <mark>자바스크립트는 0x가 붙으면 16진수로 해석</mark>
+                <mark id="sixteen"></mark>
+                <p>
+                - 2진수(Binary): 컴퓨터의 기본언어
+                    컴퓨터 내부 회로는 전류가 흐르느냐(1) 흐르지 않느냐(0)로 동작.=> 1bit: 0or1 딱 하나넣을수있는 제일작은상자한칸
+                    0과 1 단 두개의 숫자만 사용하는것이 2진수
+                    특징: 모든 정보는 2진수로 변환되어 처리됨
+                    10진수 100이 이진수 1100100 -> 100을 2로 나누면서 나머지를 아래에서 위로 읽음
+                -8진수(Octal) : 2진수를 3자리씩 묶은 것 
+                -16진수 :0부터 15까지 총 16개의 숫자를 한 자리에 표현(0~9,A~F), 2진수를 "4자리씩" 예쁘게 묶은 것.
+                
+                2진수: 1111 1111 (길고 읽기 힘듦 1byte:한글자) => 딱 두 글자(00 ~ FF)로 완벽하게 요약
+                </p>
+                <pre>
+                    1 Byte 상자 안에는 2진수 8자리(00000000 ~ 11111111):256가지 다른 신호 만들수잇음.
+                    - 2진수 4 Bit = 16진수 1자리 (예: F)
+                    - 2진수 8 Bit (1 Byte) = 16진수 2자리 (예: FF)
+                    Bit (비트): 0 또는 1이 들어가는 제일 작은 방 한 칸
+                    Byte (바이트): 방 8개를 묶은 것 , 영문자 한 글자가 들어가는 크기!
+                </pre>
+            </div>
+        </div>
+    </div>
+    <script src="js/number.js"></script>
+</body>
+</html>
