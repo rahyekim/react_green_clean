@@ -36,8 +36,8 @@ function readConfigFile(filename, callback){
     )
 }
 
+//함수호출, 파일명 config.json 작업이 끝나면 실행될 콜백 함수 ..???
 readConfigFile('config.json',(err,config)=>{
-    //함수호출, 파일명 config.json 작업이 끝나면 실행될 콜백 함수 ..???
     if(err){ //콜백 함수의 첫번쨰 인자인 err에 값이 있다면 즉, 에러가발생해서 넘어왔다면
         console.error(`Failed to read config : `, err.message);
         //콘솔에 에러빨간글씨 출력
