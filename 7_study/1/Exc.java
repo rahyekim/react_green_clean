@@ -19,13 +19,13 @@ public class Exc {
         }catch(Exception e){
             System.out.print("출력4");
         }finally{
-            System.out.println("출력5:");
+            System.out.println("출력5:"); 
         }            
     }
 }
 
 //print: 인라인이라 출력1출력5 <한줄>
 
-//println => 두줄
+//println => 두줄 , 단, 글자 다찍고 난후에 줄바꿈(엔터)
 // 출력1
 // 출력5  

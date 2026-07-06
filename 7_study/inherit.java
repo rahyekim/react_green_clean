@@ -5,7 +5,7 @@
 public class Inherit {
     
     public static class Parent {
-        public int x(int i){
+        public int x (int i){
             return i+2;
         }   
          public static String id(){ //정적메서드는 객체가 아니라 클래스 자체에 소속
@@ -13,7 +13,7 @@ public class Inherit {
         }
     }
     public static class Child extends Parent{
-        public int x(int i){
+        public int x (int i){
             return i+3;
         }
         public String x (String s){
@@ -39,4 +39,10 @@ public class Inherit {
 이것을 동적바인딩 또는 오버라이딩 이라고 함
 Parent ref 라 하더라도 실제 연결된 객체가 child이기때문에 자식 클래스에서 
 재정의 오버라이딩한 x(int)가 호출
+ */
+
+/*⭐⭐⭐⭐⭐
+일반메서드-> 실제 객체(알맹이)
+static 메서드=> 참조변수타입(껍데기)
+static은 객체 없이도 호출 -> 애초에 객체(알맹이)를 볼 이유가 없는 거야.
  */

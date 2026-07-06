@@ -10,12 +10,12 @@ class Member{
 	@Override //object의 equals() 메소드 재정의
 	public boolean equals(Object obj) {
 		if(obj instanceof Member target) {
-			//obj가 Member타입인지 검사하고 타입변환후 target변수에 대입
+			// obj가 Member타입인지 검사🕵️‍♂️하고 타입변환후 target변수에 대입
 			if(id.equals(target.id)) {
-				//id문자열이 같은지 비교
+				//➡️id문자열이 같은지 비교(본래는 주소(메모리)비교)
 				return true;
 			}
-		}return false; //위치맞나????
+		}return false;
 	}
 		
 }
@@ -53,7 +53,7 @@ public class Base_0 {
 		"java.time: 날짜 및 시간을 조작하거나 연산하는 클래스 제공\\n"+
 				"java.io: 입출력 스트림 클래스 제공\\n"+
 		"java.net: 네트워크 통신과 관련된 클래스제공\\n"+
-				"java.nio: 데이터 저장을 위한 Buffer 및 새로운 입출력 클래스를 제공\\n"+
+				"java.nio: 데이터 저장을 위한 Buffer 및 새로운 입출력 클래스를 제공(New I/O)\\n"+
 		"java.lang: 자바언어의 기본적인 클래스를 담고있는 패키지로 이 패키지에 있는 "+
 				"클래스와 인터페이스는 import 없이 사용가능"
 		
