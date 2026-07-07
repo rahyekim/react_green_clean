@@ -1,5 +1,5 @@
 
-const fs = require('fs');
+const fs = require('fs'); //파일 읽기쓰기
 
 function readConfigFile(filename, callback){
     fs.readFile(filename, 'utf-8',(err,data)=> {
@@ -30,13 +30,13 @@ function readConfigFile(filename, callback){
                 //예)파일 내용이 올바른 JSOn형식이 아닐때
                 callback(new Error(`Invalid JSON in ${filename}`));
                 //JSON형식이 잘못되었다는 에러 객체를 만들어 콜백함수로 넘겨줌
-                //try-catch안에서는 return을 쓰지않아도 함수마지막이라 자연???
+                //try-catch안에서는 return을 쓰지않아도 함수 마지막이라 자연스럽게 종료
             }
         }
     )
 }
 
-//함수호출, 파일명 config.json 작업이 끝나면 실행될 콜백 함수 ..???
+//함수호출, 파일명 config.json 작업이 끝나면 실행될 콜백 함수를 화살표 함수로 정의하여 넘겨줍니다.
 readConfigFile('config.json',(err,config)=>{
     if(err){ //콜백 함수의 첫번쨰 인자인 err에 값이 있다면 즉, 에러가발생해서 넘어왔다면
         console.error(`Failed to read config : `, err.message);

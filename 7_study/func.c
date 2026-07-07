@@ -14,7 +14,7 @@ int main(){
 
     for(int i=0; i<4; i++){
         x++; // 2 3 4 5 sum계산에는 안들어감
-        sum+=func();
+        sum+=func(); //2+4+6+8
         /*
         0 + 2= 2
         2+  4= 6
