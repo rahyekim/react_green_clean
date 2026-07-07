@@ -37,3 +37,14 @@ arr[0] = 42
 print(x)
 print(arr)
 
+#Numpy Array Shape
+sha = np.array([[1,2,3],[4,5,6]])
+print(sha.shape) #(2,3) 2차원배열에 각각3개의 요소가 있음
+
+sha1 = np.array([[1,2,3,4],[5,6,7,8]])
+print(sha1.shape) #(2,4)
+
+# nadmin으로 숫자를 설정하면 거기에 맞는 차원의 배열을 만들수있다
+five= np.array([1,2,3,4,5], ndmin=5)
+print(five)
+print('shape of array: ', five.shape) #  (1, 1, 1, 1, 5) 마지막:5개가들어있다

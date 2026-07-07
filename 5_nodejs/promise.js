@@ -9,7 +9,7 @@
 
 const fs = require('fs').promises;
 
-//아래 3명을 동시에 실행, 결과 순서 보장! 하나라도 실패하면 즉시 중단
+//아래 3명을 동시에 실행, 결과 순서 보장!(입력 순서를 기준으로 반환) 하나라도 실패하면 즉시 중단
 
 const promise1= Promise.resolve('1st🥇 result');
 
