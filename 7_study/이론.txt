@@ -4,4 +4,50 @@
 sql에서 테이블에 관한문제 
 
 사원 :사원번호(PK), 이름, 나이, 부서
-부서 :사원번호PK FK, 
+부서 :사원번호PK FK, 이름, 주소, 나이
+
+VALUES 값을 넣을때 사용 
+SELECT 만들어진 값 선택 
+FROM 데이블에 저장된 모든 데이터를 빠짐 없이 저장할때 
+
+수정할때
+UPDATE SET WHERE 
+
+신입사원이 들어와서 사원 테이블 추가
+
+⭐INSERT INTO 사원(사원번호, 이름, 주소, 부서)
+⭐VALUES (ID123, '황현진', '서울 강남구', '아이돌부서')
+
+신입사원 검색하면서 부서 테이블에 추가
+INSERT INTO 부서(사원번호,이름,나이,부서) 
+SELECT 사원번호, 이름, 나이 
+FROM 사원 
+WHERE 이름 = '황현진'; 조건
+
+
+사원전체 테이블 조회
+🟥SELECT *
+🟥FROM 사원
+
+SELECT 이름, 부서
+FROM 사원
+
+하루만에 퇴사 부서에 해당하는 값을 퇴사로 변경
+🟦UPDATE 테이블명   =>사원
+🟦SET 변경할내용    =>부서="퇴사"
+🟦WHERE 조건;      =>사원번호 = ID12345 
+
+
+프로토콜에 대한 내용
+IPsec
+network layer에서 ip패킷을 암호화하고 인증하는 등의 보안을 위한 표준
+기업에서 사설 인터넷망으로 사용할 수 있는 vpn을 구현하는데 사용되는 프로토콜
+AH(authentication header)와 ESP(encapsulating security payload) 라는
+두가지 보안 프로토콜 사용
+
+알고리즘
+AES Advanced Encryption Standard
+DES Data Encryption Standard
+
+대칭키 알고리즘 으로 DES를 대체하기위해 생성
+128비트 192비트 256비트의 가변 키 크기와 128비트의 고정 블록 크기
