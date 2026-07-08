@@ -1,16 +1,31 @@
 
-#입력된 데이터의 자료형 타입이 무엇인지 판별하고 그에 따른 값을 리턴
+#문자열 x안에서 특정 문자열 y가 몇번 포함되어있는지 세어주는 함수 
 
-def func(value):
-    if type(value)== type(100):
-        return 100 #입력값이 정수형이면 무조건 100return
-    elif type(value) == type(""):
-        return len(value) # 입력값이 문자열이면 문자열길이 반환
-    else: #정수도아냐문자열도아냐 그외모든자료형
-        return 20
+def Calculation(x,y):
     
-a='100.0'
-b=100.0
-c=(100,200)
+    result = 0; #나중결과를 위해 0으로 초기화;
+    
+    #문자열 x의 전체 길이만큼 반복문 실행 
+    for i in range(len(x)):
+        #문자열 x의 i번째 인덱스부터 y의길이 만큼 잘라내어(슬라이싱) tmp에 넣음
+        temp = x[i:i+len(y)]
+        
+        if temp == y: #우리가 찾고자하는 문자열y과 똑같은지비교
+            #똑같다면 찾는횟수 1증가
+            result +=1
+    return result
 
-print(func(a)+func(c)+func(b))  #5+20+20
+#검색대상
+a = "abdcabcabca"
+        
+p1="ab" #3
+
+p2= "ca" #3
+
+out = f"ab{Calculation(a,p1)}ca{Calculation(a,p2)}"
+
+print(out) #ab3ca3     
+            
+        
+        
+    

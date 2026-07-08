@@ -11,6 +11,7 @@ def scrape_quotes():
     #2.웹페이지 접속하여 HTML 데이터가져오기
     res = requests.get(url)
 
+    print(res.text)
     #3.요청 성공했는지 확인
     if(res.status_code == 200):
         print("웹페이지 성공적으로 불러옴\n")
