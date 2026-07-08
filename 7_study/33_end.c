@@ -1,7 +1,7 @@
 #include <stdio.h>
-
+//표준입출력 라이브러리
 #include <stdlib.h>
-//
+//표준라이브러리
 #include <string.h>
 //문자열의 길이를 재거나 strlen, 복사 strcpy, 비교 strcmp하는 등 문자열을 다루는 함수들
 #include <math.h>
@@ -60,7 +60,7 @@ int main(){
     //math.h
     printf("[Math&Random] 랜덤숫자의 제곱근: %.2f\n", sqrt(randonNum));
     printf("[Math&Random] 원주율(Macro)의 제곱 : %.2f\n", pow(PI,2));
-    return 0;
+   
 
     //처리할문자열
     char myString[MAX_BUFFER] = "hello c programming 2026! =====";
@@ -111,6 +111,3 @@ void printCurrentTime(){
 
 }
 
-/*
-n번째 호출안나왓음.....ㅡㅡ
-*/
