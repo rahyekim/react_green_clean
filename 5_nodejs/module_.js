@@ -103,27 +103,13 @@ const myUrl = new URL(req.url, `http://${req.headers.host}`);
 console.log(myUrl.pathname);
 console.log(myUrl.searchParams.get("id"));
 
-// 요청: /users?id=10
-// 결과:
+// ✅ query(데이터): id=10&name=kim
+//✅ path(경로): /users
 
-myUrl.pathname
-// "/users"
+/*
+url.parse() ------------> new URL() ✅
 
-myUrl.searchParams.get("id")
-// "10"
+parsed.query.id  ---------> parsed.searchParams.get("id") ✅
 
-
-//😎요즘방식 Node.js → new URL() 사용 권장 ✅
-const parsed = new URL(req.url, "http://localhost");
-
-parsed.pathname;
-parsed.searchParams.get("id");
-
-//옜날방식
-
-const url = require("url");
-
-const parsed = url.parse(req.url, true);
-
-parsed.pathname;
-parsed.query.id;
+parsed.pathname 은 동일 ㅋㅋ
+*/

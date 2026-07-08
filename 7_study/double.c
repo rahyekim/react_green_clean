@@ -7,9 +7,9 @@ void func(int** arr, int size){
 
     //main에서 넘겨준 pp를 여기서는arr 이 이름으로 받ㄷ음
     for(int i=0; i<size; i++){
-        *(*arr+1) =  (*(*arr+i)) % size;  ////???????
+        *(*arr + i) = (*(*arr+i) + i) % size;  ////p+i =
     /// 배열의 기존값에 현재 인덱스 번호를 더한뒤 5로 나눈 나머지를 다시 배열로
-                                     
+                        //*(*arr+i) = arr[i]             
     }
 
 }
@@ -21,8 +21,8 @@ int main(){
     int** pp = &p; //이중포인터 pp 만들고, 포인터 p의 주소를 가리키게함
     int num = 6; 
     
-    func(pp, 5);
-    num=arr[2];
+    func(pp, 5);  //3 2 1 4 4
+    num=arr[2];  
     printf("%d", num); //정답1 왜지...?ㅇㅅㅇ
 
     return 0;
