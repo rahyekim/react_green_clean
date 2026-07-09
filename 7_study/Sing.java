@@ -1,6 +1,10 @@
 //싱글톤(Singleton) 패턴 구현
 //:Connection 객체를 프로그램 전체에서 딱 1개만 만들어서 공유하겠다
-
+/*
+⭐static 변수 → 객체 하나 저장
+⭐private 생성자 → new 막기
+⭐static 메서드 → 객체 반환
+*/
 class Connection{
     //1.자기자신의 인스턴스를 담을 정적(static)변수를 선언
     //처음엔 비어있음
@@ -8,7 +12,7 @@ class Connection{
     //2.호출횟수를 저장할 인스턴스 변수...기본값 0
     private int count = 0;
     //3외부에서 객체를 달라고 할때 사용하는 정적메서드
-    static public Connection get() {
+    public static Connection get() {
 
     //4.만약 만들어진 객체가(_inst)없다면? (최초1회실행시)
     if(_inst == null){
@@ -45,4 +49,33 @@ public class Sing {
         System.out.println(con1.getCount());
     }
    
+}
+
+
+/*
+static 메서드는 객체에 속한 메서드가 아니라 클래스에 속한 메서드
+
+static = "객체의 것이 아니라 클래스의 것"
+즉, 객체들이 하나의 값을 함께 공유하는 변수
+ */
+
+
+class 클래스명 {
+
+    private static 클래스명 instance;
+
+
+    private 클래스명() {
+        // 외부 new 금지
+    }
+
+
+    public static 클래스명 getInstance() {
+
+        if(instance == null) {
+            instance = new 클래스명();
+        }
+
+        return instance;
+    }
 }
