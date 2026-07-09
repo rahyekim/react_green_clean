@@ -9,7 +9,7 @@ class Member{
 		
 	@Override //object의 equals() 메소드 재정의
 	public boolean equals(Object obj) {
-		if(obj instanceof Member target) {
+		if(obj instanceof Mem target) {
 			// obj가 Member타입인지 검사🕵️‍♂️하고 타입변환후 target변수에 대입
 			if(id.equals(target.id)) {
 				//➡️id문자열이 같은지 비교(본래는 주소(메모리)비교)
@@ -25,9 +25,9 @@ public class Base_0 {
 
 	public static void main(String[] args) {
 		
-		Member obj1 = new Member("blue");
-		Member obj2 = new Member("blue");
-		Member obj3 = new Member("red");
+		Mem obj1 = new Mem("blue");
+		Mem obj2 = new Mem("blue");
+		Mem obj3 = new Mem("red");
 		
 		if(obj1.equals(obj2)) {
 			System.out.println("obj1과 obj2는 동등");
