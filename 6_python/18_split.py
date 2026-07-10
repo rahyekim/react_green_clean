@@ -47,10 +47,67 @@ y= np.where(arr%2==0)
 print(y)
 
 print("-"*40)
+
 #search sort
-arr= np.array([10,14,93,41,8,7])
-z= np.searchsorted(arr,7)
-print(z)
+'''
+# 데이터를 정렬된 상태로 유지한 다음 searchsorted()
+# searchsorted() → 정렬되어 있다는 전제에서 위치 찾기
+이진 탐색 → 빠르게 위치 찾는 방법
+'''
+arr = np.array([10, 20, 30, 40, 50])
+z= np.searchsorted(arr,21)
+print(z) #2    새로운데이터가들어오면 이진탐색으로 위치 찾아서 위치에 삽입.
 
 
+#오른쪽부터 검색할 경우
+arr = np.array([9,8,7,6])
+q = arr.searchsorted(10,side="right")
+print(q) #4
+
+arr= np.array([1,3,5,7,9])
+r = np.searchsorted(arr,[2,4,6])
+print(r) #[1,2,3]
+
+
+'''
+# sort() 정렬이란 요소들을 순서대로 배열하는것
+
+asc: 내림차순 desc:오름차순
+정렬된 시퀀스란 숫자 또는 알파벳 순서, 오름차순 또는 내림차순 같이
+요소에 해당하는 순서가 있는 시퀀스를 말함 
+'''
+arr=np.array([3,2,0,1])
+print(np.sort(arr))
+
+#알파베티컬
+arr= np.array(['b','c','d','a', 'B',1])
+print(np.sort(arr)) #숫자-대문자...먼저...
+
+arr= np.array([False,True,False])
+print(np.sort(arr)) #false 0 true 1
+
+arr= np.array([[3,2,4],[5,0,1]])
+print(np.sort(arr))  #2차원 배열도 정렬가능
+
+#필터링!!
+
+#불리언 인덱싱(Boolean indexing)
+arr = np.array([41,42,43,44])
+x = [True,False,True,False]
+new_arr4= arr[x]
+print(new_arr4) #[41 43]
+
+
+filter_arr=[]
+
+for element in arr:
+    if element > 42:
+        filter_arr.append(True)
+    else:
+        filter_arr.append(False)
+
+new_arr5= arr[filter_arr]
+
+print(filter_arr)  #[False, False, True, True]
+print(new_arr5) #[43 44]
 
