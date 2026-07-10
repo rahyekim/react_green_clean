@@ -39,3 +39,6 @@ role based access control
 경우에 따라 동기식 시간 분할 다중화를 사용
 가상 채널기반의 ?????
 
+🟦 Network Address Transformation (NAT)
+IP 패킷에서 외부의 공인 IP주소와 포트주소에 해당하는 내부 IP주소를 재기록하여
+라우터를 통해 네트워크 트래픽을 주고받는 기술
