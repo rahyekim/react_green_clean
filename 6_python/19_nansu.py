@@ -8,10 +8,6 @@ from numpy import random
 
 # x= random.randint(1,100)
 # print(x)
-# y=random.randint(1,100)
-# print(y)
-# z=random.randint(1,100)
-# print(z)
 
 #???? 부동소수점... 소수점 위치를 움직여 표현하는 실수 저장 방식... 유효 숫자 + 지수(exponent)로 나눠저장
 # float
