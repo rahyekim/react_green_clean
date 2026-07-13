@@ -27,7 +27,7 @@ public class Lombok {
 		final 이나 @NonNull 붙은 필드가 있을때 이필드만 초기화시키는 생성자 포함
 		(중요하다고 표시한 애들만 받는 생성자 만들어줘)
  🟦 @EqualsAndHashCode: equals와 hashCode 메소드 포함 (객체 비교하는 방법 만들어줘)
- 🟦 @ToString : stoString()메소드포함 (객체 출력할 때 예쁘게 보여줘)
+ 🟦 @ToString : toString()메소드포함 (객체 출력할 때 예쁘게 보여줘)
  */
 
 
