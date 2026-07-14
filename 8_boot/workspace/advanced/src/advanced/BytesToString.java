@@ -1,7 +1,6 @@
 package advanced;
-import java.io.UnsupportedEncodingException;
-
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 /*
 String: 문자열을 저장하고 조작할때 사용
@@ -45,6 +44,22 @@ public class BytesToString {
         String data2 = new StringBuilder().append("DEF").insert(0, "ABC")
         		.delete(3,4).toString();
         System.out.println(data2);
+        
+       System.out.println("---------");
+       
+       String data3 = "황현진&문현빈, 이정후";
+       String[] arr= data3.split("&|,");
+       for (String token:arr) {
+    	   System.out.println(token);
+       }
+       System.out.println();
+       
+       String data4 = "황현진/문현빈/이정후"; //ctrl+shift+O import됨...씐기
+       StringTokenizer st = new StringTokenizer(data4, "/");
+       while(st.hasMoreTokens()) {
+    	   String token = st.nextToken();
+    	   System.out.println(token);
+       }
         
     }
 

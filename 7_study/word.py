@@ -1,8 +1,12 @@
 
-a= "engineer information processing"
-b= a[:3] #eng
-c= a[4:6] #ne
-d = a[28:] #ing
+a={'한국','중국','일본'} # {} set
 
-e=b+c+d 
-print(e)
+a.add('베트남')
+a.add('중국')
+
+print(a)
+
+'''
+집합특징: 중복을 허용하지 않음
+순서가 없음: 저장된 순서와 출력되는 순서가 다를 수있음 
+'''

@@ -17,10 +17,19 @@ int main(){
 
     for ( i=0 ; p[i]!='\0'; i++){ //널문자 만날때까지...
 
+        if (p[i] >= 'A' && p[i] <= 'Z') {
+            result[i] = (p[i] - 'A' + 3) % 26 + 'A';
+        }
+        else if (p[i] >= 'a' && p[i] <= 'z') {
+            result[i] = (p[i] - 'a' + 3) % 26 + 'a';
+        }
+        else {
+            result[i] = p[i];   // 숫자, 공백 등은 그대로
+        }
     }
 
     result[i]= '\0';
-    printf("");
+    printf("%s", result); //LW lv 8
     
     
     return 0;
