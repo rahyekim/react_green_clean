@@ -19,3 +19,4 @@ size=1000/ 동전던지기 100번 을  1000번반복
 
 sns.displot(data,kind="kde") #데이터 분포를 부드러운 곡선으로
 plt.show()
+
