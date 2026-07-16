@@ -1,24 +1,16 @@
 #include <stdio.h>
 
-
-typedef struct {
-    int n;
-    int g;
-} A;
+struct good{
+    char name[10];
+    int age;
+};
 
 int main(){
 
-    A a[2];    //struct A a[2]
-
-    for (int i=0; i<2 ; i++){
-        a[i].n = i; 
-        a[i].g = i+1;
-    }
-
-    printf("%d\n", a[0].n + a[1].g); //0 2
-    
-    
-    
-
-    return 0;
+    struct good s[] = {"jin", 22, "Lee", 25, "Seo", 50 , "Park", 34};
+    struct good *p;
+    p = s; 
+    p++;
+    printf("%s", p-> name);
+    printf("%d", p-> age);
 }

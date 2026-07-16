@@ -175,4 +175,36 @@ const reducer = (state, action)=>{
 export default function App(){
 
     const [state, dispatch] = useReducer(reducer, [])
+    const [input , setInput] = useState("");
+
+    const reduce=(state, action)=>{
+        switch(action.type){
+            case "Add":
+                return[
+                    ...state,
+                    {
+                        id: Date.now(),
+                        text: action.payload,
+                        isDone: false
+                    }
+                ];
+            case "Delete":
+                return (
+                state.filter(todo=> (
+                    todo.id !== action.payload
+                )))
+            
+            case "Toggle":
+                return(
+                    state.map(todo=>
+                        todo.id === action.payload ?
+                        {...todo, isDone: !todo.isDone} :
+                        todo
+                    )
+                )
+            default:
+                return state;
+        }
+
+    }
 }
