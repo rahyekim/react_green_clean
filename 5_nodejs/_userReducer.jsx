@@ -208,3 +208,38 @@ export default function App(){
 
     }
 }
+
+const reduce = (state,action)=>{
+    switch(action.type){
+        case "ADD":
+             return[
+                ...state,
+                {
+                    id: Date.now(),
+                    text: action.payload,
+                    isDone: False,
+                }
+             ];
+        case "DELETE":
+            return (
+                state.filter(todo=> todo.id !== action.payload)
+            )
+        case "TOGGLE":
+            return (
+                state.map(todo=>
+                    todo.id === action.payload 
+                    ? {...state, isDone : !todo.isDone }
+                    : todo
+                )
+            )
+        default:
+            return state;
+       
+    }
+};
+export default function App(){
+
+const [state, dispatch] = useReducer(reducer, []);
+const [input, setInput] = useState("");
+
+}
