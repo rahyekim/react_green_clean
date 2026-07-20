@@ -52,9 +52,10 @@ useEffect(()=>{
                 </tr>
             </thead>
             <tbody>
-                {posts.map(post=>( //리액트가 각각의 줄을 구분할 수 있게 고유한 id를 줌
+                {/* ✨화면에는 항상 연속된 번호표시(index+1 :1,2,3,4..) */}
+                {posts.map((post,index)=>( //리액트가 각각의 줄을 구분할 수 있게 고유한 id를 줌
                     <tr key={post.id}>
-                        <td>{post.id}</td>
+                        <td>{index+1}</td> 
                         <td>{post.title}</td>
                         <td>{post.author}</td>
                         <td>{new Date(post.created_at).toLocaleDateString()}</td>

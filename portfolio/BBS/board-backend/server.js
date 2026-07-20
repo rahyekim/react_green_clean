@@ -107,3 +107,23 @@ pakage.json=>
     "dev": "nodemon server.js"  //npm run dev 가능단축키!&&서버가 알아서 자동으로 새로고침
   },
 */
+
+
+
+/*
+CREATE database board_db;
+
+USE board_db;
+
+CREATE TABLE posts(
+id INT AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(255) NOT NULL,
+content TEXT NOT NULL,
+author VARCHAR(100) NOT NULL,
+created_at TIMESTAMP DEFAULT current_timestamp
+); 
+
+SELECT * FROM posts;
+*/
+
+
