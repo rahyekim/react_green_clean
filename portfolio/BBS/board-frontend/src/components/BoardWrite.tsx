@@ -38,7 +38,7 @@ export default function BoardWrite (){
     }
   return(
     <>
-    <S.FromContainer>
+    <S.FormContainer>
         <h4 className="mb-4 font-bold">게시글 작성</h4>
         {/*폼이 제출될때(submit) handlesubmit함수를 실행 */}
         <form onSubmit={handleSubmit}>
@@ -84,7 +84,7 @@ export default function BoardWrite (){
                 >제출</button>
             </div>
         </form>
-    </S.FromContainer>
+    </S.FormContainer>
     </>
   )
 };

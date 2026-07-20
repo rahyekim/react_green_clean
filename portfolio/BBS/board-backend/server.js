@@ -100,7 +100,7 @@ package.json 프로젝트 설명서
 
 
 /*백엔드
-npm install -D nodemon
+npm install -D nodemon :서버가 알아서 자동으로 새로고침
 
 pakage.json=>
 "scripts": {

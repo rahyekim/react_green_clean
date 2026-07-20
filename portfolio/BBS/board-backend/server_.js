@@ -18,9 +18,22 @@ const db = mysql.createPool({
     user: 'root',
     password: '2525',
     database: 'board_db'
-})
+});
 
 //db.connect()..삭제
+//🔥 [추가] 서버 시작 시 DB 접속 테스트 진행
+
+(async ()=>{
+    try{
+        const conn = await db.getConnection(); //연결테스트
+        console.log("✅ MySQL DB 연결 성공!");
+        conn.release(); //사용 완료 후 반납 
+    }catch(err){
+        console.error("❌ MySQL DB 연결 실패! (비밀번호나 설정을 확인하세요)")
+        console.error(err.message); //어떤 에러인지 상세 출력
+
+    }
+})();
 
 //조회
 app.get('/api/posts', async (req,res)=>{
@@ -32,7 +45,7 @@ app.get('/api/posts', async (req,res)=>{
         console.error(err);
         res.status(500).json({error: "데이터를 불러오는 중 오류 발생"})
     }
-})
+});
 
 //등록
 app.post('/api/posts', async(req,res)=>{
@@ -55,7 +68,7 @@ app.post('/api/posts', async(req,res)=>{
         console.error("DB 등록에러", err);
         res.status(500).json({message: "게시글 등록 실패 "})
     }
-})
+});
 
 app.listen(5000, ()=>{
     console.log("server running on port 5000");
