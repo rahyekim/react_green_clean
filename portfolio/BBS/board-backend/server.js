@@ -49,7 +49,7 @@ app.post('/api/posts', (req,res)=>{
     //새로운 게시글을 입력하는 sql문장 ⭐? 자리에 실제 데이터가 들어감..
     const sql = 'INSERT INTO posts ( title, content, author) values (?,?,?)'
    
-    db.query(sql,[title, content, author], (err,result)=>{
+    db.query(sql,[title, content, author], (err,result)=>{ //🟦(?,?,?)+ [] 안전힌방식
         if(err) return res.status(500).send(err);
 
         console.log('DB 저장 결과:', result);
@@ -66,7 +66,12 @@ app.listen(5000,()=>{ //5000번 port에서 실행
 })
 
 
+/*아주 위험하고 취약한 코드예시
+const sql = `INSERT INTO posts (title, content, author)
+ VALUES ('${title}', '${content}', '${author}')`;
+ 🟦(?,?,?)+ [] :안전힌방식
 
+*/
 /*
  db.query 완료 후 들어오는 result 객체의 실제 모습
 {
@@ -80,6 +85,8 @@ app.listen(5000,()=>{ //5000번 port에서 실행
 }
  */
 
-//프론트
-//npm create vite@latest board-frontend -- --template react-ts
+// 프론트
+// npm create vite@latest board-frontend -- --template react-ts
 // npm install react-router-dom axios bootstrap styled-components
+// 타입스크립트 버젼으로 한번 더 설치
+// npm install -D @types/styled-components
