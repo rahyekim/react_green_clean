@@ -15,7 +15,7 @@ const app = express(); //express실행객체생성..app변수에 담기..(서버
 app.use(cors());  // 모든 다른 곳, 컴퓨터(리액트:프론트)의 접속을 허용
 app.use(express.json()); //클라이언트가(리액트)가 보낸 데이터(JSON 문자열형태)를 백엔드(서버)가 읽을 수 있게(자바스트립트 객체로)변환해 준다
 
-//글을 쓸때 아이디,패스워드 (데이터베이스 연결 설정)
+//글을 쓸때 아이디,패스워드,키 (데이터베이스 연결 설정)
 const db= mysql.createConnection({
     host: 'localhost', //현재는 로컬호스트지만...aws사용할때는 엔드포인트 사용
     user: 'root', //mysql 사용자명 기본
@@ -49,15 +49,15 @@ app.post('/api/posts', (req,res)=>{
     //새로운 게시글을 입력하는 sql문장 ⭐? 자리에 실제 데이터가 들어감..
     const sql = 'INSERT INTO posts ( title, content, author) values (?,?,?)'
    
-    db.query(sql,[title, content, author], (err,result)=>{ //🟦(?,?,?)+ [] 안전힌방식
+    db.query(sql,[title, content, author], (err,result)=>{ //⭐(?,?,?)+[] 안전힌방식
         if(err) return res.status(500).send(err);
 
         console.log('DB 저장 결과:', result);
         res.send('Post added,,,');
         // 리액트로 보내기
-        res.status(201).json({ success: true, insertId: result.insertId,
-            message: 'Post added successfully!' 
-         });
+        // res.status(201).json({ success: true, insertId: result.insertId,
+        //     message: 'Post added successfully!' 
+        //  });
     })
 });
 
@@ -85,8 +85,25 @@ const sql = `INSERT INTO posts (title, content, author)
 }
  */
 
-// 프론트
+/*
+⭐ npm init -y는 Node.js 프로젝트를 빠르게 시작하는 명령어(기본package.json을 만드는 명령어)
+npm install express mysql2 cors             
+package.json 프로젝트 설명서 
+*/
+
+//⭐ 프론트
 // npm create vite@latest board-frontend -- --template react-ts
 // npm install react-router-dom axios bootstrap styled-components
 // 타입스크립트 버젼으로 한번 더 설치
 // npm install -D @types/styled-components
+
+
+/*백엔드
+npm install -D nodemon
+
+pakage.json=>
+"scripts": {
+    "start": "node server.js",  //나중에 배포할 때 쓸 것!
+    "dev": "nodemon server.js"  //npm run dev 가능단축키!&&서버가 알아서 자동으로 새로고침
+  },
+*/

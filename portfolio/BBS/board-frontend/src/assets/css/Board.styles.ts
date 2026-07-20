@@ -12,15 +12,20 @@ text-decoration: none;
 font-weight: bold;
 &:hover{
     background-color: #5a6268;
-    color:antiquewhite;
+    color:#fff;
 }
+// 3단 콤보로 정중앙 정렬
+display: flex;
+align-items: center;     // 위아래 정중앙
+justify-content: center  // 좌우 정중앙
+
 `;
 
 export const FromContainer = styled.div`
 
-background-color: #f8f9fa;
+background-color: #e5eff8 ; //#f8f9fa
 padding: 20px;
 border-radius: 10px;
-box-shadow: 0 4px 6px rgba(0,0,0,.1); //0.1
+box-shadow: 0 0px 20px rgba(0,0,0,.15); //0.1
 //?????
 `;

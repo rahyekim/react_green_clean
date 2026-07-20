@@ -36,12 +36,12 @@ useEffect(()=>{
             <S.CustomButton to='/write'>글쓰기</S.CustomButton>
         </div>
 
-        <table className="table table-hover table-borderd text-center">
+        <table className="table table-hover table-bordered text-center">
             <colgroup>
-            <col style={{width:"10%"}}/>
-            <col style={{width:"50%"}}/>
-            <col style={{width:"20%"}}/>
-            <col style={{width:"20%"}}/>
+                <col style={{width:"10%"}}/>
+                <col style={{width:"50%"}}/>
+                <col style={{width:"20%"}}/>
+                <col style={{width:"20%"}}/>
             </colgroup>
             <thead className="table-light">
                 <tr>
@@ -52,9 +52,21 @@ useEffect(()=>{
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                </tr>
+                {posts.map(post=>( //리액트가 각각의 줄을 구분할 수 있게 고유한 id를 줌
+                    <tr key={post.id}>
+                        <td>{post.id}</td>
+                        <td>{post.title}</td>
+                        <td>{post.author}</td>
+                        <td>{new Date(post.created_at).toLocaleDateString()}</td>
+                    </tr>
+                ) 
+                )}
+                {/* ✨만약 게시글이 없다면 보여줄 화면✨꼭! */}
+                {posts.length === 0 && (
+                    <tr>
+                        <td colSpan={4}>게시글이 없습니다.</td>
+                    </tr>
+                )}
             </tbody>
         </table>
         </>
