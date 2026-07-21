@@ -17,7 +17,7 @@ interface Post {
 }
 
 //컴포넌트의 상태와 데이터 가져오기(logic)
-export const BoardList = () => {
+export default function BoardList  () {
 /*
 [변수명, 변수를 바꾸는 함수] = useState<데이터모양>(초기값);
 서버에서 받아올 게시글 목록을 저장할 바구니를 만든다
@@ -54,7 +54,7 @@ const handleDelete = async(id:number)=>{
             fetchPosts(currentPage); //삭제후 새로고침..
         }catch(err){
             console.error(err);
-            alert("삭제 도중 실패") ///?????
+            alert("삭제 도중 실패");
         }
     }
 }

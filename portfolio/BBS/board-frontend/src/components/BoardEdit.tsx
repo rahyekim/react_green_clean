@@ -14,7 +14,8 @@ export default function BoardEdit(){
     const navigate = useNavigate();
 
     const {id} = useParams<{id:string}>();  //예) 현재 URL /edit/7 이면 id = "7"를 반환
-    
+    // {id: "7"}    
+       
     useEffect(()=>{
         axios.get( `http://localhost:5000/api/posts/${id}`)
         .then(res=> {

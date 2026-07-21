@@ -46,7 +46,7 @@ db.connect((err)=>{
 })
 
 
-//게시글 조회 불러오기(Get)
+//게시글 조회 불러오기(Get) 콜백함수버젼
 app.get('/api/posts', (req,res)=>{ 
   const sql = 'select * from posts order by created_at DESC'
   //sql실행
@@ -73,7 +73,6 @@ app.get('/api/posts', async (req,res)=>{
     }
 })
 
-
 const express= require('express')
 const mysql = require('mysql2/promise')
 const cors = require('cors')
@@ -95,7 +94,7 @@ const db = mysql.createPool({
     database: 'board_db'
 })
 
-//조회
+//조회..페이징없는버젼..이런건없다...
 app.get('/api/posts', async (req,res)=>{
     const sql = 'select * from posts order by created_at desc';
     try{
@@ -132,4 +131,72 @@ app.post('/api/posts', async(req,res)=>{
 
 app.listen(5000, ()=>{
     console.log("server running on port 5000");
+})
+
+
+//➡️ 페이징 🔥
+
+/* 
+'/api/posts?page=3'
+?뒤부터 쿼리 req.quary.page = "3"
+'/api/posts/3
+경로변수 req.params.id = "3"
+
+*/
+
+app.get('/api/posts', (req,res)=>{
+
+    const page = parseInt(req.query.page) || 1 ;
+    const limit = 6;
+    const offset = (page-1)*limit ;
+
+    //전체게시물수/한페이지 나오는 수 = 총페이지수
+    const countSql='select count(*) as total from posts';
+    db.query(countSql, (err,result)=>{
+        if(err) return res.status(500).send(err);
+
+        console.log(result); //result = [{total: 갯수}]
+
+        const total = result[0].total;
+        const totalPages= Math.ceil(total/limit);
+
+        //해당페이지 게시물만 가져오기
+        const sql= 'select * from posts order by created_at desc limit ? offset ?'
+
+        db.query(sql,[limit, offset] ,(err,result)=>{
+            if(err) return res.status(500).send(err);
+            res.json({posts: result, totalPages, currentPage: page })
+
+        })
+    })
+})
+
+//📝 수정 1단계 데이터 불러오기get
+app.get('/api/posts/:id', (req,res)=>{
+    const sql = 'select * from posts where id = ?';
+    db.query(sql, [req.params.id], (err,result)=>{
+        if(err) res.status(500).send(err);
+        res.send(result[0])
+    })
+})
+
+//📝 2단계 수정
+app.put('/api/posts/:id', (req,res)=>{
+    const {title, content, author} = req.body;
+    const sql = 'update posts set title = ? ,content =?, author=? where id = ?';
+    db.query(sql, [title,content,author,req.params.id], (err, result)=>{
+        if(err) return res.status(500).send(err);
+        res.send("Post updated");
+    })
+})
+
+//⚠️ 삭제 delete
+
+app.delete('/api/posts/:id', (req,res)=>{
+
+    const sql='delete from posts where id=?'
+    db.query(sql, [req.params.id], (err,result)=>{
+        if(err) return res.status(500).send(err);
+        res.send("post deleted..")
+    })
 })

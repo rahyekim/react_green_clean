@@ -158,7 +158,7 @@ const sql = `INSERT INTO posts (title, content, author)
 
 */
 /*
- db.query 완료 후 들어오는 result 객체의 실제 모습
+ db.query 등록 완료 후 들어오는 result 객체의 실제 모습
 {
   fieldCount: 0,
   affectedRows: 1,

@@ -1,3 +1,10 @@
+/*
+axios.get('/api/posts') //조회
+axios.post('/api/posts', data) //등록
+axios.put('/api/posts/1' ,data) //수정
+axios.delete('/api/posts/1')
+
+ */
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

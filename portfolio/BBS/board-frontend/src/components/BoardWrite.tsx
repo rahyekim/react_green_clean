@@ -5,7 +5,7 @@ import axios from "axios";
 
 import * as S from "../assets/css/Board.styles"
 
-export default function BoardWrite (){
+export default function BoardWrite  () {
 
     //사용자가 입력할 제목,작성자,내용을 각각 담을 바구니(상태)
     const [title,setTitle]=useState('');

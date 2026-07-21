@@ -1,7 +1,7 @@
 //1) 라우팅설정
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
-import {BoardList} from './components/BoardList'
+import BoardList from './components/BoardList'
 import BoardWrite from './components/BoardWrite'
 import BoardEdit from './components/BoardEdit'
 
