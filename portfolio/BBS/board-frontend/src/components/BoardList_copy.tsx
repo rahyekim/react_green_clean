@@ -32,7 +32,6 @@ export const BoardList = ()=>{
         //.then(({data})=>setPosts(data)) 구조분해할당가능
         .catch(err=> console.error("게시글 로딩실패",err));
     },[])
-    
     return(
         <>
         <div className="d-flex justify-content-between mb-3">
