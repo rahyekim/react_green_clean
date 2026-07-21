@@ -40,7 +40,7 @@ app.get('/api/posts', async (req,res)=>{
     const sql = 'select * from posts order by created_at desc';
     try{
         const [rows] = await db.query(sql)
-        res.json(rows);
+        res.json(rows);  //status(200) 생략
     }catch(err){
         console.error(err);
         res.status(500).json({error: "데이터를 불러오는 중 오류 발생"})
@@ -52,7 +52,7 @@ app.post('/api/posts', async(req,res)=>{
     const {title,content,author} = req.body;
 
     //유효성검사 
-    if(!title || !content || !author){
+    if(!title.trim() || !content.trim() || !author.trim()){
         return res.status(400).json({ error: "제목과 내용은 필수 입력 항목입니다." })
     }
     const sql = 'insert into posts( title, content, author) values(?,?,?)'

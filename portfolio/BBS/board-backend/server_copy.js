@@ -32,7 +32,7 @@ axios.delete('/users/1')   // 삭제
  */
 
 //db연결 설정...키..패스워드.. //연결 여러개 createPool()
-const db = mysql.createPool({ //mysql port:3306 디폴트
+const db = mysql.createConnection({ //mysql port:3306 디폴트
     host: 'localhost',
     user: 'root',
     password: '2525',
