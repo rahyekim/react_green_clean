@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 import {BoardList} from './components/BoardList'
 import BoardWrite from './components/BoardWrite'
+import BoardEdit from './components/BoardEdit'
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path='/' element={<BoardList/>}/>
           <Route path='/write' element={<BoardWrite/>}/>
+          <Route path='/edit/:id' element={<BoardEdit/>}/>
         </Routes>
       </div>
     </BrowserRouter>

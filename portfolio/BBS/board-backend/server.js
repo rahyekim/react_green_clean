@@ -30,6 +30,58 @@ db.connect((err)=>{
     console.log('MySql connected!')
 })
 
+//[🔥페이징]   
+
+/*
+URL
+│
+├── /api/posts          → req.path
+│
+├── ?page=3             → req.query.page
+│
+└── /:id                → req.params.id
+
+ ✔️Query String(?뒤에 붙는것) => req.query.page
+ ?key=value 형태의 데이터 영역 
+
+ ✔️Route Parameter (경로 변수) :주소자체에 포함  => req.params.id
+ /api/posts/3  
+
+ ✔️body  POST 요청 데이터 => req.body.title
+
+*/
+app.get('/api/posts', (req,res)=>{
+    const page= parseInt(req.query.page) || 1; //클라이언트가 page파라미터(문자열)를 안보내면 1페이지로 간주..
+    const limit = 5; //한페이지당 5개씩 출력
+    const offset= (page-1) * limit ; //  건너뛸 데이터 개수 
+    //데이털 가져올때 몇개를 건너뛰고 가져올지 계산... 1page 2page 5개건너뛰고 6-10개 보여줌
+
+    //page는 사람이 보는 번호고, offset은 DB가 이해하는 위치
+
+    //💡 전체 게시물 수 구하기
+    const countSql = 'select count(*) as total from posts'
+    db.query(countSql, (err, countResult)=>{
+        if(err) return res.status(500).send(err);
+
+        console.log(countResult); // [ { total: 7 } ]
+        
+        const total = countResult[0].total;  //✨✨DB가 알려준 전체 게시물 개수를 변수에 담는다 
+        const totalPages = Math.ceil(total/limit); //🌿ceil 올림처리..
+        
+        //해당페이지의 게시물만 가져오기
+        const sql= 'select * from posts order by created_at desc limit ? offset ?';
+        //우리가 계산한 limit(5)와 offset을 넣어서 잘라옴
+        db.query(sql, [limit, offset], (err,result)=>{
+            if(err) return res.status(500).send(err);
+            res.json({posts: result, totalPages, currentPage: page})
+            //결과데이터(게시물들)외 페이징 정보(총페이지,현재페이지)를 하나로 묶어서 프론트엔드로 보냄..
+        })
+    })
+})
+
+
+/*
+//📌 페이징을 하지 않을 때.... 페이징은 꼭해줘야하거덩?
 //게시글 불러오기(GET)
 //사용자가 서버주소 /api/posts 로 요청하면 실행 
 app.get('/api/posts', (req,res)=> {
@@ -41,8 +93,9 @@ app.get('/api/posts', (req,res)=> {
         res.send(result); //에러가 없다면 가져온 게시글 데이터를 사용자에게 전송
     })
 });
+*/
 
-//게시글 작성(POST)
+//📚 게시글 작성(POST)
 //사용자가 게시글 정보를 담아 서버주소 /api/posts 로 보내면 실행
 app.post('/api/posts', (req,res)=>{
     //사용자가 보낸 데이터에서(body) 제목,내용,작성자 정보를 꺼내옴
@@ -62,10 +115,41 @@ app.post('/api/posts', (req,res)=>{
     })
 });
 
-app.listen(5000,()=>{ //5000번 port에서 실행 
+//📝 put 수정페이지 : 우선 페이지를 불러와야함(get) 그후에=> update
+app.get('/api/posts/:id', (req, res)=>{
+    const sql = 'select * from posts where id = ?'
+    db.query(sql, [req.params.id], (err,result)=>{
+        if(err) return res.status(500).send(err);
+        res.send(result[0]); //객체하나..
+    })
+})
+
+//📝 put 수정페이지2
+
+app.put('/api/posts/:id', (req,res)=>{
+    const {title, content, author} = req.body;
+    const sql = 'update posts set title = ? , content= ?, author =? where id = ?'
+    db.query(sql, [title,content,author, req.params.id], (err, result)=>{
+        if(err) return res.status(500).send(err);
+        res.send('Post updated');
+    })
+});
+
+//⚠️ 삭제 delete
+app.delete('/api/posts/:id', (req,res)=>{
+    const sql = 'delete from posts where id = ?'
+    db.query(sql, [req.params.id], (err, result)=>{
+        if(err) return res.status(500).send(err);
+        res.send("post deleted ");
+    })
+})
+
+//5000번 port에서 실행 
+app.listen(5000,()=>{ 
     console.log('Server running on port 5000');
 })
 
+//⭐Rest API => get, post, put, delete CURD
 
 /*아주 위험하고 취약한 코드예시
 const sql = `INSERT INTO posts (title, content, author)
