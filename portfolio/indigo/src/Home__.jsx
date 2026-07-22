@@ -16,7 +16,38 @@ import blog01 from './assets/images/p-images/blog01.jpg'
 import blog02 from './assets/images/p-images/blog02.jpg'
 import blog03 from './assets/images/p-images/blog03.jpg'
 
+import { PromItem } from './PromItem__'
+
+const promoList = [  //고정데이터는 컴포넌트밖에 선언⭐
+    {
+        image: promo01,
+        alt: "house icon",
+        title: "HOME",
+        desc: "Lorem ipsum..."
+    },
+    {
+        image: promo02,
+        alt: "person icon",
+        title: "WE ARE",
+        desc: "Lorem ipsum..."
+    },
+    {
+        image: promo03,
+        alt: "work icon",
+        title: "WORK",
+        desc: "Lorem ipsum..."
+    },
+    {
+        image: promo04,
+        alt: "blog icon",
+        title: "BLOG",
+        desc: "Lorem ipsum..."
+    }
+];
+
 const Home = () => {
+
+   
 
     return(
         <>
@@ -35,13 +66,26 @@ const Home = () => {
             <section className="promotion-section">
                 <div className="container">
                     <ul className="promo-list">
-                        <li>
-                            <a href="">
-                                <img src={promo01} alt="house icon" />
-                                <h3>HOME</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
-                            </a>
-                        </li>
+
+                        {/*1. PromoItem 컴포넌트만들기*/}
+                        <PromItem
+                        img={promo01} alt='house icon' title='Home'
+                        description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?'
+                        />
+                        {/*2번 데이터+map*/}
+                        {promoList.map(item=>(
+                         
+                                <PromItem
+                                key={item.title}
+                                img={item.image}
+                                alt={item.alt}
+                                title={item.title}
+                                description={item.desc}
+                                />
+                            
+                        ))}
+                
+
                         <li>
                             <a href="">
                                 <img src={promo02} alt="person icon" />

@@ -14,13 +14,14 @@ h1{
     margin: 0;
 }
 `;
-
+//⭐그리드 GridRow & CardColumn
 export const GridRow = styled.div`
 
 display: flex;
 flex-wrap: wrap;
 margin-right: -0.75rem; //컬럼의 padding(0.75rem)만큼 다시 당겨주는 것
-margin-left: -0.75rem; //컬럼 padding 보정
+margin-left: -0.75rem; 
+//⭐컬럼 padding 보정:카드가 전체 컨테이너 양 끝에 딱 닿게
 `;
 
 export const CardColumn = styled.div`
@@ -46,10 +47,11 @@ export const StatCard = styled.div<{borderColor:string}>`
 position: relative;
 display: flex;
 flex-direction: column;
-min-width: 0;
+min-width: 0; /* Flexbox 찌그러짐 방지용 필수*/
+//상자 바깥으로 삐져나가는 버그를 막아주는 강력한 안전장치
 word-wrap: break-word; //장문이 나왔을때 끊어줘..
 background-color: #fff;
-background-clip: border-box;
+background-clip: border-box; //하얀 배경색이 테두리 끝까지 깔끔하게 채워지도록 하는 배경 설정
 border: 1px solid #e3e6f0;
 border-radius: 0.35rem;
 border-left: 0.25rem solid ${props=> props.borderColor};
@@ -66,7 +68,5 @@ padding: 1.25rem;
 display: flex;
 justify-content: space-between;
 align-items: center;
-
-
 
 `;

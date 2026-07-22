@@ -9,7 +9,8 @@ render는 html화면을 띄울때 사용
 '''
 #define 함수기능정의
 def members(request):
-    # return HttpResponse("hello world") #return 함수 일 마치고 결과물을 돌려줌
+    # return HttpResponse("hello world") 
+    # #return 함수 일 마치고 결과물을 돌려줌
     template = loader.get_template('members.html') ## 1. 템플릿 불러오기
     return HttpResponse(template.render()) # 2. 렌더링해서 브라우저로 쏘기!
 
@@ -18,12 +19,12 @@ def main(request):
     return HttpResponse(template.render())  # 2. 렌더링해서 브라우저로 쏘기!
 
 def python(request):
-    template = loader.get_template('python.html')  ## 1. 템플릿 불러오기
+    template = loader.get_template('python.html')  
     context = {
         "greeting": 2,
     }
-    return HttpResponse(template.render(context,request))  # 2. 렌더링해서 브라우저로 쏘기!
+    return HttpResponse(template.render(context,request))  
 
 def ufunc(request):
-    template = loader.get_template('ufunc.html')  ## 1. 템플릿 불러오기
-    return HttpResponse(template.render())  # 2. 렌더링해서 브라우저로 쏘기!
+    template = loader.get_template('ufunc.html')  
+    return HttpResponse(template.render())  
