@@ -6,8 +6,5 @@ public class Home {
 		System.out.println("전등을 켭니다");
 		
 	}
-	public void rent() {
-		
-	}
-
+	
 }

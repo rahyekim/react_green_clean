@@ -19,7 +19,7 @@ export const SideBar:React.FC = ()=>{
 
             <NavItem className="active">
                 <NavLink href="/">
-                <i className="fas fa-fw fa-tachometer-alt"></i>
+                    <i className="fas fa-fw fa-tachometer-alt"></i>
                 </NavLink>
             </NavItem>
 

@@ -24,11 +24,14 @@ export const Layout:React.FC<LayoutProps> =({children})=>{
         <>
         <Wrapper id="wrapper">
             <SideBar />
+
             <ContentWrapper id="content-wrapper">
+                <TopBar />
+
                 <MainContent id="content">
-                    <TopBar />
                     <ContainerFluid>{children}</ContainerFluid>
                 </MainContent>
+                
             </ContentWrapper>
         </Wrapper>
         </>

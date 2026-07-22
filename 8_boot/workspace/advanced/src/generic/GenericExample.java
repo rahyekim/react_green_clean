@@ -56,7 +56,14 @@ public class GenericExample {
 
 		Car car = product2.getKind();
 		String carModel = product2.getModel();
-
+		
+		HomeAgency homeAgency = new HomeAgency();
+		Home home = homeAgency.rent();
+		home.turnOnLight();
+		
+		CarAgency carAgency = new CarAgency();
+		Car car3 = carAgency.rent();
+		car.run();
 		
 			
 	}	

@@ -1,9 +1,9 @@
 package generic;
 
-public class HomeAgency implemens Rentable<Home>{
+public class HomeAgency implements Rentable<Home>{
 	
 	@Override
-	public Home rent() {  ////rent????
+	public Home rent() { 
 		return new Home();
 	}
 	

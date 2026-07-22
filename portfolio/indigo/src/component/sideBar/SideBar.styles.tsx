@@ -5,7 +5,8 @@ import styled from "styled-components";
 export const SideBarContainer = styled.ul`
 
 width: 14rem !important;
-min-height: 100vh; 
+/* min-height: 100vh;  */
+height: 100%; /* 🔥 추천! */
 background-color: #4e73df;
 background-image: linear-gradient(180deg, #4e73df 10%, #224ade 100% );
  //180도의 선형..그라데이션..
