@@ -16,7 +16,7 @@ export const Layout =({children}:LayoutProps)=>{
             
             <ContentWrapper>
                 <TopBar/>
-                
+
                 <MainContent>
                     <ContainerFluid>{children}</ContainerFluid>
                 </MainContent>
@@ -28,3 +28,13 @@ export const Layout =({children}:LayoutProps)=>{
     )
     
 }
+
+
+/*
+wrapper : flex:display height:100vh width:100% overflow:hidden
+    ㄴ sidebar 
+    ㄴ contentWrapper d-flex flex-direction:column overflow:hidden flex:1
+            ㄴ topbar
+            ㄴ maincontent flex:1 overflow-y=auto
+
+ */
