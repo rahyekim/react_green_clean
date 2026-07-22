@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--반응형웹-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>{% block title %}{% endblock %}</title>
+    {% load django_bootstrap5 %} <!--cdn-->
+    {%  bootstrap_css %} <!--cdn-->
+    {%  bootstrap_javascript %} <!--cdn-->
+<!-- jsp에선 <%자바코드%>-->
+</head>
+<body>
+{%  include "include/nav.html" %}
+
+{% block content %}
+{% endblock %}
+
+{%  include "include/footer.html" %}
+
+</body>
+</html>

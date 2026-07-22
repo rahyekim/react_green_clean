@@ -136,11 +136,14 @@ export default function BoardList (){
         {/* 🚀 페이징 */}
         <nav>
             <ul className="pagination justify-content-center mt-4">
+
+                {/* 이전 버튼 */}
                 <li className={`page-item ${currentPage ===1 ? 'disabled': ""}`}>
                     <button className="page-link"
                     onClick={()=>setCurrentPage(currentPage-1)}
                     >이전</button>
                 </li>
+                {/* 페이지 번호 목록 */}
                 {Array.from({length: totalPages},(_,i)=> i+1).map(page=>(
                     <li key={page} className={`page-item ${currentPage === page? 'active': ''}`}>
                         <button
@@ -149,7 +152,8 @@ export default function BoardList (){
                         >{page}</button>
                     </li>
                 ))}
-
+                
+                {/* 다음 버튼 */}
                 <li className={`page-item ${currentPage ===totalPages ? 'disabled': ""}`}>
                     <button className="page-link"
                     onClick={()=>setCurrentPage(currentPage+1)}

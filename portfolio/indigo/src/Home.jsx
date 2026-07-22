@@ -44,14 +44,14 @@ const Home = () => {
                         </li>
                         <li>
                             <a href="">
-                                <img src={promo02} alt="house icon" />
+                                <img src={promo02} alt="person icon" />
                                 <h3>WE ARE</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, minus.</p>
                             </a>
                         </li>
                         <li>
                             <a href="">
-                                <img src={promo03} alt="house icon" />
+                                <img src={promo03} alt="work icon" />
                                 <h3>WORK</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
 
@@ -59,7 +59,7 @@ const Home = () => {
                         </li>
                         <li>
                             <a href="">
-                                <img src={promo04} alt="house icon" />
+                                <img src={promo04} alt="blog icon" />
                                 <h3>BLOG</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
                             </a>

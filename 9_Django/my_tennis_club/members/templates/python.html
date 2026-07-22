@@ -1,0 +1,27 @@
+{% extends "master.html" %}
+
+{% block title %}
+    파이썬 기초연습
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h1 class="mt-4 mb-2">
+                    if elif else
+                </h1>
+                {% if greeting == 1 %}
+                <h5>Hello</h5>
+                {% elif greeting == 2 %}
+                <h5>world</h5>
+                {% else %}
+                <h5>Bye</h5>
+                {% endif %}
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+{% endblock %}
