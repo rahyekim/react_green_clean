@@ -12,6 +12,8 @@
   "dependencies": {
     "bootstrap": "^5.3.8",
     "react": "^19.2.6",
+    "react-bootstrap": "^2.10.10",
+    "react-daum-postcode": "^4.0.0",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.18.1",
     "sass": "^1.101.0",

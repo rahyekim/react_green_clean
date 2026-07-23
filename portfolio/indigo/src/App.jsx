@@ -7,6 +7,8 @@ import Header from "./include/Header" // import 컴포넌트명 from 'path'
 import Footer from "./include/Footer"
 import Slider from "./include/Slider"
 import Home from "./Home"
+import { Join } from "./admin/sub/Join"
+import { Login } from "./admin/sub/Login"
 
 function App() {
 
@@ -22,7 +24,10 @@ function App() {
           <Footer />
         </div>
       }/>
+      {/* admin에 못들어가게 토큰...설정해야함... */}
       <Route path="/admin" element={<DashBoard/>}/>
+      <Route path="/join" element={<Join/>}/> 
+      <Route path="/login" element={<Login/>}/>
     </Routes>
     </BrowserRouter>
     </>

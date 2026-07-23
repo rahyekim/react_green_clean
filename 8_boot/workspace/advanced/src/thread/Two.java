@@ -19,9 +19,10 @@ public class Two {
         thread.start();
         for(int i=0; i<5; i++){
             System.out.println("띵");
-        }try {
-            thread.sleep(500);
-        }catch (Exception e){}
+            try {
+                Thread.sleep(500);
+            }catch (Exception e){}
+        }
     }
 }
 
