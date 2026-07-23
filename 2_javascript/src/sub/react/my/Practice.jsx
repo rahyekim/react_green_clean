@@ -89,12 +89,13 @@ const Practice = ()=>{
                    
                     {/* 로딩 중일 떄는 버튼을 못누르게 막고 disabled 스피너보여줌  */}
                     <Button variant="primary" type="submit" className="w-100"
-                    disabled={isLoading}>{isLoading ? (
-                        <>
-                        <Spinner as="span" animation="border" size="sm" 
-                        role="status" aria-hidden="true" className="me-2" />
-                        🚨 가입요청중...
-                        </>
+                    disabled={isLoading}>
+                        {isLoading ? (
+                            <>
+                            <Spinner as="span" animation="border" size="sm" 
+                            role="status" aria-hidden="true" className="me-2" />
+                            🚨 가입요청중...
+                            </>
                     ) : "가입하기" } </Button>
 
                     </Form>

@@ -47,8 +47,8 @@ export const StatCard = styled.div<{borderColor:string}>`
 position: relative;
 display: flex;
 flex-direction: column;
-min-width: 0; /* Flexbox 찌그러짐 방지용 필수*/
-//상자 바깥으로 삐져나가는 버그를 막아주는 강력한 안전장치
+min-width: 0; /* Flexbox 찌그러짐 방지용 필수: 내용물을 보호하려는 고집(최소 크기 제한)을 0px로 리셋-> 카드틀 유지*/
+//flex디폴트가 min-width:auto(최소너비를 꽉 잡고있음)=> 터짐..상자 바깥으로 삐져나가는 버그를 막아주는 강력한 안전장치
 word-wrap: break-word; //장문이 나왔을때 끊어줘..
 background-color: #fff;
 background-clip: border-box; //하얀 배경색이 테두리 끝까지 깔끔하게 채워지도록 하는 배경 설정
@@ -63,13 +63,19 @@ padding: 0.5rem 0;
 
 export const CardBody = styled.div`
 
-flex: 1 1 auto;  
+flex: 1 1 auto;  //세로 높이를 균일하게 맞추기 위한 핵심 기술(세로 높이 100% 팽창용 스위치)
+//부모 높이가 커졌을 때 세로로 남는 빈 공간을 꽉 채워서(grow) 내용물을 수직 정중앙에
 padding: 1.25rem;
 display: flex; 
 justify-content: space-between;
 align-items: center;
 
 `;
+
+/* 🔥flex: 1
+flex-direction: row (가로) 상태일 때 flex: 1 ➔ 가로 너비(Width)를 늘림
+flex-direction: column (세로) 상태일 때 flex: 1 ➔ 세로 높이(Height)를 늘림
+ */
 
 
 //📝🔥 join 가입-> ☑️로그인
