@@ -59,3 +59,48 @@ public class Intro {
  
  메인스레드는 필요에 ㄷ따라 추가 작업 스레드를 만들어서 실행시킬 수 있다.
  */
+
+/*
+java.lang 패키지에 있는 Thread클래스로 부터 작업 스레드 객체 직접 생성
+Runnable 구현 객체를 매개값으로 갖는 생성자를 호출
+1) Thread thread= new Thraed(Runnable target);
+
+Runnable은 스레드가 작업을 실행할때 사용하는 인터페이스
+Runnable에는 run() 메소드가 정의됨
+구현클래스는 run()을 재정의해서 스레드가 실행할 코드를 가지고 있어함
+
+2)
+	class Task implements Runnable{
+		 @Override
+		 public void run(){
+		 //스레드가 실행할 코드
+
+Runnable 구현 클래스는 작업 내용을 정의한 것으로 스레드에 전달을 해야함
+Runnable 구현객체를 생성한 후 Thread 생성자 매개값으로 Runnable객체를 아래와 같이 전달한다
+
+Runnable task = new Task();
+Thread thread = new Tread(task);
+
+3) 권장하는 방법
+Thread thread= new Thread(new Runnable())
+@Override
+public void run(){
+ //스레드 실행할 코드
+};
+
+4) 함수 호출하듯이 스레드 실행
+thread.start();
+
+ */
+
+
+
+
+
+
+
+
+
+
+
+
