@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
+import mimetypes
+mimetypes.add_type("text/css",".css",True)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,10 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-byl5gnj04^@iq(u)l*0!afe$wb!67hxemi4i7k6qfthos+i6+@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True #개발모드..
+# DEBUG = False #배포할때...일반적인화면만보여줌 정보노출방지..
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = [] 어떤 도메인/주소로 접속을 허용할 것인가 //배포할때는 실제도메인을 적음..
+ALLOWED_HOSTS = ['*'] #모든접속허용
 
 # Application definition
 

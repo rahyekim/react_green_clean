@@ -2,6 +2,7 @@ import React from "react";
 import { TopBar } from "./component/topBar/TopBar";
 import { SideBar } from "./component/sideBar/SideBar";
 import { Wrapper,ContainerFluid,ContentWrapper,MainContent } from "./component/layout/Layout.styles";
+import { TopBarContainer,TopBarNavBar,TopBarSearch  } from "./component/topBar/TopBar.styles";
 
 interface LayoutProps{
     children: React.ReactNode
@@ -38,3 +39,32 @@ wrapper : flex:display height:100vh width:100% overflow:hidden
             ㄴ maincontent flex:1 overflow-y=auto
 
  */
+
+
+
+export const TopBar= ()=>{
+    return(
+        <TopBarContainer>
+            <button>
+                <i className="fa fa-bars"></i>
+            </button>
+            <TopBarSearch> 
+                {/* margin-right:auto */}
+                <div className="input-group">
+                    <input type="text" />
+                    <button>
+                        <i></i>
+                    </button>
+                </div>
+            </TopBarSearch>
+            <TopBarNavBar>
+                <li>
+                    <a href="">
+                        <span>사용자</span>
+                        <img src="" alt="" />
+                    </a>
+                </li>
+            </TopBarNavBar>
+        </TopBarContainer>
+    )
+}

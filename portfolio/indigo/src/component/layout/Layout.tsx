@@ -37,3 +37,13 @@ export const Layout:React.FC<LayoutProps> =({children})=>{
         </>
     )
 }
+
+/*
+
+Wrapper d-flex overflow:hidden height:100vh
+ ├ SideBar h:100% logo:z-index:1 flex-direction:col
+ └ ContentWrapper flex:1 d-flex flex-direction-col overflow:hidden
+       ├ TopBar 
+       └ MainContent flex:1 overflow-y:auto
+
+ */

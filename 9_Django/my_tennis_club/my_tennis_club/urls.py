@@ -12,6 +12,22 @@ urlpatterns =[
     path("admin/", admin.site.urls),
 ]  #장고가 기본으로 주는 강력한 관리자 페이지는 /admin/으로 접속해!
 
+#python manage.py createsuperuser
+'''
+>admin.py에
+from .models import Member
+admin.site.register(Member) 
+
+넣어줘야 admin에 members 뜸..
+
+'''
+
+
+'''DB
+1) python manage.py makemigrations (members) -> \migrations\0001_initial.py(DB설계도)
+2) python manage.py migrate -> 실제 DB에 적용
+'''
+
 '''
 1. 가상환경 생성 및 Django 설치
 python -m venv myworld

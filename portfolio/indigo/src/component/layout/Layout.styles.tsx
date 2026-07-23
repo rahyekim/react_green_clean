@@ -49,7 +49,7 @@ padding-right:1.5rem; //24px
 padding-left:1.5rem;
 margin-right:auto;
 margin-left:auto;
-
+//요소의 폭이 100%보다 작을 때 auto 가운데 정렬
 `;
 
 

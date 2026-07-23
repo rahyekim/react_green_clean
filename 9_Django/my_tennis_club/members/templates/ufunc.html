@@ -13,8 +13,72 @@
                 ufunc :
                 <small>Numpy배열의 요소별연산을 고속으로 수행할 수 있는 핵심 기능</small>
             </h1>
+            <p>
+                -numpy에서 벡터화를 구현하는데 사용되며 이는 요소를 순회 하는 것 보다 빠릅니다<br/>
+                -벡터화와 순회의 차이 [한 개씩 처리할래 아니면 한꺼번에 처리할래?]
+                -요소를 순회한다(iteration 파이선의 기본방식) :하나씩
+                -백터화는 (Numpy ufunc방식) :주어진 모든일을 한방에!
+                -또한 브로드 캐스팅 및 reduce, eccumulate 등 과 같은 추가 메서드를 제공하여 계산에 유용
+                -numpy는 계산엔진이 C
+                -ufunc은 아래와 같은 추가 인수도 받음 where, dtype, out
+            </p>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <h1>함수생성: for & zip <br> 더하기 결과</h1>
+            <p> <strong>첫번째리스트(X) </strong>{{ list_x }}</p>
+            <p> <strong>두번째리스트(y) </strong>{{ list_y }}</p>
+            <hr>
+            <p> <strong>최종계산결과(z) </strong>
+                <span class="result text-success fw-bold">{{ result_z }}</span>
+            </p>
+        </div>
+        <div>
+            <h1> 간단한 산술</h1>
+            <p> <strong>첫번째 리스트(a) </strong>{{ list_a }}</p>
+            <p> <strong>두번째 리스트(b) </strong>{{ list_b }}</p>
+            <hr>
+            <p> <strong>최종 계산 결과(c) </strong>
+                <span class="result text-success fw-bold">{{ result_c }}</span>
+            </p>
+        </div>
+        <div class="col-md-3">
+            <h1>간단한 산술: 나만의 우펑 만들기</h1>
+            <p> <strong>첫번째 리스트(d) </strong>{{ list_d }}</p>
+            <p> <strong>두번째 리스트(e) </strong>{{ list_e }}</p>
+            <hr>
+            <p> <strong>최종 계산 결과(f) </strong>
+                <span class="result text-success fw-bold">{{ result_f }}</span>
+            </p>
+
+        </div>
+        <div class="col-md-3">
+            <h1>소수 반올림</h1>
+        </div>
+        <div class="col-md-3">
+            <h1>로그</h1>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col-md-3">
+            <h1 class="mt-4 mb-3">최대공약수 찾기</h1>
+        </div>
+         <div class="col-md-3">
+            <h1>삼각법</h1>
+        </div>
+        <div class="col-md-3">
+            <h1> 쌍곡선 </h1>
+
+        </div>
+        <div class="col-md-3">
+            <h1>집합연산</h1>
+        </div>
+    </div>
+
+
+
     </div>
 
 {% endblock %}
