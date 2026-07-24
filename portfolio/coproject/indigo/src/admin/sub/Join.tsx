@@ -2,6 +2,8 @@
 import { useState } from "react"
 import {Link,useNavigate} from 'react-router-dom'
 import DaumPostcode from 'react-daum-postcode'
+import axios from "axios";
+
 //fontawesome추가
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faGoogle, faFacebook, faTwitter, faTwitterSquare, faXbox, faXTwitter } from "@fortawesome/free-brands-svg-icons"
@@ -48,14 +50,49 @@ export const Join = ()=>{
         setIsPostcodeOpen(false); //우편번호 팝업창 닫기
     }
     //회원가입전송함수
-    const handleSubmit = (e:React.FormEvent)=>{
+    const handleSubmit = async(e:React.FormEvent)=>{
         e.preventDefault();
         //html폼은 원래 제출 버튼 누르면 웹페이지가 빤짝거림
         //새로고침되는 성격을 없애기 위해서
-        if( password!== repassword){
+
+        //비밀번호가 일치하는지 먼저검사 => 다르면 return; 멈춤 
+        if(password.length < 8){
+            alert("비밀번호는 8자리 이상입니다")
+            return;
+        }
+        if( password !== repassword){
             alert("비밀번호가일치하지않습니다")
             return;
         }
+
+        try{
+            // ❄️백엔드 스타일로 변환해서 전달❄️
+            const res = await axios.post('http://localhost:5000/api/users/register', {
+           first_name: firstName,
+           last_name: lastName,
+            email,
+            password,
+            repassword,
+            zipcode: zipCode,
+            address,
+            detail_address: detailAddress
+            })
+            console.log("회원가입 성공 응답:", res.data);
+            alert(` ${firstName}님 🎉 회원가입이 완료되었습니다! 환영합니다 `)
+            navigate('/') // 로그인 페이지 또는 메인으로 이동
+
+        }catch(err: any){
+
+            console.error("회원가입 에러 상세:", err);
+
+            if(err.response && err.response.data){
+                alert(err.response.data.message);
+            }else{
+                alert("회원 가입 중 오류 발생...")
+            }
+        }
+        
+        
     }
 
     return(
