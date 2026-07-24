@@ -34,7 +34,7 @@ public class One {
 /*
 java.lang 패키지에 있는 Thread클래스로 부터 작업 스레드 객체 직접 생성
 Runnable 구현 객체를 매개값으로 갖는 생성자를 호출
-1) Thread thread= new Thraed(Runnable target);
+1) Thread thread= new Thread(Runnable target);
 
 Runnable은 스레드가 작업을 실행할때 사용하는 인터페이스
 Runnable에는 run() 메소드가 정의됨
@@ -53,12 +53,12 @@ Runnable task = new Task();
 Thread thread = new Tread(task);
 
 3) 권장하는 방법
-Thread thread= new Thread(new Runnable())
-@Override
-public void run(){
- //스레드 실행할 코드
-};
-
+Thread thread= new Thread(new Runnable(){
+    @Override
+    public void run(){
+     //스레드 실행할 코드
+    };
+});
 4) 함수 호출하듯이 스레드 실행
 thread.start();
 

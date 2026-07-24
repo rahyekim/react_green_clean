@@ -82,11 +82,12 @@ Runnable task = new Task();
 Thread thread = new Tread(task);
 
 3) 권장하는 방법
-Thread thread= new Thread(new Runnable())
-@Override
-public void run(){
- //스레드 실행할 코드
-};
+Thread thread= new Thread(new Runnable(){
+	@Override
+	public void run(){
+	 //스레드 실행할 코드
+	};
+})
 
 4) 함수 호출하듯이 스레드 실행
 thread.start();

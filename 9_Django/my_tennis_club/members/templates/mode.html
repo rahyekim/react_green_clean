@@ -1,0 +1,68 @@
+
+{% extends "master.html" %}
+
+{% block title %}
+Mean Median Mode
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>머신 러닝의</h1>
+            <h2>평균(mean), 중앙값(median), 최빈값(mode)</h2>
+            <p>최빈값: 가장 흔한값</p>
+            <p>
+                평균속도: mean(speed)
+                중앙값: 모든값을 정렬했을때 정중앙 가운데 있는 값
+                x=numpy.median(speed)
+                but)가운데 숫자가 두개라면 그 숫자의 합을 2로 나눔..
+                가장 흔한값: mode()
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 bg-light">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h4 class="mb-0">
+                        차량속도 데이터 분석 리포트
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="text-primary mb-3">
+                        1. 수집된 Raw data
+                    </h5>
+                    <p class="bg-light border rounded p-3 text-break">
+                        {{ speed_data }}
+                    </p>
+                    <p class="text-muted small">
+                        총<strong>{{ data_count }}</strong>가 수집되었습니다
+                    </p>
+                    <hr class="my-4"/>
+                    <h5 class="text-success">
+                        2. 분석결과 numpy 연산
+                    </h5>
+                    <div role="alert" class="alert alert-success d-flex align-items-center">
+                        <div class="card-body">
+                            계산된 평균속도 mean speed:
+                            <h4 class="text-danger">
+                               <strong> {{ average_speed }} </strong>
+                            </h4>
+                        </div>
+                        <p class="text-muted small mt-3 mb-0">
+                            해당 통계는 머신러닝 모델의 결측치 대체(Imputation) 및
+                            특성 스케일링(Frature Scaling)을 위한 기초데이터로 활용
+                        </p>
+                    </div>
+                </div>
+                <div class="card-footer bg-dark text-white py-3">
+{#                    머신 러닝의 평균(mean), 중앙값(median), 최빈값(mode)#}
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,8 +15,10 @@ export const Login = ()=>{
     const [email, setEmail]=useState("");
     const [password, setPassword]=useState("");
 
+    const [rememberme, setRememberme] = useState(false);
+
     //로그인 버튼을 누를때 실행되는 함수
-    const handleSumbit = async(e:React.FormEvent)=>{
+    const handleSubmit = async(e:React.FormEvent)=>{
         e.preventDefault();
 
         //유효성검사
@@ -53,7 +55,7 @@ export const Login = ()=>{
                                 <div className="p-5">
                                     <div className="text-center">
                                         <h1 className="h4 text-gray-500 mb-4">💙Welcome back💙</h1>
-                                        <form className="user" onSubmit={handleSumbit}>
+                                        <form className="user" onSubmit={handleSubmit}>
                                             <div className="form-group mb-3">
                                                 <Form.Label className="fw-bold small text-secondary ps-0 mb-1">
                                                     이메일 주소
@@ -141,6 +143,23 @@ export const Login = ()=>{
 };
 
 /*
+
+
+ 아이디 기억하기 토글 스위치 
+<div className="form-group mb-3 text-start">
+  <Form.Check 
+    type="switch"
+    id="remember-me-switch"
+    label="Remember Me"
+    className="small text-secondary fw-bold"
+    checked={rememberMe}
+    onChange={(e) => setRememberMe(e.target.checked)}
+  />
+</div>
+
+
+
+
 import { FloatingLabel, Form } from 'react-bootstrap'; // 💡 FloatingLabel 임포트 필요
 
 <FloatingLabel 

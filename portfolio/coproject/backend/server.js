@@ -64,7 +64,7 @@ app.post('/api/users/login', (req,res)=>{
         if(result.length === 0){ //일치하는 회원이 없다면... mysql은 비어있는 배열 []을 반환
             return res.status(401).json({message: "이메일 또는 비밀번호가 올바르지 않습니다"})
         }
-        const user = result[0]; //검색된 배열중에 첫번째 [{회원정보}]
+        const user = result[0]; //검색된 배열중에 첫번째 [{회원정보}] , 이름도같이보냄...
         res.status(200).json({message: "로그인 성공!", name: user.first_name})
     })
 })
