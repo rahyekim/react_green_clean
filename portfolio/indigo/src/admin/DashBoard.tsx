@@ -21,6 +21,7 @@ export const DashBoard:React.FC = ()=>{
                 <A.CardColumn>
                     <A.StatCard borderColor="#4e73df">
                         <A.CardBody>
+                            <div className="">
                                 <div
                                 className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Earnings (Monthly)                                    
@@ -29,10 +30,11 @@ export const DashBoard:React.FC = ()=>{
                                 <div className="h5 mb-0 font-weight-bold text-gray-800">
                                     $4,000
                                 </div>
-
-                                <div className="col-auto">
-                                    <i className="fas fa-calendar fa-2x text-gray-300"></i>
-                                </div>
+                            </div>
+                            {/* 아이콘 크기만큼만 차지*/}
+                            <div className="col-auto"> 
+                                <i className="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
                         </A.CardBody>
                     </A.StatCard>
                 </A.CardColumn>
@@ -40,12 +42,14 @@ export const DashBoard:React.FC = ()=>{
                 <A.CardColumn>
                     <A.StatCard borderColor="#1cc88a">
                         <A.CardBody>
+                            <div>
                                 <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Earnings (Annual)                                    
                                 </div>
                                  <div className="h5 mb-0 font-weight-bold text-gray-800">
                                     $215,000
                                 </div>
+                            </div> 
                         </A.CardBody>
 
                     </A.StatCard>
