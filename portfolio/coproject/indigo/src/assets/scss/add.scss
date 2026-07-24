@@ -1,0 +1,46 @@
+
+form.user , .form-control-user{
+    font-size: .8rem;
+    border-radius: 2rem;
+    padding: 0.9rem 1rem;
+}
+
+.btn-user{
+    font-size:.8rem;
+    border-radius: 10rem;
+    padding: .75rem 1rem;
+}
+
+.btn-block{
+    display: block;
+    width: 100%;
+}
+
+.btn-google{
+    color: #fff;
+    background-color: #ea4335;
+    border-color: #fff;
+}
+
+.btn-facebook{
+    color: #fff;
+    background-color: #3b5998;
+    border-color: #fff;
+}
+
+.btn-twitter{
+    color: #fff;
+    background-color: #8598c0;
+    border-color: #fff;
+}
+
+.small, small{
+    font-size: 80%;
+    font-weight: 500;
+}
+
+.bg-register-image{
+    background-image: url("../images/joinBg.png");
+    background-size: cover;
+    background-position: center;
+}

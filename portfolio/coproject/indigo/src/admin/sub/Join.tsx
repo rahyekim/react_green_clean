@@ -2,6 +2,9 @@
 import { useState } from "react"
 import {Link,useNavigate} from 'react-router-dom'
 import DaumPostcode from 'react-daum-postcode'
+//fontawesome추가
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faGoogle, faFacebook, faTwitter, faTwitterSquare, faXbox, faXTwitter } from "@fortawesome/free-brands-svg-icons"
 
 import * as S from '../DashBoard.styled'
 export const Join = ()=>{
@@ -18,6 +21,7 @@ export const Join = ()=>{
     const [zipCode, setZipCode]=useState(""); //국민우편넣기 
     const [address, setAddress]=useState('');
     const [detailAddress, setDetailAddress]=useState('');
+    //주소모달창 열기
     const [isPostcodeOpen, setIsPostcodeOpen]=useState(false);
 
     //다음 주소 검색 완료시에 실행되는 함수
@@ -75,7 +79,7 @@ export const Join = ()=>{
                                         </div>
                                         
                                         <form onSubmit={handleSubmit} className="user">
-                                            <div className="form-group row"> 
+                                            <div className="form-group row mb-3"> 
                                             {/* 이름 */}
                                                 <div className="col-sm-6 mb-3 mb-sm-0">
                                                     <input type="text" className="form-control form-control-user"
@@ -105,7 +109,7 @@ export const Join = ()=>{
                                             </div>
                                             {/* 주소검색영역 */}
                                             {/* <div className="d-flex gap-2 mb-3"></div> */}
-                                            <div className="form-group row align-items-center"> 
+                                            <div className="form-group row align-items-center my-3"> 
                                                 <div className="col-sm-8 mb-3 mb-sm-0">
                                                     <input type="text" className="form-control form-control-user"
                                                     placeholder="zipcode" value={zipCode} readOnly
@@ -164,15 +168,18 @@ export const Join = ()=>{
                                             </div>
                                             {/* 버튼이 들어가는 영역 */}
                                             <div className="d-flex gap-2 justify-content-end">
-                                                <button className="btn btn-outline-secondary"
+                                                {/* <button className="btn btn-outline-secondary"
                                                 type="button"
-                                                >cancel</button>
+                                                >cancel</button> */}
                                                 <button className="btn btn-primary btn-user btn-block"
                                                 type="submit"
                                                 >Register Account</button>
                                             </div>
-
+                                   
+                                            <div className="my-4"></div>
                                             <hr style={{borderTop:"1px solid gray"}}/>
+                                             <div className="my-3"></div>
+
                                             {/* Oauth 카카오로로그인 */}
                                             <button type="button" 
                                             className="btn btn-google btn-user btn-block">
@@ -186,13 +193,14 @@ export const Join = ()=>{
                                                 Register with facebook
                                             </button>
 
-                                              <button type="button" 
+                                            <button type="button" 
                                             className="btn btn-twitter  btn-user btn-block">
-                                                <i className="fab fa-twitter  fa-fw"></i>
+                                                <FontAwesomeIcon icon={faXTwitter} 
+                                                className="fa-fw"/>
                                                 Register with twitter 
                                             </button>
-
-                                        </form>
+                                    </form>
+                                       
                                         <hr style={{borderTop:"1px solid gray"}}/>
 
                                         <div className="text-center mt-3">
@@ -234,6 +242,20 @@ export const Join = ()=>{
 
 
 /*
+CREATE DATABASE company;
+USE company;
+
+CREATE TABLE users(
+id INT AUTO_INCREMENT PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+email VARCHAR(100) NOT NULL UNIQUE, #중복불가
+PASSWORD VARCHAR(255) NOT NULL,
+zipcode VARCHAR(20) NOT NULL, 
+address VARCHAR(255) NOT NULL,
+detail_address VARCHAR(255) NOT NULL,
+created_at TIMESTAMP DEFAULT current_timestamp
+);
 
 
 const [form, setForm] = useState({
