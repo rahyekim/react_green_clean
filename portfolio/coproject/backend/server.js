@@ -11,7 +11,7 @@ app.use(express.json()) //파싱..프론트엔드에서 보내는 JSON 데이터
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:"",
+    password:"2525",
     database: 'company'
 })
 

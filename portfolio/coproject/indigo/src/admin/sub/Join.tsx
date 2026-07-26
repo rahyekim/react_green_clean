@@ -1,4 +1,5 @@
-// npm install react-daum-postcode : 📬우편번호 찾기" / "주소 검색"
+//npm install @fortawesome/react-fontawesome @fortawesome/free-brands-svg-icons
+// 📬우편번호 찾기" / "주소 검색" npm install react-daum-postcode : 
 import { useState } from "react"
 import {Link,useNavigate} from 'react-router-dom'
 import DaumPostcode from 'react-daum-postcode'
@@ -204,14 +205,10 @@ export const Join = ()=>{
                                                 </div>
                                             </div>
                                             {/* 버튼이 들어가는 영역 */}
-                                            <div className="d-flex gap-2 justify-content-end">
-                                                {/* <button className="btn btn-outline-secondary"
-                                                type="button"
-                                                >cancel</button> */}
+                                                
                                                 <button className="btn btn-primary btn-user btn-block"
                                                 type="submit"
                                                 >Register Account</button>
-                                            </div>
                                    
                                             <div className="my-4"></div>
                                             <hr style={{borderTop:"1px solid gray"}}/>
@@ -220,24 +217,28 @@ export const Join = ()=>{
                                             {/* Oauth 카카오로로그인 */}
                                             <button type="button" 
                                             className="btn btn-google btn-user btn-block">
-                                                <i className="fab fa-google fa-fw"></i>
+                                                <i className="fab fa-google fa-fw fa-lg"></i>
                                                 Register with google
                                             </button>
 
                                              <button type="button" 
                                             className="btn btn-facebook btn-user btn-block">
-                                                <i className="fab fa-facebook fa-fw"></i>
+                                              <FontAwesomeIcon icon={faFacebook}
+                                                size="lg"
+                                              className="fa-fw"/>
                                                 Register with facebook
                                             </button>
 
                                             <button type="button" 
                                             className="btn btn-twitter  btn-user btn-block">
                                                 <FontAwesomeIcon icon={faXTwitter} 
-                                                className="fa-fw"/>
+                                                className="fa-fw"
+                                                size="lg"
+                                                />
                                                 Register with twitter 
                                             </button>
                                     </form>
-                                       
+                                        <div className="my-3"></div>
                                         <hr style={{borderTop:"1px solid gray"}}/>
 
                                         <div className="text-center mt-3">

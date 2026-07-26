@@ -101,11 +101,11 @@ export const Login = ()=>{
                                                     className="btn btn-block w-100 mb-2"
                                                     >login</Button>
 
-                                                    <hr />
-
+                                                    <hr className="my-3" style={{borderTop:"1px solid #999"}}/>
+                                                    {/* 소셜 로그인 */}      
                                                     <Button 
-                                                    type="submit"
-                                                    variant="primary"
+                                                    type="button"
+                                                    variant="warning"
                                                     className="btn-user btn-block btn-google w-100 mb-2"
                                                     >
                                                         <FontAwesomeIcon icon={faGoogle} className="fa-fw"/>
@@ -113,8 +113,8 @@ export const Login = ()=>{
                                                     </Button>
 
                                                      <Button 
-                                                    type="submit"
-                                                    variant="primary"
+                                                    type="button"
+                                                    variant="outline-primary"
                                                     className="btn-user btn-block btn-facebook w-100 mb-2"
                                                     >
                                                         <FontAwesomeIcon icon={faFacebookF} className="fa-fw"/>

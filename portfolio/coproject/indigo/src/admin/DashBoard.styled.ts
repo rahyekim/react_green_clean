@@ -18,7 +18,7 @@ h1{
 export const GridRow = styled.div`
 
 display: flex;
-flex-wrap: wrap;
+flex-wrap: wrap; //다음줄로 
 margin-right: -0.75rem; //컬럼의 padding(0.75rem)만큼 다시 당겨주는 것
 margin-left: -0.75rem; 
 //⭐컬럼 padding 보정:카드가 전체 컨테이너 양 끝에 딱 닿게
@@ -36,6 +36,7 @@ padding-right: 0.75rem;
 padding-left: 0.75rem;
 margin-bottom: 1.5rem;
 
+//col-md-6
 @media (max-width:1200px) {flex: 0 0 50%; max-width:50%;} 
 // 768~1200 태블릿 :카드 2개
 @media (max-width:768px) {flex: 0 0 100%; max-width:100%;}
@@ -46,27 +47,29 @@ export const StatCard = styled.div<{borderColor:string}>`
 
 position: relative;
 display: flex;
-flex-direction: column;
-min-width: 0; /* Flexbox 찌그러짐 방지용 필수: 내용물을 보호하려는 고집(최소 크기 제한)을 0px로 리셋-> 카드틀 유지*/
+flex-direction: column; //🔥Header, Body,footer 세로로
+height: 100%; //
+min-width: 0; /* ⭐Flexbox 찌그러짐 방지용 필수: 내용물을 보호하려는 고집(최소 크기 제한)을 0px로 리셋-> 카드틀 유지*/
 //flex디폴트가 min-width:auto(최소너비를 꽉 잡고있음)=> 터짐..상자 바깥으로 삐져나가는 버그를 막아주는 강력한 안전장치
 word-wrap: break-word; //장문이 나왔을때 끊어줘..
 background-color: #fff;
 background-clip: border-box; //하얀 배경색이 테두리 끝까지 깔끔하게 채워지도록 하는 배경 설정
 border: 1px solid #e3e6f0;
-border-radius: 0.35rem;
+border-radius: 0.35rem; //5.6px
 border-left: 0.25rem solid ${props=> props.borderColor};
 box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
-height: 100%;
+//x축이동-0 y축이동-2.4px 퍼지는정도-28px
 padding: 0.5rem 0;
 `;
 
 
 export const CardBody = styled.div`
 
-flex: 1 1 auto;  //세로 높이를 균일하게 맞추기 위한 핵심 기술(세로 높이 100% 팽창용 스위치)
+flex: 1 1 auto;  //🔥CardBody 자신이 부모(Card) 안에서 차지하는 높이
+//세로 높이를 균일하게 맞추기 위한 핵심 기술(세로 높이 100% 팽창용 스위치)
 //부모 높이가 커졌을 때 세로로 남는 빈 공간을 꽉 채워서(grow) 내용물을 수직 정중앙에
 padding: 1.25rem;
-display: flex; 
+display: flex; //내부 요소들을 flex로 배치
 justify-content: space-between;
 align-items: center;
 
@@ -75,6 +78,21 @@ align-items: center;
 /* 🔥flex: 1
 flex-direction: row (가로) 상태일 때 flex: 1 ➔ 가로 너비(Width)를 늘림
 flex-direction: column (세로) 상태일 때 flex: 1 ➔ 세로 높이(Height)를 늘림
+
+카드 위치:
+➡️ CardColumn의 flex: 0 0 50%가 결정
+카드 내부 높이:
+➡️ CardBody의 flex: 1 1 auto가 결정
+
+✅ CardColumn 
+flex: 0 0 25%; (가로 너비 결정)
+max-width:25%; 
+✅ Card
+display:flex
+flex-direction:column
+height:100% <-필요
+✅ CardBody
+flex:1
  */
 
 

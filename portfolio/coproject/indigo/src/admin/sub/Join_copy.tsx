@@ -2,6 +2,9 @@
 import  {FormEvent, useState } from "react"
 import {Link,useNavigate} from 'react-router-dom'
 import DaumPostcode from 'react-daum-postcode'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faGoogle,faFacebookF,faXTwitter } from "@fortawesome/free-brands-svg-icons"
+import axios from "axios"
 
 import * as S from '../DashBoard.styled'
 export const Join = ()=>{
@@ -59,7 +62,7 @@ export const Join = ()=>{
     }
     //회원가입전송함수
     //🛑 [1] 필수값 확인 -> [2] 조건(유효성) 확인 -> [3] 서버 전송
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>)=>{
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         //html폼은 원래 제출 버튼 누르면 웹페이지가 빤짝거림
         //새로고침되는 성격을 없애기 위해서
@@ -74,7 +77,7 @@ export const Join = ()=>{
         //[2] 이메일 유효성 검사(간단한 정규식)
          const emailRegex= /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
          if(!emailRegex.test(form.email)){ //정규식검사메서드(test)=> true.false
-            alert("비밀번호는 최소 8자리 이상이어야합니다");
+            alert("이메일을 정확히 입력해주세요");
             return;
          }
          //3.비밀번호 자리수 
@@ -83,9 +86,32 @@ export const Join = ()=>{
             return;
          }
          // 4. 비밀번호 일치 확인 (기존 코드)
-        if( form.password!== form.repassword){
+        if( form.password !== form.repassword){
             alert("비밀번호가일치하지않습니다")
             return;
+        }
+        //프론트 변수명(form) -> 백엔드 변수명으로 변환한 객체 만들기
+        const payload={
+            first_name : form.firstName ,
+            last_name: form.lastName ,
+            email: form.email,
+            password: form.password,
+            zip_code: form.zipcode,
+            address: form.address, 
+            detail_address: form.detailAddress
+        }
+        try{
+            const res = await axios.post("http://localhost:5000/api/users/register",payload)
+            console.log("회원가입 성공응답", res.data);
+            alert(` ${form.firstName}님❤️, 회원가입이 완료되었습니다. 환영합니다`)
+            navigate('/');
+        }catch(err:any){
+            console.error("회원가입 에러 상세:", err);
+            if(err.response && err.response.data){
+                alert(err.response.data.message);
+            }else{
+                alert("회원가입중 오류발생...")
+            }
         }
     }
 
@@ -98,8 +124,8 @@ export const Join = ()=>{
                         <div className="row">
                             {/* 안보이다가 pc모드가되면 block이되고 보임.. */}
                             {/* background 이미지 왼쪽이미지영역 : CSS 배경 이미지로 채우려고 비워둔 영역*/}
-                            <div className="col-lg-5 d-none d-lg-block bg-register-image">
-                                </div>
+                            <div className="col-lg-5 d-none d-lg-block bg-register-image"> </div>
+                               
                             {/* 오른쪽 회원가입 폼 입력창설정 */}
                                 <div className="col-lg-7">
                                     <div className="p-5">
@@ -123,10 +149,10 @@ export const Join = ()=>{
                                                     required 
                                                     />
                                                 </div>
-                                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                                <div className="col-sm-6 mb-sm-0">
                                                     <input 
                                                     type="text"
-                                                    name="lastname" 
+                                                    name="lastName" 
                                                     className="form-control form-control-user"
                                                     placeholder="Lastname"
                                                     value={form.lastName}
@@ -136,7 +162,7 @@ export const Join = ()=>{
                                                 </div>
                                             </div>
                                             {/* 이메일 */}
-                                            <div className="form-group mb-3 mb-sm-0">
+                                            <div className="form-group mb-3 my-3">
                                                 <input
                                                 type="email" 
                                                 name="email"
@@ -149,7 +175,7 @@ export const Join = ()=>{
                                             </div>
                                             {/* 주소검색영역 */}
                                             {/* <div className="d-flex gap-2 mb-3"></div> */}
-                                            <div className="form-group row align-items-center"> 
+                                            <div className="form-group row align-items-center my-3"> 
                                                 <div className="col-sm-8 mb-3 mb-sm-0">
                                                     <input type="text" className="form-control form-control-user"
                                                     placeholder="zipcode" value={form.zipcode} readOnly
@@ -213,35 +239,45 @@ export const Join = ()=>{
                                             </div>
                                             {/* 버튼이 들어가는 영역 */}
                                             <div className="d-flex gap-2 justify-content-end">
-                                                <button className="btn btn-outline-secondary"
+                                                <button className="btn btn-user btn-outline-secondary"
                                                 type="button"
+                                                onClick={()=>navigate('/')}
                                                 >cancel</button>
                                                 <button className="btn btn-primary btn-user btn-block"
                                                 type="submit"
                                                 >Register Account</button>
                                             </div>
 
+                                            <div className="my-4"></div>
                                             <hr style={{borderTop:"1px solid gray"}}/>
+                                            <div className="my-3"></div>
+
                                             {/* Oauth 카카오로로그인 */}
+                                            {/* Font Awesome Fixed Width(고정 너비) fa-fw */}
                                             <button type="button" 
-                                            className="btn btn-google btn-user btn-block">
-                                                <i className="fab fa-google fa-fw"></i>
+                                            className="btn btn-google btn-user btn-block py-2 mb-1">
+                                                <FontAwesomeIcon icon={faGoogle} className="fa-fw me-2"/>
+                                                 {/* <i className="fab fa-google fa-fw fa-lg"></i> */}
                                                 Register with google
                                             </button>
 
                                              <button type="button" 
-                                            className="btn btn-facebook btn-user btn-block">
-                                                <i className="fab fa-facebook fa-fw"></i>
+                                            className="btn btn-facebook btn-user btn-block py-2 mb-1">
+                                                <FontAwesomeIcon icon={faFacebookF}
+                                                className="fa-fw me-2"/>
                                                 Register with facebook
                                             </button>
 
                                               <button type="button" 
-                                            className="btn btn-twitter  btn-user btn-block">
-                                                <i className="fab fa-twitter  fa-fw"></i>
+                                            className="btn btn-twitter  btn-user btn-block py-2 mb-1">
+                                                <FontAwesomeIcon icon={faXTwitter} 
+                                                className="fa-fw me-2"/>
                                                 Register with twitter 
                                             </button>
 
                                         </form>
+                                        
+                                        <div className="my-3"></div>
                                         <hr style={{borderTop:"1px solid gray"}}/>
 
                                         <div className="text-center mt-3">

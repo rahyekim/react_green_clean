@@ -1,5 +1,5 @@
 
-form.user , .form-control-user{
+.form-control-user{
     font-size: .8rem;
     border-radius: 2rem;
     padding: 0.9rem 1rem;
@@ -34,7 +34,9 @@ form.user , .form-control-user{
     border-color: #fff;
 }
 
-.small, small{
+//클래스 이름(.small)을 쓰든, 태그(<small>)를 쓰든 
+//통해라...보험용으로 둘다 씀..
+.small, small{ 
     font-size: 80%;
     font-weight: 500;
 }
