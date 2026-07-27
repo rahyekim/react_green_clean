@@ -27,3 +27,21 @@ node_modules/
 .DS_Store
 
 .vscode/
+
+# Java
+*.class
+
+# Eclipse
+bin/
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
