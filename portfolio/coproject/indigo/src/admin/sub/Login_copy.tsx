@@ -29,6 +29,11 @@ export const Login = ()=>{
             //{email, password} => 단축문법{ email: email, password: password }
             const res  = await axios.post("http://localhost:5000/api/users/login", {email,password})
             alert(`${res.data.name}님 , ${res.data.message}`)
+
+            //✨로그인후 저장된 이름이 보이게 
+            localStorage.setItem('userName', res.data.name)
+            
+            
             navigate('/admin');
         }catch(err:any){
             //1.서버가 응답을 주면서 에러를 낸 경우
@@ -51,15 +56,21 @@ export const Login = ()=>{
             message: "비밀번호가 틀렸습니다." // 👈 백엔드가 .json({ message: ... })으로 보낸 진짜 데이터!
         }
 }        */}
+    {/* 💡
+        align-items-stretch : 양쪽 칸의 세로 높이를 똑같이 키 맞춰줌
+        g-0 :칸과 칸 사이, 테두리와의 가로 여백을 싹 지워줌
+        border-0 :미세하게 붕 뜨게 만들던 1px 회색 테두리를 제거함
+    */}
     return(
         <>
         <S.Background>
             <Container>
                 <Row className="justify-content-center">
                     <Col xl={10} lg={12} md={9}>
-                        <Card>
-                            <Card.Body>
-                                <Row>
+                    {/* overflow-hidden 사진 튀어나온거 잘라줌.. */}
+                        <Card className="overflow-hidden border-0">
+                            <Card.Body className="p-0">
+                                <Row className="g-0 align-items-stretch">
                                     <Col lg={6} className="d-none d-lg-block bg-login-image">
                                     </Col>
                                     <Col lg={6}>

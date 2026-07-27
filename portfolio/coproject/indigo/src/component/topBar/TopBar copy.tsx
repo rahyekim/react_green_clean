@@ -5,31 +5,23 @@ import { useNavigate } from "react-router-dom";
 import profileImage from '../../assets/images/joinBg.png'
 
 export const TopBar:React.FC = ()=>{
-    //1.화면에 보여줄 사용자 이름 상태를 만듦(기본값:Guest)
     
-    const [userName, setUserName]=useState('Guest');
+    const [userName, setUserName] =useState('Guest');
     const navigate = useNavigate();
 
-    //2.화면이 처음 켜질때 딱 한번만 실행
+    //
     useEffect(()=>{
-        //로그인할때 저장해둔 'userName'을 브라우저저장소(localstorage)에서 꺼내옴
-        const storeName = localStorage.getItem('userName')
-        //만약 저장된 이름이 있다면. 상태를 그 이름으로 업데이트
-        if (storeName){
-            setUserName(storeName);
+        const name = localStorage.getItem('userName');
+        if(name){
+            setUserName(name);
         }
-    }, [])
-
-    //로그아웃 버튼 눌렀을때 실행되는 함수
-    const handleLogout = ()=>{
-
-        //1.브라우저금고(localstorage)에서 'userName'데이터를 완전히 지움
-        localStorage.removeItem('userName'); //토큰도필요...
-
-        //2.로그인 페이지('/login')로 사용자를 이동시킴
-        navigate('/login');
-    }
+    },[])
     
+    //로그아웃
+    const handleLogout = ()=>{
+        localStorage.removeItem('uerName')
+        navigate('/login')
+    }
 
     return(
         <>
@@ -75,7 +67,7 @@ export const TopBar:React.FC = ()=>{
                     >
 {/* ⭐a태그의 기본 클릭이벤트(페이지최상단으로 올라가는 현상을) 막기위해⭐ */}
                         <span
-                        className="mr-2 d-none d-lg-inline text-gray-600 small me-2">
+                        className="mr-2 d-none d-lg-inline text-gray-600 small">
                             {userName}
                         </span>
                         <img 
@@ -87,7 +79,7 @@ export const TopBar:React.FC = ()=>{
                     {/* 로그아웃버튼 추가 */}
                     <button
                     className="btn btn-sm btn-outline-secondary ml-2"
-                    onClick={handleLogout}>logout</button>
+                    onClick={handleLogout}>로그아웃</button>
 
                 </li>
             </TopBarNavBar>

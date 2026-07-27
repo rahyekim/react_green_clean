@@ -81,7 +81,7 @@ export const UserList = ()=>{
                 <S.CardHeader>
                     <h6>회원 리스트(DataTables)</h6>
                 </S.CardHeader>
-                <S.CardBody>
+                <S.CardBody className="d-flex flex-column">
                     {/*🌟 터치로 스크롤 🌟*/}
                     <div className="table-responsive">
                         <S.styledTable>

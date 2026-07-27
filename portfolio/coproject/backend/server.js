@@ -5,13 +5,16 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors()) //cors
+// app.use(cors()) //cors
+app.use(cors({
+    origin: 'http://localhost:5173' //여러개는 배열로[]
+}));
 app.use(express.json()) //파싱..프론트엔드에서 보내는 JSON 데이터를 읽기위한 설정...
 
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:"",
+    password:"2525",
     database: 'company'
 })
 
@@ -22,79 +25,72 @@ db.connect(err => {
 
 //등록 
 app.post('/api/users/register', (req,res)=>{
-    const {first_name, last_name, email, password, zipcode, address, detail_address} = req.body
-    const sql= 'insert into users(first_name, last_name, email, password, zipcode, address, detail_address)values(?,?,?,?,?,?,?)'
+    const {first_name, last_name, email, password, zip_code, address, detail_address} = req.body
+    const sql = `insert into users
+    (first_name, last_name, email, password, zip_code, address, detail_address) 
+    values(?,?,?,?,?,?,?)`
 
-     // ✅ Node 백엔드 검증 영역
-    if(!first_name || !last_name || !email || !password){
-        return res.status(400).json({
-            message:"필수 항목을 입력해주세요"
-        });
+    //검증
+    if(!first_name || !last_name || !password || !email ){
+       return res.status(400).json({message:"필수항목을 입력해주세요"})        
     }
+    if(password.length <8){
+    return res.status(400).json({message:"비밀번호는 8자리이상이어야합니다"})        
 
-    if(password.length < 8){
-        return res.status(400).json({
-            message:"비밀번호는 8자 이상이어야 합니다"
-        });
     }
-    
-    db.query(sql,[first_name, last_name, email, password, zipcode, address, detail_address],(err,result)=>{
-        if(err) {
-            console.error("회원가입 에러:", err);
-            if(err.code === 'ER_DUP_ENTRY'){  //DB가 알려주는 에러 종류 : UNIQUE 중복 발생
-
-                return res.status(400).json({message: '이미존재하는 이메일입니다'}); //409충돌
-            }
-            return res.status(500).json({message: '서버오류발생'});
+    db.query(
+        sql,
+        [first_name,last_name, email, password, zip_code, address, detail_address],
+    (err,result)=>{
+        if (err) {
+            console.error("회원가입에러: ",err);
+            if(err.code === 'ER_DUP_ENTRY'){
+            return res.status(400).json({message: '이미존재하는 이메일입니다'})
         }
-        res.status(201).json({message: "회원가입이 완료되었습니다", userId: result.insertId}); 
-        //저장이 완료되었다고 알림
-    });
-});
+        return res.status(500).json({message: "서버오류발생"});
+    }res.status(201).json({message: "회원가입이 완료되엇습니다 welcome", userID : result.insertId})
+    })
+})
 
-//login
+//login=>조회(select).. 이미있는 회원데이터를 찾음
 app.post('/api/users/login', (req,res)=>{
     const { email, password} = req.body;
     const sql = 'select * from users where email = ? and password = ?' //회원정보 일치하는거 꺼냄
+
+    if(!email || !password){
+        return res.status(400).json({
+            message:"이메일과 비밀번호를 입력해주세요"
+        });
+    }
     db.query(sql,[email, password], (err,result)=>{
         if(err){
             console.error("로그인 에러:", err);
             return res.status(500).json({message: '서버 오류 발생'});
         }
-        if(result.length === 0){ //일치하는 회원이 없다면... mysql은 비어있는 배열 []을 반환
+        if(result.length === 0){ //일치하는 회원이 없다면... []... 안에..{회원정보}없음
             return res.status(401).json({message: "이메일 또는 비밀번호가 올바르지 않습니다"})
         }
-        const user = result[0]; //검색된 배열중에 첫번째 [{회원정보}] , 이름도같이보냄...
+        const user = result[0]; //검색된 배열중에 첫번째 [{회원정보}] 
         res.status(200).json({message: "로그인 성공!", name: user.first_name})
     })
 })
 
 //회원목록조회 API
-app.get('/api/users', (req,res)=>{
-    //비밀번호를 제외한 회원정보들을 최근 가입순으로 가져옴
-    const sql=`select id, first_name, last_name, email, zipcode, address, detail_address  
-    from users 
-    order by created_at desc`
+app.get('/api/users' ,(req,res)=>{
     
+    const sql=`select id , first_name, last_name, email, zip_code, address, detail_address  
+    from users order by created_at desc`
 
     db.query(sql, (err, result)=>{
 
         if(err){
-            console.error("회원목록 조회 에러", err)
-            return res.status(500).json({message: "회원목록 서버에러 발생"})
+            console.error("회원목록 조회중에러:", err)
+            return res.status(500).json({message: "회원목록 조회중 에러"})
         }
-
-        //조회된 회원을 프론트엔드로 보냄
-        //💡 회원이 없더라도 에러가 나지 않게 빈 배열 그대로 전달하거나,
-        // 프론트에서 length로 체크할 수 있게 result 자체를 보내는 것이 좋습니다.
-        res.status(200).json(result)
-        
-
+        res.status(200).json(result) //목록 봐로 쏴줌
     })
-    
-    
-})
 
+})
 
 //서버실행
 app.listen(5000, ()=>{
@@ -105,6 +101,10 @@ app.listen(5000, ()=>{
 /*
 npm install -D nodemon
 
+🔥 INSERT → result.insertId
+🔥 SELECT → result[0]
+🔥 UPDATE/DELETE → affectedRows
+
 400 Bad Request
 → 사용자가 잘못된 데이터를 보냄 (이메일 중복, 형식 오류 등)
 401 Unauthorized
@@ -113,4 +113,27 @@ npm install -D nodemon
 → 권한 없음
 500 Internal Server Error
 → 서버 문제
+ */
+
+/*⭐mysql2/promise ⭐버젼
+app.post('/api/users/login', async(req,res)=>{
+    const {email, password}=req.body
+    const sql=`select * from users where email=? and password=?`
+    
+    try{
+       const [rows]= await db.query(sql,[email,password])
+
+       if(rows.length === 0){
+        return res.status(401).json({
+            message: "이메일또는 비번이 올바르지않습니다"})
+    } 
+        const users = rows[0];
+        res.status(200).json({message:"로그인성공!", name: users.first_name} )
+
+    }catch(err){
+            console.error("로그인에러:", err);
+            return res.status(500).json({message:"서버오류발생"})
+    }
+    });
+
  */

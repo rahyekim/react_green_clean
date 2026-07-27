@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faFacebookF } from "@fortawesome/free-brands-svg-icons";
 
 import * as S from '../DashBoard.styled'
-import { response } from "express";
 
 export const Login = ()=>{
 
