@@ -1,5 +1,6 @@
 #from django.shortcuts import render
 from multiprocessing import context
+from scipy import constants, optimize, sparse
 
 import numpy as np
 from django.http import HttpResponse
@@ -71,8 +72,29 @@ def mode(request): #웹사이트 접속시 실행될 화면 컨트롤러(뷰)
     return HttpResponse(template.render(context, request))
 
 def scipy(request):
-    context={
+    #1.상수
+    pi_value = constants.pi
+    speed_of_light = constants.c #빛의속도
 
+    #2.최적화 방정식의 해(root)를 찾는 것
+    def equation(x):
+        return x**2 -4
+    root_result = optimize.root(equation, 0).x[0]
+
+    #3.희소행렬 Sparse Data
+    dense_matrix = np.array([0,0,0],[0,5,0],[2,0,0])
+    sparse_matrix = sparse.csr_matrix(dense_matrix)
+    sparse_str = str(sparse_matrix).replace('\n', '<br>')
+
+    #4.Spatial Data 공간데이터
+    point1 = (1,2,3)
+    point2 = (4,5,6)
+
+    context={
+        'pi_value': pi_value,
+        'speed_of_light': speed_of_light,
+        'root_result': root_result,
+        'sparse_str': sparse_str,
     }
     template = loader.get_template('scipy.html')  ## 1. 템플릿 불러오기
     return HttpResponse(template.render(context, request))

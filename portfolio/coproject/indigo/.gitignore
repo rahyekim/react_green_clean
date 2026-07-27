@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#########################################
+# Java
+*.class
+
+# Eclipse
+bin/
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
