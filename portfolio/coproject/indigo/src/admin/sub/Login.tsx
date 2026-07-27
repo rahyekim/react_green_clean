@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import {  useState, useEffect } from "react";
 import { useNavigate,Link } from "react-router-dom";
 import {Container, Row, Col, Button, Card, Form} from 'react-bootstrap'
 import axios from "axios";
@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faFacebookF } from "@fortawesome/free-brands-svg-icons";
 
 import * as S from '../DashBoard.styled'
+import { response } from "express";
 
 export const Login = ()=>{
 
@@ -29,6 +30,10 @@ export const Login = ()=>{
         try{
             const res = await axios.post('http://localhost:5000/api/users/login', {email,password})
             alert(`${res.data.name}님, ${res.data.message}`)
+
+            //✨❄️ 로그인후 저장된 이름이 보이게 하려면 ❄️
+            localStorage.setItem('userName', res.data.name);
+            
             navigate('/admin')
 
         }catch(err:any){
@@ -48,13 +53,13 @@ export const Login = ()=>{
                 <Row className="justify-content-center">
                     <Col xl={10} lg={12} md={9}>
                     <Card className="o-hidden border-0 shadow-lg my-5">
-                        <Card.Body>
+                        <Card.Body className="p-0">
                             <Row>
                                 <Col lg={6} className="d-none d-lg-block bg-login-image"></Col>
                                 <Col lg={6}>
                                 <div className="p-5">
                                     <div className="text-center">
-                                        <h1 className="h4 text-gray-500 mb-4">💙Welcome back💙</h1>
+                                        <h1 className="h4 text-gray-500 mb-4 mt-3">💙Welcome back💙</h1>
                                         <form className="user" onSubmit={handleSubmit}>
                                             <div className="form-group mb-3">
                                                 <Form.Label className="fw-bold small text-secondary ps-0 mb-1">
@@ -83,22 +88,25 @@ export const Login = ()=>{
                                                 />
                                             </div>
                                             {/* 아이디 기억하기 체크박스 */}
-                                            <div className="form-group mb-3">
-                                                <div className="custom-control custom-checkbox small">
-                                                    <Form.Control
+                                            <div className="form-group my-3">
+                                                <div className="custom-control custom-checkbox small text-start">
+                                                    <input
                                                     type="checkbox"
-                                                    className="custom-control-input"
+                                                    className="custom-control-input form-check-input mx-3"
                                                     id="customCheck"
+                                                    checked={rememberme}
+                                                    onChange={e=>setRememberme(e.target.checked)}
+                                                    
                                                     />
-                                                    <Form.Label className="custom-control-label"
+                                                    <label className="custom-control-label"
                                                     htmlFor="customCheck">
                                                         Remember me
-                                                    </Form.Label>
+                                                    </label>
 
                                                     <Button 
                                                     type="submit"
                                                     variant="primary"
-                                                    className="btn btn-block w-100 mb-2"
+                                                    className="btn btn-block w-100 my-3"
                                                     >login</Button>
 
                                                     <hr className="my-3" style={{borderTop:"1px solid #999"}}/>

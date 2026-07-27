@@ -11,7 +11,7 @@ app.use(express.json()) //파싱..프론트엔드에서 보내는 JSON 데이터
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:"2525",
+    password:"",
     database: 'company'
 })
 
@@ -69,6 +69,31 @@ app.post('/api/users/login', (req,res)=>{
     })
 })
 
+//회원목록조회 API
+app.get('/api/users', (req,res)=>{
+    //비밀번호를 제외한 회원정보들을 최근 가입순으로 가져옴
+    const sql=`select id, first_name, last_name, email, zipcode, address, detail_address  
+    from users 
+    order by created_at desc`
+    
+
+    db.query(sql, (err, result)=>{
+
+        if(err){
+            console.error("회원목록 조회 에러", err)
+            return res.status(500).json({message: "회원목록 서버에러 발생"})
+        }
+
+        //조회된 회원을 프론트엔드로 보냄
+        //💡 회원이 없더라도 에러가 나지 않게 빈 배열 그대로 전달하거나,
+        // 프론트에서 length로 체크할 수 있게 result 자체를 보내는 것이 좋습니다.
+        res.status(200).json(result)
+        
+
+    })
+    
+    
+})
 
 
 //서버실행

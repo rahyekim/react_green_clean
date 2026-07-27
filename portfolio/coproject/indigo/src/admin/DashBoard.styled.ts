@@ -68,7 +68,7 @@ export const CardBody = styled.div`
 flex: 1 1 auto;  //🔥CardBody 자신이 부모(Card) 안에서 차지하는 높이
 //세로 높이를 균일하게 맞추기 위한 핵심 기술(세로 높이 100% 팽창용 스위치)
 //부모 높이가 커졌을 때 세로로 남는 빈 공간을 꽉 채워서(grow) 내용물을 수직 정중앙에
-padding: 1.25rem;
+padding: 1.25rem; 
 display: flex; //내부 요소들을 flex로 배치
 justify-content: space-between;
 align-items: center;
@@ -137,6 +137,91 @@ box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     text-align: right;
     margin-bottom: 10px;
 }
+`;
+
+
+//💙회원리스트 
+export const PageWrapper = styled.div`
+
+padding: 1.5rem;
+width:100%;
+`;
+
+export const PageTitle = styled.div`
+
+font-size: 1.75rem;
+color: #5a5c69;
+margin-bottom: 1.5rem;
+width: 100%;
+
+`;
+
+//이름같으면 부트스트랩 Card못슴...
+export const Card = styled.div`
+
+background-color: #fff;
+background-clip: border-box;
+border: 1px solid #e3e6f0;
+border-radius: 0.35rem; //5.6px
+box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.15);
+margin-bottom: 1.5rem; //24px
+
+`;
+
+export const CardHeader = styled.div`
+
+padding: 0.75rem 1.25rem;
+margin-bottom: 0;
+background-color: #f8f9fc;
+border-bottom: 1px solid #e3e6f0;
+
+h6{
+    padding: 1rem;
+    margin:0;
+    font-weight: bold;
+    color: #4e73df;
+    
+}
+
+`;
+
+export const styledTable = styled.table`
+
+width: 100%;
+margin-bottom: 1rem;
+color: #858796;
+border-collapse: collapse; //❄️
+//❄️테두리선을 겹치지 않고(안쓰면 두줄로 겹쳐서나옴) 한 줄로 보이게
+//기본값 border-collapse: separate(두줄)
+//https://wpdatatables.com/how-to-stylize-a-table-border-in-html/
+
+th, td{
+    padding: 0.75rem;
+    vertical-align: top;
+    border: 1px solid #e3e6f0;
+}
+
+th ,td{
+ border-bottom: 1px solid #e0e0e0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+th{
+    background-color: #f8f9fc;
+    text-align: left;
+    white-space: nowrap;
+    //글자가 아무리 길어져도 절대 줄바꿈 안 하고 한 줄로 유지
+
+}
+
+tbody tr:hover{
+    background-color: #f1f3f6;
+}
+/* tr:first-child th { border-top:    none; }
+tr:last-child td  { border-bottom: none; } */
+
 `;
 
 

@@ -46,3 +46,22 @@
     background-size: cover;
     background-position: center;
 }
+
+.bg-login-image{
+    background-image: url("../images/joinBg.png");
+    background-size: cover;
+    background-position: center;
+    min-height: 500px;
+    align-self: stretch;
+}
+
+.img-profile{
+    width:30px; 
+}
+
+
+.page-link {
+    min-width: 40px;      /* 최소 가로 폭을 넉넉하게 지정 */
+    text-align: center;   /* 숫자를 정중앙으로 정렬 */
+    white-space: nowrap;
+}

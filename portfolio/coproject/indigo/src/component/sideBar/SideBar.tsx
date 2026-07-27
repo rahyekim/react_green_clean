@@ -21,8 +21,20 @@ export const SideBar:React.FC = ()=>{
             <Divider className="my-0"/>
 
             <NavItem className="active">
-                <NavLink href="/">
-                    <i className="fas fa-fw fa-tachometer-alt"></i>
+                <NavLink href="/admin">
+                {/* <i className="fas fa-fw fa-tachometer-alt"></i> */}
+                <i className="fas fa-fw fa-home me-2"></i>
+                    <span>DashBoard</span>
+                </NavLink>
+            </NavItem>
+
+            <Divider className="my-0"/>
+
+            {/* 2.회원리스트링크추가 */}
+             <NavItem className="active">
+                <NavLink href="/admin">
+                    <i className="fas fa-fw fa-users me-2"></i>
+                    <span>User List</span>
                 </NavLink>
             </NavItem>
 

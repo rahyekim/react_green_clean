@@ -9,6 +9,7 @@ import Slider from "./include/Slider"
 import Home from "./Home"
 import { Join } from "./admin/sub/Join"
 import { Login } from "./admin/sub/Login"
+import { UserList } from "./admin/sub/UserList"
 
 function App() {
 
@@ -28,6 +29,8 @@ function App() {
       <Route path="/admin" element={<DashBoard/>}/>
       <Route path="/join" element={<Join/>}/> 
       <Route path="/login" element={<Login/>}/>
+      <Route path="/userlist" element={<UserList/>}/>
+
     </Routes>
     </BrowserRouter>
     </>
