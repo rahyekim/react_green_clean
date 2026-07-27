@@ -25,8 +25,88 @@ Mean Median Mode
             <h1>MatlabArrays(매트랩배열)</h1>
             <h1>Interpolation(보간법)</h1>
             <h1>SignificationsTests(유의성검정)</h1>
+        </div>
+     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Scientific Data Result</h2>
 
+            <p>원주율(π): {{ pi_value | floatformat:4 }}</p>
 
+            <p>빛의 속도: {{ speed_of_light }} m/s</p>
+
+            <p>방정식의 해(root): x² - 4 = 0 의 해찾기 <br>
+                {{ root_result }}</p>
+
+            <p>희소행렬 결과: 희소행렬(sparse matrix)을 문자열로 변환한 값
+                메모리 압축 행렬변환 결과
+            </p>
+
+            <div>
+                {{ sparse_str | safe }}
+                {#safe가 없으면 <br> 문자 자체가 화면에 표시#}
+            </div>
+
+            <p>거리:두 점(point) 사이의 거리를 계산<br>
+                {{ distance }}</p>
+
+            <p>보간 결과: 중간값을 추정하는 게 보간 <br>
+                {{ interp_result }}</p>
+
+            <p>t 통계량: 두 그룹 평균 차이를 나타내는 통계량<br>
+                {{ t_stat }}</p>
+
+            <p>p-value: 우연히 이런 차이가 발생할 확률
+                두 그룹간의 차이검정
+                0.05미만이면 두 집단은 확연히 다름 <br>
+                {{ p_value }}</p>
+            <p>
+                Spatial Data → 좌표 데이터를 이용해 거리 계산
+                Interpolation → 존재하지 않는 값을 주변 데이터로 추정
+                중간값을 추정하는 게 보간
+                Statistical Test → 두 집단의 차이가 의미 있는지 검증
+                (데이터 분석/통계 쪽)
+            </p>
+            <p>
+                NumPy
+                 └─ 배열, 행렬 계산
+                      ↓
+                SciPy
+                 ├─ optimize       → 방정식 해 찾기
+                 ├─ sparse         → 희소행렬 처리
+                 ├─ spatial        → 거리 계산
+                 ├─ interpolate    → 데이터 보간
+                 └─ stats          → 통계 검정
+            </p>
+            <p>머신러닝에서는 이런 것들이 전처리, 데이터 분석, 모델 계산 과정에서 등장</p>
+            <p>
+                pandas        → 데이터 정리
+                matplotlib    → 그래프
+                scikit-learn  → 머신러닝 모델
+                tensorflow/pytorch → 딥러닝
+            </p>
+            <p>
+                NumPy
+                → 배열/행렬 계산할 때 쓰는 것
+
+                SciPy
+                → 과학 계산 기능 모아둔 라이브러리
+
+                optimize
+                → 최적화, 방정식 풀이
+
+                sparse
+                → 큰 희소 데이터 처리
+
+                spatial
+                → 거리, 공간 계산
+
+                interpolate
+                → 중간값 추정
+
+                stats
+                → 통계 계산
+            </p>
         </div>
     </div>
 </div>

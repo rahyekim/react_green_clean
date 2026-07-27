@@ -1,6 +1,6 @@
 #from django.shortcuts import render
 from multiprocessing import context
-from scipy import constants, optimize, sparse
+from scipy import constants, optimize, sparse, spatial, interpolate, stats
 
 import numpy as np
 from django.http import HttpResponse
@@ -77,24 +77,69 @@ def scipy(request):
     speed_of_light = constants.c #빛의속도
 
     #2.최적화 방정식의 해(root)를 찾는 것
+    #  Root Finding (방정식의 해 찾기)
+    # 함수의 결과값이 0이 되는 지점(root)을 찾는 기능
+    # equation 함수는 x² - 4 = 0 형태의 방정식을 표현
+    # optimize.root를 이용해 방정식의 해를 계산
+
     def equation(x):
         return x**2 -4
     root_result = optimize.root(equation, 0).x[0]
 
     #3.희소행렬 Sparse Data
-    dense_matrix = np.array([0,0,0],[0,5,0],[2,0,0])
+    # 대부분의 값이 0인 행렬을 효율적으로 저장하는 방법
+    # dense_matrix는 일반적인 2차원 배열 형태
+    # sparse.csr_matrix는 0이 아닌 값만 저장하는 압축 방식
+
+    dense_matrix = np.array([[0,0,0],[0,5,0],[2,0,0]])
     sparse_matrix = sparse.csr_matrix(dense_matrix)
     sparse_str = str(sparse_matrix).replace('\n', '<br>')
+    # 0이 아닌 값(5, 2)만 저장하여
+    # 메모리 사용량을 줄이고 큰 데이터 처리에 효율적
+
 
     #4.Spatial Data 공간데이터
+    # 두 점(point) 사이의 거리를 계산하는 기능
+    # point1과 point2는 3차원 공간의 좌표(x, y, z)
+    # euclidean distance는 피타고라스 정리를 기반으로 직선 거리를 계산
+
     point1 = (1,2,3)
     point2 = (4,5,6)
+    distance = spatial.distance.euclidean(point1, point2)
+
+    #5.보간법 Interpolation
+    # 알려진 데이터 사이의 값을 추정하는 방법
+    # x_known, y_known은 기존 데이터
+    # interp1d를 이용해 x=2일 때의 y값을 예측
+    x_known = np.array([1,3,5])
+    y_known = np.array([10,30,50])
+    interp_func = interpolate.interp1d(x_known, y_known)
+    interp_result = float(interp_func(2))
+
+    #6.통계검정
+    # 두 그룹의 평균 차이가 통계적으로 의미가 있는지 확인
+    # t-test는 두 집단의 평균을 비교하는 대표적인 통계 검정 방법
+    group_a = [10.5, 11.2, 10.8]
+    group_b = [11.5, 12.5, 13.5]
+    t_stat, p_value = stats.ttest_ind(group_a, group_b)
+
+    # 결과:
+    # t_stat : 두 그룹 평균 차이를 나타내는 통계량
+    # p_value : 우연히 이런 차이가 발생할 확률
+    #
+    # 일반적으로 p_value < 0.05이면
+    # 두 그룹의 평균 차이가 통계적으로 유의하다고 판단
 
     context={
-        'pi_value': pi_value,
-        'speed_of_light': speed_of_light,
-        'root_result': root_result,
-        'sparse_str': sparse_str,
+        'pi_value': pi_value, #원주율(π) 값
+        'speed_of_light': speed_of_light, #빛의 속도 값
+        'root_result': round(root_result,2), # 방정식의 해(root) 결과값
+        'sparse_str': sparse_str, #희소행렬(sparse matrix)을 문자열로 변환한 값
+                                # HTML 출력용 데이터
+        'distance': round(distance,2),  # 두 공간 좌표 사이의 유클리드 거리
+        'interp_result': interp_result, # 보간 결과값
+        't_stat': t_stat, # t-검정 통계량
+        'p_value': round(p_value,4),   # t-검정 p-value
     }
     template = loader.get_template('scipy.html')  ## 1. 템플릿 불러오기
     return HttpResponse(template.render(context, request))

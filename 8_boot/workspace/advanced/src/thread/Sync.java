@@ -2,19 +2,27 @@ package thread;
 
 public class Sync {
     public static void main(String[] args) {
+        //Calculator 객체 하나가 생성
         Calculator calculator = new Calculator();
 
+
         User1 user1 = new User1();
-        user1.setCalculator(calculator);
+        user1.setCalculator(calculator); //User1에게 그 객체의 주소(참조값) 전달
         user1.start();
 
         User2 user2 = new User2();
-        user2.setCalculator(calculator);
+        user2.setCalculator(calculator); //객체공유 같은 주소바라봄
         user2.start();
     }
 }
 
-
+/*
+User1 ─┐
+       ├── 같은 Calculator 객체 ── memory
+User2 ─┘
+ */
+// setMemory2 일땐 50 50
+// setMemory1 일땐 100 50
 
 /*
 멀티스레드는 하나의 객체를 공유해서 작업할수도있다
