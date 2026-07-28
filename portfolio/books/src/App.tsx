@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react"
+import { useState} from "react"
 
 import {Container, Row, Col, Navbar, Nav, FormControl, Carousel, Card, Form } from 'react-bootstrap'
 
@@ -12,7 +12,6 @@ import { User, Menu, MessageSquareText, BookOpen,
 
  //🌟유명한 아이콘들은 => 폰트어썸에서만...... 🌟npm install react-icons
 import { FaInstagram, FaYoutube } from "react-icons/fa"
-import { data } from "react-router-dom"
 
 
 //--Data Mockups ---
@@ -264,60 +263,62 @@ function App() {
      {/* Youbute & Event */}
     <section style={{padding:"60px 0"}}>
       <Container>
-        <Row className="gap-5">
+        <Row className="align-items-stretch gap-5">
+          {/* 유튜브 오른쪽 col 7칸*/}
           <Col lg={7}>
             <div className="d-flex justify-content-between align-items-center mb-4">
+              
               <S.SectionTitle className="mb-0">
                 <S.YoutubeSectionNav>
+
                   <ChevronLeft size={24}/>
                   <ChevronRight size={24}/>
 
                 </S.YoutubeSectionNav>
               </S.SectionTitle>
+
             </div>
+         
+            <Row>
+              {youtubeData.slice(0,3).map(data=>(
+                <Col md={4} key={data.id}>
+                  <S.YoutubeCard>
+                    <S.YoutubeThumbnail $bg={data.image}/>
+                    <S.YoutubeText>
+                        <div className="yt-category">
+                          {data.category}
+                        </div>
+                        <div className="yt-title">
+                          {data.title}
+                        </div>
+                    </S.YoutubeText>
+                  </S.YoutubeCard>
+                </Col>
+              ))}
+            </Row>
+          </Col>
+
+        {/* 이벤트 오른쪽 col4칸 */}
+          <Col lg={4}>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <S.SectionTitle>이벤트</S.SectionTitle>
+              <S.EventSectionNav>
+                View more <ChevronRight size={18}/>
+              </S.EventSectionNav>
+            </div>
+            {eventData.map(e=>(
+              <S.EventItem key={e.id}>
+                <Col>
+                  <S.EventBadge $type={e.type}>
+                    {e.type} EVENT
+                  </S.EventBadge>
+                  <S.EventTitle>{e.title}</S.EventTitle>
+                  <S.EventTitle>{e.date}</S.EventTitle>
+                </Col>
+              </S.EventItem>
+            ))}
           </Col>
         </Row>
-
-      <Row>
-        {youtubeData.slice(0,3).map(data=>(
-          <Col md={4} key={data.id}>
-            <S.YoutubeCard>
-              <S.YoutubeThumbnail $bg={data.image}/>
-              <S.YoutubeText>
-                  <div className="yt-category">
-                    {data.category}
-                  </div>
-                  <div className="yt-title">
-                    {data.title}
-                  </div>
-              </S.YoutubeText>
-            </S.YoutubeCard>
-          </Col>
-        ))}
-      </Row>
-
-      <Col lg={4}>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <S.SectionTitle>이벤트</S.SectionTitle>
-          <S.EventSectionNav>
-            View more <ChevronRight size={18}/>
-          </S.EventSectionNav>
-        </div>
-        {eventData.map(e=>(
-          <S.EventItem key={e.id}>
-            <Col>
-              <S.EventBadge $type={e.type}>
-                {e.type} EVENT
-              </S.EventBadge>
-              <S.EventTitle>{e.title}</S.EventTitle>
-              <S.EventTitle>{e.date}</S.EventTitle>
-            </Col>
-          </S.EventItem>
-        ))}
-        
-        
-      </Col>
-
       </Container>
     </section>
 
@@ -337,7 +338,7 @@ function App() {
             {icon:FaYoutube, text:"그린스터디북스", sns:"youtube"},
             {icon:MessageSquareText, text:"그린맘스", sns:"band"},
             ].map((item, idx)=>(
-              <Col  xs={12} md={6} lg={2} key={idx}>
+              <Col  xs={12} sm={6} md={4} lg={4} key={idx}>
                 <S.CommunityButton variant="light">
                   <div className="icon-text">
                     <item.icon 
@@ -363,7 +364,6 @@ function App() {
 
     <S.StyledFooter>
       <Container>
-        <S.StyledFooter>
           <S.FooterLinkList>
             <li>회사 소개</li>
             <li>이용 약관</li>
@@ -373,8 +373,11 @@ function App() {
             <li>투고 문의</li>
             <li>사이트맵</li>
           </S.FooterLinkList>
-          <Row className="align-items-start">
-            <Col md={8}>
+
+          <Row className="align-items-start g-4">
+            
+          {/* 회사 정보 (왼쪽) */}
+            <Col md={7} lg={8}>
               <S.FooterCompanyInfo>
                 <div className="footer-log">
                  📍 Green Study Books
@@ -383,11 +386,15 @@ function App() {
                 서울 서초구 그린로 304 (서초동) 그린타워 10층 | 팩스: 02-0000-0000 | 고객센터: 1661-0000<br/>
               </S.FooterCompanyInfo>
             </Col>
-            <Col md={4}
+            
+            {/* SNS & 패밀리 사이트 (오른쪽) */}
+            <Col md={5} lg={4}
             className="text-end d-flex flex-column align-items-end gap-3 ">
+
               <S.FooterSnsIcons>
                 <FaInstagram/><FaYoutube/><MessageSquareText/>
               </S.FooterSnsIcons>
+              
               <Form.Select
               size="sm" style={{width:"150px"}}>
                 <option>Family site</option>
@@ -396,7 +403,6 @@ function App() {
               </Form.Select>
             </Col>
           </Row>
-        </S.StyledFooter>
       </Container>
     </S.StyledFooter>
 

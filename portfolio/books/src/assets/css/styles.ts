@@ -5,7 +5,6 @@ import {Card, Nav, Form, Navbar , Button, Container, Row, Col } from 'react-boot
 //무료 아이콘 라이브러리 npm install lucide-react
 
 import {Search} from 'lucide-react';
-import { BiFontSize } from 'react-icons/bi';
 
 //---1. Global styles--- 전역
 
@@ -74,7 +73,7 @@ export const BookCard = styled(Card)`
 border: none;
 border-radius: 12px;
 overflow: hidden;
-transition: trasform 0.2s, box-shadow 0.2s;
+transition: transform 0.2s, box-shadow 0.2s;
 background-color: var(--hover-card-bg);
 height: 100%;
 &:hover{
@@ -108,7 +107,6 @@ font-size: 1rem;
 font-weight: 600;
 margin-top: 10px;
 text-align: center;
-//???????
 `;
 
 //모바일에서 옆으로 넘겨 볼 수 있는 탭 UI👍
@@ -150,7 +148,7 @@ export const HeaderLogo = styled(Navbar.Brand)`
 font-size: 1.5rem;
 font-weight: 800;
 color: #333;
-&:hover{color: #474141;}  ////?????
+&:hover{color: #555;}  
 `;
 
 export const SearchForm = styled(Form)`
@@ -162,7 +160,7 @@ width: 300px;
     margin: 10px 0;
 }
 
-.form-control{   ////??????? <FormControl/>
+.form-control{   ////<FormControl/>
     border-radius: 20px;
     padding-right: 40px; 
 }
@@ -185,6 +183,7 @@ height: 400px;
 display: flex;
 align-items: center;
 position: relative;
+overflow: hidden; /* 요소가 밖으로 삐져나가지 않도록 방지 */
 
 @media (max-width:992px){
     height: 350px;
@@ -205,7 +204,7 @@ height: 100%;
 export const BannerText =styled.div`
 max-width: 50%;
 color: #333;
-z-index: 2;
+z-index: 2; /* 이미지보다 위에 오도록 설정 */
 
 .category-badge{
     background-color: #333 ;
@@ -235,11 +234,13 @@ p{
     display: inline-flex;
     align-items: center;
     gap:5px;
-}
 
-&:hover{
+    &:hover{
     text-decoration: underline;
 }
+}
+
+
 
 @media (max-width: 992px){
     max-width: 100%;
@@ -252,8 +253,6 @@ p{
         font-size: 1.6rem;
     }
 }
-
-
 `;
 
 export const BannerBookImg = styled.div`
@@ -467,9 +466,8 @@ font-weight: 500;
 margin-top: 5px;
 `;
 export const EventDate = styled.div`
-
+font-size:0.8rem; color:#999;
 `;
-// ///////////////////////
 
 // --community
 export const CommunityButton = styled(Button)`
@@ -483,7 +481,7 @@ align-items: center;
 justify-content: space-between;
 width: 100%;
 font-weight: 600;
-transition: backgroud-color 0.2s, border-color 0.2s;
+transition: background-color 0.2s, border-color 0.2s;
 &:hover{
     background-color: #fafafa;
     border-color: #ddd;
@@ -492,10 +490,15 @@ transition: backgroud-color 0.2s, border-color 0.2s;
 .icon-text {
     display: flex;
     align-items: center;
+    white-space: nowrap; //글씨 줄바꿈 x
+    min-width: 0; /* flex 자식의 너비 줄어듦 한계 해제 */
+
     gap:10px;
     svg{
         width: 24px;
         height: 24px;
+        flex-shrink: 0; 
+        /* 🔻 [추가] 아이콘이 찌그러지지 않도록 고정 */
     }
 }
 
@@ -506,11 +509,18 @@ export const StyledFooter = styled.footer`
 background-color: #f8f9fa;
 padding: 50px 0;
 color: #666;
+border-top: 1px solid #eee; /* 푸터 상단 구분을 위한 연한 라인 */
 `;
 export const FooterLinkList = styled.ul`
 display: flex;
 gap: 20px;
 margin-bottom: 30px;
+
+@media (max-width: 768px){
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
 li{
     font-size: 0.95rem;
     font-weight: 500;
@@ -518,10 +528,7 @@ li{
     &:hover{
         color: #333;
     }
-    @media (max-width: 768px){
-        flex-wrap: wrap;
-        gap: 10px;
-    }
+   
 }
 `;
 export const FooterCompanyInfo = styled.div`
@@ -536,13 +543,19 @@ line-height: 1.6;
 `;
 export const  FooterSnsIcons = styled.div`
 display: flex;
+align-items: center;
+justify-content: center;
+width: 150px;
+
 gap: 15px;
 svg{
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
+    color: #777; /* 기본 색상을 연한 회색으로 통일 */
     cursor: pointer;
     &:hover{
         color: #555;
+        transform: translateY(-2px);
     }
 }
 
