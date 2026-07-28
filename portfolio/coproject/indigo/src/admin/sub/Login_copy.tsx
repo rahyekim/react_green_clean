@@ -7,6 +7,8 @@ import { faGoogle,faFacebook,faXTwitter } from "@fortawesome/free-brands-svg-ico
 
 import * as S from '../DashBoard.styled'
 
+
+
 export const Login = ()=>{
 
     const navigate = useNavigate();
@@ -14,7 +16,22 @@ export const Login = ()=>{
     const [email, setEmail]=useState("");
     const [password, setPassword]= useState("");
 
+    //아이디 기억하기 
     const [rememberme, setRememberme]=useState(false);
+
+    //1. 컴포넌트 마운트 시 LocalStorage에 저장된 아이디 불러오기
+    const [userId, setUserId]=useState(()=>{   //useState의 초기값(Lazy Initialization)기능
+
+        return localStorage.getItem('savedId') || "";
+    });
+    // useEffect(() => {
+    // const savedId = localStorage.getItem('savedId');
+    // if (savedId) {
+    //     setUserId(savedId);
+    // }
+    // }, []);
+    
+    
 
     //로그인버튼 누를때 실행되는 함수
     const handleLogin= async(e:React.FormEvent)=>{
@@ -33,7 +50,15 @@ export const Login = ()=>{
             //✨로그인후 저장된 이름이 보이게 
             localStorage.setItem('userName', res.data.name)
             
-            
+            {/*
+ // 2. 로그인 시 체크박스 상태에 따라 LocalStorage 처리
+    if (rememberMe) {
+      localStorage.setItem('savedId', userId);
+    } else {
+      localStorage.removeItem('savedId');
+    }
+                
+                 */}
             navigate('/admin');
         }catch(err:any){
             //1.서버가 응답을 주면서 에러를 낸 경우
