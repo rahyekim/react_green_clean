@@ -337,7 +337,7 @@ function App() {
             {icon:FaYoutube, text:"그린스터디북스", sns:"youtube"},
             {icon:MessageSquareText, text:"그린맘스", sns:"band"},
             ].map((item, idx)=>(
-              <Col  xs={12} md={5} lg={2} key={idx}>
+              <Col  xs={12} md={6} lg={2} key={idx}>
                 <S.CommunityButton variant="light">
                   <div className="icon-text">
                     <item.icon 

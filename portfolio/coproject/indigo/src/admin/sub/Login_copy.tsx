@@ -13,17 +13,24 @@ export const Login = ()=>{
 
     const navigate = useNavigate();
 
-    const [email, setEmail]=useState("");
+    //컴포넌트 마운트 시 LocalStorage에 저장된 아이디 불러오기
+    //useState의 초기값(Lazy Initialization)기능
+    const [email, setEmail]=useState(() => {
+    return localStorage.getItem('savedEmail') || "";
+});
     const [password, setPassword]= useState("");
 
     //아이디 기억하기 
-    const [rememberme, setRememberme]=useState(false);
+    //아이디 기억하기 
+const [rememberme, setRememberme] = useState(() => {
+    // 만약 로컬스토리지에 저장된 이메일이 이미 있다면, 
+    // 처음 들어왔을 때 'Remember me' 체크박스도 체크된 상태로 시작하게 하면 센스 있겠죠?
+    return !!localStorage.getItem('savedEmail');
+});
 
-    //1. 컴포넌트 마운트 시 LocalStorage에 저장된 아이디 불러오기
-    const [userId, setUserId]=useState(()=>{   //useState의 초기값(Lazy Initialization)기능
+  
+ 
 
-        return localStorage.getItem('savedId') || "";
-    });
     // useEffect(() => {
     // const savedId = localStorage.getItem('savedId');
     // if (savedId) {
@@ -50,15 +57,13 @@ export const Login = ()=>{
             //✨로그인후 저장된 이름이 보이게 
             localStorage.setItem('userName', res.data.name)
             
-            {/*
- // 2. 로그인 시 체크박스 상태에 따라 LocalStorage 처리
-    if (rememberMe) {
-      localStorage.setItem('savedId', userId);
-    } else {
-      localStorage.removeItem('savedId');
-    }
-                
-                 */}
+        // 2. 로그인 시 체크박스 상태에 따라 LocalStorage 처리
+            if (rememberme) {
+            localStorage.setItem('savedEmail', res.data.email);
+            } else {
+            localStorage.removeItem('savedEmail');
+            }
+                        
             navigate('/admin');
         }catch(err:any){
             //1.서버가 응답을 주면서 에러를 낸 경우

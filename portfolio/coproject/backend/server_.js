@@ -65,7 +65,11 @@ app.post('/api/users/login', (req,res)=>{
             return res.status(401).json({message: "이메일 또는 비밀번호가 올바르지 않습니다"})
         }
         const user = result[0]; //검색된 배열중에 첫번째 [{회원정보}] , 이름도같이보냄...
-        res.status(200).json({message: "로그인 성공!", name: user.first_name})
+        res.status(200).json({
+            message: "로그인 성공!",
+            name: user.first_name,
+            email: user.email, //이메일 -> localstorage에저장..rememberme...
+        })
     })
 })
 
