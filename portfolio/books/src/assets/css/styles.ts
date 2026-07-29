@@ -53,6 +53,16 @@ body{
 
     .carousel-control-prev-icon, 
     .carousel-control-next-icon { filter: invert(1); } //invert 100: 반전색..대조효과줌..
+
+    .carousel-control-prev {
+    left: -30px; /* 바깥쪽으로 더 밀어내기 */
+    opacity: 0.2;
+    }
+    
+    .carousel-control-next {
+    right: -30px; /* 바깥쪽으로 더 밀어내기 */
+    opacity: 0.2;
+    }
 }
 
 `;
@@ -453,7 +463,9 @@ border-radius: 5px;
 font-size: 0.75rem;
 font-weight: 600;
 ${props=> props.$type === "채널" && css `
-background-color:#e3f2fd; color: #1565c0;`}
+background-color:#e3f2fd; 
+color: #1565c0;
+`}
 ${props=> props.$type === "해외" && css `
 background-color:#e8f5e9; color: #2e7d32;`}
 ${props=> props.$type === "라인업" && css `
@@ -498,7 +510,7 @@ transition: background-color 0.2s, border-color 0.2s;
         width: 24px;
         height: 24px;
         flex-shrink: 0; 
-        /* 🔻 [추가] 아이콘이 찌그러지지 않도록 고정 */
+        /* [추가] 아이콘이 찌그러지지 않도록 고정 */
     }
 }
 
