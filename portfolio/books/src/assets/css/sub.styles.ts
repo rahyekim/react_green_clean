@@ -3,7 +3,6 @@ import styled,{ createGlobalStyle, css } from "styled-components";
 import { Card, Nav, Form, Button, Row, Col, Container } from "react-bootstrap";
 
 import { Search } from "lucide-react";
-import { TbBackground } from "react-icons/tb";
 
 export const GlobalStyle = createGlobalStyle`
 
@@ -133,21 +132,18 @@ font-weight: 500;
 
 transition: all 0.2s;
 
+background-color: #fff;
+color: #555;
+border: var(--border-color);
+
 ${ props=> props.$active   && css `
 background-color: var(--primary-color);
 color:  #fff;
 border:  var(--primary-color);`}
-
-${props=> props.$active === false && css `
-background-color: #fff;
-color: #555;
-border: var(--border-color);`}
  
 &:hover{
     //활성화 상태면 변경없음...
-    ${ props=> props.$active === false && css `
-    background-color: #c5cdd4;
-    `}
+    background-color: ${props=> !props.$active ? "#c5cdd4" : ""};
 }
 
 
@@ -201,9 +197,9 @@ margin-bottom: 30px;
 
 @media (max-width: 576px){
     flex-direction: column;
-    align-items: flex-start; ///수직정렬???
-    /* justify-content: flex-start; */
+    align-items: flex-start; 
     gap: 15px;
+    padding-left: 15px;
 }
 
 .form-check{
@@ -304,16 +300,19 @@ background:  var(--primary-color);
 color: #fff;
 `};
 
-/* 
-${props=>props.$active ===false && css`
 
-`} */
-
-&:hover:not(.active){
-    background-color: #d4dce4;
-
+&:hover{
+    background-color: ${props => !props.$active ? "#d4dce4" : "" };
 }
+
+/* $active가 참(true)이 아닐 때만 hover 스타일 적용 */
+  
+
+
+
 `;
+
+
 
 
 
