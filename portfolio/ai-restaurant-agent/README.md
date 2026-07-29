@@ -4,7 +4,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 //next js 설치
 npm create-next-app@latest 프로젝트명
-npm install mbd-react-ui-kit@fortawesome/free
+npm install mdb-react-ui-kit @fortawesome/fontawesome-free --legacy-peer-deps
 
 First, run the development server:
 
