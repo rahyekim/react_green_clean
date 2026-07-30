@@ -73,7 +73,7 @@ const Header = ()=> {
                 <img src={logoImg} alt={logoText} style={{maxHeight:"40px"}}/>}
               </a>
             </h1>
-
+{/* 
             <nav>
                 <ul className={`gnb ${isOpen ? 'active' : ''}`}> 
                    <li><a href="/">HOME</a></li>
@@ -81,6 +81,21 @@ const Header = ()=> {
                    <li><a href="/work">WORK</a></li>
                    <li><a href="/blog">BLOG</a></li>
                    <li><a href="/contact">CONTACT US</a></li>
+                </ul>
+            </nav> */}
+
+            
+            <nav>
+                <ul className={`gnb ${isOpen ? 'active' : ''}`}> 
+                   {menus && menus.length > 0 ? (
+                    menus.map(menu=> (
+                    <li><a href="/">HOME</a></li>
+                   <li><a href="/introduce">WE ARE</a></li>
+                   <li><a href="/work">WORK</a></li>
+                   <li><a href="/blog">BLOG</a></li>
+                   <li><a href="/contact">CONTACT US</a></li>
+                    ))
+                   )}
                 </ul>
             </nav>
 
