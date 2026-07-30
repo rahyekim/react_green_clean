@@ -22,14 +22,14 @@ app = FastAPI()  #FastAPI 앱(서버) 인스턴스 생성 => 모든설정과 API
 
 #app에 cors미들웨어를 추가
 app.add_middleware(
-    CORSMiddleware, #사용할 미들웨어 종류를 지정
-    allow_origins=["http://localhost:3000"],  #요청을 허용할 주소 목록 "*":모든
-    #쿠키나 인증번호(credential) 요청에 포함하는 것을 허용
-    allow_credentials=True,
-    #허용할 http메소드를 지정
-    allow_methods=["*"],
-    #허용할 http 헤더지정
-    allow_headers=["*"],
+    CORSMiddleware,    #사용할 미들웨어 종류를 지정
+    allow_origins=["http://localhost:3000"],     #요청을 허용할 주소 목록 "*":모든
+
+    allow_credentials=True,       #쿠키나 인증번호(credential) 요청에 포함하는 것을 허용
+
+    allow_methods=["*"],      #허용할 http메소드를 지정
+
+    allow_headers=["*"],    #허용할 http 헤더지정
 )
 '''
 #프론트엔드에서 서버로 보내는 요청(Request) 데이터 구조 정의
@@ -58,7 +58,9 @@ async def chat_endpoint(request: ChatRequest):
 #구동명령어 uvicorn main:app --reload
 
 
-
+'''
+pip install openai langchain langchain-openai python-dotenv
+'''
 
 
 
