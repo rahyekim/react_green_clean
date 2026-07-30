@@ -28,15 +28,16 @@ export const HeaderSetting = ()=>{
         {id:2 , title:'WE ARE', link: '/weare'},
         {id:3 , title:'WORK', link: '/work'},
         {id:4 , title:'BLOG', link: '/blog'},
-        {id:4 , title:'CONTACT US', link: '/contact'},
+        {id:5 , title:'CONTACT US', link: '/contact'},
     ]);
 
-    //함수 메뉴관리 로직  ????
-    const handleAddmenu = (field: 'title' | 'link', value: string)=>{
+    //함수 메뉴관리 로직  
+    //새로운 메뉴 행 추가
+    const handleAddmenu = ()=>{
         const newMenu:MenuItem = {
             id : Date.now(),
-            title: value,
-            link: value,
+            title: "",
+            link: "",
         };
 
         setMenus(prevMenus=>[
@@ -104,6 +105,8 @@ export const HeaderSetting = ()=>{
                             value="text"
                             onChange={()=> setLogoType('text')}
                             checked={logoType==='text'}
+                            /* 🟢 찌그러진 밑줄이 동그라미로 복원*/
+                            style={{ width: "16px", height: "16px", minWidth: "16px", appearance: "radio" }}
                             />
                             글씨(text)로고 사용
                         </label>
@@ -114,6 +117,7 @@ export const HeaderSetting = ()=>{
                             value="img"
                             onChange={()=> setLogoType('img')}
                             checked={logoType==='img'}
+                            style={{ width: "16px", height: "16px", minWidth: "16px", appearance: "radio" }}
                             />
                             이미지(image)로고 사용
                         </label>
@@ -173,21 +177,13 @@ export const HeaderSetting = ()=>{
                         </S.MenuRow>
                     ))}
 
-                    <S.MenuRow>
-                     {/* <div style={{marginTop:"15px"}}>
-                        <input type="text" onChange={} />
-                        <input type="text" onChange={} />
-
+                     <div style={{marginTop:"15px"}}>
                         <S.Button
                         variant="success"
-                        onClick={()=>handleAddmenu(title,link)}
+                        onClick={()=>handleAddmenu()}
                         >+메뉴 항목 추가
                         </S.Button>
-                    </div>  */}
-
-                    </S.MenuRow>
-
-                   
+                    </div> 
             </S.Card>
             
                 {/* 최종저장버튼 */}
@@ -201,13 +197,7 @@ export const HeaderSetting = ()=>{
                     </S.Button>
                 </S.SaveBtnWrap>
             
-            
-            
         </S.PageWrapper>
-     
-
-
-
     </Layout>
     </>
 )};
@@ -242,19 +232,18 @@ export const HeaderSetting = ()=>{
 */
 
 /*
-CREATE TABLE header_setting (
+헤더의 기본설정을 저장할 테이블 데이터 한줄만사용,,,,
+CREATE TABLE if not exists header_setting (
 id INT PRIMARY KEY DEFAULT 1,
 logo_type VARCHAR(20) DEFAULT 'text',
 logo_text VARCHAR(100) DEFAULT 'indigo',
 logo_image VARCHAR(255) DEFAULT '/assets/images/header/logo.png' 
 );
-
+헤더의 서브메뉴 리스트 저장할 테이블 
 CREATE TABLE if NOT exists header_menus(
 id INT AUTO_INCREMENT PRIMARY KEY,
 title VARCHAR(100) NOT NULL,
 link VARCHAR(100) NOT NULL
 );
-
-
 
  */

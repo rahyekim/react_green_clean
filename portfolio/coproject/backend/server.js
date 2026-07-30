@@ -112,7 +112,8 @@ app.post('/api/settings/header', (req,res)=>{
     logo_text =values(logo_text),
     logo_image = values(logo_image)
     `;
-
+    //ID 1번으로 헤더 설정을 저장하되, 첫 저장일 때는 새 데이터로 넣고, 
+    //두 번째부터는 계속 덮어씌워서 1개의 데이터만 유지
     //처음이면 만들고, 두 번째부터는 수정해 줘
 
     //?자리에 [logoType, logoText, logoImage]순서대로 값을넣어 쿼리실행
@@ -139,9 +140,9 @@ app.post('/api/settings/header', (req,res)=>{
                     ));
                     // 물음표를 하나만 쓰고 2차원 배열을 통째로 넘김
                     const insertMenuSql=`
-                    insert into header_menus (title,link) values (?);
+                    insert into header_menus (title,link) values ?;
                     `
-                    db.query(insertMenuSql, [menuValues], (err,result)=>{
+                    db.query(insertMenuSql, [menuValues], (err)=>{
                         if(err){
                             console.error("메뉴저장중에러: ", err)
                             return res.status(500).json({ message: "메뉴 저장 중 에러" });
@@ -179,14 +180,14 @@ app.get('/api/settings/header', (req,res)=>{
         };
 
         // 2. 로고 조회가 성공하면, 그 안에서 메뉴 목록 조회하기
-        db.query(`select id,title, link from header_menus`,(err,menuResult)=>{
+        db.query(`select id,title,link from header_menus`,(err,menuResult)=>{
             
             if(err){
                 return res.status(500).json({message:'메뉴불러오기에러', err});
             }
             //조회결과 배열의 첫번째 행(로고설정)을 꺼냄
             //{...} DB에 데이터가 없을 경우 처음접속시 기본값 사용
-    
+            
             //로고정보와 메뉴 목록을 하나의 객체로 클라이언트에게 응답
             res.status(200).json({
                 logoType: settings.logo_type,

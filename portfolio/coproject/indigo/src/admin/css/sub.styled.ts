@@ -46,16 +46,13 @@ export const  MenuLink =styled.a`
 
 export const PageWrapper =styled.div`
 padding: 20px; 
-/* max-width: 90%; ///??? */
-width:100%;
 
 `;
 
 export const  PageTitle=styled.h1`
-font-size: 1.75rem;
-font-weight: 400;
-color:#5a5c69;
-////?????
+font-size: 1.5rem;
+color:#333;
+margin-bottom: 20px;
 
 `;
 
@@ -99,20 +96,31 @@ max-width: 400px;
 
 export const RadioGroup  =styled.div`
 display: flex;
-gap: 15px;
+align-items: center;
+gap: 20px;
 align-items: center;
 font-weight: normal;
 
 label{
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     cursor: pointer;
+    user-select: none; /* 글자 드래그 방지 */
+
+    input[type="radio"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: #3f51b5; /* 메인 테마 색상으로 동그라미 색 변경 */
+    }
 }
 `;
 
 export const MenuRow =styled.div`
 display: flex;
+align-items: center;
+justify-content: center;
 gap:10px;
 margin-bottom: 10px;
 align-items: center;

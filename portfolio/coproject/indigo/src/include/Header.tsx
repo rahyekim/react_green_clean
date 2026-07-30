@@ -84,7 +84,7 @@ const Header = ()=> {
                 </ul>
             </nav> */}
 
-            
+{/*             
             <nav>
                 <ul className={`gnb ${isOpen ? 'active' : ''}`}> 
                    {menus && menus.length > 0 ? (
@@ -97,7 +97,7 @@ const Header = ()=> {
                     ))
                    )}
                 </ul>
-            </nav>
+            </nav> */}
 
             <span className="menu-toggle-btn" onClick={toggleMenu}>
                 <span></span>
