@@ -10,14 +10,11 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
-<<<<<<< HEAD
-=======
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@fortawesome/react-fontawesome": "^3.5.0",
     "bootstrap": "^5.3.8",
     "lucide-react": "^1.27.0",
->>>>>>> cc1fb8aea7c142b70d00d6b043e7647b9b62701d
     "mdb-react-ui-kit": "^10.0.0",
     "next": "16.2.12",
     "react": "19.2.4",
