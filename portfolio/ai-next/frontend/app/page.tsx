@@ -27,14 +27,17 @@ interface Message {
 }
 
 export default function Home(){
+  //사용자가 입력창에 적고 있는 글자를 저장하는 상태(State)
   const [inputText, setInputText] = useState("");
+  //AI가 답변을 생각하는 중(로딩 중)인지 여부를 저장하는 상태
   const [isLoading, setIsLoading] = useState(false); //로딩상태 추가
+  //채팅 화면에 보여줄 메시지들의 목록을 배열로 저장하는 상태
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
       text: "안녕하세요! 노원구 맛집 AI 에이전트 입니다. 어떤 맛집을 찾고 계신가여? (예: 주차 가능한 고기집 찾아줘) ",
       sender: "ai"
-    }
+    }  ////화면이 처음 켜졌을 때 보여줄 기본 AI 인사말을 설정
   ]);
 
   /*
@@ -57,7 +60,7 @@ export default function Home(){
   //사용자가 전송 버튼을 누르거나 엔터키를 쳣을 때 실행되는 비동기 함수(async await)
   const handleSend = async()=>{
 
-    /* 빈메세지 방지 함수종료 */
+    /*입력창의 양쪽 공백을 제거(trim)했을 때 아무 글자도 없으면=> 빈메세지 방지 함수종료 */ 
     if(!inputText.trim()) return;
 
     //사용자메세지추가
@@ -77,7 +80,7 @@ export default function Home(){
     setIsLoading(true); //ai 응답대기상태로 변경 
 
     /*
-    파이썬 백엔드 서버(Fast API)를 데이터를 보냄(POST요청)// get은 정도노출됨..
+    파이썬 백엔드 서버(Fast API)로 데이터를 보냄(POST요청)// get은 쿼리 스트링으로 어느정도노출됨..
     fetch 함수는 네트워크 통신을 담당 await를 써서 응답이 올때까지 기다림..
      */
     try{
@@ -105,7 +108,7 @@ export default function Home(){
         id: Date.now(),
         text: data.reply,
         sender: "ai"
-      }   //????
+      }   
     ])
     }catch(err){ //통신중 에러(서버꺼짐, 인터넷끊킴 등 )발생하면 콘솔에 에러 출력
 
@@ -142,10 +145,19 @@ export default function Home(){
   return(
     <>
   <MDBContainer className="py-5" style={{maxWidth:"800px"}}>
-    <MDBCard>
+      <MDBCard 
+      style={{height:"80vh", overflow: "hidden", display:"flex",flexDirection:"column"}}
+
+       >
       {/* 헤더영역 */}
       <MDBCardHeader
-      className="d-flex justify-content-between align-items-center p-3 text-white bg-primary"
+      className="d-flex justify-content-between align-items-center p-4 text-white "
+      style={{
+        border:"none",
+        overflow: "hidden",
+        borderTopLeftRadius:"25px", 
+        borderTopRightRadius:"25px", 
+        backgroundColor:"#3f51b5"}}
       >
         <div className="d-flex align-items-center">
          <MDBIcon fas icon="robot" size="lg" className="me-2"/>
@@ -167,7 +179,7 @@ export default function Home(){
           >
             {msg.sender === "ai" && (
             <div className="me-2 text-center"
-              style={{width:"41px", height:"100%"}}>
+              style={{width:"40px", height:"100%"}}>
                   <MDBIcon fas icon="robot" size="2x" style={{color:"#3f51b5"}}/>
               </div>
              )}
@@ -177,8 +189,9 @@ export default function Home(){
               padding: "10px",
               color: msg.sender==="ai"? "black" : "white" ,
               backgroundColor: msg.sender==="user"?"#3f51b5":"#e0e0e0"}}
-             className="p-3 m-3"
+             className="p-3 m-2"
              >
+              {/* whiteSpace: 엔터와 띄어쓰기를 그대로 살리면서 예쁘게 줄바꿈 */}
               <p className="small mb-0" style={{lineHeight:"1.5", whiteSpace: "pre-wrap"}}>
                 {msg.text}
               </p>
@@ -229,13 +242,14 @@ export default function Home(){
         style={{borderRadius:"15px"}}
         />
         <MDBBtn color="primary"
-        className="ms-2 border-2 d-flex justify-content-centr align-items-center"
+        className="ms-2 border-2 d-flex justify-content-center align-items-center"
         onClick={handleSend}
         disabled={isLoading}
-        style={{minWidth:"30px"}}
+        style={{minWidth:"50px", height: "48px",borderRadius:"14px"}}
         >
-          <MDBIcon fas icon="paper-plane"  style={{ fontSize: "20px"}} />
-          
+          {/**/}
+          <MDBIcon fas icon="paper-plane" className="me-2"  style={{ fontSize: "20px"}} />
+           
         </MDBBtn>
 
       </MDBCardFooter>

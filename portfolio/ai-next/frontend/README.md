@@ -27,6 +27,7 @@ CSR (React처럼 브라우저에서 렌더링)
 ## next js 설치
 npm create-next-app@latest 프로젝트명
 npm install mdb-react-ui-kit @fortawesome/fontawesome-free --legacy-peer-deps
+npm i --force 
 
 ## 매티리얼 디자인 설치
 
