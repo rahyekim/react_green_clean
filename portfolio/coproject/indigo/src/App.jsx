@@ -10,6 +10,7 @@ import Home from "./Home"
 import { Join } from "./admin/sub/Join"
 import { Login } from "./admin/sub/Login"
 import { UserList } from "./admin/sub/UserList"
+import { HeaderSetting } from "./admin/sub/HeaderSetting"
 
 function App() {
 
@@ -30,6 +31,8 @@ function App() {
       <Route path="/join" element={<Join/>}/> 
       <Route path="/login" element={<Login/>}/>
       <Route path="/userlist" element={<UserList/>}/>
+      <Route path="/hdsetting" element={<HeaderSetting/>}/>
+
 
     </Routes>
     </BrowserRouter>

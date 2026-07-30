@@ -5,16 +5,13 @@ const cors = require("cors");
 
 const app = express();
 
-// app.use(cors()) //cors
-app.use(cors({
-    origin: 'http://localhost:5173' //여러개는 배열로[]
-}));
+app.use(cors()) //cors
 app.use(express.json()) //파싱..프론트엔드에서 보내는 JSON 데이터를 읽기위한 설정...
 
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:"2525",
+    password:"",
     database: 'company'
 })
 
@@ -25,72 +22,187 @@ db.connect(err => {
 
 //등록 
 app.post('/api/users/register', (req,res)=>{
-    const {first_name, last_name, email, password, zip_code, address, detail_address} = req.body
-    const sql = `insert into users
-    (first_name, last_name, email, password, zip_code, address, detail_address) 
-    values(?,?,?,?,?,?,?)`
+    const {first_name, last_name, email, password, zipcode, address, detail_address} = req.body
+    const sql= 'insert into users(first_name, last_name, email, password, zipcode, address, detail_address)values(?,?,?,?,?,?,?)'
 
-    //검증
-    if(!first_name || !last_name || !password || !email ){
-       return res.status(400).json({message:"필수항목을 입력해주세요"})        
+     // ✅ Node 백엔드 검증 영역
+    if(!first_name || !last_name || !email || !password){
+        return res.status(400).json({
+            message:"필수 항목을 입력해주세요"
+        });
     }
-    if(password.length <8){
-    return res.status(400).json({message:"비밀번호는 8자리이상이어야합니다"})        
 
+    if(password.length < 8){
+        return res.status(400).json({
+            message:"비밀번호는 8자 이상이어야 합니다"
+        });
     }
-    db.query(
-        sql,
-        [first_name,last_name, email, password, zip_code, address, detail_address],
-    (err,result)=>{
-        if (err) {
-            console.error("회원가입에러: ",err);
-            if(err.code === 'ER_DUP_ENTRY'){
-            return res.status(400).json({message: '이미존재하는 이메일입니다'})
+    
+    db.query(sql,[first_name, last_name, email, password, zipcode, address, detail_address],(err,result)=>{
+        if(err) {
+            console.error("회원가입 에러:", err);
+            if(err.code === 'ER_DUP_ENTRY'){  //DB가 알려주는 에러 종류 : UNIQUE 중복 발생
+
+                return res.status(400).json({message: '이미존재하는 이메일입니다'}); //409충돌
+            }
+            return res.status(500).json({message: '서버오류발생'});
         }
-        return res.status(500).json({message: "서버오류발생"});
-    }res.status(201).json({message: "회원가입이 완료되엇습니다 welcome", userID : result.insertId})
-    })
-})
+        res.status(201).json({message: "회원가입이 완료되었습니다", userId: result.insertId}); 
+        //저장이 완료되었다고 알림
+    });
+});
 
-//login=>조회(select).. 이미있는 회원데이터를 찾음
+//login
 app.post('/api/users/login', (req,res)=>{
     const { email, password} = req.body;
     const sql = 'select * from users where email = ? and password = ?' //회원정보 일치하는거 꺼냄
-
-    if(!email || !password){
-        return res.status(400).json({
-            message:"이메일과 비밀번호를 입력해주세요"
-        });
-    }
     db.query(sql,[email, password], (err,result)=>{
         if(err){
             console.error("로그인 에러:", err);
             return res.status(500).json({message: '서버 오류 발생'});
         }
-        if(result.length === 0){ //일치하는 회원이 없다면... []... 안에..{회원정보}없음
+        if(result.length === 0){ //일치하는 회원이 없다면... mysql은 비어있는 배열 []을 반환
             return res.status(401).json({message: "이메일 또는 비밀번호가 올바르지 않습니다"})
         }
-        const user = result[0]; //검색된 배열중에 첫번째 [{회원정보}] 
-        res.status(200).json({message: "로그인 성공!", name: user.first_name})
+        const user = result[0]; //검색된 배열중에 첫번째 [{회원정보}] , 이름도같이보냄...
+        res.status(200).json({
+            message: "로그인 성공!",
+            name: user.first_name,
+            email: user.email, //이메일 -> localstorage에저장..rememberme...
+        })
     })
 })
 
 //회원목록조회 API
-app.get('/api/users' ,(req,res)=>{
+app.get('/api/users', (req,res)=>{
+    //비밀번호를 제외한 회원정보들을 최근 가입순으로 가져옴
+    const sql=`select id, first_name, last_name, email, zipcode, address, detail_address  
+    from users 
+    order by created_at desc`
     
-    const sql=`select id , first_name, last_name, email, zip_code, address, detail_address  
-    from users order by created_at desc`
 
     db.query(sql, (err, result)=>{
 
         if(err){
-            console.error("회원목록 조회중에러:", err)
-            return res.status(500).json({message: "회원목록 조회중 에러"})
+            console.error("회원목록 조회 에러", err)
+            return res.status(500).json({message: "회원목록 서버에러 발생"})
         }
-        res.status(200).json(result) //목록 봐로 쏴줌
+
+        //조회된 회원을 프론트엔드로 보냄
+        //💡 회원이 없더라도 에러가 나지 않게 빈 배열 그대로 전달하거나,
+        // 프론트에서 length로 체크할 수 있게 result 자체를 보내는 것이 좋습니다.
+        res.status(200).json(result)
+    })
+})
+
+//관리자
+//POST 헤더 설정 저장 API
+//바로 비동기 순서(로고 저장 ➡️ 메뉴 삭제 ➡️ 메뉴 대량 삽입)
+
+app.post('/api/settings/header', (req,res)=>{
+
+    const {logoType, logoText, logoImage, menus}=req.body
+    
+    //DB에 실행할 쿼리문을 미리 문자열로 만들어 둔다
+
+    const sql= `insert into header_setting (
+    id, logo_type, logo_text, logo_image) values(1,?,?,?)
+    on duplicate key update 
+    logo_type = values(logo_type),
+    logo_text =values(logo_text),
+    logo_image = values(logo_image)
+    `;
+
+    //처음이면 만들고, 두 번째부터는 수정해 줘
+
+    //?자리에 [logoType, logoText, logoImage]순서대로 값을넣어 쿼리실행
+    //1.로고 설정 먼저 저장
+    db.query(sql,  [logoType, logoText, logoImage], (err,result)=>{
+
+        //쿼리실행중 오류발생
+        if(err){
+            console.error('설정저장에러: ', err)
+            return res.status(500).json({message: "설정 저장중 오류"})
+        }
+        
+            //2.기존등록된 메뉴 싹 비우고 새로 입력받은 메뉴 
+            db.query('delete from header_menus', (err)=> {
+                if(err) return res.status(500).json({message: "메뉴 갱신 중 오류"});
+               
+        
+                //3. menus배열이 존재하고 메뉴가 1개이상 잇을때만 대량삽입
+                if(menus && menus.length >= 1){
+        
+                   // MySQL 대량 삽입용 2차원 배열 생성
+                    const menuValues = menus.map(menu=>(
+                        [menu.title, menu.link]
+                    ));
+                    // 물음표를 하나만 쓰고 2차원 배열을 통째로 넘김
+                    const insertMenuSql=`
+                    insert into header_menus (title,link) values (?);
+                    `
+                    db.query(insertMenuSql, [menuValues], (err,result)=>{
+                        if(err){
+                            console.error("메뉴저장중에러: ", err)
+                            return res.status(500).json({ message: "메뉴 저장 중 에러" });
+                        }
+                        // 모든 작업이 완벽하게 끝났을 때 딱 한 번만 응답 전송!
+                        return res.status(200).json({message:"헤더 설정 및 메뉴 저장 완료",
+                             affectedRows: result.affectedRows})
+                    });
+        
+                }else{
+                    //메뉴가 하나도 없는 경우: 삽입없이 바로 성공 응답 보냄
+                    return res.status(200).json({message: '헤더설정이 성공적으로 저장(메뉴없음)'})
+                }
+            });
+    })
+});
+//[get]헤더 설정 불러오기
+
+app.get('/api/settings/header', (req,res)=>{
+
+    //1.로고데이터가져오기
+    db.query(`select * from header_setting where id=1`, (err,result)=>{
+
+        //조회중에 에러 
+        if(err){
+            return res.status(500).json({message:'설정불러오기에러', err});
+        }
+        
+
+        // DB에 설정 데이터가 없을 경우를 대비한 기본값 설정 ???위치...
+        const settings = result[0] || {
+            logo_type: 'text', 
+            logo_text: 'indigo', 
+            logo_image: '/assets/logo.png'
+        };
+
+        // 2. 로고 조회가 성공하면, 그 안에서 메뉴 목록 조회하기
+        db.query(`select id,title, link from header_menus`,(err,menuResult)=>{
+            
+            if(err){
+                return res.status(500).json({message:'메뉴불러오기에러', err});
+            }
+            //조회결과 배열의 첫번째 행(로고설정)을 꺼냄
+            //{...} DB에 데이터가 없을 경우 처음접속시 기본값 사용
+    
+            //로고정보와 메뉴 목록을 하나의 객체로 클라이언트에게 응답
+            res.status(200).json({
+                logoType: settings.logo_type,
+                logoText: settings.logo_text,
+                logoImage: settings.logo_image,
+                menus: menuResult // 조회된 메뉴 배열 통째로 전달
+            })
+    })
+
+    //header_menus 테이블에서 모든 메뉴의 id,title,link를 조회
     })
 
 })
+
+
+//관리자끝
 
 //서버실행
 app.listen(5000, ()=>{
@@ -100,10 +212,6 @@ app.listen(5000, ()=>{
 //값 존재 여부 //형식 검사 //길이 검사  => DB저장
 /*
 npm install -D nodemon
-
-🔥 INSERT → result.insertId
-🔥 SELECT → result[0]
-🔥 UPDATE/DELETE → affectedRows
 
 400 Bad Request
 → 사용자가 잘못된 데이터를 보냄 (이메일 중복, 형식 오류 등)
@@ -115,25 +223,43 @@ npm install -D nodemon
 → 서버 문제
  */
 
-/*⭐mysql2/promise ⭐버젼
-app.post('/api/users/login', async(req,res)=>{
-    const {email, password}=req.body
-    const sql=`select * from users where email=? and password=?`
-    
-    try{
-       const [rows]= await db.query(sql,[email,password])
 
-       if(rows.length === 0){
-        return res.status(401).json({
-            message: "이메일또는 비번이 올바르지않습니다"})
-    } 
-        const users = rows[0];
-        res.status(200).json({message:"로그인성공!", name: users.first_name} )
+/* ✅ async / await 방식
 
-    }catch(err){
-            console.error("로그인에러:", err);
-            return res.status(500).json({message:"서버오류발생"})
+app.post('/api/settings/header', async (req, res) => {
+    try {
+        const { logoType, logoText, logoImage, menus } = req.body;
+
+        // 1. 로고 설정 저장 (await를 써서 끝날 때까지 기다림)
+        const sql = `insert into header_setting (id, logo_type, logo_text, logo_image) values(1,?,?,?)
+                     on duplicate key update logo_type = values(logo_type), logo_text = values(logo_text), logo_image = values(logo_image)`;
+        
+        await db.promise().query(sql, [logoType, logoText, logoImage]);
+
+        // 2. 기존 메뉴 삭제
+        await db.promise().query('delete from header_menus');
+
+        // 3. 메뉴가 있으면 대량 삽입
+        if (menus && menus.length >= 1) {
+            const menuValues = menus.map(menu => [menu.title, menu.link]);
+            const insertMenuSql = `insert into header_menus (title, link) values ?`; // 대량 삽입은 values 뒤에 괄호 없이 ? 하나가 정석입니다!
+            
+            const [result] = await db.promise().query(insertMenuSql, [menuValues]);
+            
+            return res.status(200).json({
+                message: "헤더 설정 및 메뉴 저장 완료",
+                affectedRows: result.affectedRows
+            });
+        } else {
+            return res.status(200).json({ message: '헤더설정이 성공적으로 저장(메뉴없음)' });
+        }
+
+    } catch (err) {
+        // 어디서든 에러가 나면 이 catch로 뚝 떨어집니다! (콜백 지옥 탈출)
+        console.error("에러 발생: ", err);
+        return res.status(500).json({ message: "서버 오류 발생", error: err.message });
     }
-    });
+});
 
- */
+
+*/

@@ -38,6 +38,14 @@ export const SideBar:React.FC = ()=>{
                 </NavLink>
             </NavItem>
 
+            {/*  */}
+            <NavItem className="active">
+                <NavLink href="/hdsetting">
+                    <i className="fas fa-fw fa-heart me-2"></i>
+                    <span>헤더/nav설정</span>
+                </NavLink>
+            </NavItem>
+
             <Divider/>
         
         </SideBarContainer>
