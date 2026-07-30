@@ -3,7 +3,6 @@ import styled,{ createGlobalStyle, css } from "styled-components";
 import { Card, Nav, Form, Button, Row, Col, Container } from "react-bootstrap";
 
 import { Search } from "lucide-react";
-import { TbBackground } from "react-icons/tb";
 
 export const GlobalStyle = createGlobalStyle`
 
@@ -13,6 +12,7 @@ export const GlobalStyle = createGlobalStyle`
     --hover-card-bg: #f8f9fa;
     --text-main: #333;
     --text-muted: #6c757d;
+    /* --border-color */
 }
 
 body{
@@ -42,6 +42,10 @@ body{
 export const SubPageContainer = styled(Container)`
 padding: 60px 0;
 //??안쪽 여백(Padding): 위/아래 30px, 좌/우 
+
+@media (max-width: 768px){
+    padding:30px 0;
+}
 `;
 
 export const PageTitle = styled.h2`
@@ -78,14 +82,19 @@ top: 50%;
 transform: translateY(-50%);
 color: #aaa;
 cursor: pointer;
-`; //중복
 
+&:hover{
+    color: #555
+}
+`; //중복
+//var(--border-color)
 export const  FilterBox = styled.div`
-border: 1px solid var(--border-color);
+border: 1px solid #eee;
 border-radius: 12px;
 padding: 25px 30px 15px;
 margin-bottom: 20px;
 background-color: #fff;
+box-shadow: 0 1px 1px rgba(0,0,0,.1);
 
 @media (max-width: 768px){
     padding: 15px;
@@ -137,18 +146,29 @@ background-color: #fff;
 color: #555;
 border: var(--border-color);
 
+background-color: #fff;
+color: #555;
+border: var(--border-color);
+
+background-color: #fff;
+color: #555;
+border: var(--border-color);
+
 ${ props=> props.$active && css `
 background-color: var(--primary-color);
 color:  #fff;
 border:  var(--primary-color);`}
-
  
 &:hover{
     //활성화 상태면 변경없음...
-    ${ props=> props.$active === false && css `
-    background-color: #c5cdd4;
-    `}
+    background-color: ${props=> !props.$active ? "#c5cdd4" : ""};
 }
+
+/* &:hover{
+    background-color: ${({$active})=> !$active ? "#c5cdd4" : ""};
+} */
+
+
 
 `;
 
@@ -199,16 +219,21 @@ margin-bottom: 30px;
 
 @media (max-width: 576px){
     flex-direction: column;
-    align-items: flex-start; ///수직정렬???!!!
+    align-items: flex-start; ///수직정렬???
+    /* justify-content: flex-start; */
     gap: 15px;
+    padding-left: 15px;
 }
 
 .form-check{
     font-weight: 500;
     color: #555;
     font-size: 0.95rem;
+    line-height: normal;
 }
-
+.form-check-input {
+margin-top: .4em;
+}
 `;
 
 export const  TotalCount = styled.div`
@@ -262,7 +287,14 @@ img{
 
     object-fit: contain;
 
+    /* border: 1px solid #eee; */
+
     box-shadow:  2px 4px 10px rgba(0,0,0,0.1);
+
+    &:hover{
+        transform: scale(1.03);
+        box-shadow: 0 4px 12px rgba(0,0,0,.3);
+    }
 }
 
 @media (max-width: 768px){
@@ -296,17 +328,28 @@ font-weight: 500;
 background-color: transparent;
 color: #555;
 
-${props=>props.$active && css`
+/* ${props=>props.$active && css`
 background:  var(--primary-color);
 color: #fff;
-`};
+`}; */
 
+${({$active})=> $active && css`
+background-color: var(--primary-color);
+color: #fff;
+`}
 
-&:hover:not(.active){
-    background-color: #d4dce4;
-
+&:hover{
+    background-color: ${props => !props.$active ? "#d4dce4" : "" };
 }
+
+/* $active가 참(true)이 아닐 때만 hover 스타일 적용 */
+  
+
+
+
 `;
+
+
 
 
 

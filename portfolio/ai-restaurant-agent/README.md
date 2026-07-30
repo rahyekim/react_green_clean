@@ -6,6 +6,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 npm create-next-app@latest 프로젝트명
 npm install mdb-react-ui-kit @fortawesome/fontawesome-free --legacy-peer-deps
 
+//매티리얼 디자인 설치
+//MDBootstrap (Material Design for Bootstrap) :리액트(React) 전용 MDB 라이브러리
+
+npm install @fortawesome/fontawesome-free --legacy-peer-deps
+
 First, run the development server:
 
 ```bash
