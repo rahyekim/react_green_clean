@@ -1,9 +1,6 @@
-import slideImg from '../assets/images/p-images/slide01.jpg'
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-
-import * as S from '../'
 
 interface CarouselItem {
     id:number,
@@ -52,9 +49,9 @@ export default function  Slider () {
     
     return(
         
-    <article className="slider">
+    <article className="slider" style={{ position: 'relative'}}>
         {bannerType === 'single' && (
-            <img src={slideImg} alt="슬라이드img" />
+            <img src={singleBanner} alt="슬라이드img" />
         )}
 
         {/* 캐러셀 슬라이드선택했을 때 */}
@@ -87,18 +84,56 @@ export default function  Slider () {
         </>
         )}
         {/* 캐러샐 방식을 선택햇는데 등록된 이미지가없을경우 */}
+        {carouselBanner.length===0 &&
         <div className="">등록된이미지가없습니다 관리자페이지에서 이미지추가해주세요</div>
+        }
         </>
         )}
         
     </article>
     )
 }
-    
-const arrowStyleLeft : React.CSSProperties ={
 
+//🌱 완벽한 정중앙 세트
+//top: 50%와 transform: translateY(-50%)
+const arrowStyleLeft : React.CSSProperties ={
+position: 'absolute', top: "50%", left:"20px",
+transform: "translateY(-50%)",
+backgroundColor: "rgba(0,0,0,.3)", //투명50%
+color:"#fff", border:"none", fontSize:"24px",
+padding:"20px 15px", cursor:"pointer",
+borderRadius:"18px"
 }
 
 const arrowStyleRight : React.CSSProperties ={
-    
+position: 'absolute', top: "50%", right:"20px",
+transform: "translateY(-50%)",
+backgroundColor: "rgba(0,0,0,.3)", //투명50%
+color:"#fff", border:"none", fontSize:"24px",
+padding:"20px 15px", cursor:"pointer",
+borderRadius:"28px"
+}
+
+const indicatorContainerStyle : React.CSSProperties ={
+    position:'absolute',
+    bottom:'20px',
+    width:'100%',
+    display:"flex",
+    justifyContent:"center",
+    gap:"10px",
+}
+
+const dotStyle : React.CSSProperties = {
+width:'20px',
+height:"8px",
+backgroundColor:"rgba(255,255,255,0.5)",
+// borderRadius: '50%', //원형
+borderRadius: '20px', //원형
+cursor: 'pointer'
+}
+
+const activeDotStyle : React.CSSProperties = {
+...dotStyle,
+backgroundColor:'#8f98e6'
+
 }

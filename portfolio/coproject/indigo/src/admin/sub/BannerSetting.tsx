@@ -17,9 +17,9 @@ export default function BannerSetting (){
     const [bannerType, setBannerType ]=useState<"single"|'carousel'>("single")
     const [singleBanner, setSingleBanner] = useState('/assets/p-images/slide01.jpg')
     const [carouselBanner, setCarouselBanner] = useState<CarouselItem[]>([
-        {id: 1, url: '/assets/images/slide/banner1.jpg'},
-        {id: 2, url: '/assets/images/slide/banner2.jpg'},
-        {id: 3, url: '/assets/images/slide/banner3.jpg'},
+        {id: 1, url: '/assets/slide/banner1.jpg'},
+        {id: 2, url: '/assets/slide/banner2.jpg'},
+        {id: 3, url: '/assets/slide/banner3.jpg'},
     ])
 
     // --useEffect() 처음 화면 뜰때 서버에서 기존 설정값 불러오기
@@ -82,7 +82,7 @@ export default function BannerSetting (){
         };
 
         try{
-            await axios.post("http://localhost:5000/api/setting/banner",settingData)
+            await axios.post("http://localhost:5000/api/settings/banner",settingData)
             console.log("저장 데이터: ", settingData)
             alert("배너설정이 성공적으로 저장")
 
@@ -157,7 +157,7 @@ export default function BannerSetting (){
                                 <S.Input
                                 type="text"
                                 value={img.url}
-                                placeholder="이미지 url(예: /assets/images//slide/banner0.jpg)"
+                                placeholder="이미지 url(예: /assets/slide/banner0.jpg)"
                                 onChange={e=>handleUpdateCarouselImg(img.id,e.target.value)}
                                 />
                                 {/* 이행을 지우는 빨간색 삭제 버튼 */}

@@ -1,7 +1,3 @@
-import promo01 from './assets/images/s-images/promo01.png'
-import promo02 from './assets/images/s-images/promo02.png'
-import promo03 from './assets/images/s-images/promo03.png'
-import promo04 from './assets/images/s-images/promo04.png'
 
 import work01 from './assets/images/p-images/work01.jpg'
 import work02 from './assets/images/p-images/work02.jpg'
@@ -16,58 +12,16 @@ import blog01 from './assets/images/p-images/blog01.jpg'
 import blog02 from './assets/images/p-images/blog02.jpg'
 import blog03 from './assets/images/p-images/blog03.jpg'
 
-const Home = () => {
+import { Weare } from './include/sub/Weare'
+
+
+export default function Home  () {
 
     return(
         <>
         <section className="content">
-            <section className="display-section">
-                <div className="container">
-                    <h2 className="sec-tit">
-                        WE ATE
-                    </h2>
-                    <p className="desc">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Error impedit aliquam optio excepturi porro eum dicta inventore saepe pariatur hic?
-                    </p>
-                </div>
-            </section>
 
-            <section className="promotion-section">
-                <div className="container">
-                    <ul className="promo-list">
-                        <li>
-                            <a href="">
-                                <img src={promo01} alt="house icon" />
-                                <h3>HOME</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <img src={promo02} alt="person icon" />
-                                <h3>WE ARE</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, minus.</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <img src={promo03} alt="work icon" />
-                                <h3>WORK</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
-
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <img src={promo04} alt="blog icon" />
-                                <h3>BLOG</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </section>
+            <Weare/>
 
             <hr className='divider'/>
 
@@ -222,5 +176,3 @@ const Home = () => {
         </>
     )
 }
-
-export default Home;

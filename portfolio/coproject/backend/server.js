@@ -296,6 +296,100 @@ app.get("/api/settings/banner",(req,res)=>{
     })
 })
 
+//--- we are 섹션 설정!
+//관리자가 수정한 내용을 DB에 저장
+app.post('/api/settings/weare', (req,res)=>{
+
+    const { mainTitle, mainDescription, feature } = req.body;
+
+    //기존내용 있으면 덮어쓰기!
+    const mainSql= `
+    insert into weare_main (id, main_title, main_description)
+    values(1,?,?) 
+    on duplicate key update
+    main_title = values(main_title),
+    main_description = values(main_description)
+    `
+
+    db.query(mainSql, [mainTitle, mainDescription], (err)=> {
+
+        if(err){
+            console.error("메인설정저장에러",err)
+            return res.status(500).json({message: "메인 설정 저장 중 에러발생"})
+        }
+        //삭제.....?
+
+        if(feature && feature.length > 0){
+
+            //한꺼번에 넣기위해 객체->배열 형태 변환 .. [[icon,title,desc],[],[]]
+            const featureValues= feature.map(item=>
+                [item.icon,item.title,item.Description])
+
+            const ftSql = `insert into weare_feature(
+            icon_class, title, description) values ? `
+
+            db.query(ftSql,[featureValues], (err)=>{
+
+                if(err){
+                    console.error("아이콘항목 삽입 에러: ",err)
+                    return res.status(500).json({message: "아이콘항목 삽입 중 에러"})
+                }
+                return res.status(200).json({message: "we are 설정 저장완료"})
+            })
+        }else{
+            return res.status(200).json({message: "we are 설정 저장완료"})
+
+        }
+
+    })
+
+
+})
+
+//DB에 저장된 내용 불러오기!
+app.get('/api/settings/weare', (req,res)=>{
+
+    //1단계 메인영역 정보가져오기 
+    db.query('select * from weare_main where id=1', (err, result)=>{
+
+        if(err){
+            return res.status(500).json({message: "weare 메인 설정 불러오기 중 에러"})
+        }
+
+        db.query('select * from weare_feature', (err,ftResult)=>{
+
+            if(err){
+            return res.status(500).json({message: "weare 아이콘 설정 불러오기 중 에러"})
+            }
+            
+            const mainData = result[0] || {}
+    
+            res.status(200).json({
+                mainTitle: mainData.main_title || 'WE ARE',
+                mainDescription: mainData.main_description || 'stay',
+                feature: ftResult
+            })
+        })
+    })
+})
+
+/*
+// 프론트에 보낼 때 필드명을 맞춰주는 센스! 💡
+const formattedFeatures = ftResult.map(item => ({
+    id: item.id,
+    icon: item.icon_class, // DB의 icon_class를 프론트가 쓰는 icon으로 매핑!
+    title: item.title,
+    description: item.description
+}));
+
+res.status(200).json({
+    mainTitle: mainData.main_title || 'WE ARE',
+    mainDescription: mainData.main_description || 'stay',
+    feature: formattedFeatures // 매핑된 배열을 전달
+});
+
+ */
+
 
 //관리자끝
 

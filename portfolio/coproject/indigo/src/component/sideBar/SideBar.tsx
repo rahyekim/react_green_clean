@@ -52,6 +52,13 @@ export const SideBar:React.FC = ()=>{
                 </NavLink>
             </NavItem>
 
+             <NavItem className="active">
+                <NavLink href="/wesetting">
+                    <i className="fas fa-fw fa-person me-2"></i>
+                    <span>WeAre 설정</span>
+                </NavLink>
+            </NavItem>
+
             <Divider/>
         
         </SideBarContainer>

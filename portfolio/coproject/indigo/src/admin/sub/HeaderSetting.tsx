@@ -1,10 +1,8 @@
 import { useState,useEffect } from "react";
 import axios from "axios";
 
-import * as D from '../DashBoard.styled';
 import * as S from '../css/sub.styled';
 import { Layout } from "../../component/layout/Layout";
-import { data } from "react-router-dom";
 
 //메뉴 데이터 타입정의
 
