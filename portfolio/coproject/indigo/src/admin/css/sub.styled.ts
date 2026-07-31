@@ -112,7 +112,8 @@ label{
       cursor: pointer;
       width: 16px;
       height: 16px;
-      accent-color: #3f51b5; /* 메인 테마 색상으로 동그라미 색 변경 */
+      appearance: auto; /* 🟢 브라우저 기본 라디오 버튼 디자인 강제 적용 */
+      accent-color: #3f51b5; /* 체크되었을 때의 색상 */
     }
 }
 `;

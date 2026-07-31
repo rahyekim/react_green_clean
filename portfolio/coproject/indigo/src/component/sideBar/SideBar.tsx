@@ -10,7 +10,7 @@ export const SideBar:React.FC = ()=>{
             <SideBarBrand href="/">
                 <div className="sidebar-brand-icon rotate-n-15">
                     {/*left 아이콘자리, 아이콘 -15도 회전 */}
-                    <i className="fas fa-laugh-wink"></i> {/*fontawesome아이콘*/}
+                    <i className="fas fa-bell"></i> {/*fontawesome아이콘*/}
                 </div>
                     {/* right 브랜드text자리 */}
                 <div className="sidebar-brand-text mx-3">
@@ -38,11 +38,17 @@ export const SideBar:React.FC = ()=>{
                 </NavLink>
             </NavItem>
 
-            {/*  */}
+            {/* 3.헤더 세팅(로고 ,메뉴) 변경 페이지 */}
             <NavItem className="active">
                 <NavLink href="/hdsetting">
-                    <i className="fas fa-fw fa-heart me-2"></i>
-                    <span>헤더/nav설정</span>
+                    <i className="fas fa-fw fa-bars me-2"></i>
+                    <span>헤더nav설정</span>
+                </NavLink>
+            </NavItem>
+             <NavItem className="active">
+                <NavLink href="/bnsetting">
+                    <i className="fas fa-fw fa-cog me-2"></i>
+                    <span>배너 설정</span>
                 </NavLink>
             </NavItem>
 

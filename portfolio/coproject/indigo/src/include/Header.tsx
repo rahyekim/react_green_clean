@@ -84,20 +84,26 @@ const Header = ()=> {
                 </ul>
             </nav> */}
 
-{/*             
+            
             <nav>
                 <ul className={`gnb ${isOpen ? 'active' : ''}`}> 
                    {menus && menus.length > 0 ? (
                     menus.map(menu=> (
-                    <li><a href="/">HOME</a></li>
+                        <li key={menu.id}>
+                   <a href={menu.link}>{menu.title}</a>
+                   </li>
+                    ))
+                   ): (
+                    <>
+                   <li><a href="/">HOME</a></li>
                    <li><a href="/introduce">WE ARE</a></li>
                    <li><a href="/work">WORK</a></li>
                    <li><a href="/blog">BLOG</a></li>
                    <li><a href="/contact">CONTACT US</a></li>
-                    ))
+                   </>
                    )}
                 </ul>
-            </nav> */}
+            </nav>
 
             <span className="menu-toggle-btn" onClick={toggleMenu}>
                 <span></span>

@@ -11,6 +11,7 @@ import { Join } from "./admin/sub/Join"
 import { Login } from "./admin/sub/Login"
 import { UserList } from "./admin/sub/UserList"
 import { HeaderSetting } from "./admin/sub/HeaderSetting"
+import BannerSetting from "./admin/sub/BannerSetting"
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
       <Route path="/login" element={<Login/>}/>
       <Route path="/userlist" element={<UserList/>}/>
       <Route path="/hdsetting" element={<HeaderSetting/>}/>
+      <Route path="/bnsetting" element={<BannerSetting/>}/>
 
 
     </Routes>

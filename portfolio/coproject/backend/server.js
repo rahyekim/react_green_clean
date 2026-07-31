@@ -199,7 +199,101 @@ app.get('/api/settings/header', (req,res)=>{
 
     //header_menus 테이블에서 모든 메뉴의 id,title,link를 조회
     })
+});
 
+// 관리자 메인 배너설정 저장 및 불러오기
+
+app.post("/api/settings/banner", (req, res)=>{
+
+    //프론트에서 보낸 3가지 데이터 꺼냄
+    const {  bannerType,
+            singleBanner,
+            carouselBanner }=req.body
+
+    const updateSql=`insert into banner_setting
+    (id, banner_type, single_banner) values(1,?,?)
+    on duplicate key update 
+    banner_type = values(banner_type),
+    single_banner = values(single_banner)
+    `
+
+    db.query(updateSql, [bannerType, singleBanner], (err)=>{
+        if(err){
+            // 🛑 에러가 났을 때만 여기서 끝내야 합니다!
+            console.error("배너 설정 저장에러: ", err)
+            return res.status(500).json({message: "배너 설정 저장 중 오류 발생"})
+        }
+    //🟢 첫 번째 저장이 성공했으므로, 이제 기존 캐러셀 이미지를 싹 지웁니다.
+    //---🌟기존에 저장되어 있던 캐러셀 이미지들을 싹 지움
+    //수정삭제 복잡하게 하는 대신, 다 지우고 새로 입력받은 걸로 덮어쓰는게 훨씬 안전하고 쉬움
+        db.query(`delete from carousel_images`, (err)=>{
+            if(err){
+                console.error("캐러셀 초기화중에 에러", err)
+                return res.status(500).json({message: "캐러셀 초기화중에 에러발생"})
+            }
+
+            if(carouselBanner && carouselBanner.length>0){
+
+                
+// ✅ 전달하는 데이터가 [ [값1], [값2], [값3] ] 같은 2차원 배열 구조여야만
+//  MySQL이 각 행(Row)으로 인식해서 한 번에 싹 밀어 넣을 수 있음
+//{ url: '이미지경로1' }, { url: '이미지경로2' }] 형태라면?
+                const imagesValues = carouselBanner.map(img=>[img.url])
+//결과: [ ['이미지경로1'], ['이미지경로2'] ] (2차원 배열 완성!)
+                const caroselsql=`insert into carousel_images 
+                (url) values ?`
+
+                db.query(caroselsql, [imagesValues], (err)=>{
+                    if(err){
+                        console.error('캐러셀 삽입 에러',err)
+                        return res.status(500).json({message:"캐러셀 삽입중 에러발생"})
+                    }
+                    //모든 과정이 끝났으므로 프론트엔드에 성공 응답을 보냄...
+                    return res.status(200).json({message:"배너 설정이 성공적으로 저장"})
+
+                })
+            }else{
+                return res.status(200).json({message:"배너 설정이 성공적으로 저장(캐러셀 저장안함)"})
+            }
+        })
+    })
+})
+
+//2.[GET] 저장된 배너 설정 불러오는 api
+app.get("/api/settings/banner",(req,res)=>{
+    //1. 기본배너설정( banner_setting) 데이터가져옴
+    db.query('select * from banner_setting where id=1', (err, bnResult)=>{
+
+        if(err){
+            console.error(err);
+            return res.status(500).json({message:"배너설정조회중 에러발생"})
+        }
+        //캐러셀 슬라이드용 이미지들 가져옴
+        db.query('select id, url from carousel_images', (err,imgResult)=>{
+
+            if(err) return res.status(500).json({message:"캐러셀 이미지 불러오기 에러발생"})
+            
+            //db에 값이 있다면 그 값을 쓰고, 처음 접속해서 DB가 텅 비어잇다면 우측값 씀
+            
+//DB에서 가져온 데이터가 있으면 그걸 쓰고, 없으면 기본값 객체 지정
+//🔥 {} : 빈객체 속성이 아무것도 없는 텅 빈 상자 : 비상용 빈상자 
+//DB에서 가져온 데이터(bnResult[0])가 아예 없을 때(undefined나 null일 때) 에러가 나는 걸 막기 위한 안전장치
+//🚨undefined.banner_type => 에러발생 
+//{}.banner_type 
+// 빈 객체에 banner_type이라는 속성이 없네? 기본값 || 뒤에거 써야지
+            const bannerData = bnResult[0] || {}
+
+            //프론트 엔드로 보낼 데이터
+            const settings= {
+                
+                bannerType: bannerData.banner_type || 'single',
+                singleBanner: bannerData.single_banner || '/assets/p-images/slide01.jpg',
+                carouselBanner: imgResult || []
+            }
+            return res.status(200).json(settings);
+        })
+
+    })
 })
 
 

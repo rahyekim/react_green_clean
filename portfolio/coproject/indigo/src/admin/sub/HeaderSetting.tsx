@@ -31,6 +31,29 @@ export const HeaderSetting = ()=>{
         {id:5 , title:'CONTACT US', link: '/contact'},
     ]);
 
+    const fetchHeaderSetting = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/settings/header");
+            
+            // 받아온 데이터가 있다면 state 업데이트
+            if (res.data) {
+                setLogoType(res.data.logoType || "text");
+                setLogoText(res.data.logoText || "INDIGO");
+                setLogoImg(res.data.logoImage || "/assets/images/header/logo.png");
+                if (res.data.menus && res.data.menus.length > 0) {
+                    setMenus(res.data.menus);
+                }
+            }
+        } catch (err) {
+            console.error("헤더 설정 불러오기 실패:", err);
+        }
+    };
+    
+    // 🟢 화면이 처음 뜰 때 서버에서 기존 설정값 불러오기
+    useEffect(() => {
+        fetchHeaderSetting();
+    }, []); // 빈 배열을 넣어서 컴포넌트가 처음 뜰 때 딱 한 번만 실행되게 함
+
     //함수 메뉴관리 로직  
     //새로운 메뉴 행 추가
     const handleAddmenu = ()=>{
@@ -177,6 +200,7 @@ export const HeaderSetting = ()=>{
                         </S.MenuRow>
                     ))}
 
+                    <S.MenuRow>
                      <div style={{marginTop:"15px"}}>
                         <S.Button
                         variant="success"
@@ -184,11 +208,22 @@ export const HeaderSetting = ()=>{
                         >+메뉴 항목 추가
                         </S.Button>
                     </div> 
+
+                    <div style={{marginTop:"15px"}}>
+                        <S.Button
+                        variant="primary"
+                        onClick={()=>{
+                            if(window.confirm("초기화하시겠습니까?")){
+                            fetchHeaderSetting();
+                            }
+                        }}
+                        >초기화</S.Button>
+                    </div>
+                    </S.MenuRow>
             </S.Card>
             
                 {/* 최종저장버튼 */}
                 <S.SaveBtnWrap>
-                    {/* 메뉴항목추가 누르면 ->위에 input창이 열리게...하고싶다..*/}
                     <S.Button
                     variant="primary"
                     style={{padding:'10px 30px', fontSize:"16px"}}
