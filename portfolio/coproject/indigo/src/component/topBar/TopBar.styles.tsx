@@ -13,6 +13,9 @@ background-color: #fff;
 box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
 margin-bottom: 1.5rem;
 
+flex-shrink: 0; 
+// 🌟 "내용물이 아무리 많아져도 나(TopBar)는 절대 찌그러지지 마라!" 고정!
+
 
 `;
 

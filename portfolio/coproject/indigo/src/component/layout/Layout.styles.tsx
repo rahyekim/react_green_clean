@@ -13,11 +13,14 @@ overflow: hidden;
 //❄️우측 전체를 감싸는 Wrapper: TopBar와 ContainerFluid를 세로(수직)로 배치
 export const ContentWrapper = styled.div`
 display: flex;
-flex-direction: column;
+flex-direction: column; //🌟 위에서 아래로 쌓이게 고정
 width: 100%;
 height:100vh;
 overflow-x: hidden;
 background-color: #f8f9fc;
+min-width: 0; // 🌟 자식들이 찌그러지지 않게 막아주는 방어막 역할!
+//min-width: 0: 플렉스 컨테이너 안에서 자식 요소가 부모를 뚫고 나가거나 
+//찌그러지는 버그를 방지하는 치트키 같은 속성
 
 `;
 //❄️나 ContentWrapper 안에서 남는 공간 내가 먹을게

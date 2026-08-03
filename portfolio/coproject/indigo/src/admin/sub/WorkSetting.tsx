@@ -48,7 +48,7 @@ export default function WorkSetting (){
                 previewUrl: tempUrl,
                 file: selectedFile
             };
-            //변경된 배열을 상태 반영
+            //변경된 배열을 상태 반영(저장)
             setImgs(newImgs);
         }
     };
@@ -139,11 +139,14 @@ export default function WorkSetting (){
                     <S.GridWrap>
                         {visibleImages.map((img,idx)=>(
                         <S.DivKey key={img.id}>
-{/* 미리보기 이미지가 이씅면 보여주고 없으면 회색 빈박스 보여줌 */}
+{/* 미리보기 이미지가 있으면 보여주고 없으면 회색 빈박스 보여줌 */}
                             {img.previewUrl ? (
+                                //  <!-- 📌 기준점이 되는 부모 // X 가 우측상단에 absolut찰싹붙음 -->
                                 <S.Relative>
                                     <img src={img.previewUrl} alt={`미리보기 ${idx+1}`}/>
-                                    <button onClick={()=>handleRemoveImg(img.id)}>X</button>
+                                    <S.Exit 
+                                    variant="danger"
+                                    onClick={()=>handleRemoveImg(img.id)}>X</S.Exit>
                                 </S.Relative>
                             ) : (
                                 <S.NoneImage>
@@ -151,12 +154,25 @@ export default function WorkSetting (){
                                 </S.NoneImage>
                             )}
 
-                            <S.FileUpload/>
+                            <S.FileUpload
+                            type="file"
+                            accept="image/*" //이미지만 업로드되게
+                            onChange={e=>handleFileChange(idx,e)}
+                            />
 
                         </S.DivKey>
                         ))}
                     </S.GridWrap>
                 </S.Card>
+
+                <S.SaveBtnWrap>
+                    <S.ButtonPrimary
+                    variant="primary"
+                    onClick={handleSave}
+                    >
+                        설정 저장
+                    </S.ButtonPrimary>
+                </S.SaveBtnWrap>
                 
             </S.PageWrapper>
 
@@ -190,4 +206,13 @@ for...of 문: break와 continue를 쓸 수 있어 중간 정지가 가능하며,
 
 some() 메서드: 조건이 맞을 때(true) 즉시 반복을 멈추고 빠져나올 수 있는 최신 고차 함수 방식
 특정한 조건을 만족하는 요소가 하나라도 있는지"를 검사(인증/검증)할 때
+*/
+
+
+/*
+
+
+
+
+
 */

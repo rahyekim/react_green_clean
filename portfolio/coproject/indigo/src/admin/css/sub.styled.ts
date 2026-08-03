@@ -98,7 +98,6 @@ export const RadioGroup  =styled.div`
 display: flex;
 align-items: center;
 gap: 20px;
-align-items: center;
 font-weight: normal;
 
 label{
@@ -164,13 +163,26 @@ border: 1px solid #ddd;
 padding: 10px;
 text-align: center;
 
-border-radius: "15px"; //내가넣은거..ㅎ
+border-radius: 15px; //내가넣은거..ㅎ
+overflow: hidden;   //{2. 부모 영역을 넘어가는 자식 요소를 숨김(잘라냄)}
 `;
 
 export const Relative = styled.div`
 
 position: relative;
 
+height: 150px;       // 💡 NoneImage랑 똑같이 높이를 잡아줘야 합니다!
+overflow: hidden;    // 💡 이미지도 밖으로 안 튀어나오게!
+
+img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // 💡 이미지가 찌그러지지 않고 박스에 꽉 차게
+        display: block;
+    }
+button{
+
+}
 `;
 
 export const NoneImage = styled.div`
@@ -181,22 +193,117 @@ background-color: #f5f5f5;
 display: flex;
 align-items: center;
 justify-content: center;
-margin-bottom: 10px;
+margin-bottom: 10px;  //padding있어서 굳이없어도됨 
 color: #999;
+object-fit: contain; //내가넣은거
+`;
+
+export const FileUpload = styled.input`
+
+width: 100%;
+font-size: 12px;
+
+border: none;
+
+`;
+
+export const ButtonPrimary = styled.button<{variant? : 'primary'|'success'|'danger'}>`
+padding: 10px 30px;
+font-size: 16px;
+border-radius: 17px;
+border: none;
+color: white;
+font-weight: bold;
+white-space: norap;
+
+background-color: ${({variant})=> variant === "danger" && "#e74a3b"};
+ background-color: ${({variant})=> variant === "success" && "#1cc88a"};
+ background-color: ${({variant})=> variant === "primary" && "#4373df"};
+
+&:hover{
+    opacity: 0.9;
+}
 `;
 
 
 
+export const GridWrap3 = styled.div`
+
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 30px;
+
+`;
+
+export const BlogKey = styled.div`
+
+display: flex;
+flex-direction: column;
+gap: 10px;
+
+`;
+
+export const BlogImgWrap = styled.div`
+
+border: 1px solid #ddd;
+padding: 10px;
+text-align: center;
+position: relative;
 
 
 
+`;
 
+export const BlogImg = styled.img`
 
+width: 100%;
+height: 200px;
+object-fit: cover;
+/* display: flex;
+align-items: center;
+justify-content: center; */
 
+`
 
+export const Exit = styled.button<{variant? : 'primary'|'success'|'danger'}>`
+top: 0; right: 0;
+position: absolute;
+padding: 5px 10px;
+font-size: 12px;
+border-radius: 50%;
+border: none;
+color: white;
+font-weight: bold;
 
+background-color: ${({variant})=> variant === "danger" && "#e74a3b"};
+ background-color: ${({variant})=> variant === "success" && "#1cc88a"};
+ background-color: ${({variant})=> variant === "primary" && "#4373df"};
 
+&:hover{
+    opacity: 0.7;
+}
+`;
 
+export const BottomInfo = styled.div`
+width: 100%;
+height: 200px;
+background-color: #f5f5f5;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #999;
+`;
 
+export const MapPreview = styled.div`
 
+width: 100%;
+height: 200px;
+object-fit: cover;
+background-color: #eaeaea;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 7px;
+overflow: hidden;
 
+`;
