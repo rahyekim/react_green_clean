@@ -1,3 +1,5 @@
+import { HiddenFileInput } from './../sub/BlogSetting';
+import { CustomButton } from './../../../../../BBS/board-frontend/src/assets/css/Board.styles';
 
 import { Form } from "react-router-dom";
 import styled from "styled-components";
@@ -306,4 +308,20 @@ justify-content: center;
 border-radius: 7px;
 overflow: hidden;
 
+`;
+
+
+export const CustomFileButton = styled.label`
+display: flex;
+justify-content: center; /* 가로 중앙 정렬 */
+align-items: center;     /* 세로 중앙 정렬 */
+width: 100%;
+padding: 10px;
+background-color: #f0f0f0;
+border-radius: 6px;
+cursor: pointer;
+margin-top: 8px;
+font-size: 13px;
+/* white-space: nowrap; */
+&:hover { background-color: #e0e0e0; }
 `;

@@ -78,6 +78,7 @@ export default function BlogSetting (){
 
         newBlogs[idx].text=value;
         
+        //📌무언가를 채우기 시작하는 순간 날짜가 딱 박히게 (안전장치)
         //이미지 안올리고 글부터 썼다면, 이때도 '오늘 날짜'를 자동으로 찍어줌
         if(!newBlogs[idx].date && value.trim() !== ""){
             newBlogs[idx].date = getTodayDate();
@@ -121,7 +122,6 @@ export default function BlogSetting (){
         blogsToSave.forEach((blog, idx)=>{
             if(blog.file){
 
-                //📌무언가를 채우기 시작하는 순간 날짜가 딱 박히게 (안전장치)
                 //이미지가잇으면 blogImages라는 이름표를 붙여 상자에 넣는다
                 formData.append('blogImages', blog.file);
             }
@@ -204,10 +204,11 @@ export default function BlogSetting (){
                                     type="text"
                                     value={blog.date}
                                     readOnly
-                                    placeholder="이미지나 글을 올리면 날짜가 찍힌다"
+                                    placeholder="*이미지나 글을 올리면 날짜가 찍힙니다"
                                     />
                                     {/* 🌟 텍스트 입력창 */}
                                     <S.Input
+                                    style={{border:"1px solid #ddd" , marginTop:"8px"}}
                                     type="text"
                                     value={blog.text}
                                     placeholder="블로그내용을 입력해주세요"
@@ -269,36 +270,8 @@ export default function BlogSetting (){
                     readOnly
                     placeholder="이미지나 글을 올리면 날짜가 찍힙니다"
                 />
-
-                {/* 🌟 예쁜 커스텀 파일 업로드 버튼 *
-                    <S.CustomFileButton>
-                        {blog.previewUrl ? "이미지 변경" : "파일 업로드"}
-                        <S.HiddenFileInput 
-                            type="file" 
-                            accept="image/*"
-                            onChange={(e) => handleFileChange(idx, e)}
-                        />
-                    </S.CustomFileButton>
             </S.BlogImgWrap>
 
-
-
-export const HiddenFileInput = styled.input`
-    display: none;
-`;
-
-export const CustomFileButton = styled.label`
-    display: block;
-    width: 100%;
-    padding: 8px;
-    background-color: #f0f0f0;
-    text-align: center;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 8px;
-    font-size: 13px;
-    &:hover { background-color: #e0e0e0; }
-`;
 
 export const TextInput = styled.input`
     width: 100%;

@@ -48,9 +48,9 @@ export default function WorkSetting (){
             //🌟기존 이미지 배열을 복사한 뒤 => ✨내가 클릭한 칸(idx)의 데이터만 덮어씌운다
             const newImgs = [...imgs];  //배열 복사
 
-            // if(newImgs[idx].previewUrl){
-            //     URL.revokeObjectURL(newImgs[idx].previewUrl);
-            // }
+            if(newImgs[idx].previewUrl){
+                URL.revokeObjectURL(newImgs[idx].previewUrl);
+            }
             // //페이지를 닫거나 새로고침하기 전까지 메모리에 계속 남음
 
             newImgs[idx] = {
@@ -180,11 +180,20 @@ export default function WorkSetting (){
                                 </S.NoneImage>
                             )}
 
+                            {/* <S.FileUpload
+                            type="file"
+                            accept="image/*" //이미지만 업로드되게
+                            onChange={e=>handleFileChange(idx,e)}
+                            /> */}
+                        <S.CustomFileButton>
                             <S.FileUpload
+                            style={{display:"none"}}
                             type="file"
                             accept="image/*" //이미지만 업로드되게
                             onChange={e=>handleFileChange(idx,e)}
                             />
+                            {img.previewUrl? "이미지변경" : "파일 업로드"}
+                        </S.CustomFileButton>
 
                         </S.DivKey>
                         ))}
