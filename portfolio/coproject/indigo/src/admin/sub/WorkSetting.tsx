@@ -19,7 +19,9 @@ export default function WorkSetting (){
     const [rowCount, setRowCount]=useState<1 | 2>(2);
     const [imgs, setImgs] = useState<WorkImg[]>(
         Array.from({length:8}).map(( _, idx)=>({
-            id: idx, previewUrl: '', file: null
+            id: idx, 
+            previewUrl: '', 
+            file: null
         }))
     )
 
@@ -37,12 +39,20 @@ export default function WorkSetting (){
         //사용자가 선택한 파일을 꺼냄
         const selectedFile = e.target.files?.[0]; //🌟처음꺼!!! 
 
+        if(!selectedFile) return;
+        
         if(selectedFile){
             //🌟선택한 파일을 브라우저 화면에 띄울 수 있도록 가짜(임시) url을 만든다
             const tempUrl = URL.createObjectURL(selectedFile);
 
             //🌟기존 이미지 배열을 복사한 뒤 => ✨내가 클릭한 칸(idx)의 데이터만 덮어씌운다
             const newImgs = [...imgs];  //배열 복사
+
+            // if(newImgs[idx].previewUrl){
+            //     URL.revokeObjectURL(newImgs[idx].previewUrl);
+            // }
+            // //페이지를 닫거나 새로고침하기 전까지 메모리에 계속 남음
+
             newImgs[idx] = {
                 ...newImgs[idx],
                 previewUrl: tempUrl,
@@ -50,14 +60,30 @@ export default function WorkSetting (){
             };
             //변경된 배열을 상태 반영(저장)
             setImgs(newImgs);
+
+            //동일한 파일 재선택 가능하도록 초기화
+            e.target.value = "";  //=> 파일명이 안보임 => 파일명을 숨기거나... ref 사용해서 handleRemove 
         }
     };
+    /*state상태는 지워졌어도
+    HTML <input> 태그 내부에는 여전히 ".jpg"가 입력된 상태 */
 
     //4.업로드된 이미지를 취소 삭제하는 핸들러
     const handleRemoveImg = (idx:number)=>{
+
         const newImgs = [...imgs];
+
+        //기존 메모리 url해제
+        if(newImgs[idx].previewUrl){
+            URL.revokeObjectURL(newImgs[idx].previewUrl)
+        }
+        
         //다시 빈칸으로 초기화..
-        newImgs[idx] = {id:idx, previewUrl: '', file: null};
+        newImgs[idx] = {
+            id:idx,
+            previewUrl: '',
+            file: null
+        };
         setImgs(newImgs);
     }
 
@@ -84,8 +110,8 @@ export default function WorkSetting (){
         
         
         try{
-            axios.post("http://localhost:5000/api/settings/work", formData, {
-                headers:{'Content-Type': 'multipart/form-Data'}
+            await axios.post("http://localhost:5000/api/settings/work", formData, {
+                headers:{'Content-Type': 'multipart/form-data'}
             })
 
             console.log('저장될 줄수:', rowCount);
@@ -212,7 +238,40 @@ some() 메서드: 조건이 맞을 때(true) 즉시 반복을 멈추고 빠져�
 /*
 
 
-
+{
+    "rowCount": "1",   //👈백엔드: rowCount:UploadFile  (파일1개)
+    "workImgs": [ File1, File2, File3 ]  // 
+    // 👈 백엔드가 배열 형태로 수신함! workImgs: List[UploadFile] (배열)
+  }
 
 
 */
+
+/*
+URL.revokeObjectURL: 메모리 등록 해제(삭제)
+
+ */
+
+
+/*동일한 파일 재선택 가능하도록 초기화 e.target.value= "" 대체방법
+
+state상태는 지워졌어도
+    HTML <input> 태그 내부에는 여전히 ".jpg"가 입력된 상태 
+
+// 1. 배열 형태의 ref 생성
+const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+// 2. 각 index(0, 1, 2, 3...) 위치에 해당 input을 저장
+<input
+  type="file"
+  accept="image/*"
+  ref={(element) => (fileInputRefs.current[idx] = element)}
+  onChange={(e) => handleFileChange(idx, e)}
+/>
+
+// 해당 칸의 input value 비우기
+  if (fileInputRefs.current[idx]) {
+    fileInputRefs.current[idx]?.value = "";
+  }
+
+ */

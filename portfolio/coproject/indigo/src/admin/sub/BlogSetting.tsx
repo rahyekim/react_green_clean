@@ -3,7 +3,6 @@ import axios from 'axios'
 
 import { Layout } from "../../component/layout/Layout";
 import * as S from "../css/sub.styled"
-import { Intl } from "@js-temporal/polyfill";
 
 
 interface BlogItem {
