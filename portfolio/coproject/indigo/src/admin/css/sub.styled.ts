@@ -150,7 +150,40 @@ text-align: right;
 margin-bottom: 20px;
 `;
 
+export const GridWrap = styled.div`
 
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 20px;
+
+`;
+
+export const DivKey = styled.div`
+
+border: 1px solid #ddd;
+padding: 10px;
+text-align: center;
+
+border-radius: "15px"; //내가넣은거..ㅎ
+`;
+
+export const Relative = styled.div`
+
+position: relative;
+
+`;
+
+export const NoneImage = styled.div`
+
+width: 100%;
+height: 150px;
+background-color: #f5f5f5;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-bottom: 10px;
+color: #999;
+`;
 
 
 

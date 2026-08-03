@@ -21,30 +21,34 @@ export const Weare = ()=>{
     
     useEffect(()=>{
 
-        const fetchMain = async()=>{
+        const fetchWeareData = async()=>{
 
             try{
             
                 const res = await axios.get('http://localhost:5000/api/settings/weare')
                 
+                //받아온 데이터 상태에 넣기
+                setMainTitle(res.data.mainTitle);
+                setMainDescription(res.data.mainDescription);
+                setFeature(res.data.feature)
 
             }catch(err){
                 console.error("weare설정불러오기중에러",err)
+                alert("we are 설정 불러오기 실패")
             }
         }
-        fetchMain();
+        fetchWeareData();
     }, [])
 
     return(
-        <>
-        <section className="content">
+            <>
             <section className="display-section">
                 <div className="container">
                     <h2 className="sec-tit">
-                        WE ATE
+                        {mainTitle || 'WE ARE'}
                     </h2>
                     <p className="desc">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Error impedit aliquam optio excepturi porro eum dicta inventore saepe pariatur hic?
+                        {mainDescription || '관리자 페이지에서 메인 설명글을 등록해주세요'}
                     </p>
                 </div>
             </section>
@@ -52,40 +56,28 @@ export const Weare = ()=>{
             <section className="promotion-section">
                 <div className="container">
                     <ul className="promo-list">
+                        {feature && feature.length > 0 ?(
+                            feature.map(ft => (
+                                <li key={ft.id}>
+                                    <a href="/{ft">
+                                        <i className={ft.icon} />
+                                        {/* <img src={ft.icon} alt={ft.title} /> */}
+                                        <h3>{ft.title}</h3>
+                                        <p>{ft.description}</p>
+                                    </a>
+                                </li>
+                            ))
+                        ): (
+                        //등록된 화면이 하나도 없을때 보여줄 화면 
                         <li>
-                            <a href="">
-                                <img src={promo01} alt="house icon" />
-                                <h3>HOME</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
-                            </a>
+                            <p style={{padding:'50px 0', color:'#999'}}>
+                                등록된 promotion 항목이 없습니다
+                            </p>
                         </li>
-                        <li>
-                            <a href="">
-                                <img src={promo02} alt="person icon" />
-                                <h3>WE ARE</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, minus.</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <img src={promo03} alt="work icon" />
-                                <h3>WORK</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
-
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <img src={promo04} alt="blog icon" />
-                                <h3>BLOG</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, reprehenderit?</p>
-                            </a>
-                        </li>
-                        
+                        )}
                     </ul>
                 </div>
             </section>
-        </section>
         </>
     )
 }

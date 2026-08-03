@@ -317,29 +317,40 @@ app.post('/api/settings/weare', (req,res)=>{
             console.error("메인설정저장에러",err)
             return res.status(500).json({message: "메인 설정 저장 중 에러발생"})
         }
-        //삭제.....?
 
-        if(feature && feature.length > 0){
+        //기존 feature 데이터를 모두 삭제 (누적 방지)
+        db.query(`delete from weare_feature`, (err)=>{
 
-            //한꺼번에 넣기위해 객체->배열 형태 변환 .. [[icon,title,desc],[],[]]
-            const featureValues= feature.map(item=>
-                [item.icon,item.title,item.Description])
-
-            const ftSql = `insert into weare_feature(
-            icon_class, title, description) values ? `
-
-            db.query(ftSql,[featureValues], (err)=>{
-
-                if(err){
-                    console.error("아이콘항목 삽입 에러: ",err)
-                    return res.status(500).json({message: "아이콘항목 삽입 중 에러"})
-                }
+            if (err) {
+                console.error("아이콘 기존 데이터 삭제 에러: ", err);
+                return res.status(500).json({message: "아이콘 설정 초기화 중 에러" });
+            }
+            
+            //새로운 feature 데이터가 있다면 일괄 삽입
+            if(feature && feature.length > 0){
+    
+                //한꺼번에 넣기위해 객체->배열 형태 변환 .. [[icon,title,desc],[],[]]
+                const featureValues= feature.map(item=>
+                    [item.icon,item.title,item.description])
+    
+                const ftSql = `insert into weare_feature(
+                icon_class, title, description) values ? `
+    
+                db.query(ftSql,[featureValues], (err)=>{
+    
+                    if(err){
+                        console.error("아이콘항목 삽입 에러: ",err)
+                        return res.status(500).json({message: "아이콘항목 삽입 중 에러"})
+                    }
+                    return res.status(200).json({message: "we are 설정 저장완료"})
+                })
+            }else{
                 return res.status(200).json({message: "we are 설정 저장완료"})
-            })
-        }else{
-            return res.status(200).json({message: "we are 설정 저장완료"})
+    
+            }
 
-        }
+        })
+
 
     })
 
@@ -356,7 +367,9 @@ app.get('/api/settings/weare', (req,res)=>{
             return res.status(500).json({message: "weare 메인 설정 불러오기 중 에러"})
         }
 
-        db.query('select * from weare_feature', (err,ftResult)=>{
+
+        db.query(`select id, icon_class AS icon, title, description
+            from weare_feature`, (err,ftResult)=>{
 
             if(err){
             return res.status(500).json({message: "weare 아이콘 설정 불러오기 중 에러"})

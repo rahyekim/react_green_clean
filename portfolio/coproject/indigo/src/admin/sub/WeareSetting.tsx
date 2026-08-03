@@ -71,7 +71,7 @@ export default function WeareSetting (){
         ))
     };
 
-    const hadnleUpdateFeature = (id:number, field:'icon'|'title'|'description', value:string) => {
+    const handleUpdateFeature = (id:number, field:'icon'|'title'|'description', value:string) => {
         setFeature(prevfts=>(
             prevfts.map(ft=>(
                 ft.id === id ? {...ft, [field]:value} : ft
@@ -131,13 +131,13 @@ export default function WeareSetting (){
                         paddingBottom:'15px', marginBottom:"15px"
                         }}>
                         <div className="mx-3"
-                         style={{fontWeight:'bold', color:"#888", minWidth:"70px"}}>
+                         style={{fontWeight:'bold', color:"#888", minWidth:"70px", marginBottom:"10px"}}>
                             <span>항목{idx+1}</span>
                             {/* 🌟 아이콘 셀렉트(드롭다운) 박스 */}
                             <select 
                             className="mx-3"
                             value={item.icon}
-                            onChange={e=>hadnleUpdateFeature(item.id, 'icon', e.target.value)}
+                            onChange={e=>handleUpdateFeature(item.id, 'icon', e.target.value)}
                             style={{
                                 padding:'8px', border:'1px solid #ccc',
                                 borderRadius:'15px'}}
@@ -152,7 +152,7 @@ export default function WeareSetting (){
                              style={{width:"200px", marginRight:"20px"}}
                                 type="text"
                                 value={item.title}
-                                onChange={e=>hadnleUpdateFeature(item.id, 'title', e.target.value)}
+                                onChange={e=>handleUpdateFeature(item.id, 'title', e.target.value)}
                                 placeholder="타이틀 입력해주세요"
                                 />
                             <S.Button
@@ -161,11 +161,12 @@ export default function WeareSetting (){
                             >삭제</S.Button>
 
                         </div>
-                        <div>
+                        <div style={{width:"100%"}}>
                             <S.Input
+                            style={{maxWidth:"700px"}}
                             type="text"
                             value={item.description}
-                            onChange={e=>hadnleUpdateFeature(item.id, 'description', e.target.value)}
+                            onChange={e=>handleUpdateFeature(item.id, 'description', e.target.value)}
                             placeholder="설명 입력해주세요"
                             />
                         </div>

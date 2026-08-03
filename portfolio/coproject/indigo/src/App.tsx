@@ -13,6 +13,10 @@ import { UserList } from "./admin/sub/UserList"
 import { HeaderSetting } from "./admin/sub/HeaderSetting"
 import BannerSetting from "./admin/sub/BannerSetting"
 import WeareSetting from "./admin/sub/WeareSetting"
+import WorkSetting from "./admin/sub/WorkSetting"
+import BlogSetting from "./admin/sub/BlogSetting"
+import MapSetting from "./admin/sub/MapSetting"
+import ContactSetting from "./admin/sub/ContactSetting"
 
 function App() {
 
@@ -36,6 +40,11 @@ function App() {
       <Route path="/hdsetting" element={<HeaderSetting/>}/>
       <Route path="/bnsetting" element={<BannerSetting/>}/>
       <Route path="/wesetting" element={<WeareSetting/>}/>
+      <Route path="/wksetting" element={<WorkSetting/>}/>
+      <Route path="/blogsetting" element={<BlogSetting/>}/>
+      <Route path="/contsetting" element={<ContactSetting/>}/>
+      <Route path="/mapsetting" element={<MapSetting/>}/>
+      
 
 
 

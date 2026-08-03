@@ -28,7 +28,7 @@ export const SideBar:React.FC = ()=>{
                 </NavLink>
             </NavItem>
 
-            <Divider className="my-0"/>
+            <Divider className="my-0 mb-2"/>
 
             {/* 2.회원리스트링크추가 */}
              <NavItem className="active">
@@ -58,8 +58,36 @@ export const SideBar:React.FC = ()=>{
                     <span>WeAre 설정</span>
                 </NavLink>
             </NavItem>
+           
+             <NavItem className="active">
+                <NavLink href="/wksetting">
+                    <i className="fas fa-fw fa-briefcase me-2"></i>
+                    <span>Work 설정</span>
+                </NavLink>
+            </NavItem>
 
-            <Divider/>
+             <NavItem className="active">
+                <NavLink href="/blogsetting">
+                    <i className="fas fa-fw fa-edit me-2"></i>
+                    <span>Blog 설정</span>
+                </NavLink>
+            </NavItem>
+
+             <NavItem className="active">
+                <NavLink href="/contsetting">
+                    <i className="fas fa-fw fa-phone me-2"></i>
+                    <span>Contact 설정</span>
+                </NavLink>
+            </NavItem>
+
+              <NavItem className="active">
+                <NavLink href="/mapsetting">
+                    <i className="fas fa-fw fa-map me-2"></i>
+                    <span>Map 설정</span>
+                </NavLink>
+            </NavItem>
+
+            <Divider className="mt-2"/>
         
         </SideBarContainer>
     

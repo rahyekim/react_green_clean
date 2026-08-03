@@ -69,6 +69,6 @@ export const Divider = styled.hr`
 
 margin: 0 1rem 1rem ;  // 순서 위 양옆 아래 
 //위쪽 기본 여백 제거✅ 좌우 살짝 안쪽 정렬✅ 아래쪽 여백으로 메뉴 구분
-border-top: 1px solid rgba(255,255,255,0.2); /* 은은한 15% 투명도 흰 선 */
+border-top: 1px solid rgba(255,255,255,0.25); /* 은은한 15% 투명도 흰 선 */
 
 `;
