@@ -276,13 +276,14 @@ border-radius: 50%;
 border: none;
 color: white;
 font-weight: bold;
+background-color: #242222;
 
-background-color: ${({variant})=> variant === "danger" && "#e74a3b"};
- background-color: ${({variant})=> variant === "success" && "#1cc88a"};
- background-color: ${({variant})=> variant === "primary" && "#4373df"};
+background-color: ${({variant})=> variant === "success" && "#1cc88a"};
+background-color: ${({variant})=> variant === "primary" && "#4373df"};
 
 &:hover{
-    opacity: 0.7;
+    opacity: 0.9;
+    background-color: ${({variant})=> variant === "danger" && "#e74a3b"};
 }
 `;
 
@@ -294,6 +295,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 color: #999;
+border-radius: 7px;
 `;
 
 export const MapPreview = styled.div`
@@ -325,3 +327,39 @@ font-size: 13px;
 /* white-space: nowrap; */
 &:hover { background-color: #e0e0e0; }
 `;
+
+//테이블 -------
+export const CTable = styled.table`
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+
+thead{
+    tr{
+        background-color: #f5f5f5;
+        border-bottom: 2px solid #ddd;
+        text-align: center;
+    }
+
+    th{
+        padding:12px 8px;
+    }
+}
+
+tbody{
+    tr{
+        border-bottom: 1px solid #eee;
+        text-align: center;
+
+        td{
+            padding: 12px 8px;
+            font-size: 14px;
+            color: #888;
+        }
+    }
+}
+
+`;
+
+
+

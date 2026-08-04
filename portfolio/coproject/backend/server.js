@@ -3,10 +3,46 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 
+//🌟파일올릴 경우 추가
+const multer = require('multer');
+const path= require('path');
+const fs = require('fs'); 
+
 const app = express();
 
 app.use(cors()) //cors
 app.use(express.json()) //파싱..프론트엔드에서 보내는 JSON 데이터를 읽기위한 설정...
+
+
+//업로드할 폴더(uploads)가 없으면 자동으로 만들어주는 코드
+//__dirname(절대파일경로) C:/../../indigo/uploads
+
+const uploadDir = path.join(__dirname, 'uploads');  
+if(!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir);
+}
+
+//multer설정 (저장 위치와 이름 정하기)
+//cb(callback)
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); //에러없고, 업로드 폴더에 저장
+    },
+    filename:(req,file,cb)=>{
+        //한글이름 깨짐 중복방지 위해 '현재시간.확장자' 형태로저장(1748405.jpg)
+        //확장자(Extension)
+        const ext = path.extname(file.originalname);
+        cb(null, Date.now()+ext)
+    }
+})
+//최대 8장까지 업로드 가능한 multer 미들웨어 준비
+const upload = multer({storage: storage});
+
+//🔥🌟 프론트엔드에서 upload폴더 안의 이미지를 볼 수 있게 권한 열어줌
+//정적 파일 제공
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -19,6 +55,7 @@ db.connect(err => {
     if(err)throw err;
     console.log('mysql company db connedted')
 })
+
 
 //등록 
 app.post('/api/users/register', (req,res)=>{
@@ -402,6 +439,90 @@ res.status(200).json({
 });
 
  */
+
+//[관리자] work섹션 설정 저장
+//post work설정 및 이미지저장(upload.array를 통해 파일받음)
+
+app.post('/api/settings/work', upload.array('workImages',8), (req,res)=>{
+
+    //프론트에서 넘긴 줄 수 (문자열로 오므로 숫자로 변환)
+    const rowCount = parseInt(req.body.rowCount) || 2;
+    const files = req.files; //정보(이름,크기등)를 꺼냄
+
+    //1단계: '몇출 노출할것인지' (rowCount)
+    const updateSettingsql= `
+    insert into work_setting ( id, row_count) 
+    values (1,?)
+    on duplicate key update 
+    row_count = values(row_count)
+    `
+
+/*
+    on duplicate key update 
+ id가 1인 데이터가 이미 있으면 새로만들지 말고 값을 덮어씌워라! 
+ */
+
+        //위에서만든 sql실행
+        db.query(updateSettingsql, [rowCount], (err)=>{
+        if(err){
+            console.error("work 줄수 저장 에러", err)
+            return res.status(500).json({message: "설정 저장 중 오류 발생"});
+        }
+
+        //줄 수 저장 성공, 프론트에서 새로올린 사진파일이 1개라도 잇으면..
+        if(files && files.length > 0){
+
+            db.query(`delete from work_image`,(err)=>{
+                
+                if(err) return res.status(500).json({message: "이미지 초기화 오류 발생"})
+                
+                //새로올린 사진들의 경로(주소)를 🌟 배열형태로 
+                const imgValues= files.map(file=>(
+                    [`/uploads/${file.filename}`]
+                ))
+
+                const insertImgsql=`insert into work_image(image_url)
+                values ?`;
+
+                db.query(insertImgsql, [imgValues], (err)=>{
+                    if(err){
+                    console.error("work 이미지 저장 에러", err)
+                    return res.status(500).json({message: "이미지 저장 중 오류 발생"});
+                    }
+
+                    return res.status(200).json({message: "work설정 성공적으로 저장"});
+                })
+            })
+        }else{ //🟢 else안하면 res 두번 응답해서 에러터짐 
+            return res.status(200).json({message: "work설정 노출수가 변경되었습니다"});
+        }
+    })
+ })
+
+ app.get('/api/settings/work', (req,res)=>{
+
+    //db에서 몇줄 노출할건지(row_count) 
+    db.query('select * from work_setting where id = 1 ', (err,result)=>{
+        if(err) return res.status(500).json({message: "work설정 불러오기 오류 발생"})
+        
+        //db에 저장된 사진주소들을 싹 다 가져옴
+
+        db.query('select id, image_url as previewUrl from work_image', (err,imgResult)=>{
+
+            if(err) return res.status(500).json({message: "work이미지 불러오기 오류 발생"})
+            
+            const settings = result[0] || {row_count: 2};
+
+            res.status(200).json({
+                rowCount: settings.row_count,
+                images: imgResult})
+        })
+        
+    })
+    
+ })
+
+
 
 
 //관리자끝

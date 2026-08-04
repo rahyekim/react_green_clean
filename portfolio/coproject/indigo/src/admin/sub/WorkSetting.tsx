@@ -12,6 +12,8 @@ interface WorkImg {
     file: File | null;
 }
 
+
+
 export default function WorkSetting (){
 
 
@@ -24,6 +26,32 @@ export default function WorkSetting (){
             file: null
         }))
     )
+
+    useEffect(()=>{
+    const fetchSettings = async()=>{
+        try{
+            const res = await axios.get('http://localhost:5000/api/settings/work')
+            setRowCount(res?.data.rowCount);
+
+            const dbImgs = res.data.images;
+            const initialImg = Array.from({length:8}).map((_,idx)=>{
+                if(dbImgs[idx]){
+                    return{
+                        id:idx,
+                        previewUrl: `http://localhost:5000${dbImgs[idx].previewUrl}`,
+                        file:null
+                    }
+                }
+                return {id: idx, previewUrl: '', file:null}
+            })
+            setImgs(initialImg);
+
+        }catch(err){
+            console.error("관리자 설정 불러오기중 에러", err)
+        }
+    }
+    fetchSettings();
+    }, [])
 
     //2. 조작함수 줄수를 바꾸는 라디오 버튼 핸들러
 
@@ -108,11 +136,9 @@ export default function WorkSetting (){
             }
         }) 
         
-        
+//{headers:{'Content-Type': 'multipart/form-data'}         }
         try{
-            await axios.post("http://localhost:5000/api/settings/work", formData, {
-                headers:{'Content-Type': 'multipart/form-data'}
-            })
+            await axios.post("http://localhost:5000/api/settings/work", formData)
 
             console.log('저장될 줄수:', rowCount);
             console.log("업로드된 파일들: ", formData.getAll('workImages'));

@@ -1,0 +1,67 @@
+
+multer 패키지 설치 npm install multer 
+파일 업로드를 처리하기 위해 사용하는 
+가장 대표적인 미들웨어(Middleware) 라이브러리
+
+USE company;
+
+CREATE TABLE if not EXISTS Work_setting (
+id INT PRIMARY KEY DEFAULT 1,
+ROW_COUNT INT DEFAULT 2
+);
+
+CREATE TABLE if NOT EXISTS work_image(
+id INT AUTO_INCREMENT PRIMARY KEY,
+image_url VARCHAR(255) NOT null
+);
+
+CREATE TABLE if NOT EXISTS banner_setting(
+id INT PRIMARY KEY DEFAULT 1,
+banner_type VARCHAR(20) DEFAULT 'single',
+single_banner VARCHAR(255) DEFAULT '/assets/p-images/slide01.jpg' 
+);
+
+CREATE TABLE if NOT EXISTS carousel_images(
+id INT AUTO_INCREMENT PRIMARY key,
+url VARCHAR(255) NOT null
+);
+
+CREATE TABLE if NOT EXISTS weare_main(
+id INT PRIMARY KEY DEFAULT 1,
+main_title VARCHAR(100) DEFAULT 'WE ARE',
+main_description text  
+);
+
+CREATE TABLE if NOT EXISTS weare_feature(
+id INT AUTO_INCREMENT PRIMARY key,
+icon_class VARCHAR(50) NOT NULL,
+title VARCHAR(100) NOT NULL,
+DESCRIPTION text
+);
+
+
+CREATE TABLE header_setting (
+id INT PRIMARY KEY DEFAULT 1,
+logo_type VARCHAR(20) DEFAULT 'text',
+logo_text VARCHAR(100) DEFAULT 'indigo',
+logo_image VARCHAR(255) DEFAULT '/assets/images/header/logo.png' 
+);
+
+CREATE TABLE if NOT exists header_menus(
+id INT AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(100) NOT NULL,
+link VARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE users(
+id INT AUTO_INCREMENT PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+email VARCHAR(100) NOT NULL UNIQUE, #중복불가
+PASSWORD VARCHAR(255) NOT NULL,
+zipcode VARCHAR(20) NOT NULL, 
+address VARCHAR(255) NOT NULL,
+detail_address VARCHAR(255) NOT NULL,
+created_at TIMESTAMP DEFAULT current_timestamp
+);

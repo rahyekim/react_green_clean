@@ -32,6 +32,17 @@ export default function  Slider () {
         }
         fetchBannerSetting();
     }, [])
+
+    //// 🕒 일정 시간마다 자동으로 슬라이드 넘기기 (예: 3초 = 3000ms)
+    useEffect(()=>{
+        if(bannerType !=="carousel" || carouselBanner.length===0 ) return;
+
+        const timer = setInterval(() => {
+            nextSlide();            
+        }, 5000);
+        return ()=>clearInterval(timer);
+    }, [bannerType, carouselBanner])
+    
     
     // [다음>] 화살표를 눌렀을 때 실행되는 함수
     const nextSlide = ()=>{
@@ -95,14 +106,15 @@ export default function  Slider () {
 }
 
 //🌱 완벽한 정중앙 세트
-//top: 50%와 transform: translateY(-50%)
+//top: 50% (부모 높이의 50%라 아래로 치우쳐짐)와 transform: translateY(-50%): 내높이의50%만큼위로
 const arrowStyleLeft : React.CSSProperties ={
 position: 'absolute', top: "50%", left:"20px",
 transform: "translateY(-50%)",
 backgroundColor: "rgba(0,0,0,.3)", //투명50%
 color:"#fff", border:"none", fontSize:"24px",
 padding:"20px 15px", cursor:"pointer",
-borderRadius:"18px"
+borderRadius:"18px",
+zIndex:10,
 }
 
 const arrowStyleRight : React.CSSProperties ={

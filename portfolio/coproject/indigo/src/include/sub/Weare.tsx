@@ -1,10 +1,10 @@
-import promo01 from '../../assets/images/s-images/promo01.png'
-import promo02 from '../../assets/images/s-images/promo02.png'
-import promo03 from '../../assets/images/s-images/promo03.png'
-import promo04 from '../../assets/images/s-images/promo04.png'
+
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+
+import * as S from "../css/sub.styled"
+
 
 interface FeatureItem{
     id: number,
@@ -81,3 +81,12 @@ export const Weare = ()=>{
         </>
     )
 }
+
+
+/*
+
+import promo01 from '../../assets/images/s-images/promo01.png'
+import promo02 from '../../assets/images/s-images/promo02.png'
+import promo03 from '../../assets/images/s-images/promo03.png'
+import promo04 from '../../assets/images/s-images/promo04.png'
+ */
