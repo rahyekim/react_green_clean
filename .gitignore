@@ -36,7 +36,13 @@ node_modules/
 
 # Eclipse
 bin/
-
+# Eclipse specific files
+.metadata/
+.settings/
+.project
+.classpath
+bin/
+target/
 # IntelliJ
 .idea/
 *.iml
@@ -48,3 +54,25 @@ target/
 # Gradle
 build/
 .gradle/
+
+# --- 이클립스 설정 파일 ---
+.metadata/
+.settings/
+.project
+.classpath
+
+# --- 자바 빌드 결과물 (컴파일된 파일) ---
+bin/
+build/
+target/
+
+# --- 스프링 부트 실행/로그 파일 ---
+*.log
+/logs/
+
+# --- 운영체제/IDE 부산물 ---
+.DS_Store
+Thumbs.db
+*.suo
+*.user
+*.lock
