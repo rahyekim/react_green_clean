@@ -1,4 +1,4 @@
-package com.skz.jpa;
+package com.skz.entity;
 
 import jakarta.persistence.*;
 //DB 테이블과 자바 객체를 연결해주는 JPA 관련 기능 모두 불러옴

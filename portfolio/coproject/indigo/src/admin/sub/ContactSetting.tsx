@@ -63,7 +63,7 @@ export default function ContactSetting (){
         }
     }
 
-    // 쓸모없는 스팸문의 삭제하는함수
+    // (쓸모없는 스팸문의) 삭제하는함수
     const handleDelete = async(id:number) =>{
         //실수로 누를 수 있으니 경고창을 한번 띄움
         if(!window.confirm('정말 이 문의 내역을 삭제하시겠습니까?')) return;

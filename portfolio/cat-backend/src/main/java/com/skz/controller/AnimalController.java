@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skz.jpa.Animal;
+import com.skz.entity.Animal;
 import com.skz.repository.AnimalRepository;
 
 
@@ -20,15 +20,16 @@ import com.skz.repository.AnimalRepository;
 public class AnimalController {
 
 	private final AnimalRepository animalRepository;
-/*데이터 베이스와 통신할 Repository 객체를 담아둘 공간임 / 중간에 변경되지않도록 final 선언*/
+/*데이터 베이스와 통신할 Repository 객체를 담아둘 공간임 , 중간에 변경되지않도록 final 선언*/
 	
 	//자동으로 데이터베이스 통신 객체(Repository)를 주입(연결) 해주는 생성자
 	public AnimalController(AnimalRepository animalRepository) {
 		this.animalRepository = animalRepository;
 		//넘겨받을 Repository 객체를 이 클래스 전역에서 쓸수 있게 변수에 저장
 	}
-	
-	@GetMapping("/recomended")
+
+	//조회 findAll jpa가기본제공해주는 메서드
+	@GetMapping("/recommended")
 	public List<Animal> getRecommendedAnimals(){
 		return animalRepository.findAll();
 	}
