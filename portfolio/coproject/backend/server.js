@@ -553,7 +553,7 @@ app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
             let fileIdx = 0;
 
             for(let i =0; i<totalItems ; i++){
-                
+                insertValues.append([ image_url: `/uploads/${file.filename}`])
             }
 
             const insertSql = ``
@@ -575,7 +575,8 @@ app.get('/api/settings/blog', (req,res)=>{
         if(err) return res.status(500).json({message:"블로그줄수조회에러"})
 
         
-        db.query(`select * from blog_image`, (err)=> {
+        db.query(`select id, image_url as previewUrl, date_str as date, 
+            text_content as text from blog_item`, (err, itemsResult)=> {
 
             if(err) return res.status(500).json({message:"블로그이미지조회에러"})
 
