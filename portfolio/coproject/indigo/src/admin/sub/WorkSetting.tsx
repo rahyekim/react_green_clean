@@ -27,6 +27,7 @@ export default function WorkSetting (){
         }))
     )
 
+    //🟢Array(8).fill(null) , [...Array(8)] , 
     useEffect(()=>{
     const fetchSettings = async()=>{
         try{
@@ -39,6 +40,7 @@ export default function WorkSetting (){
                     return{
                         id:idx,
                         previewUrl: `http://localhost:5000${dbImgs[idx].previewUrl}`,
+                        //previewUrl: dbImg[idx] ? `http://~~` : '',
                         file:null
                     }
                 }
@@ -136,7 +138,7 @@ export default function WorkSetting (){
             }
         }) 
         
-//{headers:{'Content-Type': 'multipart/form-data'}         }
+//{headers:{'Content-Type': 'multipart/form-data'}}
         try{
             await axios.post("http://localhost:5000/api/settings/work", formData)
 

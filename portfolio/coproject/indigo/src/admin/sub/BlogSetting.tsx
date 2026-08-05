@@ -102,7 +102,10 @@ export default function BlogSetting (){
                 date: newBlogs[idx].date || getTodayDate(),
             };
             setBlogs(newBlogs); //변경된 내용 저장
+
+            e.target.value=''; //동일한 파일 재선택 가능
         }
+        
 
 
     }
@@ -113,13 +116,13 @@ export default function BlogSetting (){
 
         newBlogs[idx].text=value;
         
-        //📌무언가를 채우기 시작하는 순간 날짜가 딱 박히게 (안전장치)
+        //📌 글자를 채우기 시작하는 순간 날짜 자동 생성
         //이미지 안올리고 글부터 썼다면, 이때도 '오늘 날짜'를 자동으로 찍어줌
         if(!newBlogs[idx].date && value.trim() !== ""){
             newBlogs[idx].date = getTodayDate();
         }
-        //글을 다 지웠다면 날짜도 다시 비워줍니다
-        if(value.trim()==='' && !newBlogs[idx].file){
+        //📌 글도 지우고 첨부된 이미지 파일도 없으면 날짜 초기화
+        if(value.trim()==='' && !newBlogs[idx].file && !newBlogs[idx].previewUrl){
             newBlogs[idx].date= "";
         }
         setBlogs(newBlogs);
@@ -234,44 +237,34 @@ export default function BlogSetting (){
                                             이미지 {idx+1} 첨부
                                         </S.BottomInfo>
                                     )}    
-                                    {/* 🌟 날짜 표시용 인풋 */}
-                                    {/* <S.FileUpload
-                                    type="text"
-                                    value={blog.date}
-                                    readOnly
-                                    placeholder="*이미지나 글을 올리면 날짜가 찍힙니다"
-                                    /> */}
-                                    {/* 🌟 텍스트 입력창 */}
-                                    {/* <S.Input
-                                    style={{border:"1px solid #ddd" , marginTop:"8px"}}
-                                    type="text"
-                                    value={blog.text}
-                                    placeholder="블로그내용을 입력해주세요"
-                                    onChange={e=>handleTextChange(idx, e.target.value)}
-                                    /> */}
-
                                     {/*🌟 파일 업로드 */}
-                                    <S.FileUpload
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e)=>handleFileChange(idx,e)}
-                                    />
+                                     <S.CustomFileButton>
+                                        <S.FileUpload
+                                        style={{display:"none"}}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e)=>handleFileChange(idx,e)}
+                                        /> 
+                                        {blog.previewUrl? "이미지변경" : "사진 업로드"}
+                                    </S.CustomFileButton>
                                 </S.BlogImgWrap>     
+                                    
+                                {/* 🌟 날짜 표시용 인풋 */}
                                 <div className="mt-2">
                                     <S.FileUpload
                                     type="text"
                                     value={blog.date}
                                     readOnly
-                                    placeholder="이미지나 글을 올리면 날짜가 자동으로"
+                                    placeholder="*이미지나 글을 올리면 날짜가 자동으로"
                                     />
                                 </div>
-                                <S.TextArea>
-                                    <textarea
+                                {/* 🌟 텍스트 입력창 */}
+                                <S.TextArea
                                     value={blog.text}
                                     onChange={e=>handleTextChange(idx, e.target.value)}
                                     placeholder="블로그 내용 입력"
                                     />
-                                </S.TextArea>
+                               
                             </S.BlogKey>
                         ))}
                     </S.GridWrap3>
@@ -294,41 +287,3 @@ export default function BlogSetting (){
 }
 
 
-/*
-{/* 🌟 1. 파일 업로드 버튼 추가하기 *
-                <S.CustomFileButton>
-                    {blog.previewUrl ? "이미지 변경" : "파일 업로드"}
-                    <S.HiddenFileInput 
-                        type="file" 
-                        accept="image/*"
-                        onChange={(e) => handleFileChange(idx, e)} 
-                    />
-                </S.CustomFileButton>
-
-                {/* 🌟 2. 텍스트 입력창 추가하기 (제목/설명) *
-                <S.TextInput 
-                    type="text"
-                    value={blog.text}
-                    onChange={(e) => handleTextChange(idx, e.target.value)}
-                    placeholder="블로그 제목이나 내용을 입력하세요"
-                />
-
-                {/* 3. 날짜 표시용 인풋 
-                <S.FileUpload
-                    type="text"
-                    value={blog.date}
-                    readOnly
-                    placeholder="이미지나 글을 올리면 날짜가 찍힙니다"
-                />
-            </S.BlogImgWrap>
-
-
-export const TextInput = styled.input`
-    width: 100%;
-    padding: 8px;
-    margin-top: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 13px;
-`;
- */
