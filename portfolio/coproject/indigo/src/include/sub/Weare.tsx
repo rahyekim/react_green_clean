@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-import * as S from "../css/sub.styled"
+// import * as S from "../css/sub.styled"
 
 
 interface FeatureItem{
@@ -59,7 +59,7 @@ export const Weare = ()=>{
                         {feature && feature.length > 0 ?(
                             feature.map(ft => (
                                 <li key={ft.id}>
-                                    <a href="/{ft">
+                                    <a href="#">
                                         <i className={ft.icon} />
                                         {/* <img src={ft.icon} alt={ft.title} /> */}
                                         <h3>{ft.title}</h3>

@@ -22,7 +22,7 @@ if(!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir);
 }
 
-//multer설정 (저장 위치와 이름 정하기)
+//🌟multer설정 (저장 위치와 이름 정하기)
 //cb(callback)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -42,7 +42,7 @@ const upload = multer({storage: storage});
 //정적 파일 제공
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
+//---------------------------
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -493,7 +493,7 @@ app.post('/api/settings/work', upload.array('workImages',8), (req,res)=>{
                     return res.status(200).json({message: "work설정 성공적으로 저장"});
                 })
             })
-        }else{ //🟢 else안하면 res 두번 응답해서 에러터짐 
+        }else{ //🟢위는 콜백함수return이라 else안하면 res 두번 응답해서 에러터짐 
             return res.status(200).json({message: "work설정 노출수가 변경되었습니다"});
         }
     })
@@ -522,8 +522,72 @@ app.post('/api/settings/work', upload.array('workImages',8), (req,res)=>{
     
  })
 
+//[관리자] 블로그 섹션 설정 저장 및 불러오기 API
 
+app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
+    
+    const rowCount = parseInt(req.body.rowCount) || 1;
 
+    //multer가 서버의 uploads 폴더에 방금 저장한 진짜 사진 파일들  
+    const files = req.files || [];
+    //안전장치?????
+
+    //sql
+    const updateSql=`insert into blog_setting(id, row_count)
+    values (1, ?) 
+    on duplicate key update
+    row_count = values(row_count)
+    `;
+
+    db.query(updateSql, [rowCount], (err)=>{
+
+        if(err) return res.status(500).json({message:"블로그 줄 수 저장에러"})
+        
+        db.query(`delete from blog_item`, (err)=>{
+
+            if(err) return res.status(500).json({message:"블로그이미지 초기화에러"})
+
+            const insertValues = [];  //바구니
+
+            const totalItems = rowCount === 1 ? 3 : 6;
+            let fileIdx = 0;
+
+            for(let i =0; i<totalItems ; i++){
+                
+            }
+
+            const insertSql = ``
+
+            db.query(insertSql, [insertValues], (err)=>{
+                if(err)  return res.status(500).json({message:"블로그 줄 수 저장에러"})
+
+                res.status(200).json({message:"성공"})
+            });
+           
+        })
+    })
+});
+
+app.get('/api/settings/blog', (req,res)=>{
+
+    db.query(`select * form blog_setting where id=1`, (err,result)=>{
+
+        if(err) return res.status(500).json({message:"블로그줄수조회에러"})
+
+        
+        db.query(`select * from blog_image`, (err)=> {
+
+            if(err) return res.status(500).json({message:"블로그이미지조회에러"})
+
+            const settings = result[0] || {row_count:1};
+    
+            res.status(200).json({
+                rowCount: settings.row_count,
+                blogs: itemsResult
+            })
+        })
+    })
+})
 
 //관리자끝
 

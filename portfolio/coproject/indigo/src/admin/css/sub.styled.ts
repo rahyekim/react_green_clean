@@ -361,5 +361,12 @@ tbody{
 
 `;
 
+export const TextArea=styled.textarea`
 
-
+width: 100%;
+height: 80px;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 7px;
+resize: none; ////🌟🌟크기고정
+`;

@@ -214,7 +214,7 @@ align-items: center;
 background-color: #fff;
 border-top: 1px solid #dee2e6;
 padding: 8px 0;
-z-index: 1000;
+z-index: 1000; //🌟
 `;
 export const  NavItem = styled.div<{$active?:boolean}>`
 display: flex;

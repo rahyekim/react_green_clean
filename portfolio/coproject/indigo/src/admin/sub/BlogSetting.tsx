@@ -26,7 +26,42 @@ export default function BlogSetting (){
             date:"", 
             text:"",
         }))
-    )
+    );
+
+    useEffect(()=>{
+
+        const fetchBlog = async()=>{
+
+            try{
+                const res = await axios.get("http://localhost:5000/api/settings/blog")
+                if(res.data){
+                    setRowCount(res.data.rowCount);
+                    const dbBlogs = res.data.blogs;
+                    //DB에서 가져온 데이터를 내 6칸짜리 배열에 맞춤
+                    const initialBlogs = Array.from({length:6}).map((_,idx)=>{
+                        if(dbBlogs[idx]){
+                            return {
+                                id: idx,
+                                //사진 주소앞에 백엔드주소를 붙여서 사진을 보이게함
+                                previewUrl: `http://localhost:5000${dbBlogs[idx].image_url}`,
+                                //이미 서버에 있는 사진이므로 진짜 파일은 없음
+                                file: null,
+                                date: dbBlogs[idx].date_str || '', //날짜넣기
+                                text: dbBlogs[idx].text_content || '' //글넣기
+                            }
+                        }//db에 데이터가 없으면 그냥 빈칸으로 둠
+                        return({id: idx, previewUrl:"", file:null, date: "", text:""});
+                    }
+                    ); //완성된6칸배열을 내 상태에 최종 저장
+                    setBlogs(initialBlogs);
+                }
+            }catch(err){
+                console.error("블로그설정 불러오기 에러: ",err)
+                alert("블로그 설정 불러오기 실패")
+            }
+        }
+        fetchBlog();
+    },[])
 
     // ---2.날짜 자동생성 함수 -----
     const getTodayDate = ()=>{
@@ -199,21 +234,21 @@ export default function BlogSetting (){
                                             이미지 {idx+1} 첨부
                                         </S.BottomInfo>
                                     )}    
-                                    {/* 날짜 표시용 인풋 */}
-                                    <S.FileUpload
+                                    {/* 🌟 날짜 표시용 인풋 */}
+                                    {/* <S.FileUpload
                                     type="text"
                                     value={blog.date}
                                     readOnly
                                     placeholder="*이미지나 글을 올리면 날짜가 찍힙니다"
-                                    />
+                                    /> */}
                                     {/* 🌟 텍스트 입력창 */}
-                                    <S.Input
+                                    {/* <S.Input
                                     style={{border:"1px solid #ddd" , marginTop:"8px"}}
                                     type="text"
                                     value={blog.text}
                                     placeholder="블로그내용을 입력해주세요"
                                     onChange={e=>handleTextChange(idx, e.target.value)}
-                                    />
+                                    /> */}
 
                                     {/*🌟 파일 업로드 */}
                                     <S.FileUpload
@@ -222,6 +257,21 @@ export default function BlogSetting (){
                                     onChange={(e)=>handleFileChange(idx,e)}
                                     />
                                 </S.BlogImgWrap>     
+                                <div className="mt-2">
+                                    <S.FileUpload
+                                    type="text"
+                                    value={blog.date}
+                                    readOnly
+                                    placeholder="이미지나 글을 올리면 날짜가 자동으로"
+                                    />
+                                </div>
+                                <S.TextArea>
+                                    <textarea
+                                    value={blog.text}
+                                    onChange={e=>handleTextChange(idx, e.target.value)}
+                                    placeholder="블로그 내용 입력"
+                                    />
+                                </S.TextArea>
                             </S.BlogKey>
                         ))}
                     </S.GridWrap3>
