@@ -227,6 +227,112 @@ span {
     margin-top: 4px;
 }
 `;
+export const TopFlexBasic = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 15px 10px;
+margin-bottom: 30px;
+
+border-bottom: 1px solid #ccc;
+`;
+
+//플렉스 칸을 중심으로
+export const Column = styled.div`
+display: flex;
+flex-direction: column;
+gap: 15px;
+padding: 60px 20px 0px 20px; //상 우 하 좌 
+`;
+
+export const BasicLayout = styled.div`
+padding: 15px 10px;
+`;
+
+export const Back = styled.span`
+cursor: pointer; //스크롤 없어서 포인터보이게
+color: #999;
+transition: all 0.5s;
+
+&:hover{
+    color: #333;
+}
+`;
+//title
+export const H5Bold  = styled.h5`
+font-weight: 600;
+letter-spacing: -0.03rem; //🌟 우리나라글자는 자간을 줘야
+color: #333; //✨검정색보단 약간 검정색이 조아...
+
+`;
+export const H3Bold  = styled.h3`
+font-weight: 700;
+letter-spacing: -0.03rem; 
+color: #333;
+`;
+
+export const  None= styled.div`
+width: 40px;
+height: auto;
+`;
+export const TextCenter = styled.div`
+text-align: center;
+margin-top: 30px;
+`;
+
+export const  KaKaoBtn= styled.button`
+background-color: #fee500;
+color: #181818;
+padding: 15px;
+border-radius: 8px;
+border: 0px solid #fee500;
+font-weight: bold;
+
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+opacity: 0.9;
+cursor: pointer;
+transition: all 0.3s;
+
+&:hover{
+    opacity: 1;
+}
+`;
+
+export const  LocalBtn= styled.button`
+background-color: #eee;
+color: #333;
+padding: 15px;
+border-radius: 8px;
+border: 1px solid #fff;
+font-weight: bold;
+
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+
+opacity: 0.9;
+cursor: pointer;
+transition: all 0.3s;
+
+&:hover{
+    opacity: 1;
+}
+`;
+export const MemberInfo  = styled.div`
+margin-top: 30px;
+
+`;
+
+export const BtnEndWrap = styled.div`
+display: flex;
+justify-content: flex-end;
+
+width: 100%;
+`;
 // export const  = styled.div``;
 // export const  = styled.div``;
 // export const  = styled.div``;

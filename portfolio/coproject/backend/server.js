@@ -521,17 +521,25 @@ app.post('/api/settings/work', upload.array('workImages',8), (req,res)=>{
     })
     
  })
+/*
+미들웨어가 실행: 전송된 파일들을 서버(지정된 폴더)에 자동으로 저장=> 저장된 파일 정보들을 req.files에 담음
+req.files로 들어가는 것: 사용자가 업로드한 진짜 이미지 파일들 (최대 6개)
+req.body로 들어가는 것: rowCount, bolgTexts, blogDate 같은 텍스트 데이터들
+*/
 
 //[관리자] 블로그 섹션 설정 저장 및 불러오기 API
-
 app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
     
     const rowCount = parseInt(req.body.rowCount) || 1;
 
     //multer가 서버의 uploads 폴더에 방금 저장한 진짜 사진 파일들  
     const files = req.files || [];
-    //안전장치?????
-
+    
+    // 안전장치: 무조건 배열모양([데이터])으로 통일시켜주는 작업
+    //1칸만 채워서 보내면 '글자'로오고 여러칸을 채우면 '배열(목록)'
+    const texts = Array.isArray(req.body.blogTexts) ? req.body.blogTexts: [req.body.blogTexts]
+    const date = Array.isArray(req.body.blogDate) ? req.body.blogDate : [req.body.blogDate]
+    const existing = Array.isArray(req.body.blogImages) ? req.body.blogImages : [req.body.blogImages]
     //sql
     const updateSql=`insert into blog_setting(id, row_count)
     values (1, ?) 
@@ -546,39 +554,52 @@ app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
         db.query(`delete from blog_item`, (err)=>{
 
             if(err) return res.status(500).json({message:"블로그이미지 초기화에러"})
-
-            const insertValues = [];  //바구니
+            
+            const insertValues = [];  //DB에 넣을 바구니
 
             const totalItems = rowCount === 1 ? 3 : 6;
             let fileIdx = 0;
 
-            for(let i =0; i<totalItems ; i++){
-                insertValues.append([ image_url: `/uploads/${file.filename}`])
-            }
+            for(let i =0; i<totalItems ; i++){ //1칸부터 3번(6번)칸까지 하나씩 확인하며 조립
+                //최종적으로 DB에 저장될 이미지 주소
+                let finalImageUrl= '';
+                //경우의 수 A : 관리자가 사진을 안바꾸고 '기존사진' 그대로 뒀을때
+                if(existing && existing[i] && existing[i] !== 'undefined' && existing[i]!==''){
+                        finalImageUrl = existing[i];  ///?????
+                //경우의 수 B: 관리자가 새로운 사진 파일을 업로드했을 때
+                }else if(files[fileIdx]){
+                    finalImageUrl= `/uploads/${files[fileIdx].filename}`;
+                    fileIdx++; 
+                }
+                //텍스트와 날짜도 빈값이면(undefined) 빈칸('')으로 깔끔하게 처리
+                const finalDate = date[i] && date[i] !== 'undefined' ? date[i] :''
+                const finalText = texts[i] && texts[i] !== 'undefined' ? texts[i] :''
+                //조립이 끝난 [사진주소,날자, 글]세트 
+                insertValues.push([finalImageUrl, finalDate, finalText]);
+            }   
 
-            const insertSql = ``
+            const insertSql = `insert into blog_item 
+            (image_url, date_str, text_content) values ?`
 
             db.query(insertSql, [insertValues], (err)=>{
-                if(err)  return res.status(500).json({message:"블로그 줄 수 저장에러"})
-
-                res.status(200).json({message:"성공"})
+                if(err)  return res.status(500).json({message:"블로그item 저장에러"})
+                    console.error("블로그item 저장에러",err)
+                res.status(200).json({message:"블로그 설정 성공적으로 저장"})
             });
-           
         })
     })
 });
 
+//프론트엔드에서 저장된 블로그 정보 좀 줘! 라고 요청할때 데이터 보내줌
 app.get('/api/settings/blog', (req,res)=>{
 
-    db.query(`select * form blog_setting where id=1`, (err,result)=>{
+    db.query(`select * from blog_setting where id=1`, (err,result)=>{
 
-        if(err) return res.status(500).json({message:"블로그줄수조회에러"})
+        if(err) return res.status(500).json({message:"블로그줄수 불러오기에러"})
 
-        
-        db.query(`select id, image_url as previewUrl, date_str as date, 
-            text_content as text from blog_item`, (err, itemsResult)=> {
+        db.query(`select * from blog_item order by id asc`, (err, itemsResult)=> {
 
-            if(err) return res.status(500).json({message:"블로그이미지조회에러"})
+            if(err) return res.status(500).json({message:"블로그아이템 불러오기에러"})
 
             const settings = result[0] || {row_count:1};
     
