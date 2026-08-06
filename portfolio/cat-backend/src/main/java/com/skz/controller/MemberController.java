@@ -5,7 +5,12 @@ import com.skz.repository.MemberRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @RestController //@Controller와 @ResposeBody가 합쳐진 형태 //API전용창구
@@ -69,7 +74,36 @@ public class MemberController { //외부에서 접근 가능한 컨트롤러 클
             .body("이메일 또는 비밀번호가 일치하지않는다");
         //회원이 없거나 비밀번호가 틀리면 401 인증실패 에러 메세지 보내줌
     }
+
+    @PostMapping("/upload-profile")
+    public ResponseEntity<String> uploadProfile(@RequestParam("file") MultipartFile file) {
+
+        try {
+            //파일이름이 겹치치 않도록 현재시간(밀리초) 앞에 붙여줌
+            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            //2.프로젝트 폴더안의 uploads 폴더에 저장할 경로잡기
+            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            Path path = Paths.get(uploadDir + filename);
+            //폴더가 없으면 만들고 파일 복사해서 씀
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+            //저장된 이미지에 접근할 수 있는 가짜url을 프론트로 반환
+            //실무에서는 aws s3 url 들어가는 자리
+            String imageUrl = "http://localhost:8080/uploads/" + filename;
+            return ResponseEntity.ok(imageUrl);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("이미지 업로드 실패");
+        }
+    }
 }
+
+
+
+
+
 
 //로그인 성공 시 비밀번호가 포함된 원본 객체를 통째로 주는 것은 보안상 좋지 않으니,
 // 나중에는 필요한 정보만 추려서(DTO) 주거나 토큰을 줘야함

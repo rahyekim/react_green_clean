@@ -364,6 +364,7 @@ position:fixed;
 bottom:3%;
 left:50%;
 transform:translateX(-50%);
+z-index: 999;
 
 /* 💡 뼈대가 되는 기본 넓이와 양옆 여백 */
   width: 100%;
@@ -414,6 +415,15 @@ margin: 0 auto;
 display: flex;
 align-items: center;
 justify-content: center;
+overflow: hidden;
+
+cursor: pointer;
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 `;
 export const PhotoUpBottomText = styled.span`
 font-size: 12px;
