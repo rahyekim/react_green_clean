@@ -2,7 +2,7 @@
 
 import React, {useState } from "react"
 import * as S from '../../css/style.styled'
-import { PetsOutlined } from "@mui/icons-material";
+import { PestControlOutlined, PestControlRodent, PetsOutlined, PetsRounded, PetsSharp, PetsTwoTone } from "@mui/icons-material";
 
 export default function SignupPage(){
 
@@ -34,8 +34,7 @@ export default function SignupPage(){
     }
 
     const handleCheckEmail = async()=>{}
-    const handleSubmit = async(e:SubmitEvent)=>{
-        e.preventDefault()
+    const handleSubmit = async()=>{
     }
     
     
@@ -57,14 +56,20 @@ export default function SignupPage(){
     {/* === step 0: 가입방식 선택(new) ===*/}
                 {step===0 && (
                     <S.TextCenter>
+
                         <PetsOutlined style={{color:"#f28c28", marginBottom:"4px"}}/>
                         <S.H3Bold>어서 찾아주개냥 오신 것을 환영합니다 </S.H3Bold>
-                        <S.Column>
-                            <S.KaKaoBtn>카카오로 시작하기</S.KaKaoBtn>
-                            <S.LocalBtn
-                            onClick={handleGeneralSignup}
-                            >일반 회원 가입하기</S.LocalBtn>
-                        </S.Column>
+                        <S.BtnBottomWrap>
+                            <S.Column>
+                                <S.BaseBtn $variant='kakao'
+                                onClick={handleKaKaoSignup}
+                                >카카오로 시작하기</S.BaseBtn>
+                                <S.BaseBtn
+                                $variant="local"
+                                onClick={handleGeneralSignup}
+                                >일반 회원 가입하기</S.BaseBtn>
+                            </S.Column>
+                        </S.BtnBottomWrap>
                     </S.TextCenter>
                 )}
 
@@ -105,13 +110,86 @@ export default function SignupPage(){
                                 /> 마케팅 정보 email, SMS 수신동의 (선택)
                             </label> <br/>
                         </S.MemberInfo>
-                        <S.BtnEndWrap>
-                            <S.LocalBtn
+                        <S.BtnBottomWrap>
+                            <S.BaseBtn
+                            $variant="primary"
                             onClick={()=>setStep(2)}
-                            > 다음으로 </S.LocalBtn>
-                        </S.BtnEndWrap>
+                            > 다음으로 </S.BaseBtn>
+                        </S.BtnBottomWrap>
                     </S.BasicLayout>
                 )}
+
+            {/* ====== step.3 : 정보입력===== */}
+            {step === 2 && (
+                <>
+                <S.TextCenter>
+                    <S.PhotoUpload style={{marginBottom:"7px"}}>
+                        <PetsRounded style={{color:"pink"}}></PetsRounded>
+                    </S.PhotoUpload>
+                    <S.PhotoUpBottomText
+                    className="mt-2"
+                    > <span style={{color:"#dd7979"}}>*</span> 발바닥을 클릭해서 사진을 등록하세요
+                    </S.PhotoUpBottomText>
+                </S.TextCenter>
+                <S.LayoutPadding>
+                    <S.AlineItemsCenter className="mt-3">
+                        <S.FormControl
+                        type="email"
+                        name="email"
+                        placeholder="이메일 입력"
+                        value={formData.email}
+                        onChange={handleChange}/>
+                        <S.BaseBtn
+                        style={{padding: "10px", fontWeight:400}}
+                        onClick={handleCheckEmail}
+                        $variant="primary"
+                        $mainColor="#ccc"
+                        $width="25%"
+                        >중복 확인
+                        </S.BaseBtn>
+                    </S.AlineItemsCenter>
+
+                    <S.AlineItemsCenter>
+                        <S.FormControl
+                        type="text"
+                        name="nickname"
+                        placeholder="닉네임 입력"
+                        value={formData.nickname}
+                        onChange={handleChange}/>
+                        <S.BaseBtn 
+                        style={{padding: "10px", fontWeight:400}}
+                        onClick={handleCheckEmail}
+                        $variant="primary"
+                        $mainColor="#ccc"
+                        $width="25%"
+                        >중복 확인
+                        </S.BaseBtn>
+                    </S.AlineItemsCenter>
+    <div style={{padding:"5px"}}/>
+                        <S.FormControl
+                        type="password"
+                        name="password"
+                        placeholder="비밀번호 입력"
+                        value={formData.password}
+                        onChange={handleChange}/>
+   <div style={{padding:"5px"}}></div>
+                        <S.FormControl
+                        type="password"
+                        name="passwordConfirm"
+                        placeholder="다시 비밀번호 입력"
+                        value={formData.passwordConfirm}
+                        onChange={handleChange}/>
+                        
+
+                    <S.BtnBottomWrap>
+                        <S.BaseBtn
+                        $variant="primary"
+                        onClick={handleSubmit}
+                        > 회원 가입 </S.BaseBtn>
+                    </S.BtnBottomWrap>
+                </S.LayoutPadding>
+                </>
+            )}
             </S.Container>
         </S.AppWrapper>
         </>
