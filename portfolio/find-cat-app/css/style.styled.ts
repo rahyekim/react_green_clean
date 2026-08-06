@@ -366,13 +366,11 @@ left:50%;
 transform:translateX(-50%);
 z-index: 999;
 
-/* 💡 뼈대가 되는 기본 넓이와 양옆 여백 */
-  width: 100%;
-  padding: 0 20px; 
-  box-sizing: border-box;
-
-  /* 💡 PC 화면 기준 최대 크기 */
-  max-width: 480px; 
+/* 🌟 뼈대가 되는 기본 넓이와 양옆 여백 🌟*/
+width: 100%;
+max-width: 480px;  
+padding: 0 20px; 
+box-sizing: border-box;
 
   /* 💡 1. 480px 이하 기기 */
   @media (max-width: 480px) {
@@ -398,11 +396,6 @@ z-index: 999;
   @media (max-width: 280px) {
     max-width: 280px;
   }
-
-  /* width: 460px;
-  position: fixed;
-  bottom: 3%;
-  z-index: 999; */
 
   `;
 export const PhotoUpload = styled.div`

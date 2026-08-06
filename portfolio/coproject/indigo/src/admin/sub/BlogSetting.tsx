@@ -35,7 +35,11 @@ export default function BlogSetting (){
             try{
                 const res = await axios.get("http://localhost:5000/api/settings/blog")
                 if(res.data){
-                    setRowCount(res.data.rowCount);
+                    // 🌟 핵심: res.data.rowCount를 Number()로 감싸 숫자로 변환..
+                    // 네트워크통신은 무조건 문자열로온다고봐야
+                    const row = Number(res.data.rowCount);
+                    setRowCount( row === 2? 2:1 );
+                    // setRowCount(res.data.rowCount) -> 숫자로 못읽어서 라디오체크도안되고 2줄 다나옴
                     const dbBlogs = res.data.blogs;
                     //DB에서 가져온 데이터를 내 6칸짜리 배열에 맞춤
                     const initialBlogs = Array.from({length:6}).map((_,idx)=>{
@@ -158,12 +162,19 @@ export default function BlogSetting (){
 
         //준비된 데이터를 상자에 담는다
         blogsToSave.forEach((blog, idx)=>{
-            if(blog.file){
+            
+            //1.기존 이미지 경로 추출(새파일 없고 previewUrl있을떄만 기존경로전송)
+            const existingUrl = blog.file 
+            ? '' 
+            : blog.previewUrl.replace('http://localhost:5000', '');
+            //앞에 도메인주소는 지우고 /uploads/a.jpg라는 순수 경로만 남김
+            
+            formData.append('blogExistingImages', existingUrl);
 
-                //이미지가잇으면 blogImages라는 이름표를 붙여 상자에 넣는다
+            //2.새로 선택한 파일이 있는 경우에만 파일 전송
+            if(blog.file){
                 formData.append('blogImages', blog.file);
             }
-            //텍스트와 날짜도 짝을 맞추기위해 배열형태로 상자에 넣음
             formData.append('blogTexts', blog.text);
             formData.append('blogDate', blog.date);
         })
@@ -287,3 +298,48 @@ export default function BlogSetting (){
 }
 
 
+
+/*
+
+//설정 저장 함수
+    const handleSave = async()=>{
+
+        //이미지가 포함된 데이터를 보낼 때는 FormData라는 상자를 씁니다
+        const formData = new FormData();
+
+        //rows몇줄인지 상자에 담기
+        formData.append('rowCount', String(rowCount));
+        
+        //1줄이면 3개 2줄이면 6개 잘라서 준비
+        const blogsToSave = rowCount === 1 ? blogs.slice(0,3) : blogs;
+
+        //준비된 데이터를 상자에 담는다
+        blogsToSave.forEach((blog, idx)=>{
+            if(blog.file){
+
+                //이미지가잇으면 blogImages라는 이름표를 붙여 상자에 넣는다
+                formData.append('blogImages', blog.file);
+            }
+            //텍스트와 날짜도 짝을 맞추기위해 배열형태로 상자에 넣음
+            formData.append('blogTexts', blog.text);
+            formData.append('blogDate', blog.date);
+        })
+        try{
+            await axios.post("http://localhost:5000/api/settings/blog", formData,{
+                headers: {'Content-Type': 'multipart/form-data'}
+            })
+
+            console.log("저장된 줄 수: ", rowCount);
+            console.log("저장된 블로그 데이터: ", blogsToSave);
+
+            alert("BlOG 설정 성공적으로 저장")
+            
+        }catch(err){
+            console.error("blog 설정 저장실패: ", err)
+            alert("blog설정 저장중 오류발생!")
+        }
+    }
+
+
+
+*/

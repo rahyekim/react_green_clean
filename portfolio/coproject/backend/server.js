@@ -47,7 +47,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:"",
+    password:"2525",
     database: 'company'
 })
 
@@ -522,7 +522,8 @@ app.post('/api/settings/work', upload.array('workImages',8), (req,res)=>{
     
  })
 /*
-미들웨어가 실행: 전송된 파일들을 서버(지정된 폴더)에 자동으로 저장=> 저장된 파일 정보들을 req.files에 담음
+🟢미들웨어가 실행: 전송된 파일들을 서버(지정된 폴더)에 자동으로 저장
+=> 저장된 파일 정보들을 req.files에 담음 
 req.files로 들어가는 것: 사용자가 업로드한 진짜 이미지 파일들 (최대 6개)
 req.body로 들어가는 것: rowCount, bolgTexts, blogDate 같은 텍스트 데이터들
 */
@@ -539,7 +540,7 @@ app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
     //1칸만 채워서 보내면 '글자'로오고 여러칸을 채우면 '배열(목록)'
     const texts = Array.isArray(req.body.blogTexts) ? req.body.blogTexts: [req.body.blogTexts]
     const date = Array.isArray(req.body.blogDate) ? req.body.blogDate : [req.body.blogDate]
-    const existing = Array.isArray(req.body.blogImages) ? req.body.blogImages : [req.body.blogImages]
+    const existing = Array.isArray(req.body.blogExistingImages) ? req.body.blogExistingImages : [req.body.blogExistingImages]
     //sql
     const updateSql=`insert into blog_setting(id, row_count)
     values (1, ?) 
@@ -555,22 +556,25 @@ app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
 
             if(err) return res.status(500).json({message:"블로그이미지 초기화에러"})
             
-            const insertValues = [];  //DB에 넣을 바구니
+            const insertValues = [];  //DB에 넣을 데이터바구니
 
             const totalItems = rowCount === 1 ? 3 : 6;
             let fileIdx = 0;
-
+            //🟢으렵당.. 
+            //multer은 하드디스크저장까지만..생성된filename이름만 건내줌..
             for(let i =0; i<totalItems ; i++){ //1칸부터 3번(6번)칸까지 하나씩 확인하며 조립
                 //최종적으로 DB에 저장될 이미지 주소
-                let finalImageUrl= '';
-                //경우의 수 A : 관리자가 사진을 안바꾸고 '기존사진' 그대로 뒀을때
-                if(existing && existing[i] && existing[i] !== 'undefined' && existing[i]!==''){
-                        finalImageUrl = existing[i];  ///?????
-                //경우의 수 B: 관리자가 새로운 사진 파일을 업로드했을 때
-                }else if(files[fileIdx]){
+                let finalImageUrl= '';  //루프실행될때마다 초기화..ㅎ
+
+                //우선순위🔴 최신 데이터(새 파일) > 기존 데이터(기존 URL) 
+                //경우의 수 A: 관리자가 새로운 사진 파일을 업로드했을 때
+                if(files[fileIdx]){  //새로만들어진 파일 주소 씀..
                     finalImageUrl= `/uploads/${files[fileIdx].filename}`;
                     fileIdx++; 
-                }
+                }  else if(existing && existing[i] && existing[i] !== 'undefined' && existing[i]!==''){
+                    finalImageUrl = existing[i]; } 
+                //경우의 수 B : 관리자가 사진을 안바꾸고 '기존사진' 그대로 뒀을때
+                
                 //텍스트와 날짜도 빈값이면(undefined) 빈칸('')으로 깔끔하게 처리
                 const finalDate = date[i] && date[i] !== 'undefined' ? date[i] :''
                 const finalText = texts[i] && texts[i] !== 'undefined' ? texts[i] :''

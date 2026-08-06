@@ -108,3 +108,69 @@ export default function WorkSetting (){
     )
     
 }
+
+interface BlogItem {
+    id:number;
+    previewUrl:string;
+    file: File | null;
+    date: string;
+    text: string;
+}
+export const BlogSetting = () => {
+
+    const [rowCount]=useState<1|2>(1);
+    const [blogs, setBlogs]=useState<BlogItem[]>(
+        Array(8).fill(null).map((_,idx)=>({
+            id: idx,
+            previewUrl: "",
+            file: null,
+            date: '',
+            text: ''
+        }))
+    )
+
+}
+
+useEffect
+
+const dbBlogs =res.data.blogs;
+
+const initialBlogs= [...Array(6)].map((_,idx)=>{
+
+    if(dbBlogs[idx]){
+        return{
+            id: idx,
+            previewUrl: `http://loaclhost:5000${dbBlogs[idx].image_url}`
+            file:null,
+            date: dbBlogs[idx].date_str || '',
+            text: dbBlogs[idx].text_content || ''
+        }
+    }return{}
+}) ;
+setBlogs(initialBlogs)
+
+const getTodayDate= ()=>{
+    const today= new Date();
+
+    const options :Intl.DateTimeFormatOptions={
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    } 
+    return today.toLocaleDateString('en-US',options).toUpperCase
+};
+
+const formdata= new FormData();
+
+formdata.append('rowCount', String(rowCount));
+
+const blogsTosave =rowCount ===1? blogs.slice(0,3) : BlogSetting;
+
+blogsTosave.forEach((blog,idx) => {
+    if(blog.file){
+        formdata.append('blogimage', blog.file)
+    }
+    formdata.append('date', blog.date)
+    formdata.append('blogTExt', blog.text)
+    
+});

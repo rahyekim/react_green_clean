@@ -6,7 +6,7 @@ import { Password, PestControlOutlined, PestControlRodent, PetsOutlined, PetsRou
 
 export default function SignupPage(){
 
-//🌟가입방법: step1 약관 (동의)=> 2.휴대폰 (인증)=> 3.정보입력
+//🌟가입방법: step0.가입종류-> step1.약관(동의)=> step2.휴대폰(인증)=>step3.정보입력
     const [step, setStep]=useState(0);
     const [formData, setFormData]=useState({
         marketingAgreed:false, // 마케팅 정보 수신동의(선택)
@@ -19,7 +19,7 @@ export default function SignupPage(){
 
     // ✅사진미리보기 url과 숨겨진 input을 조종할 Ref선언
     const [profilePreview, setProfilePreview]=useState<string>('');
-    const [ProfileFile, setProfileFile] = useState<File|null>(null);
+    const [profileFile, setProfileFile] = useState<File|null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     //추가2.사진 선택헀을때 실행될 함수
@@ -28,18 +28,21 @@ export default function SignupPage(){
 
         if(!file) return;
 
+        //file.type: image/jpeg , image/png 등등
         if(!file.type.startsWith("image/")){
         alert("이미지 파일만 등록 가능합니다.");
         return;
         }
-        setProfileFile(file);
+        //메모리해제
+        if(profilePreview) URL.revokeObjectURL(profilePreview); 
         //파일을 브라우저에서 볼수있는 가짜 임시 url로 변환
         const imgUrl= URL.createObjectURL(file);
-        //d상태에 저장해서 화면에 그림
+        //상태에 저장해서 화면에 그림
+        setProfileFile(file);
         setProfilePreview(imgUrl);
         
     };
-    //추가3.회색박스를 클릭 v파일input을 대신 클릭해주는 함수
+    //추가3. 디자인용 예쁜박스를 클릭=> 파일input을 대신 클릭해주는 함수
     const handleBoxClick = ()=>{
         fileInputRef.current?.click();
     }
@@ -121,6 +124,9 @@ export default function SignupPage(){
 
         //3단계 ??????profile추가
         try{
+            // Multipart/form-data 객체 생성
+            const profileData = new FormData();
+
             const res = await fetch(`http://localhost:8080/api/members/signup`,{
                 method: "POST",
                 headers:{'Content-Type': 'application/json'},
@@ -130,9 +136,9 @@ export default function SignupPage(){
                     password: formData.password,
                     phone: formData.phone,
                     marketingAgreed: formData.marketingAgreed,
-                    provider: "LOCAL" //🌟명시적으로 일반 가입임을 백엔드에게 알려줌
-                    //
+                    provider: "LOCAL", //🌟명시적으로 일반 가입임을 백엔드에게 알려줌
                     //???profileImageUrl: finalImageUrl
+
                 })
             });
             //4단계 결과처리
@@ -152,10 +158,11 @@ export default function SignupPage(){
         
     };
     
+    // 이미지 삭제 처리
     const handleRemoveImage = ()=>{
+        if (profilePreview) URL.revokeObjectURL(profilePreview);
         setProfilePreview("");
         setProfileFile(null);
-
         //같은 사진 다시 선택가능하게 input초기화
         if(fileInputRef.current){
             fileInputRef.current.value = "";
@@ -259,7 +266,15 @@ export default function SignupPage(){
                     )}
                     </S.PhotoUpload>
 
-                    {/* {삭제} */}
+                    {/*삭제*/}
+                    {profilePreview && (
+                    <div>
+                        <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        >X</button>
+                    </div>
+                    )}
                     <S.PhotoUpBottomText
                     className="mt-2"
                     > <span style={{color:"#dd7979"}}>*</span> 발바닥을 클릭해서 사진을 등록하세요
@@ -341,64 +356,4 @@ export default function SignupPage(){
 
 /*
 
-const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-
-    if(!file) return;
-
-    if(!file.type.startsWith("image/")){
-        alert("이미지 파일만 등록 가능합니다.");
-        return;
-    }
-
-    setProfileFile(file);
-
-    const previewUrl = URL.createObjectURL(file);
-    setProfilePreview(previewUrl);
-};
-
-const handleRemoveImage = () => {
-    setProfilePreview("");
-    setProfileFile(null);
-
-    // 같은 사진 다시 선택 가능하게 input 초기화
-    if(fileInputRef.current){
-        fileInputRef.current.value = "";
-    }
-};
-
-<S.TextCenter>
-    <S.PhotoUpload 
-        onClick={handleBoxClick}
-        style={{marginBottom:"7px"}}
-    >
-        {profilePreview ? (
-            <img src={profilePreview} alt="프로필 미리보기"/>
-        ) : (
-            <PetsRounded style={{color:"pink"}}/>
-        )}
-    </S.PhotoUpload>
-
-    {profilePreview && (
-        <button 
-            type="button"
-            onClick={handleRemoveImage}
-        >
-            사진 삭제
-        </button>
-    )}
-
-    <S.PhotoUpBottomText>
-        <span style={{color:"#dd7979"}}>*</span>
-        발바닥을 클릭해서 사진을 등록하세요
-    </S.PhotoUpBottomText>
-
-    <input
-        type="file"
-        accept="image/*"
-        ref={fileInputRef}
-        style={{display:"none"}}
-        onChange={handleImageChange}
-    />
-</S.TextCenter>
- */
+*/
