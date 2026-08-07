@@ -31,10 +31,24 @@ box-shadow: 0 0 10px rgba(0,0,0,0.15);
 `;
 
 export const Header = styled.header`
+//🌟 헤더 고정
+position: fixed;
+width: 100%;
+max-width: 480px;
+z-index: 999;
+box-sizing: border-box;
+
+//🔥화면 정중앙 배치공식(내가 최대치 크기 정했을때)
+top:0;  //화면 맨 위에 고정 fixed면 꼭🌟
+left: 50%;
+transform: translateX(-50%);
+
+background-color: #fff;
+
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 16px;
+padding: 15px 20px; ///????
 `;
 
 export const Logo = styled.h4`
@@ -230,13 +244,39 @@ span {
 }
 `;
 export const TopFlexBasic = styled.div`
+//🌟🔥 헤더 고정 
+position: fixed;
+width: 100%;
+max-width: 480px;
+z-index: 999;
+box-sizing: border-box;
+
+//🔥화면 정중앙 배치공식(내가 최대치 크기 정했을때)
+top:0; //🌟화면 맨 위에 고정 fixed면 꼭🌟
+left: 50%;
+transform: translateX(-50%);
+
+background-color: #fff;
+
 display: flex;
 justify-content: space-between;
 align-items: center;
 padding: 15px 10px;
-margin-bottom: 30px;
 
 border-bottom: 1px solid #ccc;
+
+@media (max-width: 480px){
+  max-width: 480px;
+}
+
+@media (max-width: 440px){
+  max-width: 440px;
+}
+
+@media (max-width: 430px){
+  max-width: 430px;
+}
+//390 280 .... 까지....
 `;
 
 //플렉스 칸을 중심으로
@@ -289,9 +329,11 @@ interface BtnProps {
     $variant: ButtonVariant;
     $mainColor?: string; 
     $width?:string;
+    $radius?:string;
+    $padding?:string;
 }
 //variant별 스타일 객체 매핑
-const variantStyles = {
+const variantStyles = { //색상,테마 결정
     kakao:css`
     background-color: #fee500;
     color: #181818;
@@ -313,8 +355,8 @@ export const  BaseBtn= styled.button<BtnProps>`
 width: ${({$width})=> $width || '100%'};
 box-sizing: border-box;
 
-padding: 15px;
-border-radius: 8px;
+padding: ${({$padding})=> $padding || "15px"};
+border-radius: ${({$radius})=> $radius || "8px"};
 font-weight: bold;
 
 display: flex;
@@ -446,6 +488,94 @@ border-radius: 10px;
 box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 
 `;
+export const UpandDown  = styled.span`
+cursor: pointer;
+
+font-size: 12px;
+color: #888;
+
+`;
+
+export const Terms = styled.div<{$IsOpen:boolean}>`
+/* max-height: showTerms ? '150px': '0'; */
+max-height: ${({$IsOpen})=> $IsOpen ? '150px': '0'};
+overflow:hidden;
+transition: max-height 0.3s ease-in-out;
+background-color: #f9f9f9;
+border-radius: 4px;
+padding: 10px;
+font-size: 12px;
+color: #666;
+`;
+
+export const TermsInner = styled.div`
+padding: 10px;
+font-size: 12px;
+color: #666;
+`;
+export const LabelGroup = styled.div`
+display: flex; 
+justify-content: center;
+gap: 20px;
+width: 100%;
+margin-bottom: px;
+
+`;
+export const Label = styled.div`
+display: flex;
+gap: 5px;
+cursor: pointer;
+`;
+
+
+export const Modal = styled.div`
+border: 2px solid #ccc ;
+padding: 10px;
+margin-top: 10px;
+border-radius: 10px;
+background-color: #fff;
+`;
+export const Exit = styled.div`
+/* display: flex;
+justify-content: flex-end; */
+text-align: right;
+font-weight: bold;
+margin-bottom: 10px;
+color: #555;
+cursor: pointer;
+`;
+export const MT70 = styled.div`
+margin-top: 80px;
+`;
+export const ModalBg= styled.div`
+display: flex;
+justify-content: center;
+align-items: flex-start;
+padding: 10vh;
+/* align-items: center; */
+
+position: fixed;
+top:0;
+left: 0;
+right: 0;
+bottom: 0;
+
+background-clip: border-box;
+background-color: rgba(0,0,0,.6);
+z-index: 999;
+
+`;
+export const ContainerColumn  = styled.div`
+display: flex;
+flex-direction: column;
+height: 100vh;
+background-color: white;
+width: 100%;
+max-width: 480px;
+
+`;
+// export const  = styled.div``;
+// export const  = styled.div``;
 // export const  = styled.div``;
 // export const  = styled.div``;
 // export const  = styled.div``;
