@@ -615,6 +615,96 @@ app.get('/api/settings/blog', (req,res)=>{
     })
 })
 
+//[관리자] Contact 문의내역
+
+app.get('/api/contact', (req,res)=>{
+    const sql = `select * from contacts order by created_at desc`;
+
+    db.query(sql, (err, result)=>{
+
+        if(err){
+            console.err("", err);
+            return res.status(500).json({message:"불러오기에러"});
+        }
+        return res.status(200).json(result);
+
+    });
+})
+//2. put 특정 문의의 답변 상태 변경
+
+app.put('/api/contact/:id/reply', (req,res)=>{
+
+    const contactId = req.params.id;
+    const {is_replied} = req.body;
+    const sql= `update contacts set is_replied = ? where id= ?`;
+    
+    db.query(sql, [is_replied, contactId], (err)=>{
+        if(err){
+            console.err("", err);
+            return res.status(500).json({message:"답변상태변경에러"});
+        }
+        return res.status(200).json({message:"상태가 변경되었습니다"});
+
+
+    })
+})
+
+//3. put 특정 문의의 조치사항(메모) 업데이트하기
+app.put('/api/contact/:id/memo', (req,res)=>{
+
+    const contactId = req.params.id;
+    const {action_memo} = req.body;
+    const sql= `update contacts set action_memo = ? where id= ? `;
+
+    db.query(sql, [action_memo, contactId], (err)=>{
+        if(err){
+            console.err("", err);
+            return res.status(500).json({message:"메모변경에러"});
+        }
+        return res.status(200).json({message:"메모 변경되었습니다"});
+    })
+} )
+//4. delete 특정 단일 문의 내역 삭제하기
+app.delete('/api/contact/:id/memo', (req,res)=>{
+
+    const contactId = req.params.id;
+    const sql= `delete from contacts where id=?`;
+
+    db.query(sql, [contactId], (err)=>{
+        if(err){
+            console.err("문의내역삭제에러", err);
+            return res.status(500).json({message:"문의내역삭제에러"});
+        }
+        return res.status(200).json({message:"문의내역이삭제되었습니다"});
+        
+    })
+} )
+//5. post 선택된 문의내역 일괄 삭제 bulk Delete
+app.post('', (req,res)=>{
+
+    const sql= `delete from contacts where `;
+    const {ids} =req.body;
+    if(!ids || ids.length === 0){
+        return res.status(400).json({ message: "삭제할항목이없습니다"})
+    }
+
+    db.query(sql, [ids], (err)=>{
+        if(err){
+            console.err("일괄삭제에러", err);
+            return res.status(500).json({message:"일괄삭제에러"});
+        }
+        return res.status(200).json({message:"일괄삭제되었습니다"});
+    })
+} )
+
+    
+
+
+
+
+
+
+
 //관리자끝
 
 //서버실행

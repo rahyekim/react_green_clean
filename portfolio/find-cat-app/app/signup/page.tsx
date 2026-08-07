@@ -206,6 +206,7 @@ export default function SignupPage(){
 
                 //백엔드에서 이미지 url주소 돌려줌 (예: http://.../uploads/123.jpg)
                 finalImageUrl = await res.text();
+                console.log("보낼 프로필 이미지 URL:", finalImageUrl);
                 //☑️회원가입할때 이미지주소를 받아와서 저장해놔야 마이페이지에서 볼 수있음  
             }
             
@@ -223,7 +224,8 @@ export default function SignupPage(){
                     password: formData.password,
                     marketingAgreed: formData.marketingAgreed,
                     provider: "LOCAL", //🌟명시적으로 일반 가입임을 백엔드에게 알려줌
-                    profileImageUrl: finalImageUrl, ////  ✅업로드된 최종 이미지 URL 대입
+                    profileImageUrl: finalImageUrl || '', 
+                     //✅업로드된 최종 이미지 URL 대입
                     name: formData.name,
                     phone: formData.phone,
                     address: fullAddressTosend,

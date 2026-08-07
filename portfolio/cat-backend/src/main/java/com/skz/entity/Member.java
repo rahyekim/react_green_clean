@@ -46,7 +46,8 @@ public class Member {
 //	카카오에서 넘겨ㄴ주는 고유 회원번호
 	private String providerId;
 
-	private String profileImageURl;
+	@Column(name = "profileimageurl", nullable=true)
+	private String profileImageUrl;
 
 	
 	

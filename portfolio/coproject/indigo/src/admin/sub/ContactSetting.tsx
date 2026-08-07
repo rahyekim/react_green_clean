@@ -18,11 +18,14 @@ interface ContactItem {
     created_at: string;
     is_replied:number; 
     //🌟DB에서는 true/fase대신 1(완료), 0(대기) 로 저장
+    action_memo?:string;
 }
 export default function ContactSetting (){
 
     //문의 내역 리스트를 담을 배열 상태
-    const [contacts , setContacts]=useState<ContactItem[]>([])
+    const [contacts , setContacts]=useState<ContactItem[]>([]);
+    //🔹체크박스로 선택된 항목들의 ID를 담아둘 배열 상태
+    const [selectedIds, setSelectedIds]=useState<number[]>([]);
 
     // 데이터 불러오기(화면이 켜질때 DB에 저장된 모든 문의 내역을 최신순으로 가져옴)
 
@@ -39,6 +42,23 @@ export default function ContactSetting (){
         }
         fetchContact();
     },[]);
+
+    //-----3.🔹체크박스 조작 함수들 -------
+    const handleSelectAll = (e:React.ChangeEvent<HTMLInputElement>)=>{
+        if(e.target.checked){
+            setSelectedIds(contacts.map(c=> c.id)) //전체선택
+        }else{
+            setSelectedIds([]); ///전체해제
+        }
+    }
+    //개별선택/해제
+    const handleSelectOne = (id:number)=>{
+        if(selectedIds.includes(id)){  //이미있으면 해제
+            setSelectedIds(selectedIds.filter(selectedId=> selectedId !== id));
+        }else{
+            setSelectedIds([...selectedIds, id]); //추가
+        }
+    }
 
     //조작함수들----
     //답변상태(대기<->완료)바꿔주는 함수
@@ -62,7 +82,30 @@ export default function ContactSetting (){
             alert("상태변경중 오류 발생")
         }
     }
+    //🔹조치사항(메모) 입력/수정 함수
+    const handleUpdateMemo = async(id:number, currentMemo:string|undefined)=>{
+        //간단하게 브라우저 알림창을 이용해 메모를 입력받음
+        const newMemo = window.prompt('해당문듸에 대한 조치사항(메모) 입력해주세요', 
+            currentMemo || ''
+        )
+        //취소버튼 누르면 중단
+        if(newMemo === null) return;
 
+        try{
+            const res= await axios.put(`http://localhost:5000/api/conctact/${id}/memo`, {
+                action_memo: newMemo
+            }); //화면즉시반영
+
+            setContacts(contacts.map(contact=>(
+                contact.id === id ? {...contact, action_memo: newMemo} : contact
+            )))
+        }catch(err){
+            console.error("메모 업데이트 에러", err)
+            alert("조치사항 저장 중 오류 발생")
+        }
+
+
+    }
     // (쓸모없는 스팸문의) 삭제하는함수
     const handleDelete = async(id:number) =>{
         //실수로 누를 수 있으니 경고창을 한번 띄움
@@ -77,6 +120,29 @@ export default function ContactSetting (){
         }
     }
 
+    //🔹선택 삭제 함수(여러개 한 번에 지우기)
+    const handleBulkDelete = async()=>{
+        if(selectedIds.length===0){
+            alert("삭제할 항목을 먼저 선택해주세요");
+            return;
+        }
+        if(!window.confirm(`선택하신 ${selectedIds.length}개 문의를 한번에 삭제하시겠습니까?`)) return;
+
+        try{
+            const res = await axios.post(`http://localhost:5000/api/contact/bulk-delete`,{
+                ids: selectedIds
+            });
+
+            //삭제성공시 화면에서도 싹 날려준다
+            setContacts(prev=> prev.filter(contact=> !selectedIds.includes(contact.id)));
+            //체크박스 초기화...
+            setSelectedIds([]);
+            alert("산텍 항목이 모두 삭제되엇습니다")
+        }catch(err){
+            console.error("선택 삭제 에러", err)
+            alert("선택 삭제 중 오류발생");
+        }
+    }
 
     return(
         <>
@@ -84,16 +150,30 @@ export default function ContactSetting (){
             <S.PageWrapper>
                 <S.PageTitle>CONTACT 문의관리</S.PageTitle>
                 <S.Card>
-                    <S.SectionTitle>고객 문의 리스트</S.SectionTitle>
+                    <S.SpaceBetween>
+                        <S.SectionTitle>고객 문의 리스트</S.SectionTitle>
+                        <S.ColorButton
+                        style={{fontSize:"14px"}}
+                        bgColor="red"
+                        onClick={handleBulkDelete}
+                        >선택 삭제</S.ColorButton>
+                    </S.SpaceBetween>
                     <S.CTable>
                         <thead>
                             <tr>
-                                <th style={{width:"6%"}}>No.</th>
-                                <th style={{width:"12%"}}>이름</th>
-                                <th style={{width:"20%"}}>연락처/이메일</th>
-                                <th style={{width:"34%"}}>문의</th>
+                                {/* 체크박스 중앙..style={{width:"4%"}} */}
+                                <th className="text-center">  
+                                    <input type="checkbox" onChange={handleSelectAll}
+                                    checked={contacts.length>0 && selectedIds.length === contacts.length}
+                                    />
+                                </th>
+                                <th style={{width:"5%"}}>No.</th>
+                                <th style={{width:"11%"}}>이름</th>
+                                <th style={{width:"19%"}}>연락처/이메일</th>
+                                <th style={{width:"27%"}}>문의</th>
                                 <th style={{width:"12%"}}>접수일</th>
                                 <th style={{width:"8%"}}>상태</th>
+                                <th style={{width:"6%"}}>메모</th>
                                 <th style={{width:"8%"}}>관리</th>
                             </tr>
                         </thead>
@@ -102,15 +182,26 @@ export default function ContactSetting (){
                             {contacts.length > 0 ? (
                                 contacts.map((contact,idx)=>(
                                     <tr key={contact.id}>
-                                        <td>{idx+1}</td>
+                                        <td>
+                                            <input type="checkbox" 
+                                            checked={selectedIds.includes(contact.id)}
+                                            onChange={()=>handleSelectOne(contact.id)}
+                                             />
+                                        </td>
+                                        <td>{contact.id}</td>
                                         <td>{contact.name}</td>
                                         <td>{contact.phone}<br/>{contact.email}</td>
                                         <td>{contact.message.length>50 
                                         ?contact.message.substring(0,50)+"..."
                                         :contact.message}</td>
                                         <td>{contact.created_at.substring(0,10)}</td>
-                                        <td>{contact.is_replied===1 ? 
+                                        {/* <td>{contact.is_replied===1 ? 
                                         <span>"답변 완료"</span> : <span>"답변 대기"</span>}
+                                        </td> */}
+                                        <td>
+                                            <S.StatusText statusColor={contact.is_replied ===1 ? 'blue':'red'}>
+                                                {contact.is_replied === 1 ? "답변완료" : "답변대기"}
+                                            </S.StatusText>
                                         </td>
                                         <td>
                                             <button
@@ -129,7 +220,9 @@ export default function ContactSetting (){
                             ):(
                                 // 데이터없을때 띄워주는 화면
                                 <tr>
-                                    <td colSpan={7}>아직 접수된 문의 내역이 없습니다</td>
+                                    <td colSpan={9} 
+                                    style={{textAlign:"center", padding:"30px"}}
+                                    >아직 접수된 문의 내역이 없습니다</td>
                                 </tr>
                             )}
                         </tbody>
