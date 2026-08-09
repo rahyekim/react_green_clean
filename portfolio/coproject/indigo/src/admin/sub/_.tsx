@@ -145,3 +145,33 @@ export default function BlogSetting (){
         <></>
     )
 }
+
+
+
+export const contactSetting= ()=>{
+
+    const[contacts,setContacts]=useState<ContactItem[]>([])
+    const [selectedIds, setSelectedIds]=useState<number[]>([]);
+
+
+    const handleSelectAll= (e:React.ChangeEvent<HTMLInputElement>)={
+        if(e.target.checked){
+            setSelectedIds(contacts.map(c=>c.id))
+        }
+        else{
+            setSelectedIds([])
+        }
+    }
+
+    const handleSelectOne=(id:number)=>{
+
+        if(selectedIds.include(id)){
+            setSelectedIds(selectedIds.filter(selectedid=> selectedid !==id ))
+        }
+        else{
+            setselectedIds([...selectedIds, id])
+        }
+
+    }
+
+}

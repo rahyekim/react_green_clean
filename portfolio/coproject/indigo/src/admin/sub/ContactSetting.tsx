@@ -85,17 +85,18 @@ export default function ContactSetting (){
     //🔹조치사항(메모) 입력/수정 함수
     const handleUpdateMemo = async(id:number, currentMemo:string|undefined)=>{
         //간단하게 브라우저 알림창을 이용해 메모를 입력받음
-        const newMemo = window.prompt('해당문듸에 대한 조치사항(메모) 입력해주세요', 
+        //window.prompt(메시지, 기본값)
+        const newMemo = window.prompt('해당문의에 대한 조치사항(메모) 입력해주세요', 
             currentMemo || ''
         )
         //취소버튼 누르면 중단
         if(newMemo === null) return;
 
         try{
-            const res= await axios.put(`http://localhost:5000/api/conctact/${id}/memo`, {
+            const res= await axios.put(`http://localhost:5000/api/contact/${id}/memo`, {
                 action_memo: newMemo
-            }); //화면즉시반영
-
+            }); 
+            //화면즉시반영
             setContacts(contacts.map(contact=>(
                 contact.id === id ? {...contact, action_memo: newMemo} : contact
             )))
