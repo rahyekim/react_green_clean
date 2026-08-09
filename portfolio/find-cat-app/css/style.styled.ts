@@ -550,6 +550,8 @@ margin-top: 80px;
 export const ModalBg= styled.div`
 display: flex;
 justify-content: center;
+
+//모달 창을 세로 기준 화면 💡맨 위에서 10vh(화면 높이의 10%)만큼 떨어진 위치
 align-items: flex-start;
 padding: 10vh;
 /* align-items: center; */
@@ -560,7 +562,7 @@ left: 0;
 right: 0;
 bottom: 0;
 
-background-clip: border-box;
+background-clip: border-box; //배경색 테두리까지 채우겟다..기본값 생략가능
 background-color: rgba(0,0,0,.6);
 z-index: 999;
 

@@ -537,10 +537,16 @@ app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
     const files = req.files || [];
     
     // 안전장치: 무조건 배열모양([데이터])으로 통일시켜주는 작업
-    //1칸만 채워서 보내면 '글자'로오고 여러칸을 채우면 '배열(목록)'
+    //1칸만 채워서 보내면 '글자'로오고=>[]강제전환 // 여러칸을 채우면 '배열(목록)[ , , ]'
     const texts = Array.isArray(req.body.blogTexts) ? req.body.blogTexts: [req.body.blogTexts]
     const date = Array.isArray(req.body.blogDate) ? req.body.blogDate : [req.body.blogDate]
     const existing = Array.isArray(req.body.blogExistingImages) ? req.body.blogExistingImages : [req.body.blogExistingImages]
+    //⭐새파일이 몇번째 칸인지 
+    const blogImageIdx = req.body.blogImageIdx ===undefined
+    ? []  //0개일때 빈배열
+    : Array.isArray(req.body.blogImageIdx)
+        ? req.body.blogImageIdx   //2개이상일때 (배열그대로)
+        : [req.body.blogImageIdx]  //1개일때 (단수'') 배열로 변환
     //sql
     const updateSql=`insert into blog_setting(id, row_count)
     values (1, ?) 
@@ -559,7 +565,13 @@ app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
             const insertValues = [];  //DB에 넣을 데이터바구니
 
             const totalItems = rowCount === 1 ? 3 : 6;
-            let fileIdx = 0;
+            // ⭐ 새 이미지들을 "몇 번째 칸인지" 기준으로 객체화
+            const newImages={} 
+            files.forEach((file,idx)=>{
+                const blogIdx= parseInt(blogImageIdx[idx])
+                newImages[blogIdx]=`/uploads/${file.filename}`
+            })
+            
             //🟢으렵당.. 
             //multer은 하드디스크저장까지만..생성된filename이름만 건내줌..
             for(let i =0; i<totalItems ; i++){ //1칸부터 3번(6번)칸까지 하나씩 확인하며 조립
@@ -568,13 +580,18 @@ app.post("/api/settings/blog", upload.array('blogImages',6),(req,res)=>{
 
                 //우선순위🔴 최신 데이터(새 파일) > 기존 데이터(기존 URL) 
                 //경우의 수 A: 관리자가 새로운 사진 파일을 업로드했을 때
-                if(files[fileIdx]){  //새로만들어진 파일 주소 씀..
-                    finalImageUrl= `/uploads/${files[fileIdx].filename}`;
-                    fileIdx++; 
+                if(newImages[i]){  //새파일이 있으면 새파일 주소 씀..
+                    finalImageUrl= newImages[i];
+                   //새 파일이 없으면 기존 이미지 적용
                 }  else if(existing && existing[i] && existing[i] !== 'undefined' && existing[i]!==''){
                     finalImageUrl = existing[i]; } 
                 //경우의 수 B : 관리자가 사진을 안바꾸고 '기존사진' 그대로 뒀을때
-                
+/*
+🟢FormData.append('blogDate', date)를 할 때 
+date 변수가 undefined 상태이면, FormData가 이걸 자동으로 
+문자열 "undefined"로 바꿔서 보내는 기괴한(?) 버그
+ */             
+                //🟢문자열 "undefined"=>참으로 인식=> DB로 들어갈수잇어서 걸러준다
                 //텍스트와 날짜도 빈값이면(undefined) 빈칸('')으로 깔끔하게 처리
                 const finalDate = date[i] && date[i] !== 'undefined' ? date[i] :''
                 const finalText = texts[i] && texts[i] !== 'undefined' ? texts[i] :''

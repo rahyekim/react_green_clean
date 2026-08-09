@@ -98,6 +98,10 @@ export default function BlogSetting (){
             
             const newBlogs = [...blogs]  //기존배열복사
 
+            if(newBlogs[idx].previewUrl){
+                URL.revokeObjectURL(newBlogs[idx].previewUrl);
+            }
+
             newBlogs[idx] = {
                 ...newBlogs[idx],
                 previewUrl: tempUrl,
@@ -137,6 +141,11 @@ export default function BlogSetting (){
     const handleRemoveBlog = (idx:number)=>{
 
         const newBlogs = [...blogs];
+
+         //기존 메모리 url해제
+        if(newBlogs[idx].previewUrl){
+            URL.revokeObjectURL(newBlogs[idx].previewUrl)
+        }
         //선택한 칸을 완전히 비운다
         newBlogs[idx] = {
             id: idx,
@@ -174,6 +183,8 @@ export default function BlogSetting (){
             //2.새로 선택한 파일이 있는 경우에만 파일 전송
             if(blog.file){
                 formData.append('blogImages', blog.file);
+                // ⭐ 이 파일이 몇 번째 칸인지 같이 보냄
+                formData.append('blogImageIdx', String(idx));
             }
             formData.append('blogTexts', blog.text);
             formData.append('blogDate', blog.date);
@@ -185,7 +196,8 @@ export default function BlogSetting (){
 
             console.log("저장된 줄 수: ", rowCount);
             console.log("저장된 블로그 데이터: ", blogsToSave);
-
+            console.log("업로드된 파일들: ", formData.getAll('blogImages'));
+             
             alert("BlOG 설정 성공적으로 저장")
             
         }catch(err){

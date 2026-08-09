@@ -171,7 +171,7 @@ export default function SignupPage(){
     }
 
 
-    const handleSubmit = async(e:any)=>{  ///?????
+    const handleSubmit = async()=>{  
         //1단계 유효성검증
         if(!formData.email || !formData.nickname || !formData.password || !formData.phone
             || !formData.name
@@ -240,7 +240,7 @@ export default function SignupPage(){
             }else{
                 //백엔드에서 400등 에러를 뱉었을 경우
                 const errText = await res.text();
-                alert(`회원가입에 실패 ??? ${errText}`)
+                alert(`회원가입에 실패했습니다: ${errText}`)
             }
 
         }catch(err){
@@ -308,48 +308,54 @@ export default function SignupPage(){
                              <label>
                                 <input
                                 type="checkbox"
+                                name="agreeTerms" //👈 name 속성
                                 checked={formData.agreeTerms}
-                                onChange={e=> setFormData({...formData, agreeTerms:e.target.checked})}
+                                // onChange={e=> setFormData({...formData, agreeTerms:e.target.checked})}
+                                onChange={handleChange} //👈 
                                 /> 이용약관 동의(필수)
                             </label>
                             <S.UpandDown 
                             onClick={()=>setShowTerms(!showTerms)}>
-                                {showTerms ? '닫기': '👉보기'}
+                                {showTerms ? '▲ 닫기: '👉보기'}
                             </S.UpandDown>
                             <br/>
                             <S.Terms $IsOpen={showTerms}>
                                 <S.TermsInner>
-                                    제1조 (목적) <br/>
-                                    블라블라
-                                    블라블라
-                                    블라블라
+                                제 1조 (목적) <br/>
+                                본 약관은 어서찾아주개(이하 "회사")가 제공하는 서비스의 
+                                이용조건 및 절차, 권리, 의무 및 책임사항을 규정함을 목적으로 합니다. <br/>
+                                (여기에 실제 약관 내용을 넣으시면 됩니다.)        
                                 </S.TermsInner>
                             </S.Terms>
 
                              <label>
                                 <input
                                 type="checkbox"
+                                name="agreePrivacy"
                                 checked={formData.agreePrivacy}
-                                onChange={e=> setFormData({...formData, agreePrivacy:e.target.checked})}
+                                onChange={handleChange}
+                                // onChange={e=> setFormData({...formData, agreePrivacy:e.target.checked})}
                                 /> 개인정보 수집이용 동의(필수)
                             </label>
                              <S.UpandDown 
                             onClick={()=>setShowPrivacy(!showPrivacy)}>
-                                {showPrivacy ? '닫기': '👉보기'}
+                                {showPrivacy ? '▲ 닫기': '👉보기'}
                             </S.UpandDown>
                             <br/>
                             <S.Terms $IsOpen={showPrivacy}>
                                 <S.TermsInner>
-                                   수집항목: 블라블라 <br/>
-                                   수집목적: 블라블라 <br/>
-                                   보유기간: 블라블라 <br/>
+                                수집 항목: 이메일, 닉네임, 이름, 연락처, 주소 <br/>
+                                수집 목적: 서비스 제공 및 회원 관리 <br/>
+                                보유 기간: 회원 탈퇴 시까지      
                                 </S.TermsInner>
                             </S.Terms>
                             <label>
                                 <input
                                 type="checkbox"
+                                name="agreeAge"
                                 checked={formData.agreeAge}
-                                onChange={e=> setFormData({...formData, agreeAge: e.target.checked})}
+                                onChange={handleChange}
+                                // onChange={e=> setFormData({...formData, agreeAge: e.target.checked})}
                                 /> 만 14세 이상입니다(필수)
                             </label> <br/>
                             <label>
