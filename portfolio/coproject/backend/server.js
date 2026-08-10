@@ -47,7 +47,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:"2525",
+    password:"",
     database: 'company'
 })
 
@@ -634,13 +634,13 @@ app.get('/api/settings/blog', (req,res)=>{
 
 //[관리자] Contact 문의내역
 
-app.get('/api/contact', (req,res)=>{
+app.get('/api/settings/contact', (req,res)=>{
     const sql = `select * from contacts order by created_at desc`;
 
     db.query(sql, (err, result)=>{
 
         if(err){
-            console.err("", err);
+            console.err("불러오기에러", err);
             return res.status(500).json({message:"불러오기에러"});
         }
         return res.status(200).json(result);
@@ -657,7 +657,7 @@ app.put('/api/contact/:id/reply', (req,res)=>{
     
     db.query(sql, [is_replied, contactId], (err)=>{
         if(err){
-            console.err("", err);
+            console.err("답변상태변경에러", err);
             return res.status(500).json({message:"답변상태변경에러"});
         }
         return res.status(200).json({message:"상태가 변경되었습니다"});
@@ -675,14 +675,14 @@ app.put('/api/contact/:id/memo', (req,res)=>{
 
     db.query(sql, [action_memo, contactId], (err)=>{
         if(err){
-            console.err("", err);
+            console.err("메모변경에러", err);
             return res.status(500).json({message:"메모변경에러"});
         }
         return res.status(200).json({message:"메모 변경되었습니다"});
     })
 } )
 //4. delete 특정 단일 문의 내역 삭제하기
-app.delete('/api/contact/:id/memo', (req,res)=>{
+app.delete('/api/contact/:id', (req,res)=>{
 
     const contactId = req.params.id;
     const sql= `delete from contacts where id=?`;
@@ -697,9 +697,10 @@ app.delete('/api/contact/:id/memo', (req,res)=>{
     })
 } )
 //5. post 선택된 문의내역 일괄 삭제 bulk Delete
-app.post('', (req,res)=>{
+app.post('/api/contact/bulk-delete', (req,res)=>{
 
-    const sql= `delete from contacts where `;
+    //🌟배열형태의 id들을 한번에 지우는 쿼리(🌟in사용)
+    const sql= `delete from contacts where id in(?) `;
     const {ids} =req.body;
     if(!ids || ids.length === 0){
         return res.status(400).json({ message: "삭제할항목이없습니다"})
@@ -712,7 +713,21 @@ app.post('', (req,res)=>{
         }
         return res.status(200).json({message:"일괄삭제되었습니다"});
     })
-} )
+});
+
+//프론트에서 쓰는 포스트
+app.post('/api/contact', (req,res)=>{
+    const { name, phone, email, message} = req.body;
+    const sql=`insert into contacts (name, phone, email, message) values(?,?,?,?)`
+
+    db.query(sql, [name,phone,email,message],(err,result)=>{
+        if(err){
+            console.error("문의접수에러")
+            return res.status(500).json({message:"문의접수에러"})
+        }
+        return res.status(200).json({message:"문의가 성공적으로 저장"})
+    })
+})
 
     
 

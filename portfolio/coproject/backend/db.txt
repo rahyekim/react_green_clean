@@ -5,6 +5,21 @@ multer 패키지 설치 npm install multer
 
 USE company;
 
+----[contacts]
+
+create TABLE if NOT EXISTS contacts (
+id INT AUTO_INCREMENT PRIMARY KEY,
+NAME VARCHAR(50) NOT NULL,
+phone VARCHAR(30) NOT NULL,
+email VARCHAR(100) NOT NULL,
+message TEXT NOT NULL,
+is_replied TINYINT(1) DEFAULT 0,
+action_memo VARCHAR(255) DEFAULT NULL,
+created_at TIMESTAMP DEFAULT current_timestamp
+
+);
+
+
 ----[블로그]
 
 CREATE TABLE if not EXISTS blog_setting (

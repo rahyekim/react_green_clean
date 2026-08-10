@@ -55,9 +55,77 @@ export default function ContactSetting (){
     }
 
     const handletoggleReply =async(id:number,currentStatus:number)=>{
-        
+        const newStatus = currentStatus === 1 ? 0 :1;
+
+        try{
+            await axios.put(`http://localhost:5000/api/contact/${id}/reply`,{
+                is_replied: newStatus
+            });
+            //프론트화면 배열에서 해당항목의 상태만 쏙 업그레이드
+            setContacts(contacts=> 
+                contacts.map(contact=>(
+                    contact.id === id ? {...contact, is_replied: newStatus} : contact
+                ))
+            )
+        }catch(err){
+            console.error("")
+            alert("")
+        }
+    }
+
+    const handleUpdataMemo = async(id:number, currentMemo:string|null)=>{
+        const newMemo = window.prompt('조치사항 입력해주세요',
+            currentMemo || ''
+        )
+        //취소버튼 누르면 중단
+        if(newMemo === null) return;
+
+        try{
+            const res= await axios.put(`http://localhost:5000/api/contact/${id}/memo`,{
+                action_memo: newMemo
+            });
+
+            setContacts(contacts=> 
+                contacts.map(contact=>(
+                    contact.id===id ? {...contact, action_memo: newMemo} : contact
+                ))
+            )
+        }
     }
     
+    const handleDelete = async(id:number)=>{
+        if(!window.confirm('삭제?'))return;
+
+        try{
+            await axios.delete(`http://localhost:5000/api/contact/${id}`)
+            alert("삭제 ㅇㅇ")
+        }catch(err){
+            console.error("")
+            alert("")
+        }
+        
+    }
+
+    const handleBulkDelete =async()=>{
+        if(selectedIds.length===0){
+            alert("삭제항목선택해주세요")return;
+        }
+        if(!window.confirm(`선택하신 ${selectedIds.length}개를 삭제?`))return;
+
+        try{
+            const res= await axios.post(`http://lcoalholst:5000/api/contacts/bulk-delete`,{
+                ids: selectedIds
+            })
+            //삭제성공시 화면도 싹 날려줌
+            setContacts(prev=> prev.filter(contact=>
+                !selectedIds.includes(contact.id)
+            ))
+            setSelectedIds([]);
+            alert("모두삭제되었습니다")
+        }catch(err){
+            
+        }
+    }
     
     return(
         <>

@@ -46,7 +46,7 @@ export default function ContactSetting (){
     //-----3.🔹체크박스 조작 함수들 -------
     const handleSelectAll = (e:React.ChangeEvent<HTMLInputElement>)=>{
         if(e.target.checked){
-            setSelectedIds(contacts.map(c=> c.id)) //전체선택
+            setSelectedIds(contacts.map(contact=> contact.id)) //전체선택
         }else{
             setSelectedIds([]); ///전체해제
         }
@@ -113,11 +113,15 @@ export default function ContactSetting (){
 
           try{
             await axios.delete(`http://localhost:5000/api/contact/${id}`)
+            
+            // 👇 화면즉시반영 (방금 지운 id와 다른 애들만 남기기!)
+            setContacts(contacts.filter(contact => contact.id !== id));
             alert("삭제되었습니다")
         }catch(err){
             console.error("삭제에러", err)
             alert("삭제중 오류발생")
         }
+
     }
 
     //🔹선택 삭제 함수(여러개 한 번에 지우기)
@@ -137,7 +141,7 @@ export default function ContactSetting (){
             setContacts(prev=> prev.filter(contact=> !selectedIds.includes(contact.id)));
             //체크박스 초기화...
             setSelectedIds([]);
-            alert("산텍 항목이 모두 삭제되엇습니다")
+            alert("선택한 항목이 모두 삭제되었습니다")
         }catch(err){
             console.error("선택 삭제 에러", err)
             alert("선택 삭제 중 오류발생");
@@ -165,7 +169,8 @@ export default function ContactSetting (){
                                 <th className="text-center">  
                                     <input type="checkbox" onChange={handleSelectAll}
                                     checked={contacts.length>0 && selectedIds.length === contacts.length}
-                                    />
+                                    /> 
+                                    {/* 🌟🌟checked */}
                                 </th>
                                 <th style={{width:"5%"}}>No.</th>
                                 <th style={{width:"11%"}}>이름</th>
