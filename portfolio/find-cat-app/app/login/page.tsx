@@ -32,6 +32,9 @@ export default function Login(){
             }
             //로그인성공 
             const data = await res.json();
+
+            //✅localStorage는 오직 문자열(String) 데이터만 저장
+            localStorage.setItem('user', JSON.stringify(data))
 /*
 🔹예: data = { token: "eyJhbGciOiJIUzI1...", nickname: "김코딩" }
 🌟 받은 토큰을 브라우저의 저장소(LocalStorage)에 저장

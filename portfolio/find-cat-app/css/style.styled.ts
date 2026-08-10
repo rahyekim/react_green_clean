@@ -131,17 +131,17 @@ cursor: pointer;
 `;
 export const HorizontalScroll  = styled.div`
 display: flex;
-overflow-x: auto;  //가로 스크롤
-white-space: nowrap;
+overflow-x: auto;  //🌟가로 스크롤
+white-space: nowrap; //🌟
 padding-bottom: 10px;
 margin-bottom: 8px;
 gap: 12px;
 
-/* 크롬, 사파리, 엣지 스크롤바 숨김(::가상요소) */
+/* 🌟크롬, 사파리, 엣지 스크롤바 숨김(::가상요소) */
 &::-webkit-scrollbar{ // 스크롤 안보이게 터치로 슉슉!!!!
     display: none;
 }
-/* 파이어폭스 스크롤바 숨김 (그냥속성으로봄) */
+/* 🌟파이어폭스 스크롤바 숨김 (그냥속성으로봄) */
 scrollbar-width: none; 
 `;
 export const RegionCircle = styled.div`
@@ -503,9 +503,7 @@ overflow:hidden;
 transition: max-height 0.3s ease-in-out;
 background-color: #f9f9f9;
 border-radius: 4px;
-padding: 10px;
-font-size: 12px;
-color: #666;
+
 `;
 
 export const TermsInner = styled.div`
@@ -518,7 +516,7 @@ display: flex;
 justify-content: center;
 gap: 20px;
 width: 100%;
-margin-bottom: px;
+margin-bottom: 15px;
 
 `;
 export const Label = styled.div`
@@ -576,6 +574,83 @@ width: 100%;
 max-width: 480px;
 
 `;
+//레이아웃 layout
+export const  LoginLayout= styled.div`
+padding: 10px 20px 30px 20px;
+`;
+export const  H2Size20= styled.h2`
+font-size: 20px;
+font-weight: 500;
+margin-bottom: 25px;
+color: #111;
+`;
+
+export const LayoutSpaceBetween  = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 10px;
+`;
+
+//마이페이지 전용 스타일
+export const ListItemWrapper = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 16px 0;
+cursor: pointer;
+`;
+export const ListItemLeft = styled.div`
+display: flex;
+align-items: center;
+gap: 15px;
+
+`;
+export const ListItemText = styled.span`
+font-size: 15px;
+color: #181818;
+`;
+
+export const MenuCardBox = styled.div`
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background-color: #fff7ed;
+border-radius: 25px;
+padding: 20px 0;
+cursor: pointer;
+
+`;
+export const MenuCardText= styled.div`
+font-size: 14px;
+font-weight: 500;
+color: #333;
+margin-top: 8px;
+`;
+export const List = styled.div`
+padding: 0 20px 20px 20px;
+`;
+export const  H3Size16= styled.h3`
+font-size: 16px;
+font-weight: bold;
+margin-bottom: 15px;
+margin-top: 5px;
+`;
+export const Line = styled.div`
+width: 100%;
+height: 10px;
+background-color: #f5f5f5;
+`;
+export const LogoutBtn = styled.span`
+font-size: 14px;
+color: #888;
+cursor: pointer;
+text-decoration: underline;
+
+`;
+// export const  = styled.div``;
 // export const  = styled.div``;
 // export const  = styled.div``;
 // export const  = styled.div``;

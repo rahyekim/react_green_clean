@@ -6,16 +6,14 @@ import {
    MDBCardImage, MDBIcon 
 } from 'mdb-react-ui-kit';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import HomeIcon from '@mui/icons-material/Home';
-import PetsIcon from '@mui/icons-material/Pets';
-import CampaignIcon from '@mui/icons-material/Campaign';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutlined';
+
 import PetsOutlinedIcon from '@mui/icons-material/PetsOutlined';
 import { error } from "console";
 
 import * as S from '../css/style.styled'
 import { PetsOutlined } from "@mui/icons-material";
+
+import Footer from "./components/Footer";
 
 //1.스프링부트(백엔드)에서 넘어올 동물 데이터의 타입(Interface)정의
 
@@ -151,33 +149,7 @@ export default function HomePage (){
         </S.StatBox>
         
       </S.Section>
-
-      <S.BottomNav>
-        <S.NavItem $active>
-          <HomeIcon/>
-          <span>홈</span>
-        </S.NavItem>
-
-        <S.NavItem>
-          <PetsIcon/>
-          <span>보호소</span>
-        </S.NavItem>
-
-        <S.NavItem>
-          <CampaignIcon/>
-          <span>실종/제보</span>
-        </S.NavItem>
-
-        <S.NavItem>
-          <MenuBookIcon/>
-          <span>스토리</span>
-        </S.NavItem>
-
-        <S.NavItem>
-          <PersonOutlineIcon/>
-          <span>마이메뉴</span>
-        </S.NavItem>
-      </S.BottomNav>
+      <Footer/>
 
     </S.Container>
     </S.AppWrapper>

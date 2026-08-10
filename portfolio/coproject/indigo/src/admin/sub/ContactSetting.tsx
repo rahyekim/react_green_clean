@@ -59,8 +59,7 @@ export default function ContactSetting (){
             setSelectedIds([...selectedIds, id]); //추가
         }
     }
-
-    //조작함수들----
+    //
     //답변상태(대기<->완료)바꿔주는 함수
     const handleToggleReply = async(id:number, currentStatus:number)=>{
         //현재가 0(대기)면 1(완료), 1(완료)면 0(대기)로 바꿈
