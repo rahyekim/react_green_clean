@@ -96,7 +96,7 @@ export default function ContactSetting (){
                 action_memo: newMemo
             }); 
             //화면즉시반영
-            setContacts(contacts.map(contact=>(
+            setContacts(prev=> prev.map(contact=>(
                 contact.id === id ? {...contact, action_memo: newMemo} : contact
             )))
         }catch(err){
@@ -116,6 +116,7 @@ export default function ContactSetting (){
             
             // 👇 화면즉시반영 (방금 지운 id와 다른 애들만 남기기!)
             setContacts(contacts.filter(contact => contact.id !== id));
+            setSelectedIds(prev=>prev.filter(selectedId=> selectedId !==id))
             alert("삭제되었습니다")
         }catch(err){
             console.error("삭제에러", err)
@@ -167,19 +168,19 @@ export default function ContactSetting (){
                             <tr>
                                 {/* 체크박스 중앙..style={{width:"4%"}} */}
                                 <th className="text-center">  
-                                    <input type="checkbox" onChange={handleSelectAll}
+                                    <S.CheckInput type="checkbox" onChange={handleSelectAll}
                                     checked={contacts.length>0 && selectedIds.length === contacts.length}
                                     /> 
                                     {/* 🌟🌟checked */}
                                 </th>
                                 <th style={{width:"5%"}}>No.</th>
-                                <th style={{width:"11%"}}>이름</th>
-                                <th style={{width:"19%"}}>연락처/이메일</th>
-                                <th style={{width:"27%"}}>문의</th>
-                                <th style={{width:"12%"}}>접수일</th>
-                                <th style={{width:"8%"}}>상태</th>
-                                <th style={{width:"6%"}}>메모</th>
-                                <th style={{width:"8%"}}>관리</th>
+                                <th style={{width:"8%"}}>이름</th>
+                                <th style={{width:"15%"}}>연락처/이메일</th>
+                                <th style={{width:"22%"}}>문의</th>
+                                <th style={{width:"10%"}}>접수일</th>
+                                <th style={{width:"11%"}}>상태</th>
+                                <th style={{width:"12%"}}>메모</th>
+                                <th style={{width:"14%"}}>관리</th>
                             </tr>
                         </thead>
 
@@ -188,7 +189,7 @@ export default function ContactSetting (){
                                 contacts.map((contact,idx)=>(
                                     <tr key={contact.id}>
                                         <td>
-                                            <input type="checkbox" 
+                                            <S.CheckInput type="checkbox" 
                                             checked={selectedIds.includes(contact.id)}
                                             onChange={()=>handleSelectOne(contact.id)}
                                              />
@@ -199,7 +200,7 @@ export default function ContactSetting (){
                                         <td>{contact.message.length>50 
                                         ?contact.message.substring(0,50)+"..."
                                         :contact.message}</td>
-                                        <td>{contact.created_at.substring(0,10)}</td>
+                                        <td>{contact.created_at?.substring(0,10)}</td>
                                         {/* <td>{contact.is_replied===1 ? 
                                         <span>"답변 완료"</span> : <span>"답변 대기"</span>}
                                         </td> */}
@@ -208,17 +209,32 @@ export default function ContactSetting (){
                                                 {contact.is_replied === 1 ? "답변완료" : "답변대기"}
                                             </S.StatusText>
                                         </td>
+                                        {/* 🌟 메모 컬럼 추가 (handleUpdateMemo 연결 및 메모 내용 표시) */}
                                         <td>
-                                            <button
-                                            onClick={()=>handleToggleReply(contact.id,contact.is_replied)}
-                                            > {contact.is_replied ===1 ? '대기로 변경' : "완료 처리"}
-                                            </button>
+                                            <div>
+                                                {/* {contact.action_memo || "(메모없음)"} */}
+                                                <S.ColorButton 
+                                                bgColor="green"
+                                                onClick={()=>handleUpdateMemo(contact.id, contact.action_memo)}
+                                                >{contact.action_memo ? "메모수정" :"메모작성"}</S.ColorButton>
+                                            </div>
                                         </td>
+
+
+                                        {/* 🌟 관리 컬럼 (상태 변경 및 삭제) */}
                                         <td>
-                                            <button
-                                            onClick={()=>handleDelete(contact.id)}
-                                            >삭제
-                                            </button>
+                                            <S.ButtonWrapper>
+                                                <S.ColorButton
+                                                bgColor='blue'
+                                                onClick={()=>handleToggleReply(contact.id,contact.is_replied)}
+                                                > {contact.is_replied ===1 ? '대기로 변경' : "완료 처리"}
+                                                </S.ColorButton>
+                                                <S.ColorButton
+                                                // bgColor="pink"
+                                                onClick={()=>handleDelete(contact.id)}
+                                                >삭제
+                                                </S.ColorButton>
+                                            </S.ButtonWrapper>
                                         </td>
                                     </tr>
                                 ))

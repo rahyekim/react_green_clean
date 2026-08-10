@@ -380,7 +380,7 @@ margin-bottom: 15px;
 `;
 //버튼
 interface ColorBtnProps {
-    bgColor?: 'red'| 'yellow' | 'pink' | 'green' |'purple'
+    bgColor?: 'red'| 'yellow' | 'pink' | 'green' |'purple' | 'blue'
 }
 //선택된 색상에 따라 배경색(hex 코드)을 반환하는함수
 
@@ -391,6 +391,7 @@ const getBgColor = (color?:string)=>{
         case 'green' : return '#28a745';
         case 'purple' : return '#6f42c1'
         case 'pink' : return '#e83e8c';
+        case 'blue': return '#007bff';
         default: return '#dc3545';
     }
 }
@@ -405,9 +406,11 @@ const getTextColor = (color?:string)=>{
 export const ColorButton= styled.button<ColorBtnProps>`
 padding: 8px 15px;
 border: none;
-border-radius: 14px;
+border-radius: 12px;
 cursor: pointer;
 font-weight: bold;
+text-align: center;
+min-width: 90px; /* 👈 버튼의 최소 너비를 통일하여 글자 수 차이 보완 */
 background-color: ${({bgColor})=> getBgColor(bgColor)};
 color: ${({bgColor})=> getTextColor(bgColor)};
 transition: opacity 0.2s ease-in-out;
@@ -425,12 +428,11 @@ interface StatusProps{
 
 export const getStatusColor = (color?:string)=>{
      switch(color){
-        case 'red' : return '#dc3545' ;
-        case 'yellow' : return '#ffc107';
-        case 'green' : return '#28a745';
-        case 'purple' : return '#6f42c1'
-        case 'pink' : return '#e83e8c';
-        default: return '#dc3545';
+       case 'blue': return '#007bff';   // 파란색 추가
+        case 'red': return '#dc3545';
+        case 'green': return '#28a745';
+        case 'gray': return '#6c757d';   // 회색 추가
+        default: return '#6c757d';       // 기본값 (회색)
     }
 }
 
@@ -438,6 +440,26 @@ export const StatusText= styled.span<StatusProps>`
 color: ${({statusColor})=> getStatusColor(statusColor)};
 font-weight: bold;
 `;
+export const CheckInput= styled.input`
+
+appearance: auto;
+-webkit-appearance: auto;
+width: 16px;
+height: 16px;
+cursor: pointer;
+
+`;
+
+export const ButtonWrapper = styled.div`
+display: flex;
+gap: 8px;
+align-items: center;
+justify-content: center ;
+flex-wrap: wrap;
+`;
+// export const = styled.div``;
+// export const = styled.div``;
+// export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;

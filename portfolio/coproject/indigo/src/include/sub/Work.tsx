@@ -58,10 +58,18 @@ export default function Work  () {
                     {imgToshow.length>0 && 
                     imgToshow.map((img,idx)=>(
                         <S.GridItem key={img.id}>
-                            <S.WorkImg
-                            src={`http://localhost:5000${img.previewUrl}`}
-                            alt={`work 포트폴리오 ${idx+1}`}
-                            />
+                            {/* 1. 이미지와 오버레이 레이어를 감싸는 Link 추가 */}
+                            <S.WorkLink href={img.linkUrl || '#'}>
+                                <S.WorkImg
+                                src={`http://localhost:5000${img.previewUrl}`}
+                                alt={`work 포트폴리오 ${idx+1}`}
+                                />
+                                {/* 2. 마우스를 올렸을 때 위에서 내려올 텍스트 상자 추가 */}
+                                <S.WorkInfo className="info">
+                                    <h3>{img.title || '포트폴리오 제목'}</h3>
+                                    <span>{img.category || '카테고리'}</span>
+                                </S.WorkInfo>
+                            </S.WorkLink>
                         </S.GridItem>
                     ))}
                     { imgToshow.length === 0 && 

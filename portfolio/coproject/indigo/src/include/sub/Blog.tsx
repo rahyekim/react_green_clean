@@ -47,25 +47,25 @@ export default function Blog  () {
 
     return(
         <>
-        <section className="blog-section">
+        <S.BlogSection>
                 <div className="container">
-                    <h2 className="sec-tit">BLOG</h2>
-                    <ul className="blog-list">
+                    <S.SectionTitle>BLOG</S.SectionTitle>
+                    <S.BlogList>
                     {/* 저장된 데이터가 있을 경우 */}
                     {itemsToShow.length > 0 ? (
                         itemsToShow.map((blog,idx)=>(
                             <li key={blog.id || idx}>
                                 <a href="#">
-                                    <img
+                                    <S.BlogImg
                                     src={blog.image_url ? `http://localhost:5000${blog.image_url}`:''}
                                     alt={`블로그 섬네일 ${idx+1}`}
                                     />
-                                    <time dateTime="2026-10-30">
+                                    <S.BlogTime dateTime="2026-10-30">
                                         {blog.date_str}
-                                    </time>
-                                    <h3>
+                                    </S.BlogTime>
+                                    <S.BlogH3>
                                         {blog.text_content}
-                                    </h3>
+                                    </S.BlogH3>
                                 </a>
                             </li>
                         ))
@@ -75,9 +75,9 @@ export default function Blog  () {
                         </li>
                     )}
 
-                    </ul>
+                    </S.BlogList>
                 </div>
-            </section>
+            </S.BlogSection>
         
         </>
     )
