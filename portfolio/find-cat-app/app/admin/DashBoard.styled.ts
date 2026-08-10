@@ -1,144 +1,230 @@
 'use client'
-
-import styled from "styled-components"
-
+import styled from "styled-components";
 
 export const PageHeader = styled.div`
-display:flex; align-items:center;
-justify-content:space-between;
-margin-bottom:1.5rem;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 1.5rem;
 h1{
-font-size:1.75rem;
-font-weight:400;
-color:#5a5c69;
-margin:0;
+    font-size: 1.75rem;
+    font-weight: 400;
+    color:#5a5c69;
+    margin: 0;
 }
 `;
-
+//⭐그리드 GridRow & CardColumn
 export const GridRow = styled.div`
-display:flex; flex-wrap:wrap;
-margin-right:-0.75rem; margin-left:-0.75rem;
+
+display: flex;
+flex-wrap: wrap; //다음줄로 
+margin-right: -0.75rem; //컬럼의 padding(0.75rem)만큼 다시 당겨주는 것
+margin-left: -0.75rem; 
+//⭐컬럼 padding 보정:카드가 전체 컨테이너 양 끝에 딱 닿게
 `;
 
 export const CardColumn = styled.div`
+
 flex: 0 0 25%;
-/*
-flex-grow: 0; 여유 공간이 있어도 커지지 않음
-flex-shrink: 0; 공간이 부족해도 줄어들지 않음
-flex-basis: 25%; 기본 너비는 부모의  25%
-*/
-max-width:25%;
-padding-right:0.75rem;
-padding-left:0.75rem;
-margin-bottom:1.5rem;
+/* grow:0 여유공간이 있어도 커지지 않고
+shrink:0 공간이 부족해도 줄어들지 않고 
+basis: 25% 기본 너비는 부모의 25% */
 
-@media (max-width: 1200px) {flex:0 0 50%; max-width:50%;}
-@media (max-width: 768px) {flex:0 0 100%; max-width:100%;}
+max-width: 25%; // 1200px이상은 카드4개
+padding-right: 0.75rem;
+padding-left: 0.75rem;
+margin-bottom: 1.5rem;
+
+//col-md-6
+@media (max-width:1200px) {flex: 0 0 50%; max-width:50%;} 
+// 768~1200 태블릿 :카드 2개
+@media (max-width:768px) {flex: 0 0 100%; max-width:100%;}
+//모바일 768이하는 카드 1개
 `;
 
-export const StatCard = styled.div<{$borderColor?:string}>`
-position:relative;
-display:flex;
-flex-direction:column;
-min-width:0;
-word-wrap:break-word;
-background-color:#fff;
-background-clip:border-box;
-border:1px solid #e3e6f0;
-border-radius:0.35rem;
-border-left:0.25rem solid ${props => props.$borderColor || '#e3e6f0'};
-box-shadow:0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-height:100%;
-padding:0.5rem 0;
+export const StatCard = styled.div<{borderColor:string}>`
+
+position: relative;
+display: flex;
+flex-direction: column; //🔥Header, Body,footer 세로로
+height: 100%; //
+min-width: 0; /* ⭐Flexbox 찌그러짐 방지용 필수: 내용물을 보호하려는 고집(최소 크기 제한)을 0px로 리셋-> 카드틀 유지*/
+//flex디폴트가 min-width:auto(최소너비를 꽉 잡고있음)=> 터짐..상자 바깥으로 삐져나가는 버그를 막아주는 강력한 안전장치
+word-wrap: break-word; //장문이 나왔을때 끊어줘..
+background-color: #fff;
+background-clip: border-box; //하얀 배경색이 테두리 끝까지 깔끔하게 채워지도록 하는 배경 설정
+border: 1px solid #e3e6f0;
+border-radius: 0.35rem; //5.6px
+border-left: 0.25rem solid ${props=> props.borderColor};
+box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
+//x축이동-0 y축이동-2.4px 퍼지는정도-28px
+padding: 0.5rem 0;
 `;
+
 
 export const CardBody = styled.div`
-flex: 1 1 auto;
-padding:1.25rem;
-display:flex;
-align-items:center;
-justify-content:space-between;
+
+flex: 1 1 auto;  //🔥CardBody 자신이 부모(Card) 안에서 차지하는 높이
+//세로 높이를 균일하게 맞추기 위한 핵심 기술(세로 높이 100% 팽창용 스위치)
+//부모 높이가 커졌을 때 세로로 남는 빈 공간을 꽉 채워서(grow) 내용물을 수직 정중앙에
+padding: 1.25rem; 
+display: flex; //내부 요소들을 flex로 배치
+justify-content: space-between;
+align-items: center;
+
 `;
 
-//join
+/* 🔥flex: 1
+flex-direction: row (가로) 상태일 때 flex: 1 ➔ 가로 너비(Width)를 늘림
+flex-direction: column (세로) 상태일 때 flex: 1 ➔ 세로 높이(Height)를 늘림
+
+카드 위치:
+➡️ CardColumn의 flex: 0 0 50%가 결정
+카드 내부 높이:
+➡️ CardBody의 flex: 1 1 auto가 결정
+
+✅ CardColumn 
+flex: 0 0 25%; (가로 너비 결정)
+max-width:25%; 
+✅ Card
+display:flex
+flex-direction:column
+height:100% <-필요
+✅ CardBody
+flex:1
+ */
+
+
+//📝🔥 join 가입-> ☑️로그인
 export const Background = styled.div`
-background-color:#4e73df;
-background-image:linear-gradient(180deg, #4e73df 10%, #224abe 100%);
-background-size:cover;
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
+
+background-color: #4e73df;
+background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+background-size: cover;
+min-height: 100vh ;
+display: flex;
+align-items: center;
+justify-content: center;
 `;
 
-//다음 우편번호 모달 배경(어둡게 처리)
+//📬 다음 우편번호 모달 배경(어둡게 처리)
 export const ModalBackground = styled.div`
-position:fixed; top:0; left:0;
-width:100%; height:100%; 
-background:rgba(0, 0, 0, 0.5);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:999;
+
+position: fixed; 
+top:0; left:0;   //왼쪽위 시작점.. 화면 전체 덮기
+width: 100%;
+height:100%;
+background: rgba(0,0,0,0.5); //반투명
+display: flex;
+align-items: center;
+justify-content: center; //모달을 정중앙에
+z-index: 999;
+
 `;
 
-//다음 우편번호 컴포넌트를 감싸는 박스
+//📨 다음 우편번호 컴포넌트를 감싸는 박스 
 export const PostcodeWrapper = styled.div`
-width:400px; max-width:90%; background:white;
-padding:20px; border-radius:8px; 
-box-shadow:0 4px 12px rgba(0,0,0, .2);
 
-/*닫기 버튼을 감싸는 영역*/
+width: 400px;
+max-width: 90%;
+background: #fff;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+/* 닫기 버튼을 감싸는 영역 */
 .close-btn-wrap{
-text-align:right;
-margin-bottom:10px;
+    text-align: right;
+    margin-bottom: 10px;
 }
 `;
 
-//회원리스트
+
+//💙회원리스트 
 export const PageWrapper = styled.div`
-padding:1.5rem;
+
+padding: 1.5rem;
+width:100%;
 `;
 
-export const PageTitle = styled.h1`
-font-size:1.75rem; color:#5a5c69;
-margin-bottom:1.5rem;
+export const PageTitle = styled.div`
+
+font-size: 1.75rem;
+color: #5a5c69;
+margin-bottom: 1.5rem;
+width: 100%;
+
 `;
 
+//이름같으면 부트스트랩 Card못슴...
 export const Card = styled.div`
-background-color:#fff;
-background-clip:border-box;
-border:1px solid #e3e6f0;
-border-radius:0.35rem;
-box-shadow:0 0.15rem 1.75rem 0 rgba(58, 69, 69, 0.15);
-margin-bottom:1.5rem;
+
+background-color: #fff;
+background-clip: border-box;
+border: 1px solid #e3e6f0;
+border-radius: 0.35rem; //5.6px
+box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.15);
+margin-bottom: 1.5rem; //24px
+
 `;
 
 export const CardHeader = styled.div`
-padding:0.75rem 1.25rem;
-margin-bottom:0; 
-background-color:#f8f9fc;
-border-bottom:1px solid #e3e6f0;
+
+padding: 0.75rem 1.25rem;
+margin-bottom: 0;
+background-color: #f8f9fc;
+border-bottom: 1px solid #e3e6f0;
+
 h6{
-margin:0; font-weight:bold;
-color:#4e73df;
+    padding: 1rem;
+    margin:0;
+    font-weight: bold;
+    color: #4e73df;
+    
 }
+
 `;
 
-export const StyledTable = styled.table`
-width:100%; margin-bottom:1rem;
-color:#858796; border-collapse:collapse;
+export const styledTable = styled.table`
 
-th, td {
-padding:0.75rem; vertical-align:top;
-border:1px solid #e3e6f0;
+width: 100%;
+margin-bottom: 1rem;
+color: #858796;
+border-collapse: collapse; //❄️
+//❄️테두리선을 겹치지 않고(안쓰면 두줄로 겹쳐서나옴) 한 줄로 보이게
+//기본값 border-collapse: separate(두줄)
+//https://wpdatatables.com/how-to-stylize-a-table-border-in-html/
+
+th, td{
+    padding: 0.75rem;
+    vertical-align: top;
+    border: 1px solid #e3e6f0;
+}
+
+th ,td{
+ border-bottom: 1px solid #e0e0e0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }
 
 th{
-background-color:#f8f9fc; text-align:left;
+    background-color: #f8f9fc;
+    text-align: left;
+    white-space: nowrap;
+    //글자가 아무리 길어져도 절대 줄바꿈 안 하고 한 줄로 유지
+
 }
 
-tbody tr:hover {
-background-color:#f1f3f6;
+tbody tr:hover{
+    background-color: #f1f3f6;
 }
+/* tr:first-child th { border-top:    none; }
+tr:last-child td  { border-bottom: none; } */
+
 `;
+
+
+
+
+
