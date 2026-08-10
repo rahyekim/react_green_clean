@@ -38,7 +38,24 @@ export default function ContactSetting (){
     },[])
     
     const handleSelectAll=(e:ChangeEvent<HTMLInputElement>)=>{
+        if(e.target.checked){
+            setSelectedIds(contacts.map(contact=>contact.id))
+        }else{
+            setSelectedIds([]);
+        }
+    }
 
+    const handleSelectOne =(id:number)=>{
+        if(selectedIds.includes(id)){
+            setSelectedIds(selectedIds.filter(selectedId=> selectedId !== id));
+        }else{
+            setSelectedIds([...selectedIds, id])
+        }
+
+    }
+
+    const handletoggleReply =async(id:number,currentStatus:number)=>{
+        
     }
     
     

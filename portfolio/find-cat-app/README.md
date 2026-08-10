@@ -6,6 +6,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## npm install mdb-react-ui-kit @mui/icons-material @mui/material @emotion/react @emotion/styled --legacy-peer-deps
 ## npm install styled-components --legacy-peer-deps
 
+## npm install axios react-bootstrap bootstrap @fortawesome/fontawesome-svg-core @fortawesome/react-fontawesome @fortawesome/free-brands-svg-icons --legacy-peer-deps
+
+## 우편번호 API react-daum-postcode --legacy-peer-deps
+
 
 ## nextConfig -> 스타일드컴포넌트 활성화
 compiler:{
@@ -20,7 +24,7 @@ import React, {useState} from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
-## 우편번호 API react-daum-postcode --legacy-peer-deps
+##
 
 First, run the development server:
 

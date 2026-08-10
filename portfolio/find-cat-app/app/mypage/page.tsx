@@ -33,7 +33,7 @@ export default function Mypage(){
     useEffect(()=>{
         const storedUser= localStorage.getItem('user');
         if(storedUser){
-            //✅JSON.parse(문자열)
+            //JSON.parse(문자열) : 문자열 ➡️ 다시 객체로 해체
             //저장된 정보가 있다면, 글자(JSON)를 객체로 바꿔서 상태에 넣음
             setUser(JSON.parse(storedUser) as {nickname:string})    
         }
