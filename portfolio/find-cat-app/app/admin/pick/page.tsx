@@ -1,5 +1,6 @@
 'use client'
 
+//📍https://www.catcare.or.kr/main
 import { useState } from "react"
 import {Layout} from '../../components/layout/Layout'
 
@@ -95,6 +96,17 @@ export default function RecommendedAnimalAdmin (){
                 ...formData
             })
             alert("추천동물이 성공적으로 등록되었습니다.")
+            //초기화
+            setFormData({
+                sourceUrl: '',
+                region: '',
+                noticeNo: '',
+                birthYear: '',
+                gender: 'M',
+                weight: '',
+                imageUrl: ''
+            });
+            setSourceType('DIRECT');
         }catch(err){
             console.error("등록 중 에러발생", err);
             alert("등록에 실패했습니다. 다시 시도해주세요")

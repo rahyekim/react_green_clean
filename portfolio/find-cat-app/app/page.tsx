@@ -116,7 +116,7 @@ export default function HomePage (){
                 src={animal.imageUrl || "https://via.placeholder.com/160x160"}
                 alt={`cat-${animal.id}`}/>
                 <S.CardBody>
-                  <S.CardTitle>{animal.region}{animal.noticeNo}</S.CardTitle>
+                  <S.CardTitle>{animal.region}:{animal.noticeNo}</S.CardTitle>
                   <S.CardDescription>
                     {animal.birthYear}/{animal.gender}/{animal.weight}kg
                   </S.CardDescription>
