@@ -135,7 +135,7 @@ export default function SignupPage(){
             return;
         }
         try{
-            const res= await fetch(`http://localhost:8080/api/members/check-email?email=${formData.email}`)
+            const res= await fetch(`/api/members/check-email?email=${formData.email}`)
             if(!res.ok) throw new Error("서버 응답 에러");
             const isDuplicate = await res.json()
             if(isDuplicate){
@@ -156,7 +156,7 @@ export default function SignupPage(){
             return;
         }
         try{
-            const res= await fetch(`http://localhost:8080/api/members/check-nickname?nickname=${formData.nickname}`)
+            const res= await fetch(`/api/members/check-nickname?nickname=${formData.nickname}`)
             if(!res.ok) throw new Error("서버 응답 에러");
             const isDuplicate = await res.json()
             if(isDuplicate){
@@ -197,7 +197,7 @@ export default function SignupPage(){
                 const imageFormData = new FormData(); 
                 imageFormData.append('file', profileFile);
     
-                const res = await fetch(`http://localhost:8080/api/members/upload-profile`,{
+                const res = await fetch(`/api/members/upload-profile`,{
                     method:"POST",
                     body: imageFormData, //헤더에 Content-Type을 적지않아야 브라우저가 알아서
                 })
@@ -215,7 +215,7 @@ export default function SignupPage(){
             : formData.address;
             
             
-            const res = await fetch(`http://localhost:8080/api/members/signup`,{
+            const res = await fetch(`/api/members/signup`,{
                 method: "POST",
                 headers:{'Content-Type': 'application/json'},
                 body:JSON.stringify({

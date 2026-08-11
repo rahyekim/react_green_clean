@@ -124,16 +124,16 @@ export default function Login  (){
                                                     variant="warning"
                                                     className="btn-user btn-block btn-google w-100 mb-2"
                                                     >
-                                                        <FontAwesomeIcon icon={faGoogle} className="fa-fw"/>
+                                                        <FontAwesomeIcon icon={faGoogle} className="fa-fw me-1"/>
                                                         login with google
                                                     </Button>
 
                                                      <Button 
                                                     type="button"
-                                                    variant="outline-primary"
+                                                    variant="secondary"
                                                     className="btn-user btn-block btn-facebook w-100 mb-2"
                                                     >
-                                                        <FontAwesomeIcon icon={faFacebookF} className="fa-fw"/>
+                                                        <FontAwesomeIcon icon={faFacebookF} className="fa-fw me-1"/>
                                                         login with facebook
                                                     </Button>
 
@@ -173,24 +173,5 @@ export default function Login  (){
   />
 </div>
 
-
-
-
-import { FloatingLabel, Form } from 'react-bootstrap'; // 💡 FloatingLabel 임포트 필요
-
-<FloatingLabel 
-  controlId="floatingEmail" 
-  label="이메일 주소" 
-  className="mb-3 text-muted"
->
-  <Form.Control 
-    type="email"
-    className="form-control-user"
-    placeholder="name@example.com" // 플로팅 라벨에서는 placeholder 필수
-    value={email}
-    onChange={e => setEmail(e.target.value)}
-    required
-  />
-</FloatingLabel>
 
  */

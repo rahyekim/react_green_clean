@@ -4,6 +4,9 @@ package com.skz.controller;
 import com.skz.DTO.AdminRequest;
 import com.skz.DTO.AdminResponse;
 import com.skz.service.AdminService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +25,18 @@ public class AdminController {
     //점원(Controller)이 주방장(service)에게 일을 시켜야하므로 주방장객체를 불러옴..
 
     @PostMapping("/login")
-    //프론트엔드 상태코드(200성공401실패등)와 함께 데이터 아무 박스나 다 된다는 뜻
-    public ResponseEntity<?> login(@RequestBody AdminRequest req) {
+    //프론트엔드 상태코드(200성공401실패등)와 함께 <?>데이터 아무 박스나 다 된다는 뜻
+    public ResponseEntity<?> login(@RequestBody AdminRequest req, HttpServletRequest httpRequest) {
         try {
+            //① authenticate()가 먼저 로그인 확인
             AdminResponse response = adminService.authenticate(
                     req.getEmail(), req.getPassword()
             );
+            // 💡 [여기가 핵심입니다!] 이 두 줄이 무조건 있어야 합니다!!!
+            //세션 생성 => 세션에 adminName(👤이름) 저장
+            HttpSession session = httpRequest.getSession(true);
+            session.setAttribute("adminName", response.getName());
+
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

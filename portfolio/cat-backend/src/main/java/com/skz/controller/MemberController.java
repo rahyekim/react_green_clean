@@ -35,11 +35,11 @@ public class MemberController { //외부에서 접근 가능한 컨트롤러 클
      * url뒤에 쿼리스트링으로 넘어온값(?email=skz@jin.com)을 뽑아내어 자바의
      * String email변수에 담음
      * */
-    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+    public ResponseEntity<Boolean> checkEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(memberRepository.existsByEmail(email));
     }
     @GetMapping("/check-nickname")
-    public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
+    public ResponseEntity<Boolean> checkNickname(@RequestParam("nickname") String nickname) {
         return ResponseEntity.ok(memberRepository.existsByNickname(nickname));
     }
 
