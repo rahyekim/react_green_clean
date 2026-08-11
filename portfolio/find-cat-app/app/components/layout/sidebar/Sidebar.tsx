@@ -14,11 +14,11 @@ export const Sidebar:React.FC = ()=>{
             <SideBarBrand href="/">
                 <div className="sidebar-brand-icon rotate-n-15">
                     {/*left 아이콘자리, 아이콘 -15도 회전 */}
-                    <i className="fas fa-bell"></i> {/*fontawesome아이콘*/}
+                    <i className="fas fa-paw"></i> 
                 </div>
                     {/* right 브랜드text자리 */}
                 <div className="sidebar-brand-text mx-3">
-                    Admin<sup>2</sup>
+                    Admin
                 </div>
             </SideBarBrand>
 
@@ -26,7 +26,6 @@ export const Sidebar:React.FC = ()=>{
 
             <NavItem className="active">
                 <NavLink href="/admin">
-                {/* <i className="fas fa-fw fa-tachometer-alt"></i> */}
                     <i className="fas fa-fw fa-home me-2"></i>
                     <span>DashBoard</span>
                 </NavLink>
@@ -34,60 +33,53 @@ export const Sidebar:React.FC = ()=>{
 
             <Divider className="my-0 mb-2"/>
 
-            {/* 2.회원리스트링크추가 */}
+            {/*  */}
              <NavItem className="active">
-                <NavLink href="/userlist">
-                    <i className="fas fa-fw fa-users me-2"></i>
-                    <span>User List</span>
+                <NavLink href="/admin/pick">
+                    <i className="fas fa-fw fa-heart me-2"></i>
+                    <span>추천동물 설정</span>
                 </NavLink>
             </NavItem>
-
-            {/* 3.헤더 세팅(로고 ,메뉴) 변경 페이지 */}
-            <NavItem className="active">
-                <NavLink href="/hdsetting">
-                    <i className="fas fa-fw fa-bars me-2"></i>
-                    <span>헤더nav설정</span>
-                </NavLink>
-            </NavItem>
+            {/*  */}
              <NavItem className="active">
-                <NavLink href="/bnsetting">
-                    <i className="fas fa-fw fa-cog me-2"></i>
-                    <span>배너 설정</span>
-                </NavLink>
-            </NavItem>
-
-             <NavItem className="active">
-                <NavLink href="/wesetting">
-                    <i className="fas fa-fw fa-person me-2"></i>
-                    <span>WeAre 설정</span>
+                <NavLink href="/">
+                    <i className="fas fa-fw fa-cat me-2"></i>
+                    <span>냥</span>
                 </NavLink>
             </NavItem>
            
              <NavItem className="active">
-                <NavLink href="/wksetting">
-                    <i className="fas fa-fw fa-briefcase me-2"></i>
-                    <span>Work 설정</span>
+                <NavLink href="/">
+                    <i className="fas fa-fw fa-dog me-2"></i>
+                    <span>멍</span>
+                </NavLink>
+            </NavItem>
+
+            <NavItem className="active">
+                <NavLink href="/">
+                    <i className="fas fa-fw fa-cog me-2"></i>
+                    <span>설정</span>
                 </NavLink>
             </NavItem>
 
              <NavItem className="active">
-                <NavLink href="/blogsetting">
-                    <i className="fas fa-fw fa-edit me-2"></i>
-                    <span>Blog 설정</span>
+                <NavLink href="/">
+                    <i className="fas fa-fw fa-dove me-2"></i>
+                    <span>설정</span>
                 </NavLink>
             </NavItem>
 
              <NavItem className="active">
-                <NavLink href="/contsetting">
-                    <i className="fas fa-fw fa-phone me-2"></i>
-                    <span>Contact 설정</span>
+                <NavLink href="/">
+                    <i className="fas fa-fw fa-carrot me-2"></i>
+                    <span>설정</span>
                 </NavLink>
             </NavItem>
 
               <NavItem className="active">
-                <NavLink href="/mapsetting">
-                    <i className="fas fa-fw fa-map me-2"></i>
-                    <span>Map 설정</span>
+                <NavLink href="/">
+                    <i className="fas fa-fw fa-bone me-2"></i>
+                    <span>설정</span>
                 </NavLink>
             </NavItem>
 

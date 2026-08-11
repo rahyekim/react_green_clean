@@ -1,7 +1,5 @@
-import { HiddenFileInput } from './../sub/BlogSetting';
 import { CustomButton } from './../../../../../BBS/board-frontend/src/assets/css/Board.styles';
 
-import { Form } from "react-router-dom";
 import styled from "styled-components";
 
 // export const  =styled.div``;
@@ -388,11 +386,11 @@ const getBgColor = (color?:string)=>{
     switch(color){
         case 'red' : return '#dc3545' ;
         case 'yellow' : return '#ffc107';
-        case 'green' : return '#1cc88a'; //1cc88a 28a745
+        case 'green' : return '#28a745';  //1cc88a 28a745
         case 'purple' : return '#6f42c1'
         case 'pink' : return '#e83e8c';
-        case 'blue': return '#4373df'; //4373df 007bff
-        default: return '#dc3545'; 
+        case 'blue': return '#007bff';  //4373df 007bff
+        default: return '#e74a3b'; 
     }
 }
 

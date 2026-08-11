@@ -4,7 +4,7 @@
 import React, {useState, useEffect} from "react";
 import { useRouter } from 'next/navigation' //🌟
 
-import { TopBarContainer,TopBarNavBar,TopBarSearch } from "./Topbar.styled"
+import { TopBarContainer,TopBarNavBar,TopBarSearch, TopbarProfile } from "./Topbar.styled"
 // import { useNavigate } from "react-router-dom";
 
 export const Topbar:React.FC = ()=>{
@@ -90,11 +90,10 @@ export const Topbar:React.FC = ()=>{
                         className="mr-2 d-none d-lg-inline text-gray-600 small me-2">
                             {userName}
                         </span>
-                        <img 
-                        style={{width:"50px", height:"50px"}}
-                        src='/img/cat.jpg'
+                        <TopbarProfile 
+                        src='/img/cat.jpg' 
                         alt="프로필이미지"
-                        className="img-profile rounded-circle"/>
+                        className="rounded-circle"/>
                     </a>
 
                     {/* 로그아웃버튼 추가 */}

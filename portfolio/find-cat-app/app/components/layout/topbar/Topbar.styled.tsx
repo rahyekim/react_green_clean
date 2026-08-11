@@ -42,3 +42,12 @@ padding: 0; /* ul 기본 패딩 제거 */
 /* <ul> 태그는 브라우저 기본값으로 왼쪽 패딩(padding-left: 40px) */
 `;
 
+export const TopbarProfile = styled.img`
+width: 50px;
+max-width: 100%;
+object-fit: cover;
+`;
+
+// export const = styled.div``;
+// export const = styled.div``;
+// export const = styled.div``;

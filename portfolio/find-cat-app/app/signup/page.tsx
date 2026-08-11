@@ -316,7 +316,7 @@ export default function SignupPage(){
                             </label>
                             <S.UpandDown 
                             onClick={()=>setShowTerms(!showTerms)}>
-                                {showTerms ? '▲ 닫기: '👉보기'}
+                                {showTerms ? '▲ 닫기:':'👉보기'}
                             </S.UpandDown>
                             <br/>
                             <S.Terms $IsOpen={showTerms}>
@@ -414,7 +414,7 @@ export default function SignupPage(){
                 </S.TextCenter>
                 <S.LayoutPadding>
 
-                    <S.AlineItemsCenter className="mt-5">
+                    <S.AlineItemsCenter className="mt-3">
                         <S.LabelGroup>
                             <S.Label>
                                 <input type="radio"
@@ -435,7 +435,7 @@ export default function SignupPage(){
                         </S.LabelGroup>
                     </S.AlineItemsCenter>
 
-                    <S.AlineItemsCenter className="mt-5">
+                    <S.AlineItemsCenter className="mt-2">
                         <S.FormControl
                         type="text" 
                         name="name"
@@ -445,7 +445,7 @@ export default function SignupPage(){
                         />
                         
                     </S.AlineItemsCenter>
-                    <S.AlineItemsCenter className="mt-5">
+                    <S.AlineItemsCenter className="mt-3">
                         <S.FormControl
                         type="text" 
                         name="phone"
