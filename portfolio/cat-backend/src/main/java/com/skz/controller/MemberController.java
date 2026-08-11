@@ -16,7 +16,7 @@ import java.util.Optional;
 @RestController //@Controller와 @ResposeBody가 합쳐진 형태 //API전용창구
 // 이 클래스 내의 모든 API주소는 기본적으로 "/api/members"로 시작하도록설정
 @RequestMapping("/api/members") //모든 API주소의 공통 접두사 를 설정
-@CrossOrigin(origins = "http://localhost:3000") //교차출처자원공유 보안 에러 방지
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials="true") //교차출처자원공유 보안 에러 방지
 public class MemberController { //외부에서 접근 가능한 컨트롤러 클래스 작성
 
     private final MemberRepository memberRepository; //불변성 설정

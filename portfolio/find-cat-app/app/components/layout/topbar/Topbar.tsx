@@ -38,7 +38,7 @@ export const Topbar:React.FC = ()=>{
         localStorage.removeItem('userName'); //토큰도필요...
 
         //2.로그인 페이지('/login')로 사용자를 이동시킴
-        router.push('/login') //🌟
+        router.push('/admin/login') //🌟
         // navigate('/login');
     }
     

@@ -154,6 +154,8 @@ margin-bottom: 20px;
 export const GridWrap = styled.div`
 
 display: grid;
+/* 최소 200px 공간을 확보하고, 남는 공간은 1fr 비율로 채우며, 줄어들면 자동으로 줄바꿈 */
+/* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
 grid-template-columns: repeat(4, 1fr);
 gap: 20px;
 

@@ -32,7 +32,10 @@ export default function Login  (){
             return;
         }
         try{
-            const res = await axios.post('http://localhost:8080/api/admin/login', {email,password})
+            const res = await axios.post('/api/admin/login',  //http://localhost:8080
+                {email,password},
+                {withCredentials: true},
+            )
             alert(`${res.data.name}님, ${res.data.message}`)
 
             //✨❄️ 로그인후 저장된 이름이 보이게 하려면 ❄️

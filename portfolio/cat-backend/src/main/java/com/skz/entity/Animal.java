@@ -14,7 +14,7 @@ public class Animal {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; //동물을 식별하는 고유 번호(예: 1,2,3..)을 저장하는 정수형 변수
 	
-	private String region, noticeNo, birthYear, gender , imageUrl, category;
+	private String region, noticeNo, birthYear, gender , imageUrl, category ;
 	
 	private Double weight;
 

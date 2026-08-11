@@ -19,10 +19,15 @@ export default function MapSetting (){
 
         const fetchMapData = async()=>{
             
-            try{   ////??????
-                await axios.get('http://localhost:5000/api/settings/map') 
+            try{   
+               const res= await axios.get('http://localhost:5000/api/settings/map') 
 
+               if(res.data){
+                setMapType(res.data.mapType || 'google');
+                setMapUrl(res.data.mapUrl || '')
+               }
             }catch(err){
+                console.error("지도데이터 불러오기 에러: ", err)
             }
         }
         fetchMapData();
@@ -31,15 +36,32 @@ export default function MapSetting (){
     // 지도 종류 ( 구글/다음) o 라디오 버튼 변경시 실행
     const handleMapTypeChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
 
+        // const selectedType = 
+        // e.target.value as 'google' | 'daum';
         setMapType(e.target.value as 'daum'|'google');
+        //선택 서비스종류를 바꾸면 기존 url을 싹 지워준다
+        setMapUrl('');
     }
 
     //---4.설정 저장 합수-----
     const handleSave = async()=>{
-        await axios.post('http://localhost:5000/api/settings/map')
-    }
-    
 
+        if(!mapUrl.trim()){
+            alert("지도퍼가기(임베드 Embed)url를 입력 하세요")
+            return;
+        }
+            
+        try{
+            //이미지가 없으므로 formData대신 일반 JSON 편하게 보냄
+            await axios.post('http://localhost:5000/api/settings/map',{
+                mapType, mapUrl
+            })
+            alert("지도설정이 성공적으로 저장")
+        }catch(err){
+            console.error("지도설정 저장실패:", err)
+            alert("설정 저장 중 오류 발생");
+        }
+    }
 
     return(
         <>

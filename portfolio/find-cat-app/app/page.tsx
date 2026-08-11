@@ -36,7 +36,7 @@ export default function HomePage (){
 
   useEffect(()=>{
 
-    fetch('http://localhost:8080/api/animals/recommended')
+    fetch('/api/animals/recommended')
     .then(res=> {
       if(!res.ok) throw new Error("네트워크 응답이 정상이 아닙니다"); //성공(200)여부체크
       return res.json();  //파싱

@@ -25,7 +25,21 @@ text-align: center;
 
 export const  GridWrap = styled.div`
 display: grid;
-grid-template-columns: repeat(4, 1fr);
+/* grid-template-columns: repeat(4, 1fr); */
+/* 최소 200px 공간을 확보하고, 남는 공간은 1fr 비율로 채우며, 줄어들면 자동으로 줄바꿈 */
+/* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+  grid-template-columns: repeat(4, 1fr);
+  /* gap: 20px; */
+
+  /* 태블릿 크기에서는 3열로 변경 */
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* 더 좁아지면(모바일 등) 2열로 변경 */
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 gap:0;
 `;
 

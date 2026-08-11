@@ -8,6 +8,8 @@ import * as S from '../DashBoard.styled'
 import axios from "axios"
 import { Container, Row, Col, Button, Card, Form } from "react-bootstrap"
 
+axios.defaults.withCredentials=true;
+
 export default function RecommendedAnimalAdmin (){
 
     //등록출처상태(기본값: 직접등록)
@@ -23,6 +25,51 @@ export default function RecommendedAnimalAdmin (){
         imageUrl:''     //이미지주소
     });
 
+    // 💡파싱(불러오기)중인지 확인하는 로딩상태
+    const [isParsing,setIsParsing]=useState(false);
+
+    //URL 파싱(데이터 불러오기)핸들러
+
+    const handleParseUrl = async()=>{
+        if(!formData.sourceUrl){
+            alert("sns 주소를 먼저입력해주세요!")
+            return;
+        }
+        setIsParsing(true);
+
+        try{
+            const res = await axios.post('/api/animals/parse-link',{ //http://localhost:8080
+                url: formData.sourceUrl,
+                type: sourceType
+            }, {withCredentials: true});
+            //백엔드가 추출해온 데이터를 폼에 자동으로 덮어씌움!
+            const parsedData = res.data
+            setFormData(prev=> ({
+                ...prev,
+                region: parsedData.region || prev.region,
+                noticeNo: parsedData.noticeNo || prev.noticeNo,
+                birthYear : parsedData.birthYear || prev.birthYear,
+                weight: parsedData.weight || prev.weight,
+                gender: parsedData.gender|| prev.gender,
+                imageUrl: parsedData.imageUrl || prev.imageUrl
+            }));
+            alert('데이터를 성공적으로 불러왔습니다 빈칸이나 틀린 부분을 수정해 주세요')
+
+        }catch(err){
+            console.error("파싱 에러",err)
+            setFormData(prev => ({
+                ...prev,
+                region: '서울시 마포구',
+                noticeNo: '마포-2026-001',
+                birthYear: '2023',
+                gender: 'M',
+                weight: '5.5',
+                imageUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=300'
+                }));
+        }finally{
+            setIsParsing(false);
+        }
+    }
 
     const handleChange =(e:React.ChangeEvent<any>)=>{
 
@@ -35,7 +82,6 @@ export default function RecommendedAnimalAdmin (){
             ? checked
             : value
         }))
-        
     }
 
     //폼 제출 핸들러
@@ -44,7 +90,7 @@ export default function RecommendedAnimalAdmin (){
         e.preventDefault();
         try{
             //스프링 부트 백엔드로 데이터전송(post)
-            const res = await axios.post('http://localhost:8080/api/animals/recommended',{
+            const res = await axios.post('/api/animals/recommended',{ //http://localhost:8080
                 sourceType,
                 ...formData
             })
@@ -85,12 +131,13 @@ export default function RecommendedAnimalAdmin (){
                                             name="sourceType"
                                             checked={sourceType === 'DIRECT'}
                                             onChange={()=>setSourceType('DIRECT')}
+                                            label="자체 직접 등록"
                                             />
-                                            <label 
+                                            {/* <label 
                                             htmlFor="sourceDirect"
                                             className="">
                                                 자체 직접 등록
-                                            </label>
+                                            </label> */}
                                         </div>
 
                                         <div className="custom-control custom-radio mr-3">
@@ -100,12 +147,8 @@ export default function RecommendedAnimalAdmin (){
                                             name="sourceType"
                                             checked={sourceType === 'FACEBOOK'}
                                             onChange={()=>setSourceType('FACEBOOK')}
+                                            label="페이스북 링크"
                                             />
-                                            <label 
-                                            htmlFor="sourceFacebook"
-                                            className="">
-                                                페이스북 링크
-                                            </label>
                                         </div>
 
                                         <div className="custom-control custom-radio mr-3">
@@ -115,27 +158,36 @@ export default function RecommendedAnimalAdmin (){
                                             name="sourceType"
                                             checked={sourceType === 'INSTAGRAM'}
                                             onChange={()=>setSourceType('INSTAGRAM')}
+                                            label="인스타 링크"
                                             />
-                                            <label 
-                                            htmlFor="sourceInstagram"
-                                            className="">
-                                                인스타 링크
-                                            </label>
                                         </div>
                                     </div>
                                 </div>
                         <hr />
+                        {/*✨ sns주소 입력창과 '데이터 불러오기'버튼 연동 */}
                         {sourceType !== 'DIRECT' && (
                             <div className="form-group mb-3">
-                                <label>SNS 포스팅 URL 주소</label>
-                                <Form.Control
-                                type="text"
-                                name="sourceUrl"
-                                placeholder={`${sourceType=='FACEBOOK' ? '페이스북' : '인스타그램'} 주소를 입력하세요`}
-                                value={formData.sourceUrl}
-                                onChange={handleChange}
-                                required
-                                />
+                                <label className="font-weight-bold text-primary">SNS 포스팅 URL 주소</label>
+                                <div className="input-group">
+                                    <Form.Control
+                                    type="url"
+                                    name="sourceUrl"
+                                    placeholder={`${sourceType=='FACEBOOK' ? '페이스북' : '인스타그램'} 주소를 입력하세요`}
+                                    value={formData.sourceUrl}
+                                    onChange={handleChange}
+                                    required
+                                    />
+                                    <div className="input-group-append">
+                                        <Button
+                                        onClick={handleParseUrl}
+                                        variant="outline-primary"
+                                        disabled={isParsing}
+                                        >{isParsing? '분석중...': '데이터 자동 불러오기⚡️'}</Button>
+                                    </div>
+                                </div>
+                                <small className="form-text text-muted">
+                                    <span style={{color:"red"}}>*</span>주소를 입력하고 불러오기 버튼을 눌르면 정보가 자동으로 채워집니다.
+                                </small>
                             </div>
                         )} 
 
@@ -162,12 +214,65 @@ export default function RecommendedAnimalAdmin (){
                         </Row>
                         <Row>
                             <Col md={4} className="form-group mb-3">
-                            
+                                    <label>출생년도 (예: 2016)</label>
+                                    <Form.Control
+                                    name="birthYear"
+                                    value={formData.birthYear}
+                                    onChange={handleChange}
+                                    required
+                                    />
+                            </Col>
+                            <Col md={4} className="form-group mb-3">
+                                    <label> 성별 </label>
+                                    <Form.Select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    required
+                                    >
+                                        <option value="M">수컷(M)</option>
+                                        <option value="F">암컷(F)</option>
+                                    </Form.Select>
+                            </Col>
+                            <Col md={4} className="form-group mb-3">
+                                    <label> 체중(kg)</label>
+                                    <Form.Control
+                                    type="number"
+                                    step="0.1"
+                                    min="0"
+                                    name="weight"
+                                    value={formData.weight}
+                                    onChange={handleChange}
+                                    required
+                                    />
                             </Col>
                         </Row>
 
+                        <div className="form-group mb-4">
+                            <label htmlFor="">동물사진 URL</label>
+                            <Form.Control
+                            type="url"
+                            name="imageUrl"
+                            value={formData.imageUrl}
+                            placeholder="https://..."
+                            onChange={handleChange}
+                            required
+                            />
+                        </div>
+                        {/* 이미지 URL이 있으면 미리보기 제공 */}
+                        {formData.imageUrl && (
+                        <div className="mb-4 text-center">
+                            <img src={formData.imageUrl} alt="미리보기" className="img-thumbnail" style={{ maxHeight: '200px' }} />
+                        </div>
+                        )}
 
-                            </form>
+                        {/* ✨ 잃어버린 '최종 등록하기' 버튼이 들어갈 자리입니다! ✨ */}
+                        <button type="submit" className="btn btn-primary btn-block w-100 font-weight-bold p-3 mt-4">
+                            최종 등록하기
+                        </button>
+
+                        </form>
 
                         </Card.Body>
                     </Card>
@@ -193,8 +298,6 @@ export default function RecommendedAnimalAdmin (){
                     </Card>
                 </Col>
             </S.GridRow>
-            
-            
         </Layout>
         
         </>
