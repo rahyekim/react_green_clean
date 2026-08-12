@@ -21,8 +21,9 @@ const Footer = () => {
     useEffect(()=>{
         const fetchMapsetting = async()=>{
             try{
-                const res= await axios.get('/api/settings/map');
+                const res= await axios.get('http://localhost:5000/api/settings/map');
                 if(res.data){
+                    
                     setMapType(res.data.mapType || 'google');
                     setMapValue(res.data.mapUrl || '');
                 }
@@ -73,9 +74,10 @@ const Footer = () => {
                 height={450}>
                 </iframe>
             ) : (
+                // 💡 높이를 명시해주어야 카카오맵이 정상적으로 보입니다!
                 <div 
                 ref={kakaoMapRef}
-                style={{width:'100%', height:'100%'}}
+                style={{width:'100%', height:'450px'}}
                 />
             )}
             <p className="copyrignt">

@@ -33,6 +33,7 @@ export default function MapSetting (){
 
                if(res.data){
                 setMapType(res.data.mapType || 'google');
+                setMapValue(res.data.mapUrl || '');
                 // setMapUrl(res.data.mapUrl || '')
                }
             }catch(err){
