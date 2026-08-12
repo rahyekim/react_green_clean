@@ -185,14 +185,14 @@ export default function HomePage (){
                   </>
                 )}
               </S.CampaignMediaWrap>
-                 <S.CampaignTextWrap>
-                    <S.CampaignCardtitle>
-                      {item.title}
-                    </S.CampaignCardtitle>
-                    <S.CampaignCardDesc>
-                      {item.desc}
-                    </S.CampaignCardDesc>
-                  </S.CampaignTextWrap>
+              <S.CampaignTextWrap>
+                <S.CampaignCardtitle>
+                  {item.title}
+                </S.CampaignCardtitle>
+                <S.CampaignCardDesc>
+                  {item.desc}
+                </S.CampaignCardDesc>
+              </S.CampaignTextWrap>
             </S.CampaignCard>
           ))}
         </S.HorizontalScroll>
