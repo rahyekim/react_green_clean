@@ -2,6 +2,7 @@
 
 import React , {useState, useEffect} from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 
 import * as S from '../../css/style.styled'
 import Header from '../components/Header'
@@ -26,6 +27,8 @@ import {
 
 export default function Mypage(){
 
+    const router = useRouter();
+
     //로그인한 유저정보를 담을 공간 (초기값은 비어있음)
     const [user,setUser]=useState<{nickname:string}|null>(null);
 
@@ -45,7 +48,8 @@ export default function Mypage(){
         setUser(null);
         alert('로그아웃이 되었습니다')
         //⭐
-        window.location.href="/login";
+       // ⭐ window.location.href 대신 router.push 사용하기
+        router.push('/login');
 
     }
 
@@ -67,12 +71,12 @@ export default function Mypage(){
                         </S.LayoutSpaceBetween>
                         ):(
                             //➡️유저 정보가 없을때(비로그인시)
-                            <Link href='/login'>
-                                <S.MenuIconWrapper>
+                                <S.MenuIconWrapper 
+                                onClick={()=>router.push('/login')}
+                                >
                                 <PetsIcon style={{ fontSize: '32px', color:'pink' }}/>
                                 로그인을 해주세요
                                 </S.MenuIconWrapper>
-                            </Link> 
                         )}
                     </S.H2Size20>
 

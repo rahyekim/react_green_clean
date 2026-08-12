@@ -39,7 +39,7 @@ export default function RecommendedAnimalAdmin (){
         setIsParsing(true);
 
         try{
-            const res = await axios.post('/api/animals/parse-link',{ //http://localhost:8080
+            const res = await axios.post('/api/animals/parse-link',{ 
                 url: formData.sourceUrl,
                 type: sourceType
             }, {withCredentials: true});

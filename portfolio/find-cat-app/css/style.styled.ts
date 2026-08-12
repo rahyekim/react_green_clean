@@ -94,9 +94,8 @@ display: flex;
 flex-direction: column;
 align-items: center;
 gap: 4px;
+cursor: pointer;
 
-text-decoration: none; /* Link(a) 밑줄 제거 */
-color: inherit;         /* 부모의 글씨 색상 상속 (파란색 방지) */
 `;
 export const IconCircle= styled.div`
 width: 50px;
