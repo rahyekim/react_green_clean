@@ -729,8 +729,50 @@ app.post('/api/contact', (req,res)=>{
     })
 })
 
-    
+//[관리자&사용자] map 지도 섹션
+//[post] 지도 설정 저장하기
+app.post('/api/settings/map', (req, res)=>{
 
+    const {mapType, mapUrl} = req.body;
+
+    const sql=`insert into map_settings(id, map_type, map_url)
+    values(1,?,?) 
+    on duplicate key update
+    map_type = values(map_type),
+    map_url = values(map_url)
+    `
+
+    db.query(sql,[mapType, mapUrl], (err)=>{
+
+        if(err){
+            console.error("지도 설정 저장에러:",err)
+            return res.status(500).json({message:"지도 설정 저장중 서버에러발생"})
+        }
+
+        return res.status(200).json({message:"지도 설정 성공적으로 저장 완료"})
+    })
+} )
+    
+//[get] db에 저장되어있는 지도설정을 프론트엔드로 불러오는 api
+app.get('/api/settings/map', (req,res)=>{
+
+    const sql=`select map_type as mapType,
+    map_url as mapUrl from map_settings where id=1`;
+
+    db.query(sql, (err, result)=>{
+        if(err){
+            console.error("지도 설정 불러오기 에러")
+            return res.status(500).json({message:"지도 설정 불러오기 에러"})
+        }
+        //바구니에 데이터가 1개라도 들어있다면?
+        if(result.length>0){
+            return res.status(200).json(result[0]);
+        }else{
+            //바구니 텅 비어있다면? 사이트를 처음켜서 아무것도 저장 안한 상태
+            return res.status(200).json({mapType:'google', mapUrl:''})
+        }
+    })
+})
 
 
 

@@ -92,7 +92,7 @@ border: 1px solid #ccc;
 border-radius: 12px;
 font-size: 14px;
 width: 100%;
-max-width: 400px;
+max-width: 600px;
 
 `;
 
@@ -303,7 +303,7 @@ border-radius: 7px;
 export const MapPreview = styled.div`
 
 width: 100%;
-height: 200px;
+height: 400px;
 object-fit: cover;
 background-color: #eaeaea;
 display: flex;

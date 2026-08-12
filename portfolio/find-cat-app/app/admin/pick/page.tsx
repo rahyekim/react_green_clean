@@ -84,6 +84,20 @@ export default function RecommendedAnimalAdmin (){
             : value
         }))
     }
+    //setSourceType 변경 시 초기화 추가
+    const handleSourceTypeChange = (type:'DIRECT'|'FACEBOOK'|'INSTAGRAM')=>{
+        setSourceType(type);
+        setFormData({
+            sourceUrl: '',
+            region: '',
+            noticeNo: '',
+            birthYear: '',
+            gender: 'M',
+            weight: '',
+            imageUrl: ''
+        })
+    };
+
 
     //폼 제출 핸들러
 
@@ -142,7 +156,7 @@ export default function RecommendedAnimalAdmin (){
                                             id="sourceDirect"
                                             name="sourceType"
                                             checked={sourceType === 'DIRECT'}
-                                            onChange={()=>setSourceType('DIRECT')}
+                                            onChange={()=>handleSourceTypeChange('DIRECT')}
                                             label="자체 직접 등록"
                                             />
                                             {/* <label 
@@ -158,7 +172,7 @@ export default function RecommendedAnimalAdmin (){
                                             id="sourceFacebook"
                                             name="sourceType"
                                             checked={sourceType === 'FACEBOOK'}
-                                            onChange={()=>setSourceType('FACEBOOK')}
+                                            onChange={()=>handleSourceTypeChange('FACEBOOK')}
                                             label="페이스북 링크"
                                             />
                                         </div>
@@ -169,7 +183,7 @@ export default function RecommendedAnimalAdmin (){
                                             id="sourceInstagram"
                                             name="sourceType"
                                             checked={sourceType === 'INSTAGRAM'}
-                                            onChange={()=>setSourceType('INSTAGRAM')}
+                                            onChange={()=>handleSourceTypeChange('INSTAGRAM')}
                                             label="인스타 링크"
                                             />
                                         </div>
