@@ -8,10 +8,9 @@ import {
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 import PetsOutlinedIcon from '@mui/icons-material/PetsOutlined';
-import { error } from "console";
-
 import * as S from '../css/style.styled'
 import { PetsOutlined } from "@mui/icons-material";
+import { PlayArrow } from "@mui/icons-material";
 
 import Footer from "./components/Footer";
 
@@ -34,6 +33,9 @@ export default function HomePage (){
   const [animals, setAnimals]=useState<Animal[]>([]);
   const [isLoading, setIsLoading]= useState(true);
 
+  //해시태그 상태관리 (기본값으로 #제주입양 선택)
+  const [activeHashtag, setActiveHashtag]=useState('#제주입양');
+
   useEffect(()=>{
 
     fetch('/api/animals/recommended')
@@ -48,10 +50,34 @@ export default function HomePage (){
       setIsLoading(false);
     })
     
-  },[])
+  },[]);
 
-  
-  
+  // 💡 2. 사진과 완벽히 똑같이 보일 테스트용 데이터! (나중에는 백엔드에서 받아오게 됩니다)
+  const campaignHashtags = ['#제주입양', '#외부기생충예방', '#사료건강', '#위생'];
+  const mockCampaigns = [
+    {
+      id: 1,
+      title: '제주-제주-2026-01786',
+      desc: '2026(60일미만)(년생)/암컷/0.6(Kg)',
+      imageUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=300', // 임시 강아지 사진
+      isVideo: true // 동영상이면 썸네일에 플레이 버튼이 뜹니다!
+    },
+    {
+      id: 2,
+      title: '제주-제주-2026-01782',
+      desc: '2026(60일미만)(년생)/암컷/1.1(Kg)',
+      imageUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=300',
+      isVideo: true
+    },
+    {
+      id: 3,
+      title: '제주-제주-2026-01789', // 사진 전용 게시물 예시
+      desc: '2026(60일미만)(년생)/수컷/0.9(Kg)',
+      imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=300',
+      isVideo: false // false면 사진이므로 플레이 버튼이 뜨지 않음
+    }
+  ];
+
   return(
     <>
     <S.AppWrapper>
@@ -124,6 +150,51 @@ export default function HomePage (){
               </S.AnimalCard>
             ))
           )}
+        </S.HorizontalScroll>
+      </S.Section>
+
+  {/* 입양 캠패인 & 해시태그 */}
+      <S.Section>
+        <S.SectionHeader>
+          <S.SectionTitle>입양 캠페인</S.SectionTitle>
+          <S.MoreButton>더보기 &gt;</S.MoreButton>
+        </S.SectionHeader>
+
+        <S.HashTagScroll>
+          {campaignHashtags.map((tag,idx)=>(
+            <S.HashTagBtn 
+            key={idx} 
+            $active={activeHashtag===tag}
+            onClick={()=>setActiveHashtag(tag)}
+            >
+                {tag}
+            </S.HashTagBtn>
+          ))}
+        </S.HashTagScroll>
+
+        <S.HorizontalScroll>
+          {mockCampaigns.map(item=>(
+            <S.CampaignCard key={item.id}>
+              <S.CampaignMediaWrap>
+                <S.CampaignImg src={item.imageUrl} alt={item.title}/>
+                {item.isVideo && (
+                  <>
+                  <S.PlayIconWrap>
+                    <PlayArrow style={{fontSize:"18px"}}/>
+                  </S.PlayIconWrap>
+                  </>
+                )}
+              </S.CampaignMediaWrap>
+                 <S.CampaignTextWrap>
+                    <S.CampaignCardtitle>
+                      {item.title}
+                    </S.CampaignCardtitle>
+                    <S.CampaignCardDesc>
+                      {item.desc}
+                    </S.CampaignCardDesc>
+                  </S.CampaignTextWrap>
+            </S.CampaignCard>
+          ))}
         </S.HorizontalScroll>
       </S.Section>
 
