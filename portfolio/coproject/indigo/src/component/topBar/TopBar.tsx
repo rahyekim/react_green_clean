@@ -51,7 +51,7 @@ export const TopBar:React.FC = ()=>{
     //⌨️ 엔터키를 눌러도 검색이 되도록하는 함수
     const handleKeyPress = (e:React.KeyboardEvent<HTMLInputElement>)=>{
         if(e.key === 'Enter'){
-            e.preventDefault(); //⭐⭐⭐
+            e.preventDefault(); //⭐⭐⭐ 이것도 폼제출(submit)처럼 엔터키누르면 브라우저가 새로고침 해줌 ㅋㅋ
             handleSearch();
         }
     }

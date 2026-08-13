@@ -42,9 +42,9 @@ export const Sidebar:React.FC = ()=>{
             </NavItem>
             {/*  */}
              <NavItem className="active">
-                <NavLink href="/">
+                <NavLink href="/admin/campaign">
                     <i className="fas fa-fw fa-cat me-2"></i>
-                    <span>냥</span>
+                    <span>입양 캠페인</span>
                 </NavLink>
             </NavItem>
            

@@ -1,0 +1,12 @@
+package com.skz.DTO;
+
+import lombok.Data;
+
+//프론트엔드에서 캠페인을 등록할때 서버로 전송할 데이터 구조
+@Data
+public class AdoptionCampaignRequest {
+
+    private String hashtag, title, content,
+            thumbnailUrl, mediaType, mediaUrl;
+
+}
