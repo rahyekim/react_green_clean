@@ -12,16 +12,21 @@ export const Login = ()=>{
     const navigate = useNavigate();
 
     //사용자가 입력한 이메일과 패스워드를 담을 바구니(상태)
-    const [email, setEmail]=useState("");
+    const [email, setEmail]=useState(()=>{
+        return localStorage.getItem('savedEmail') || ""
+    });
     const [password, setPassword]=useState("");
 
-    const [rememberme, setRememberme] = useState(false);
+    //아이디(이메일)기억하기
+    const [rememberme, setRememberme] = useState(()=>{
+        return !!localStorage.getItem('savedEmail')
+    });
 
     //로그인 버튼을 누를때 실행되는 함수
     const handleSubmit = async(e:React.FormEvent)=>{
         e.preventDefault();
 
-        //유효성검사
+        //유효성검사(빈칸 방어 로직)
         if(!email || !password){
             alert("이메일과 비밀번호 모두 입력해주세요")
             return;
@@ -33,7 +38,12 @@ export const Login = ()=>{
             //✨❄️ 로그인후 저장된 이름이 보이게 하려면 ❄️
             localStorage.setItem('userName', res.data.name);
             
-            navigate('/admin')
+            if(rememberme){
+                localStorage.setItem('savedEmail', email.trim());
+            }else{
+                localStorage.removeItem('savedEmail');
+            }
+            navigate('/admin') //화면전환
 
         }catch(err:any){
             if(err.response && err.response.data){
@@ -87,49 +97,50 @@ export const Login = ()=>{
                                                 />
                                             </div>
                                             {/* 아이디 기억하기 체크박스 */}
-                                            <div className="form-group my-3">
-                                                <div className="custom-control custom-checkbox small text-start">
-                                                    <input
-                                                    type="checkbox"
-                                                    className="custom-control-input form-check-input mx-3"
-                                                    id="customCheck"
-                                                    checked={rememberme}
-                                                    onChange={e=>setRememberme(e.target.checked)}
-                                                    
-                                                    />
-                                                    <label className="custom-control-label"
-                                                    htmlFor="customCheck">
-                                                        Remember me
-                                                    </label>
-
-                                                    <Button 
-                                                    type="submit"
-                                                    variant="primary"
-                                                    className="btn btn-block w-100 my-3"
-                                                    >login</Button>
-
-                                                    <hr className="my-3" style={{borderTop:"1px solid #999"}}/>
-                                                    {/* 소셜 로그인 */}      
-                                                    <Button 
-                                                    type="button"
-                                                    variant="warning"
-                                                    className="btn-user btn-block btn-google w-100 mb-2"
-                                                    >
-                                                        <FontAwesomeIcon icon={faGoogle} className="fa-fw"/>
-                                                        login with google
-                                                    </Button>
-
-                                                     <Button 
-                                                    type="button"
-                                                    variant="outline-primary"
-                                                    className="btn-user btn-block btn-facebook w-100 mb-2"
-                                                    >
-                                                        <FontAwesomeIcon icon={faFacebookF} className="fa-fw"/>
-                                                        login with facebook
-                                                    </Button>
-
-                                                </div>
+                                            <div className="form-group my-3 text-start ps-1">
+                                                <Form.Check
+                                                type="checkbox"
+                                                label="Remember me"
+                                                className="small text-secondary fw-bold"
+                                                id="customCheck"
+                                                checked={rememberme}
+                                                onChange={e=>setRememberme(e.target.checked)}
+                                                
+                                                />
+                                                {/* <label className="custom-control-label"
+                                                htmlFor="customCheck">
+                                                    Remember me
+                                                </label> */}
                                             </div>
+                                            
+                                            {/*로그인 버튼 */}
+                                            <Button 
+                                            type="submit"
+                                            variant="primary"
+                                            className="btn btn-block w-100 my-3"
+                                            >login</Button>
+
+                                            <hr className="my-3" style={{borderTop:"1px solid #999"}}/>
+                                            
+                                            {/* 소셜 로그인 버튼들 */}      
+                                            <Button 
+                                            type="button"
+                                            variant="warning"
+                                            className="btn-user btn-block btn-google w-100 mb-2"
+                                            >
+                                                <FontAwesomeIcon icon={faGoogle} className="fa-fw me-1"/>
+                                                login with google
+                                            </Button>
+
+                                            <Button 
+                                            type="button"
+                                            variant="primary"
+                                            className="btn-user btn-block btn-facebook w-100 mb-2"
+                                            >
+                                                <FontAwesomeIcon icon={faFacebookF} className="fa-fw me-1"/>
+                                                login with facebook
+                                            </Button>
+
                                         </form>
                                     </div>
                                 </div>

@@ -1,22 +1,46 @@
 import React, { useState, useEffect } from "react"
-import { TopBarContainer,TopBarNavBar,TopBarSearch } from "./TopBar.styles"
+import * as S from "./TopBar.styles"
 import { useNavigate } from "react-router-dom";
 
 import profileImage from '../../assets/images/joinBg.png'
 
 export const TopBar:React.FC = ()=>{
-    
-    const [userName, setUserName] =useState('Guest');
+
+    //게으른 초기화(Lazy Initialization)
+    const [userName, setUserName]=useState(()=>{
+        const name =localStorage.getItem("userName");
+        return name || "Guest";
+    })
+    // const [userName, setUserName] =useState('Guest');
     const navigate = useNavigate();
 
-    //
-    useEffect(()=>{
-        const name = localStorage.getItem('userName');
-        if(name){
-            setUserName(name);
+    //'Guest'로 떴다가 이름이 바뀌는 깜빡임 발생->게으른초기화 추천
+    // useEffect(()=>{
+    //     const name = localStorage.getItem('userName');
+    //     if(name){
+    //         setUserName(name);
+    //     }
+    // },[])
+    //🔍검색어 상태
+    const [searchTerm, setSearchTerm]=useState("");
+
+    //🔍검색 버튼을 눌렀을때 실행되는 함수
+
+    const handleSearch = async()=>{
+        if(!searchTerm.trim()){
+            alert('검색어를 입력해주세요')
+            return;
         }
-    },[])
+
+        navigate(`/search?q=${searchTerm}`)
+    }
     
+    const handlekeyPress = (e:React.KeyboardEvent<HTMLInputElement>)=>{
+        if(e.key === 'Enter'){
+            e.preventDefault(); //⭐브라우저새로고침 방지
+            handleSearch();
+        }
+    }
     //로그아웃
     const handleLogout = ()=>{
         localStorage.removeItem('uerName')
@@ -25,7 +49,7 @@ export const TopBar:React.FC = ()=>{
 
     return(
         <>
-        <TopBarContainer 
+        <S.TopBarContainer 
         className="navbar navbar-expand navbar-light topbar static-top">
             
             {/*사이드바 토글(mobile) */}
@@ -40,22 +64,28 @@ export const TopBar:React.FC = ()=>{
         my-md-0 큰 화면에서는 navbar 높이에 맞춰서 딱 맞추는 겁니다.
         mw-100 (max-width: 100%)  부모보다 커지지 마
         */}
-            <TopBarSearch
+            <S.TopBarSearch
             className="d-none d-sm-inline-block form-inline my-2 my-md-0 mw-100 navbar-search">
                 <div className="input-group">
                     <input type="text"
                     className="form-control bg-light border-0 small"
                     placeholder="Search for..."
+                    value={searchTerm}
+                    onChange={e=>setSearchTerm(e.target.value)}
+                    onKeyDown={handlekeyPress}
                     />
                     <div className="input-group-append">
-                        <button className="btn btn-primary">
+                        <button 
+                        type="button"//⭐
+                        className="btn btn-primary"
+                        onClick={handleSearch}>
                             <i className="fas fa-search fa-sm"></i>
                         </button>
                     </div>
                 </div>
-            </TopBarSearch>
+            </S.TopBarSearch>
              {/*탑바 navbar */}
-            <TopBarNavBar className="ml-auto">
+            <S.TopBarNavBar className="ml-auto">
             {/* 유저 정보
             li 메뉴하나 > a 클릭영역 (span 유저이름, 프로필사진)
          */}
@@ -82,8 +112,8 @@ export const TopBar:React.FC = ()=>{
                     onClick={handleLogout}>로그아웃</button>
 
                 </li>
-            </TopBarNavBar>
-        </TopBarContainer>
+            </S.TopBarNavBar>
+        </S.TopBarContainer>
         </>
     )
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios'
 
-import { Layout } from "../../component/layout/Layout";
+import { Layout } from "../../components/layout/Layout";
 import * as S from "../css/sub.styled"
 
 //🌟typescript에서 전역 kakao 객체를 인식하도록 선언

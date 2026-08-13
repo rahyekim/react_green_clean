@@ -42,6 +42,8 @@ localStorage.setItem('accessToken', data.token);
 🌟 헤더에 토큰을 실어 보냄! (이게 바로 신분증 제시)
 const token = localStorage.getItem('accessToken');
 headers: {"Authorization": `Bearer ${token}`}
+
+세션/쿠키는 빽단에서 알아서 브라우저에 저장해줌..
 */
             //백엔드에서 받아온 회원의 닉네임(data.nickname)으로 인사함
             alert(`환영합니다 ${data.nickname}님`)

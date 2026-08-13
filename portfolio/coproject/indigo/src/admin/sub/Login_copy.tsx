@@ -21,7 +21,6 @@ export const Login = ()=>{
     const [password, setPassword]= useState("");
 
     //아이디 기억하기 
-    //아이디 기억하기 
 const [rememberme, setRememberme] = useState(() => {
     // 만약 로컬스토리지에 저장된 이메일이 이미 있다면, 
     // 처음 들어왔을 때 'Remember me' 체크박스도 체크된 상태로 시작하게 하면 센스 있겠죠?
@@ -59,12 +58,12 @@ const [rememberme, setRememberme] = useState(() => {
             
         // 2. 로그인 시 체크박스 상태에 따라 LocalStorage 처리
             if (rememberme) {
-            localStorage.setItem('savedEmail', res.data.email);
+            localStorage.setItem('savedEmail', email.trim());
             } else {
             localStorage.removeItem('savedEmail');
             }
-                        
-            navigate('/admin');
+            navigate('/admin'); //마지막에 화면전환
+
         }catch(err:any){
             //1.서버가 응답을 주면서 에러를 낸 경우
             if(err.response && err.response.data){
@@ -137,15 +136,14 @@ const [rememberme, setRememberme] = useState(() => {
                                                     
                                                     {/* 아이디 기억하기 체크박스 */}
                                                     <div className="form-group mb-3">
-                                                        
-                                                            <Form.Check
-                                                            type="switch"
-                                                            className="d-flex gap-2 align-items-center small text-secondary"
-                                                            id="customCheck"
-                                                            label="Remember me"
-                                                            checked={rememberme}
-                                                            onChange={e=>setRememberme(e.target.checked)}
-                                                            />
+                                                        <Form.Check
+                                                        type="switch"
+                                                        className="d-flex gap-2 align-items-center small text-secondary"
+                                                        id="customCheck"
+                                                        label="Remember me"
+                                                        checked={rememberme}
+                                                        onChange={e=>setRememberme(e.target.checked)}
+                                                        />
                                                     </div>
 
                                                     <Button

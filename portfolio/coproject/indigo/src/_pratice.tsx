@@ -1,8 +1,8 @@
 import React from "react";
-import { TopBar } from "./component/topBar/TopBar";
-import { SideBar } from "./component/sideBar/SideBar";
-import { Wrapper,ContainerFluid,ContentWrapper,MainContent } from "./component/layout/Layout.styles";
-import { TopBarContainer,TopBarNavBar,TopBarSearch  } from "./component/topBar/TopBar.styles";
+import { TopBar } from "./components/topBar/TopBar";
+import { SideBar } from "./components/sideBar/SideBar";
+import { Wrapper,ContainerFluid,ContentWrapper,MainContent } from "./components/layout/Layout.styles";
+import { TopBarContainer,TopBarNavBar,TopBarSearch  } from "./components/topBar/TopBar.styles";
 
 interface LayoutProps{
     children: React.ReactNode

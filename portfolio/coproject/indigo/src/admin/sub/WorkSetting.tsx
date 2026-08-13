@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
 
-import { Layout } from "../../component/layout/Layout";
+import { Layout } from "../../components/layout/Layout";
 import * as S from "../css/sub.styled"
 
 //개별이미지 데이터 형태를 정의

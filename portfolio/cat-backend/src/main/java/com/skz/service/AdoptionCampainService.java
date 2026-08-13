@@ -23,7 +23,7 @@ public class AdoptionCampainService {
 
     public AdoptionCampainService(AdoptionCampainRepository adoptionCampainRepository) {
         this.adoptionCampainRepository = adoptionCampainRepository;
-    } //전달받은 레파지토리 객체를 클래스 ??????
+    } //전달받은 레파지토리 객체를 클래스를 전역에 쓸수있또록 변수에 저장
 
     //전체 캠페인 목록조회
     public List<AdoptionCampaign> getAllCampaigns() {

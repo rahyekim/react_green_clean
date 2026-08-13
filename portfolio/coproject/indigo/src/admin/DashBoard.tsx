@@ -1,5 +1,5 @@
 import React from "react"
-import { Layout } from "../component/layout/Layout"
+import { Layout } from "../components/layout/Layout"
 import * as A from './DashBoard.styled'
 
 export const DashBoard:React.FC = ()=>{

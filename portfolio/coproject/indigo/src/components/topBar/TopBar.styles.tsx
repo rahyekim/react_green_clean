@@ -46,12 +46,16 @@ padding: 0; /* ul 기본 패딩 제거 */
 export const TopBarSearchInput= styled.input.attrs({type:"text"})` //선택자 input[type="text"]
 padding: 10px 15px;
 width: 250px;
-border-radius: 5px;
-border: 1px solid #ccc;
+border-radius: 8px;
+border: 1px solid #e5e7eb;
 outline: none;
+transition: all 0.3s ease-in-out;
 
-&:focus {   //안먹히는중...
-    border-color: #4f46e5 !important;
+&:focus {   
+    
+    background-color: #fff;
+    border-color: #6366f1; 
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
   }
 `;
 export const SearchResultWrap= styled.div`

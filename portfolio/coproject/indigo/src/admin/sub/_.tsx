@@ -1,8 +1,9 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import axios from 'axios'
 
-import { Layout } from "../../component/layout/Layout";
+import { Layout } from "../../components/layout/Layout";
 import * as S from "../css/sub.styled"
+import { useSearchParams } from "react-router-dom";
 
 interface ContactItem {
     id: number;
@@ -133,3 +134,70 @@ export default function ContactSetting (){
         </>
     )
 }
+
+export const SearchResult = ()=>{
+
+    const [searchParams]=useSearchParams();
+    const keyword= searchParams.get('q');
+
+    const[result, setResult]=useState({users:[], bologs:[], contacts:[]})
+    const [loading, setLoading]=useState(false);
+
+    useEffect(()=>{
+        const fetchResults = async()=>{
+
+            // 1. 검색어가 없으면 결과를 비우고 로딩 종료
+            if(!keyword){
+                setResult({users:[], bologs:[], contacts:[]}); 
+                // ✨ 검색어 지웠을 때 이전 결과도 지워주는 것이 좋습니다.
+                setLoading(false);
+                return;
+            }
+            try{
+                const res=await axios.get(`/api/search?q=${keyword}`)
+                setResult(res.data);
+            }catch(err){
+                console.error("검색불러오기에러", err)
+            }finally{
+                setLoading(false);
+            }
+
+        }
+        fetchResults();
+    },[keyword]);
+
+
+    return(
+        <>
+        <div>
+            <h3>{keyword} 검색결과</h3>
+            {loading? (
+                <p>검색중...</p>
+            ):(
+                <div>
+                    <h5>회원 {result.users.length} 건</h5>
+                    {result.users.length === 0 ?
+                    <p> 검색된 회원이 없습니다 </p>
+                :(
+                    <ul>
+                        {result.users.map((user:any)=>(
+                            <li key={user.id}>
+                                <strong>{user.first_name} {user.last_name}</strong>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+                </div>
+            )}
+        </div>
+
+        <div>
+            <h5></h5>
+        </div>
+        </>
+    )
+    
+    
+    
+}
+

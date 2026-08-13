@@ -2,7 +2,7 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 
 import * as S from '../css/sub.styled';
-import { Layout } from "../../component/layout/Layout";
+import { Layout } from "../../components/layout/Layout";
 
 //메뉴 데이터 타입정의
 

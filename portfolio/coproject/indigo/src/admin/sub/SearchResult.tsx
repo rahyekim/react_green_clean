@@ -1,9 +1,9 @@
-import * as S from '../../component/topBar/TopBar.styles'
+import * as S from '../../components/topBar/TopBar.styles'
 import axios from 'axios'
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {Layout} from '../../component/layout/Layout'
+import {Layout} from '../../components/layout/Layout'
 
 export default function SearchResult(){
 
@@ -16,10 +16,16 @@ export default function SearchResult(){
 
     useEffect(()=>{
         const fetchResults = async()=>{
+
+            //검색어가 없으면 
             if(!keyword) {
+                //✨ 검색어 지웠을 때 이전 결과도 지워
+                setResult({users:[], blogs:[], contacts:[]}); 
                 setLoading(false);
                 return;
             }
+
+            setLoading(true);
 
             try{
                 const res = await axios.get(`http://localhost:5000/api/search?q=${keyword}`)

@@ -8,11 +8,17 @@ import profileImage from '../../assets/images/joinBg.png';
 export const TopBar:React.FC = ()=>{
     //1.화면에 보여줄 사용자 이름 상태를 만듦(기본값:Guest)
     
-    const [userName, setUserName]=useState('Guest');
+    //게으른 초기화(Lazy Initialization)
+    const [userName, setUserName]=useState(()=>{
+        const name =localStorage.getItem("userName");
+        return name || "Guest";
+    })
+    // const [userName, setUserName]=useState('Guest');
     const navigate = useNavigate();
 
     //🔍검색어 상태
     const [searchTerm, setSearchTerm]=useState('');
+
     //검색 결과 상태
     const [result, setResult]=useState({users:[], blogs:[], contacts:[]});
     //검색을 한번이라도 했는지 체크하는 상태
@@ -99,7 +105,7 @@ export const TopBar:React.FC = ()=>{
                 <div className="input-group">
                     <S.TopBarSearchInput 
                     type="text"
-                    className="bg-light border-0 small"
+                    className="bg-light small"
                     placeholder="Search for..."
                     value={searchTerm}
                     onChange={e=> setSearchTerm(e.target.value)}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import * as S from '../DashBoard.styled'
-import { Layout } from "../../component/layout/Layout";
+import { Layout } from "../../components/layout/Layout";
 
 //백엔드 에서 받아올 데이터 : res.status(200).json(result) 
 //의 타입정의...

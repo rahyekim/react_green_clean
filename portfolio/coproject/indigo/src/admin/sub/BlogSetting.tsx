@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
 
-import { Layout } from "../../component/layout/Layout";
+import { Layout } from "../../components/layout/Layout";
 import * as S from "../css/sub.styled"
 
 

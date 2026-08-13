@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import * as S from '../css/sub.styled'
-import { Layout } from "../../component/layout/Layout";
+import { Layout } from "../../components/layout/Layout";
 
 interface CarouselItem{
     id: number;
