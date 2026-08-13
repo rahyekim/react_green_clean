@@ -43,7 +43,7 @@ margin-bottom: 1.5rem;
 //모바일 768이하는 카드 1개
 `;
 
-export const StatCard = styled.div<{borderColor:string}>`
+export const StatCard = styled.div<{$borderColor:string}>`
 
 position: relative;
 display: flex;
@@ -56,7 +56,7 @@ background-color: #fff;
 background-clip: border-box; //하얀 배경색이 테두리 끝까지 깔끔하게 채워지도록 하는 배경 설정
 border: 1px solid #e3e6f0;
 border-radius: 0.35rem; //5.6px
-border-left: 0.25rem solid ${props=> props.borderColor};
+border-left: 0.25rem solid ${props=> props.$borderColor};
 box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
 //x축이동-0 y축이동-2.4px 퍼지는정도-28px
 padding: 0.5rem 0;

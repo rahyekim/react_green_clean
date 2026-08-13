@@ -1,4 +1,5 @@
 
+import { text } from "node:stream/consumers";
 import styled from "styled-components";
 
 export const TopBarContainer = styled.nav`
@@ -42,3 +43,58 @@ padding: 0; /* ul 기본 패딩 제거 */
 /* <ul> 태그는 브라우저 기본값으로 왼쪽 패딩(padding-left: 40px) */
 `;
 
+export const TopBarSearchInput= styled.input.attrs({type:"text"})` //선택자 input[type="text"]
+padding: 10px 15px;
+width: 250px;
+border-radius: 5px;
+border: 1px solid #ccc;
+outline: none;
+
+&:focus {   //안먹히는중...
+    border-color: #4f46e5 !important;
+  }
+`;
+export const SearchResultWrap= styled.div`
+
+margin-top: 30px;
+
+h3{
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+}
+`;
+
+export const SearchUserResultWrap= styled.div`
+
+margin-top: 20px;
+
+h5{
+    color: #0d6efd;
+}
+`;
+
+export const SearchBlogResultWrap= styled.div`
+
+margin-top: 20px;
+
+h5{
+    color: #198754; 
+}
+`;
+export const Datespan= styled.span`
+color: #888;
+margin-right: 10px;
+`;
+
+export const SearchQResultWrap= styled.div`
+margin-top: 20px;
+
+h5{
+    color: #dc3545; 
+}
+`;
+
+// export const = styled.div``;
+// export const = styled.div``;
+// export const = styled.div``;
+// export const = styled.div``;

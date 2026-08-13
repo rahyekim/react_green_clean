@@ -775,9 +775,98 @@ app.get('/api/settings/map', (req,res)=>{
 })
 
 
+///🔍 검색기능
+app.get('/api/search',(req,res)=>{
 
+    //1.🔎 프론트엔드에서 보낸 검색어(q)를가져옴
+    const keyword = req.query.q;
+    if(!keyword){
+        return res.status(400).json({message:"검색어를 입력해주세요"});
+    }
+    //2.sql의 like검색을 위해 앞뒤 % 를 붙여줌 ( %황현진% )
+    const searchKeyword = `%${keyword}%`;
 
+    //각 테이블을 뒤지는 쿼리문을 준비  user 테이블 (이름, 성, 이메일에서 검색)
+    const sqlUser = `
+    select id, last_name, first_name, email 
+    from users
+    where first_name like ? or last_name like ? or email like ? `;
 
+    const sqlBlogs = `
+    select id, text_content, date_str from blog_item
+    where text_content like ? `;
+
+    const sqlContact = ` 
+    select id, name, email, message from contacts
+    where name like ? or email like ? or message like ?` 
+
+    // 쿼리 3개를 순서대로 실행하고 결과를 모은다..(콜백지옥을 피하기 위해 단순 중첩 사용)
+    db.query(sqlUser, [searchKeyword, searchKeyword, searchKeyword], (err1, users)=>{
+
+        if(err1){
+            console.error("유저검색에러: ",err1);
+            return res.status(500).json({message: "유저검색에러"});
+        }
+
+        db.query(sqlBlogs, [searchKeyword], (err2,blogs)=>{
+
+            if(err2) {
+                console.error("블로그검색에러: ",err2);
+                return res.status(500).json({message:"블로그 검색에러"});
+            }
+            db.query(sqlContact, [searchKeyword,searchKeyword,searchKeyword], (err3,contacts)=>{
+
+              if(err3) return res.status(500).json({message:"문의내역 검색에러"});
+
+              //모든 검색이 끝나면 묶어서 프론트엔드로 보냄
+              res.status(200).json({
+                users: users,
+                blogs: blogs,
+                contacts: contacts
+                })
+            })
+        })
+    })
+})
+
+//인디고프론트)npm install recharts
+//📊 관리자 대시보드 통계 API 📈
+app.get('/api/statistics',(req,res)=>{
+    
+    const sqlUser = ``;
+
+    const sqlContact = ``;
+
+    db.query(sqlUser, (err1, userStats)=>{
+        if(err1){
+            return res.status(500).json({message:"유저 통계 에러"})
+        }
+        db.query(sqlContact, (err2, contactStats)=>{
+            if(err2){
+                return res.status(500).json({message:"문의 통계 에러"})
+            }
+            const contacts = contactStats[0]
+            const resolveRate = contacts.totalInquiries > 0 ?
+            Math.round((contacts.resolved / contacts.totalInquiries) * 100) : 0;
+
+            return res.status(200).json({
+                userSignups: userStats.reverse(),
+                claimRate :[ 
+                    {}, {}
+                ],
+                summary: {
+
+                },
+                traffic: [
+                    {},{},{},{}
+                ],
+                inquiriesVsClaims: [
+                    {},{},{},{}
+                ]
+            });
+        })
+    })
+})
 
 //관리자끝
 

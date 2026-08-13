@@ -19,7 +19,7 @@ export const DashBoard:React.FC = ()=>{
 
             <A.GridRow>
                 <A.CardColumn>
-                    <A.StatCard borderColor="#4e73df">
+                    <A.StatCard $borderColor="#4e73df">
                         <A.CardBody>
                             <div className="">
                                 <div
@@ -40,7 +40,7 @@ export const DashBoard:React.FC = ()=>{
                 </A.CardColumn>
 
                 <A.CardColumn>
-                    <A.StatCard borderColor="#1cc88a">
+                    <A.StatCard $borderColor="#1cc88a">
                         <A.CardBody>
                             <div>
                                 <div className="text-xs font-weight-bold text-success text-uppercase mb-1">

@@ -1,14 +1,60 @@
 import React, { useState, useEffect } from "react"
-import { TopBarContainer,TopBarNavBar,TopBarSearch } from "./TopBar.styles"
+import * as S from "./TopBar.styles"
 import { useNavigate } from "react-router-dom";
 
-import profileImage from '../../assets/images/joinBg.png'
+import axios from 'axios'
+import profileImage from '../../assets/images/joinBg.png';
 
 export const TopBar:React.FC = ()=>{
     //1.화면에 보여줄 사용자 이름 상태를 만듦(기본값:Guest)
     
     const [userName, setUserName]=useState('Guest');
     const navigate = useNavigate();
+
+    //🔍검색어 상태
+    const [searchTerm, setSearchTerm]=useState('');
+    //검색 결과 상태
+    const [result, setResult]=useState({users:[], blogs:[], contacts:[]});
+    //검색을 한번이라도 했는지 체크하는 상태
+    const [hasSearched, setHasSearched]=useState(false);
+    /*
+    사용자가 처음에 페이지를 켰을 때는 검색 결과를 안 보여주다가, 
+    검색 결과 상자의 전원 스위치 //평상시: 전원 OFF (false) 결과창 숨김
+    검색 버튼을 눌렀을 때만 밑에 결과창이 툭 튀어나와야 합니다.
+     */
+
+    //🔍검색 버튼을 눌렀을때 실행되는 함수
+    const handleSearch = async()=>{
+
+        if(!searchTerm.trim()) {
+            alert("검색어를 입력해주세요");
+            return;
+        }
+
+        //⭐ /search 페이지로 이동하면서 주소창에 ?q=검색어 를 붙여서 보냄(쿼리스트링) ⭕
+        navigate(`/search?q=${searchTerm}`);
+        // setSearchTerm('');
+
+        // try{
+        //     //백엔드의 /api/search 주소로 검색어(?q=검색어)를 보냄
+        //     const res= await axios.get(`http://localhost:5000/api/search?q=${searchTerm}`); 
+
+        //     setResult(res.data); //결과저장
+        //     setHasSearched(true); //검색완료상태로 변경
+
+        // }catch(err){
+        //     alert("검색을 가져오는중 오류가 발생하였습니다")
+        //     console.error("검색중에 오류발생: ", err);
+        // }
+    };
+
+    //⌨️ 엔터키를 눌러도 검색이 되도록하는 함수
+    const handleKeyPress = (e:React.KeyboardEvent<HTMLInputElement>)=>{
+        if(e.key === 'Enter'){
+            e.preventDefault(); //⭐⭐⭐
+            handleSearch();
+        }
+    }
 
     //2.화면이 처음 켜질때 딱 한번만 실행
     useEffect(()=>{
@@ -33,7 +79,7 @@ export const TopBar:React.FC = ()=>{
 
     return(
         <>
-        <TopBarContainer 
+        <S.TopBarContainer 
         className="navbar navbar-expand navbar-light topbar static-top">
             
             {/*사이드바 토글(mobile) */}
@@ -48,22 +94,31 @@ export const TopBar:React.FC = ()=>{
         my-md-0 큰 화면에서는 navbar 높이에 맞춰서 딱 맞추는 겁니다.
         mw-100 (max-width: 100%)  부모보다 커지지 마
         */}
-            <TopBarSearch
+            <S.TopBarSearch
             className="d-none d-sm-inline-block form-inline my-2 my-md-0 mw-100 navbar-search">
                 <div className="input-group">
-                    <input type="text"
-                    className="form-control bg-light border-0 small"
+                    <S.TopBarSearchInput 
+                    type="text"
+                    className="bg-light border-0 small"
                     placeholder="Search for..."
+                    value={searchTerm}
+                    onChange={e=> setSearchTerm(e.target.value)}
+                    onKeyDown={handleKeyPress}
                     />
                     <div className="input-group-append">
-                        <button className="btn btn-primary">
+                        <button 
+                        type="button" //⭐
+                        className="btn btn-primary"
+                        onClick={handleSearch}>
                             <i className="fas fa-search fa-sm"></i>
                         </button>
                     </div>
                 </div>
-            </TopBarSearch>
+            </S.TopBarSearch>
+
+            
              {/*탑바 navbar */}
-            <TopBarNavBar className="ml-auto">
+            <S.TopBarNavBar className="ml-auto">
             {/* 유저 정보
             li 메뉴하나 > a 클릭영역 (span 유저이름, 프로필사진)
          */}
@@ -90,8 +145,8 @@ export const TopBar:React.FC = ()=>{
                     onClick={handleLogout}>logout</button>
 
                 </li>
-            </TopBarNavBar>
-        </TopBarContainer>
+            </S.TopBarNavBar>
+        </S.TopBarContainer>
         </>
     )
 }
@@ -105,3 +160,27 @@ topbarcontainer
 
 
 */
+
+
+/*
+💡 왜 굳이 hasSearched 스위치가 필요할까요?
+만약 이 스위치(hasSearched) 없이 그냥 result.users.length 같은 데이터 유무만 믿고 화면에 띄우려고 하면, 
+다음과 같은 문제가 생깁니다.
+
+아무것도 검색 안 한 맨 처음 상태
+아직 검색을 시작조차 안 했으니 result.users 배열은 텅 빈 상태(길이: 0)입니다.
+
+이때 스위치가 없다면, 페이지가 켜지자마자 화면에 "검색된 회원이 없습니다"라는 
+문구가 뜬금없이 떡하니 먼저 보이게 됩니다. (사용자 입장선: "아직 검색도 안 했는데 왜 결과가 없대?" 하고 당황스러움)
+
+스위치의 진짜 역할
+
+평소(false): "아직 검색 안 했으니까 결과 영역 자체를 숨겨두자."
+
+검색 후(true): "이제 검색 끝났으니까 결과 영역을 보여줄게! 만약 데이터가 없으면 
+'검색된 회원이 없습니다'라고 띄워줄게."
+
+즉, '아직 검색을 안 한 상태'와 '검색을 했는데 결과가 0건인 상태'를 
+명확하게 구분해서 화면에 이상한 문구가 먼저 뜨지 않게 막아주는 안전장치(스위치)라고 생각하시면 됩니다!
+
+ */
