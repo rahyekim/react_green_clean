@@ -1,0 +1,12 @@
+mkdir clinic-backend && cd clinic-backend
+npm init -y 
+npm install express cors dotenv oracledb
+
+개발 편의를 위한 nodemon설치 
+npm install -D nodemon
+
+
+----
+
+
+npx create-next-app@latest clinic-frontend --ts --tailwind --eslint --app --src-dir --import-alias "@/*"
