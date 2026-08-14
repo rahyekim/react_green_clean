@@ -47,7 +47,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:"2525",
+    password:"",
     database: 'company'
 })
 
@@ -832,36 +832,65 @@ app.get('/api/search',(req,res)=>{
 //인디고프론트)npm install recharts
 //📊 관리자 대시보드 통계 API 📈
 app.get('/api/statistics',(req,res)=>{
-    
-    const sqlUser = ``;
+    //가입일을 2026-08 형태로 바꾸고, 칸의 이름을 name으로 부름..
+    //group by name : 같은 월 끼리 묶기
+    const sqlUser = `
+    select date_format(created_at, '%Y-%m') as name, count(*) as 가입자수
+    from users 
+    group by name 
+    order by name desc
+    limit 6 `;
 
-    const sqlContact = ``;
+    const sqlContact = `
+    select count(*) as totalInquiries,
+    sum(case when is_replied=1 then 1 else 0 end) as resolved,
+    sum(case when is_replied=0 then 1 else 0 end) as unresolved
+    from contacts
+     `;
 
+    //첫번째 질문: 회원가입통계 데이터베이스에 보냄
     db.query(sqlUser, (err1, userStats)=>{
         if(err1){
-            return res.status(500).json({message:"유저 통계 에러"})
+            console.error("회원 통계 쿼리 에러:", err1);
+            return res.status(500).json({message:"회원 통계 에러"})
         }
+        //이어서 두번째 질문(문의통계)를 데이터베이스에 보냄
         db.query(sqlContact, (err2, contactStats)=>{
             if(err2){
+                console.error("문의 통계 쿼리 에러:", err2);
                 return res.status(500).json({message:"문의 통계 에러"})
             }
+            //DB가 준 결과물(배열)에서 첫번째 덩어리만 쏙 빼서 contat변수에담음
             const contacts = contactStats[0]
+            //해결률(%) 계산하기 문의가 1개라도 있을 때만 계산
             const resolveRate = contacts.totalInquiries > 0 ?
+            //해결된건수 / 전체 건수 * 100
+            //Math.round 반올림하여 깔끔한 % 숫자로 만듦(문의가 없으면 그냥 0%)
             Math.round((contacts.resolved / contacts.totalInquiries) * 100) : 0;
 
             return res.status(200).json({
-                userSignups: userStats.reverse(),
-                claimRate :[ 
-                    {}, {}
+                userSignups: userStats.reverse(), //과거부터 최신순으로 바꿈(default는 최신순)
+                claimRate :[  
+                    //?????
+                    {name: "해결완료", value: Number(contacts.resolved) || 0}, 
+                    {name:"미해결(대기", value: Number(contacts.unresolved) || 0}
                 ],
+                //???????
                 summary: {
-
+                    totalInquiries: contacts.totalInquiries , //총 문의량
+                    resolveRate: resolveRate //위에서 계산한 해결률(%)
                 },
                 traffic: [
-                    {},{},{},{}
+                    { name: '월', 접속량: 4000 }, { name: '화', 접속량: 3000 },
+                    { name: '수', 접속량: 2000 }, { name: '목', 접속량: 2780 },
+                    { name: '금', 접속량: 1890 }, { name: '토', 접속량: 2390 },
+                    { name: '일', 접속량: 3490 },
                 ],
                 inquiriesVsClaims: [
-                    {},{},{},{}
+                    { name: '1주차', 일반문의: 400, 클레임: 240 },
+                    { name: '2주차', 일반문의: 300, 클레임: 139 },
+                    { name: '3주차', 일반문의: 200, 클레임: 980 },
+                    { name: '4주차', 일반문의: 278, 클레임: 390 },
                 ]
             });
         })

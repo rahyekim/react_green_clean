@@ -52,6 +52,8 @@ export const Login = ()=>{
                 alert("로그인중 에러발생");
             }
         }
+        //const message= err.response?.data?.message || err.message || "알 수없는 에러 발생"
+        //alert(message)
     };
 
     return(

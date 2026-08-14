@@ -112,7 +112,8 @@ export const Join = ()=>{
             }else{
                 alert("회원가입중 오류발생...")
             }
-        }
+        }////const message= err.response?.data?.message || err.message || "알 수없는 에러 발생"
+        //alert(message)
     }
 
     return(

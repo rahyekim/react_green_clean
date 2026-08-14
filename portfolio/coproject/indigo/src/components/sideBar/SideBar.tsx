@@ -42,13 +42,13 @@ export const SideBar:React.FC = ()=>{
             <NavItem className="active">
                 <NavLink href="/hdsetting">
                     <i className="fas fa-fw fa-bars me-2"></i>
-                    <span>헤더nav설정</span>
+                    <span>Header 설정</span>
                 </NavLink>
             </NavItem>
              <NavItem className="active">
                 <NavLink href="/bnsetting">
                     <i className="fas fa-fw fa-cog me-2"></i>
-                    <span>배너 설정</span>
+                    <span>Banner 설정</span>
                 </NavLink>
             </NavItem>
 

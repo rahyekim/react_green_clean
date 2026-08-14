@@ -76,7 +76,7 @@ const [rememberme, setRememberme] = useState(() => {
     };
     //프론트엔드 코드 오타 (자바스크립트 에러): 서버요청도 못해서 err.response없음
     //서버가 꺼져있거나 인터넷이 끊긴 경우: err.response가 undefined
-
+    //err.response?.data?.message || err.message || "알수없는 에러발생"
     {/* axios가 예쁘게 포장해준=> err.response 
         err.response = {
         status: 400, // 백엔드가 보낸 res.status(400)

@@ -92,7 +92,9 @@ export const Join = ()=>{
                 alert("회원 가입 중 오류 발생...")
             }
         }
-        
+        //👍
+        //const message= err.response?.data?.message || err.message || "알 수없는 에러 발생"
+        //alert(message)
         
     }
 

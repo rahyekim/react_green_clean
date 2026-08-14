@@ -227,4 +227,21 @@ tr:last-child td  { border-bottom: none; } */
 
 
 
+//padding
+export const Pd20= styled.div`
+padding: 20px;
+`;
 
+//layout
+export const AdminContainer=styled.div.attrs({className:'container-fluid'})`
+padding: 20px;
+background-color: #f8f9fc; //#f8f9fc
+
+`;
+// export const =styled.div``;
+// export const =styled.div``;
+// export const =styled.div``;
+// export const =styled.div``;
+// export const =styled.div``;
+// export const =styled.div``;
+// export const =styled.div``;
