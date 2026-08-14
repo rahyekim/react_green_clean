@@ -19,6 +19,9 @@ export const TopBar:React.FC = ()=>{
     //🔍검색어 상태
     const [searchTerm, setSearchTerm]=useState('');
 
+    //💡 드롭다운이 열려있는지 닫혀있는지 기억하는 상태
+    const [isDropdownOpen, setIsDropdownOpen ]=useState(false)
+
     //검색 결과 상태
     const [result, setResult]=useState({users:[], blogs:[], contacts:[]});
     //검색을 한번이라도 했는지 체크하는 상태
@@ -129,26 +132,35 @@ export const TopBar:React.FC = ()=>{
             li 메뉴하나 > a 클릭영역 (span 유저이름, 프로필사진)
          */}
                 <li className="nav-item dropdown no-arrow d-flex align-items-center">
-                    <a href="#"
-                    className="nav-link dropdown-toggle d-flex align-items-center"
-                    id="userDropdown"
-                    onClick={e=> e.preventDefault()}
-                    >
-{/* ⭐a태그의 기본 클릭이벤트(페이지최상단으로 올라가는 현상을) 막기위해⭐ */}
-                        <span
-                        className="mr-2 d-none d-lg-inline text-gray-600 small me-2">
-                            {userName}
-                        </span>
-                        <img 
-                        src={profileImage}
-                        alt="프로필이미지"
-                        className="img-profile rounded-circle"/>
-                    </a>
+                    <S.UserMenuContainer>
+                        <S.UserProfileToggle
+                        onClick={()=>setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                            <span>{userName}</span>
+                            <img src={profileImage} alt='프로필 이미지'/>
+                        </S.UserProfileToggle>
+                        <S.DropdownMenu $isOpen={!isDropdownOpen}>
+                            <S.DropdownItem>
+                                <i className="fas fa-user fa-sm fa-fw"></i>
+                                프로필
+                            </S.DropdownItem>
+                            <S.DropdownItem>
+                                <i className="fas fa-cogs fa-sm fa-fw"></i>
+                                설정
+                            </S.DropdownItem>
+                            <S.DropdownItem>
+                                <i className="fas fa-list fa-sm fa-fw"></i>
+                                활동내역
+                            </S.DropdownItem>
 
-                    {/* 로그아웃버튼 추가 */}
-                    <button
-                    className="btn btn-sm btn-outline-secondary ml-2"
-                    onClick={handleLogout}>logout</button>
+                            <S.DropdownDivider/>
+
+                            <S.DropdownItem onClick={handleLogout}>
+                                <i className="fas fa-sign-out-alt fa-sm fa-fw"></i>
+                                로그아웃
+                            </S.DropdownItem>
+                        </S.DropdownMenu>
+                    </S.UserMenuContainer>
 
                 </li>
             </S.TopBarNavBar>
@@ -190,3 +202,31 @@ topbarcontainer
 명확하게 구분해서 화면에 이상한 문구가 먼저 뜨지 않게 막아주는 안전장치(스위치)라고 생각하시면 됩니다!
 
  */
+
+
+/*
+
+<a href="#"
+                    className="nav-link dropdown-toggle d-flex align-items-center"
+                    id="userDropdown"
+                    onClick={e=> e.preventDefault()}
+                    >
+{/* ⭐a태그의 기본 클릭이벤트(페이지최상단으로 올라가는 현상을) 막기위해⭐ 
+                        <span
+                        className="mr-2 d-none d-lg-inline text-gray-600 small me-2">
+                            {userName}
+                        </span>
+                        <img 
+                        src={profileImage}
+                        alt="프로필이미지"
+                        className="img-profile rounded-circle"/>
+                    </a>
+
+                    {/* 로그아웃버튼 추가 
+                    <button
+                    className="btn btn-sm btn-outline-secondary ml-2"
+                    onClick={handleLogout}>logout</button>
+
+
+
+*/
