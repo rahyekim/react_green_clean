@@ -5,8 +5,27 @@ npm install express cors dotenv oracledb
 개발 편의를 위한 nodemon설치 
 npm install -D nodemon
 
-
-----
-
-
+-----
 npx create-next-app@latest clinic-frontend --ts --tailwind --eslint --app --src-dir --import-alias "@/*"
+
+npm install typeorm reflect-metadata
+
+## typeorm: 자바스크립트/타입스크립트 객체와 데이터베이스(Oracle, MySQL, PostgreSQL 등)의 테이블을 서로 연결(매핑)해 주는 도구
+
+## reflect-metadata: 타입스크립트의 데코레이터(Decorator, @Entity, @Column 등)가 클래스나 
+속성의 메타데이터(타입 정보 등)를 읽고 유지할 수 있도록 지원해 주는 폴리필(Polyfill)
+
+**"오라클 같은 데이터베이스와 쉽고 편하게 대화하기 위해 TypeORM을 쓰는데, 
+타입스크립트 환경에서 어노테이션 기능이 정상 작동하도록 돕는 필수 짝꿍(reflect-metadata)까지 함께 설치하는 명령어"**
+------
+ALTER SESSION SET "_ORACLE_SCRIPT"=true;
+CREATE USER "BLG_USR" IDENTIFIED BY "1234";
+GRANT CONNECT TO "BLG_USR";
+GRANT RESOURCE TO "BLG_USR";
+alter user BLG_USR default tablespace quota unlimited on users;
+
+ALTER SESSION SET "_ORACLE_SCRIPT"=true;
+CREATE USER "PLASTIC_USR" IDENTIFIED BY "1234";
+GRANT CONNECT TO "PLASTIC_USR";
+GRANT RESOURCE TO "PLASTIC_USR";
+alter user PLASTIC_USR default tablespace users quota unlimited on users;
