@@ -1,10 +1,10 @@
 import {  useState, useEffect } from "react";
 import { useNavigate,Link } from "react-router-dom";
-import {Container, Row, Col, Button, Card, Form} from 'react-bootstrap'
+import { Temporal } from "@js-temporal/polyfill";
 import axios from "axios";
+import {Container, Row, Col, Button, Card, Form} from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faFacebookF } from "@fortawesome/free-brands-svg-icons";
-
 import * as S from '../DashBoard.styled'
 
 export const Login = ()=>{
@@ -35,16 +35,22 @@ export const Login = ()=>{
             const res = await axios.post('http://localhost:5000/api/users/login', {email,password})
             alert(`${res.data.name}님, ${res.data.message}`)
 
+            const expiryTime = Temporal.Now.instant().add({hours:1});
+            // const expiryTime = now+ (1000 * 60 * 60) //밀리초 *60초 *60분
+            
             //✨❄️ 로그인후 저장된 이름이 보이게 하려면 ❄️
             localStorage.setItem('userName', res.data.name);
-            
+
+            localStorage.setItem('loginExpiry', expiryTime.toString());
+
             if(rememberme){
                 localStorage.setItem('savedEmail', email.trim());
             }else{
                 localStorage.removeItem('savedEmail');
             }
-            navigate('/admin') //화면전환
 
+            navigate('/admin') //화면전환
+            
         }catch(err:any){
             if(err.response && err.response.data){
                 alert(err.response.data.message);

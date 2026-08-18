@@ -139,7 +139,7 @@ export const TopBar:React.FC = ()=>{
                             <span>{userName}</span>
                             <img src={profileImage} alt='프로필 이미지'/>
                         </S.UserProfileToggle>
-                        <S.DropdownMenu $isOpen={!isDropdownOpen}>
+                        <S.DropdownMenu $isOpen={isDropdownOpen}>
                             <S.DropdownItem>
                                 <i className="fas fa-user fa-sm fa-fw"></i>
                                 프로필
@@ -230,3 +230,131 @@ topbarcontainer
 
 
 */
+
+/*
+import React from 'react';
+import styled from 'styled-components';
+
+const TopbarContainer = styled.nav`
+  height: 70px;
+  background-color: #ffffff;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`;
+
+const ToggleButton = styled.button`
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #858796;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: #eaecf4;
+    color: #4e73df;
+  }
+
+  /* 데스크탑 화면에서는 숨기고 모바일에서만 보이고 싶다면 아래 주석 해제 */
+  /* @media(min-width: 768px) {
+    display: none;
+  } 
+`;
+
+const TopbarRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  .user-info {
+    font-size: 14px;
+    color: #5a5c69;
+    font-weight: 600;
+  }
+`;
+
+export default function Topbar({ onToggle }) {
+  return (
+    <TopbarContainer>
+      {/* 왼쪽: 모바일/사이드바 토글 버튼 
+      <ToggleButton onClick={onToggle} aria-label="Toggle Sidebar">
+        <i className="fa fa-bars"></i>
+      </ToggleButton>
+
+    //   {/* 오른쪽: 사용자 정보 또는 알림 아이콘 등 
+      <TopbarRight>
+        <div className="user-info">관리자님 환영합니다!</div>
+        {/* 필요한 경우 프로필 이미지나 로그아웃 버튼 추가 가능 
+      </TopbarRight>
+    </TopbarContainer>
+  );
+}
+* */
+
+
+/*2. 메인 화면(Layout)에 탑바 연결하기
+사이드바와 탑바가 함께 조화를 이루려면, 
+전체 페이지 레이아웃 구조를 아래처럼 잡아주어야 합니다.
+보통 대시보드 레이아웃은 [사이드바] + [우측 영역(탑바 + 본문 콘텐츠)] 구조로 짭니다.
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Sidebar from './Sidebar'; // 기존에 만든 사이드바
+import Topbar from './Topbar'; // 방금 만든 탑바
+
+const AppLayout = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: #f8f9fc;
+`;
+
+const PageBody = styled.div`
+  padding: 20px;
+`;
+
+export default function DashboardLayout() {
+  const [isOpen, setIsOpen] = useState(true); // 사이드바 열림/닫힘 상태
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <AppLayout>
+      {/* 1. 사이드바 
+      <Sidebar isOpen={isOpen} />
+
+      {/* 2. 우측 메인 영역 (탑바 + 실제 페이지 내용) 
+      <MainContent>
+        <Topbar onToggle={handleToggle} />
+        
+        <PageBody>
+          {/* 여기에 캠페인 등록 폼이나 홈 화면 콘텐츠가 들어갑니다! 
+          <h2>캠페인 대시보드</h2>
+        </PageBody>
+      </MainContent>
+    </AppLayout>
+  );
+}
+
+
+ */

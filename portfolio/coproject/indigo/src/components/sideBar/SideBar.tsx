@@ -1,11 +1,28 @@
-import React from "react"
-import { SideBarContainer,SideBarBrand,NavLink,NavItem,Divider } from "./SideBar.styles"
+import React, { useState } from "react"
+import {
+    SideBarContainer,
+    SideBarBrand,
+    NavLink,NavItem,
+    Divider, 
+    SidebarWrapper,
+    ToggleButton} from "./SideBar.styles"
+
+
+
 export const SideBar:React.FC = ()=>{
 
+    const [isOpen, setIsOpen]=useState(true);
+
+    //버튼 클릭시 상태를 반대로 바꾸는 함수
+
+    const ToggleSidebar = ()=>{
+        setIsOpen(!isOpen);
+    }
 
     return(
         <>
-        <SideBarContainer className="sidebar sidebar-dark accordion">
+    <SidebarWrapper $isOpen={isOpen}>
+        <SideBarContainer $isOpen={isOpen} className="sidebar sidebar-dark accordion">
             {/*메뉴 접기/펴기 동작 연결용 */}
             <SideBarBrand href="/">
                 <div className="sidebar-brand-icon rotate-n-15">
@@ -88,9 +105,12 @@ export const SideBar:React.FC = ()=>{
             </NavItem>
 
             <Divider className="mt-2"/>
-        
         </SideBarContainer>
-    
+        
+        <ToggleButton onClick={ToggleSidebar}>
+            <i className={isOpen ? 'fas fa-chevron-left': 'fas fa-chevron-right'}></i>
+        </ToggleButton>
+    </SidebarWrapper>
         </>
     )
 }

@@ -1,5 +1,6 @@
 import { BrowserRouter,Routes,Route } from "react-router-dom"
 
+import { ProtectedRoute } from "./admin/ProtectedRoute"
 //admin
 import { DashBoard } from "./admin/DashBoard"
 
@@ -35,18 +36,20 @@ function App() {
         </div>
       }/>
       {/* admin에 못들어가게 토큰...설정해야함... */}
-      <Route path="/admin" element={<DashBoard/>}/>
+      <Route path="/admin" element={
+        <ProtectedRoute><DashBoard/></ProtectedRoute>}/>
       <Route path="/join" element={<Join/>}/> 
       <Route path="/login" element={<Login/>}/>
-      <Route path="/userlist" element={<UserList/>}/>
-      <Route path="/hdsetting" element={<HeaderSetting/>}/>
-      <Route path="/bnsetting" element={<BannerSetting/>}/>
-      <Route path="/wesetting" element={<WeareSetting/>}/>
-      <Route path="/wksetting" element={<WorkSetting/>}/>
-      <Route path="/blogsetting" element={<BlogSetting/>}/>
-      <Route path="/contsetting" element={<ContactSetting/>}/>
-      <Route path="/mapsetting" element={<MapSetting/>}/>
-      <Route path="/search" element={<SearchResult/>}/>
+      <Route path="/userlist" element={<ProtectedRoute><UserList/></ProtectedRoute>}/>
+
+      <Route path="/hdsetting" element={<ProtectedRoute><HeaderSetting/></ProtectedRoute>}/>
+      <Route path="/bnsetting" element={<ProtectedRoute><BannerSetting/></ProtectedRoute>}/>
+      <Route path="/wesetting" element={<ProtectedRoute><WeareSetting/></ProtectedRoute>}/>
+      <Route path="/wksetting" element={<ProtectedRoute><WorkSetting/></ProtectedRoute>}/>
+      <Route path="/blogsetting" element={<ProtectedRoute><BlogSetting/></ProtectedRoute>}/>
+      <Route path="/contsetting" element={<ProtectedRoute><ContactSetting/></ProtectedRoute>}/>
+      <Route path="/mapsetting" element={<ProtectedRoute><MapSetting/></ProtectedRoute>}/>
+      <Route path="/search" element={<ProtectedRoute><SearchResult/></ProtectedRoute>}/>
       
 
 

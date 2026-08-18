@@ -222,7 +222,7 @@ export default function HomePage (){
             <S.CampaignCard key={item.id}>
               <S.CampaignMediaWrap onClick={() =>setSelectedYoutubeUrl(item.mediaUrl)}>
                 <S.CampaignImg src={item.thumbnailUrl} alt={item.title}/>
-                {item.thumbnailUrl && (
+                {item.mediaType !== 'IMAGE' && (
                   <>
                   <S.PlayIconWrap>
                     <PlayArrow style={{fontSize:"18px"}}/>

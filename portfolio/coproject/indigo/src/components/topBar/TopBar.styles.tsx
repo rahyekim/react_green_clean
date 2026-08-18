@@ -54,8 +54,8 @@ transition: all 0.3s ease-in-out;
 &:focus {   
     
     background-color: #fff;
-    border-color: #6366f1; 
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
+    border-color: #4e73df; 
+    /* box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);  */
   }
 `;
 export const SearchResultWrap= styled.div`
@@ -141,7 +141,7 @@ width: 12rem;
 background-color: #fff ;
 border-radius: 0.35rem ;
 box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.2);
-border: 1px solid #f0dbf1;
+border: 1px solid #eee;
 z-index: 999;
 animation: fadein .2s ease-in-out;
 
@@ -178,7 +178,7 @@ i{
 
 &:hover{
     border-radius: 5px;
-    background-color: #f8f9fc;
+    /* background-color: #f8f9fc; */
     color: #2e59d9;
     i{
         color: #2e59d9;
