@@ -41,15 +41,15 @@ public class AdoptionCampaignController {
     public ResponseEntity<?> registerCampaign(
             @RequestBody AdoptionCampaignRequest Request,
             HttpServletRequest httpRequest) {
-        //세션 검사( 신분확인단계)
-        HttpSession session = httpRequest.getSession(false);
-        //접속한사람이 세션(신분증)없으면 새로만들지말고(false) 그냥 없다고(null)해라
-        if (session == null || session.getAttribute("adminName") == null) {
-            //세션자체가 없거나, adminNAme이라는 관리자신분증이 없다면 실행되는 조건문
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    new AdoptionCampaignResponse("관리자 로그인이 필요한 서비스입니다"));
-
-        }
+//        //세션 검사( 신분확인단계)
+//        HttpSession session = httpRequest.getSession(false);
+//        //접속한사람이 세션(신분증)없으면 새로만들지말고(false) 그냥 없다고(null)해라
+//        if (session == null || session.getAttribute("adminName") == null) {
+//            //세션자체가 없거나, adminNAme이라는 관리자신분증이 없다면 실행되는 조건문
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+//                    new AdoptionCampaignResponse("관리자 로그인이 필요한 서비스입니다"));
+//
+//        }
         try {
             //서비스에 요청(request) 데이터를 넘겨서 DB에 저장하라고 시킴
             adoptionCampainService.registerCampaign(Request);

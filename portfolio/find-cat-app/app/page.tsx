@@ -26,6 +26,19 @@ interface Animal{
   imageUrl: string;
 }
 
+//🔹백엔드에서 넘어올 캠페인 데이터 정의
+interface Campaign{
+  id:number,
+  hashtag: string,
+  title: string,
+  content: string,
+  thumbnailUrl: string,
+  mediaUrl: string,
+  mediaType: string,
+}
+
+//🔹탭에 보여줄 해시태그 목록(배열관리)
+const campaignHashtags = ['#제주입양', '#임시보호', '#치료지원','#입양홍보', '#구조스토리' ]
 
 export default function HomePage (){
  
@@ -36,6 +49,12 @@ export default function HomePage (){
   //해시태그 상태관리 (기본값으로 #제주입양 선택)
   const [activeHashtag, setActiveHashtag]=useState('#제주입양');
 
+  //🔹추가 캠페인리스트 상태관리
+  const [campaigns, setCampaigns]=useState<Campaign[]>([]);
+  const [isCampaignLoading, setIsCampaignLoading]=useState(true)
+  
+  //어떤영상보여줄지관리하는상태 추가
+  const [selectedYoutubeUrl , setSelectedYoutubeUrl]=useState<string>()
   useEffect(()=>{
 
     fetch('/api/animals/recommended')
@@ -52,8 +71,27 @@ export default function HomePage (){
     
   },[]);
 
+  // 캠페인 데이터 불러오기 (activeHashtag 가 바뀔때마다 실행)
+  useEffect(()=>{
+    setIsCampaignLoading(true);
+
+    const url=`/api/campaigns?hashtag=${encodeURIComponent(activeHashtag)}`
+   
+      fetch(url).then((res)=>{
+        if(!res.ok) throw new Error('캠페인 네트워크 응답이 정상이 아닙니다');
+        return res.json();
+      }).then(data=>{
+        setCampaigns(data);
+        setIsCampaignLoading(false);
+      }).catch(err=>{
+        console.error("캠페인 API호출에러", err);
+        alert('캠페인 불러오기 실패')
+      })
+  }, [activeHashtag])
+
+
   // 💡 2. 사진과 완벽히 똑같이 보일 테스트용 데이터! (나중에는 백엔드에서 받아오게 됩니다)
-  const campaignHashtags = ['#제주입양', '#외부기생충예방', '#사료건강', '#위생'];
+  // const campaignHashtags = ['#제주입양', '#외부기생충예방', '#사료건강', '#위생'];
   const mockCampaigns = [
     {
       id: 1,
@@ -173,11 +211,18 @@ export default function HomePage (){
         </S.HashTagScroll>
 
         <S.HorizontalScroll>
-          {mockCampaigns.map(item=>(
+          {/*캠페인 ?????*/}
+          {isCampaignLoading ? (
+            <S.StatusText>캠페인을 불러오는 중입니다</S.StatusText>
+          ) : (
+            campaigns.length === 0 ? (
+          <S.StatusText>해당 해시태그의 캠페인이 없습니다</S.StatusText>
+          ) : (
+            campaigns.map(item=>(
             <S.CampaignCard key={item.id}>
-              <S.CampaignMediaWrap>
-                <S.CampaignImg src={item.imageUrl} alt={item.title}/>
-                {item.isVideo && (
+              <S.CampaignMediaWrap onClick={() =>setSelectedYoutubeUrl(item.mediaUrl)}>
+                <S.CampaignImg src={item.thumbnailUrl} alt={item.title}/>
+                {item.thumbnailUrl && (
                   <>
                   <S.PlayIconWrap>
                     <PlayArrow style={{fontSize:"18px"}}/>
@@ -190,11 +235,13 @@ export default function HomePage (){
                   {item.title}
                 </S.CampaignCardtitle>
                 <S.CampaignCardDesc>
-                  {item.desc}
+                  {item.content}
                 </S.CampaignCardDesc>
               </S.CampaignTextWrap>
             </S.CampaignCard>
-          ))}
+          )
+        )))}
+          
         </S.HorizontalScroll>
       </S.Section>
 
@@ -227,3 +274,46 @@ export default function HomePage (){
     </>
   )
 }
+
+/*
+모달 컴포넌트 띄우기
+React-Bootstrap의 Modal을 사용하면 아주 쉽게 구현할 수 있습니다. return 문 가장 마지막(</S.AppWrapper> 안쪽)에 아래 코드를 추가해 보세요.
+
+TypeScript
+import { Modal } from 'react-bootstrap'; // 필요한 경우 import
+
+// ... return 문 안쪽 ...
+<Modal 
+  show={!!selectedVideoUrl} 
+  onHide={() => setSelectedVideoUrl(null)} 
+  centered
+  size="lg"
+>
+  <Modal.Body style={{ padding: 0 }}>
+    {selectedVideoUrl && (
+      <iframe
+        width="100%"
+        height="400"
+        src={`https://www.youtube.com/embed/${extractYoutubeId(selectedVideoUrl)}`}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+    )}
+  </Modal.Body>
+</Modal>
+여기서 알아두어야 할 꿀팁!
+유튜브 임베드 URL 규칙:
+[https://www.youtube.com/watch?v=ID](https://www.youtube.com/watch?v=ID) 형태의 주소를 그대로 iframe에 넣으면 영상이 뜨지 않습니다. 유튜브는 항상 [https://www.youtube.com/embed/ID](https://www.youtube.com/embed/ID) 형태의 주소를 요구합니다. 그래서 extractYoutubeId(url)을 한 번 더 써서 ID만 추출한 뒤 저 주소 형식을 만들어주는 것이 핵심입니다!
+
+모달 닫기:
+onHide={() => setSelectedVideoUrl(null)}를 설정하면 모달 바깥 배경을 누르거나 Esc 키를 눌렀을 때 영상이 깔끔하게 꺼지고 상태값도 비워집니다.
+
+반응형:
+width="100%"와 size="lg"를 사용하면 모바일에서도 모달이 화면 크기에 맞춰서 적절하게 잘 나타날 거예요.
+
+이렇게 하면 사용자가 썸네일을 톡 누르는 순간, 바로 영상이 재생되는 멋진 입양 캠페인 기능을 완성하실 수 있습니다! 바로 적용해 보시겠어요?
+
+
+ */
