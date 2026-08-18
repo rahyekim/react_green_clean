@@ -72,7 +72,7 @@ export const Login = ()=>{
                     <Card className="o-hidden border-0 shadow-lg my-5">
                         <Card.Body className="p-0">
                             <Row>
-                                <Col lg={6} className="d-none d-lg-block bg-login-image"></Col>
+                                <Col lg={6} className="d-none d-lg-block bg-login-image "></Col>
                                 <Col lg={6}>
                                 <div className="p-5">
                                     <div className="text-center">
@@ -115,10 +115,6 @@ export const Login = ()=>{
                                                 onChange={e=>setRememberme(e.target.checked)}
                                                 
                                                 />
-                                                {/* <label className="custom-control-label"
-                                                htmlFor="customCheck">
-                                                    Remember me
-                                                </label> */}
                                             </div>
                                             
                                             {/*로그인 버튼 */}

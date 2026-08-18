@@ -1,6 +1,7 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import axios from 'axios'
-
+import { Temporal } from "@js-temporal/polyfill";
+import { Navigate } from "react-router-dom";
 import { Layout } from "../../components/layout/Layout";
 import * as S from "../css/sub.styled"
 import { useSearchParams } from "react-router-dom";
@@ -199,5 +200,34 @@ export const SearchResult = ()=>{
     
     
     
+}
+type props={
+    children: React.ReactNode;
+}
+export const ProtectedRoute = ({children}:props)=>{
+
+    const userName = localStorage.getItem('userName');
+    const expiryStr = localStorage.getItem('loginExpiry');
+
+    if(!userName || !expiryStr){
+        alert('');
+        return <Navigate to='/login' replace/>
+    }
+
+    const expiryTime = Temporal.Instant.from(expiryStr);
+
+    const now = Temporal.Now.instant();
+
+    if(Temporal.Instant.compare(now,expiryTime)>=0){
+        alert('')
+        localStorage.removeItem('')
+        return <Navigate to='/login' replace/>
+    }
+
+    return(
+        <>
+        {children}
+        </>
+    )
 }
 

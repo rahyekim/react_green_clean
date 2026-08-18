@@ -2,6 +2,11 @@ import { useState } from "react"
 import { Navigate } from 'react-router-dom'
 import { Temporal } from "@js-temporal/polyfill";
 
+// type props={
+//     children: React.ReactNode;
+// }
+// {children}:props 와 같음 
+
 export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
 
     //1.브라우저 금고(localStorage)에서 로그인정보(userName)를 꺼냄

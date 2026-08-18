@@ -66,20 +66,21 @@ export const TopBar:React.FC = ()=>{
     }
 
     //2.화면이 처음 켜질때 딱 한번만 실행
-    useEffect(()=>{
-        //로그인할때 저장해둔 'userName'을 브라우저저장소(localstorage)에서 꺼내옴
-        const storeName = localStorage.getItem('userName')
-        //만약 저장된 이름이 있다면. 상태를 그 이름으로 업데이트
-        if (storeName){
-            setUserName(storeName);
-        }
-    }, [])
+    // useEffect(()=>{
+    //     //로그인할때 저장해둔 'userName'을 브라우저저장소(localstorage)에서 꺼내옴
+    //     const storeName = localStorage.getItem('userName')
+    //     //만약 저장된 이름이 있다면. 상태를 그 이름으로 업데이트
+    //     if (storeName){
+    //         setUserName(storeName);
+    //     }
+    // }, [])
 
     //로그아웃 버튼 눌렀을때 실행되는 함수
     const handleLogout = ()=>{
 
         //1.브라우저금고(localstorage)에서 'userName'데이터를 완전히 지움
         localStorage.removeItem('userName'); //토큰도필요...
+        localStorage.removeItem('loginExpiry');
 
         //2.로그인 페이지('/login')로 사용자를 이동시킴
         navigate('/login');
@@ -139,6 +140,7 @@ export const TopBar:React.FC = ()=>{
                             <span>{userName}</span>
                             <img src={profileImage} alt='프로필 이미지'/>
                         </S.UserProfileToggle>
+                        
                         <S.DropdownMenu $isOpen={isDropdownOpen}>
                             <S.DropdownItem>
                                 <i className="fas fa-user fa-sm fa-fw"></i>

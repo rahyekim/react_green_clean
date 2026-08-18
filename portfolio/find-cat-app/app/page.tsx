@@ -54,7 +54,8 @@ export default function HomePage (){
   const [isCampaignLoading, setIsCampaignLoading]=useState(true)
   
   //어떤영상보여줄지관리하는상태 추가
-  const [selectedYoutubeUrl , setSelectedYoutubeUrl]=useState<string>()
+  const [selectedYoutubeUrl , setSelectedYoutubeUrl]=useState<string>('');
+
   useEffect(()=>{
 
     fetch('/api/animals/recommended')
@@ -221,15 +222,19 @@ export default function HomePage (){
             campaigns.map(item=>(
             <S.CampaignCard key={item.id}>
               <S.CampaignMediaWrap onClick={() =>setSelectedYoutubeUrl(item.mediaUrl)}>
-                <S.CampaignImg src={item.thumbnailUrl} alt={item.title}/>
+                <S.CampaignImg 
+                  src={item.thumbnailUrl} 
+                  alt={item.title}/>
+
                 {item.mediaType !== 'IMAGE' && (
-                  <>
-                  <S.PlayIconWrap>
-                    <PlayArrow style={{fontSize:"18px"}}/>
-                  </S.PlayIconWrap>
-                  </>
+                
+                <S.PlayIconWrap>
+                  <PlayArrow style={{fontSize:"18px"}}/>
+                </S.PlayIconWrap>
+                
                 )}
               </S.CampaignMediaWrap>
+              
               <S.CampaignTextWrap>
                 <S.CampaignCardtitle>
                   {item.title}
@@ -275,6 +280,12 @@ export default function HomePage (){
   )
 }
 
+
+/*
+ 1. 로딩 중일 때 {isCampaignLoading && () }
+ 2. 로딩이 끝났고, 데이터가 없을 때 {!isCampaignLoading && campaigns.length === 0 && ()}
+ 3. 로딩이 끝났고, 데이터가 있을 때 {!isCampaignLoading && campaigns.length > 0 && ()}
+ */
 /*
 모달 컴포넌트 띄우기
 React-Bootstrap의 Modal을 사용하면 아주 쉽게 구현할 수 있습니다. return 문 가장 마지막(</S.AppWrapper> 안쪽)에 아래 코드를 추가해 보세요.

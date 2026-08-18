@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate,Link } from "react-router-dom";
+import { Temporal } from "@js-temporal/polyfill";
 import { Container, Row,Col,Button,Card,Form } from "react-bootstrap";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,10 +27,7 @@ const [rememberme, setRememberme] = useState(() => {
     // 처음 들어왔을 때 'Remember me' 체크박스도 체크된 상태로 시작하게 하면 센스 있겠죠?
     return !!localStorage.getItem('savedEmail');
 });
-
-  
  
-
     // useEffect(() => {
     // const savedId = localStorage.getItem('savedId');
     // if (savedId) {
@@ -53,8 +51,12 @@ const [rememberme, setRememberme] = useState(() => {
             const res  = await axios.post("http://localhost:5000/api/users/login", {email,password})
             alert(`${res.data.name}님 , ${res.data.message}`)
 
+            const expiryTime= Temporal.Now.instant().add({hours:1});
+
             //✨로그인후 저장된 이름이 보이게 
             localStorage.setItem('userName', res.data.name)
+
+            localStorage.setItem('loginExpiry', expiryTime.toString())
             
         // 2. 로그인 시 체크박스 상태에 따라 LocalStorage 처리
             if (rememberme) {

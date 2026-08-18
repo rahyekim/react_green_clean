@@ -143,16 +143,16 @@ border-radius: 0.35rem ;
 box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.2);
 border: 1px solid #eee;
 z-index: 999;
-animation: fadein .2s ease-in-out;
+animation: fadeIn .2s ease-in-out; //연출⭐
 
-@keyframes fadeIn{
+@keyframes fadeIn{ //시나리오⭐
     from {   //시작지점
         opacity: 0;  //투명
-        transform: translateY(-10px); //위쪽으로 10px둥둥
+        transform: translateY(-20px); //위쪽으로 20px 올라가있음
     } 
     to{ 
         opacity: 1; 
-        transform: translateY(0); //제자리로
+        transform: translateY(0); //0.2s후에제자리로
     }
 }
 `;
@@ -164,6 +164,7 @@ animation: fadein .2s ease-in-out;
 export const DropdownItem= styled.div`
 display: flex;
 align-items: center;
+
 width: 100%;
 padding: 0.5rem 1.5rem;
 font-size: 0.85rem;
@@ -177,7 +178,7 @@ i{
 }
 
 &:hover{
-    border-radius: 5px;
+    /* border-radius: 5px; */
     /* background-color: #f8f9fc; */
     color: #2e59d9;
     i{
@@ -188,7 +189,7 @@ i{
 //메뉴사이의 얇은 실선(구분선)
 export const DropdownDivider= styled.div`
 height: 0;
-margin: 0.5rem 0.5rem;
+margin: 0.5rem;
 overflow: hidden;
 border-top: 1px solid #eaecf4;
 `;

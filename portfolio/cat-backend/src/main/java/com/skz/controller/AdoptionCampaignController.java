@@ -26,7 +26,7 @@ public class AdoptionCampaignController {
 
     //프론트에서 데이터를 달라고하는 http get요청이 오면 이 메서드를 실행
     @GetMapping
-    public List<AdoptionCampaign> getCampaigns(@RequestParam(required = false) String hashtag) {
+    public List<AdoptionCampaign> getCampaigns(@RequestParam(name = "hashtag", required = false) String hashtag) {
         if (hashtag != null && !hashtag.trim().isEmpty()) {
             //hashtag값을 보냇고(null이아님) 빈칸만 보낸게 아니라면(글자가진짜로있다면)
             return adoptionCampainService.getCampaignByHashTag(hashtag);

@@ -44,6 +44,8 @@ export const TopBar:React.FC = ()=>{
     //로그아웃
     const handleLogout = ()=>{
         localStorage.removeItem('uerName')
+        localStorage.removeItem('loginExpiry');
+
         navigate('/login')
     }
 

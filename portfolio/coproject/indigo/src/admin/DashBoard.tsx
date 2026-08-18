@@ -169,13 +169,28 @@ export const DashBoard:React.FC = ()=>{
                         <Card.Body style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <ResponsiveContainer>
                                 <PieChart>
-                                    <Pie data={stats.claimRate} cx='50%' cy='50%'
-                                    innerRadius={60} outerRadius={90} paddingAngle={5}
-                                    dataKey='value' label
+                                    <Pie
+                                    activeShape={{
+                                        outerRadius: 96, 
+                                      }}
+                                    data={stats.claimRate} cx='50%' cy='50%'
+                                    innerRadius={60} outerRadius={90} paddingAngle={4}
+                                    dataKey='value' 
+                                    // label
                                     >{stats.claimRate.map((entry:any, idx:number)=>(
                                         <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]}/>
                                     ))}</Pie>
-                                    <Tooltip/>
+                                    <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: '8px',
+                                        border: '1px solid #e2e8f0',
+                                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                                        fontSize: '13px',
+                                        padding: '8px 12px',
+                                      }}
+                                      formatter={(value: any) => [`${value}건`, '건수']}
+                                    />
                                     <Legend verticalAlign="bottom" height={36}/>  
                                 </PieChart>
                             </ResponsiveContainer>
@@ -184,6 +199,45 @@ export const DashBoard:React.FC = ()=>{
                 </Col>
             </Row>
           </A.AdminContainer>
+          
+          <A.GridRow>
+                <A.CardColumn>
+                    <A.StatCard $borderColor="#4e73df">
+                        <A.CardBody>
+                            <div className="">
+                                <div
+                                className="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Earnings (Monthly)                                    
+                                </div>
+
+                                <div className="h5 mb-0 font-weight-bold text-gray-800">
+                                    $4,000
+                                </div>
+                            </div>
+                         
+                            <div className="col-auto"> 
+                                <i className="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </A.CardBody>
+                    </A.StatCard>
+                </A.CardColumn>
+
+                <A.CardColumn>
+                    <A.StatCard $borderColor="#1cc88a">
+                        <A.CardBody>
+                            <div>
+                                <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Earnings (Annual)                                    
+                                </div>
+                                 <div className="h5 mb-0 font-weight-bold text-gray-800">
+                                    $215,000
+                                </div>
+                            </div> 
+                        </A.CardBody>
+
+                    </A.StatCard>
+                </A.CardColumn>
+            </A.GridRow>
         </Layout>
         </>
     )

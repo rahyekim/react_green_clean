@@ -10,6 +10,10 @@ import axios from "axios";
 //세션(쿠키)기반 관리자 인증을 위해
 axios.defaults.withCredentials = true;
 
+const HASHTAG_LIST=[
+    '#제주입양', '#임시보호', '#치료지원', '#입양홍보', '#구조스토리'
+   ]
+
 export default function AdoptionCampaignAdmin(){
 
     
@@ -126,9 +130,7 @@ export default function AdoptionCampaignAdmin(){
         }
     }
 
-    const HASHTAG_LIST=[
-     '#제주입양', '#임시보호', '#치료지원', '#입양홍보', '#구조스토리'
-    ]
+  
     return(
         <>
         <Layout>
