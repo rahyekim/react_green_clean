@@ -8,7 +8,8 @@ require('dotenv').config();  //환경변수를 읽어서 프로그램에 적용
 
 // const db = require('./db'); //직접만든 오라클 DB연결 파일(db.js)를 불러와서 사용
 const AppDataSource = require('./db');
-const User = require('./user.schema'); // 아까 만든 User 엔티티 스키마 파일
+// const User = require('./user.schema'); // 아까 만든 User 엔티티 스키마 파일
+const User = require('./src/entity/User');
 
 const app = express(); // Express 기능을 사용할수있도록 app이라는 서버 객체 만들어줌
 

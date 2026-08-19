@@ -4,13 +4,181 @@ import styled from 'styled-components' // next.comfig.ts 에 compiler 추가
 
 export const Wrapper= styled.div`
 width: 100%;
+max-width: 800px;
+margin: 0 auto;
+padding: 40px 20px;
 `;
-export const StepNav= styled.div`
+export const StepContainer= styled.div`
 display: flex;
-`;
-export const StepItem= styled.div<{$active?:boolean; $hasBorder?:boolean}>`
+align-items: center;
+justify-content: center;
+margin-bottom: 50px;
 
 `;
+
+export const Step = styled.div<{$active:boolean}>`
+display: flex;
+align-items: center;
+gap: 8px;
+
+`;
+
+export const StepNumber= styled.div<{$active?:boolean}>`
+width: 24px;
+height: 24px;
+border-radius: 50%;
+background-color: ${({$active})=> $active ? '#111': '#f0f0f0'};
+color: ${({$active})=>$active ? '#fff': '#999'};
+font-size: 13px;
+font-weight: bold;
+
+display: flex;
+align-items: center;
+justify-content: center;
+`;
+
+export const StepText= styled.span<{$active:boolean}>`
+font-size: 16px;
+font-weight: ${({$active})=>$active ? 'bold' : 'normal'};
+color: ${({$active})=> $active ? '#000':'#999'} ;
+text-decoration: ${({$active})=> $active ? 'underline' : 'none'};
+text-underline-offset: 4px; //offset 글자와 밑줄간격
+`;
+
+export const StepDivider= styled.div`
+width: 40px;
+height: 1px;  //0px?
+border-bottom: 1px dashed #ccc;
+margin: 0 15px;
+`;
+
+export const CheckAllWrapper= styled.div`
+border-top: 1px solid #e5e5e5;
+border-bottom: 1px solid #e5e5e5;
+padding: 20px 0;
+margin-bottom: 30px;
+`;
+export const CheckboxLabel = styled.label`
+display: flex;
+align-items: center;
+gap: 10px;
+cursor: pointer;
+`;
+
+// 🌟커스텀 사각 체크박스 디자인🌟
+export const CheckboxInput= styled.input`
+appearance: none; //기존꺼 숨김
+flex-shrink: 0;
+
+width: 20px;
+height: 20px;
+border: 1px solid #d1d5db;
+border-radius: 2px;
+background-color: #fff;
+cursor: pointer;
+position: relative;
+&:checked{
+    border-color: #111;
+}
+/* 체크시 나타나는 v마크 */
+&:checked::after{
+    content: '✔';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); // 🏖️ 가운데정렬공식
+    color: #181818;
+    font-size:14px;
+}
+`;
+export const CheckAllText= styled.span`
+font-size: 16px;
+font-weight: bold;
+color: #111;
+`;
+export const TermSection= styled.div`
+margin-bottom: 30px;
+`;
+export const TermHeader= styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 15px;
+`;
+export const TermTitle= styled.span`
+font-size: 15px;
+color: #444;
+`;
+export const ToggleButton= styled.button`
+background: none;
+border: none;
+color: #666;
+font-size: 14px;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 4px;
+`;
+
+export const TermContentBox = styled.div<{$isOpen:boolean}>`
+display: ${({$isOpen})=>$isOpen ? 'block': 'none'};
+width: 100%;
+height: 140px;
+overflow-y: auto;
+border: 1px solid #e5e5e5;
+border-radius: 6px;
+padding: 20px;
+font-size: 13px;
+color: #666;
+background-color: #fff;
+line-height: 1.6; //160%
+white-space: pre-wrap; 
+
+/* 박스 내부 스크롤바만 커스텀 */
+&::-webkit-scrollbar {
+    width: 4px;
+}
+
+&::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    border-radius: 25px;
+}
+
+`;
+
+/*
+페이지에서 글자의 띄어쓰기, 들여쓰기, 줄바꿈을 코드에 적은 그대로 유지하면서
+글쓴 내용이 화면상자 크기를 넘어가면 자동으로 다음줄로 넘겨주는 css속성
+ */
+
+export const ButtonGroup= styled.div`
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-top: 60px;
+`;
+export const Button= styled.button<{$variant:'outline'|'solid'}>`
+width: 180px;
+height: 54px;
+font-size: l6px;
+font-weight: bold;
+border-radius: 4px;
+cursor: pointer;
+transition: all .2s;
+background-color: ${({$variant})=>$variant === 'outline' ? '#fff': '#000'};
+border: 1px solid; //자동으로 검은색#000 
+color: ${({$variant})=>$variant === 'outline' ? '#000' : '#fff'};
+
+&:hover{
+    background-color: ${({$variant})=>$variant === 'outline' ? '#f9f9f9': '#333'};
+}
+
+@media (max-width:480px){
+    width: 100%;
+}
+`;
+//export const = styled.div``;
+//export const = styled.div``;
 export const Container= styled.div`
 
 `;
@@ -26,9 +194,7 @@ export const SectionTitle= styled.h3`
 export const TermsBox= styled.div<{$bg?:string}>`
 
 `;
-export const CheckBoxLabel= styled.label`
 
-`;
 export const Checkbox= styled.input<{$isLarge?:boolean}>`
 
 `;
@@ -38,13 +204,9 @@ export const TotlAgreeText= styled.span`
 export const AgreeText= styled.span`
 
 `;
-export const ButtonGroup= styled.div`
 
-`;
-export const Button= styled.button<{$variant:'primary'|'secondary'}>`
-
-
-`;
+//export const = styled.div``;
+//export const = styled.div``;
 //export const = styled.div``;
 //export const = styled.div``;
 
