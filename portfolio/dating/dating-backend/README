@@ -1,0 +1,52 @@
+
+##빽설치
+npm init -y
+npm install express cors mysql2 dotenv
+
+## 프론트 플러터 설치 ( 구글이 만든 안드로이드 맥 알아서 변환해주는 크로스 플랫폼 앱 개발 프레임워크 )
+winget install flutter 
+
+윈도우설치 => 환경변수 bin까지 => 익스텐젼 flutter 설치 
+flutter config --enable-web
+flutter create dating_web
+폴더들어가서
+flutter run -d chrome
+flutter pub add http flutter_card_swiper
+------------------------------------------------
+
+CREATE DATABASE dating_db CHARACTER SET UTF8MB4 COLLATE  UTF8MB4_UNICODE_CI;
+
+
+USE dating_db;
+
+CREATE TABLE users (
+id INT AUTO_INCREMENT PRIMARY KEY,
+email VARCHAR(255) NOT NULL UNIQUE,
+password_hash VARCHAR(255) NOT NULL,
+nickname VARCHAR(50) NOT NULL,
+gender ENUM('M','F','OTHER') NOT NULL,
+birthdate DATE NOT NULL ,
+bio TEXT,
+created_at TIMESTAMP DEFAULT current_timestamp
+);
+
+CREATE TABLE user_photos(
+id INT AUTO_INCREMENT PRIMARY KEY,
+user_id INT NOT NULL,
+photo_url VARCHAR(500) NOT NULL,
+is_main BOOLEAN DEFAULT FALSE,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE dating_dbdating_dbusersuser_photos
+);
+
+
+CREATE TABLE matches(
+id INT AUTO_INCREMENT PRIMARY KEY,
+sender_id INT NOT NULL,
+receiver_id INT NOT NULL,
+action ENUM('LIKE','DISLIKE') NOT NULL,
+is_matched BOOLEAN DEFAULT FALSE,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE,
+UNIQUE KEY unique_interaction (sender_id, receiver_id)
+);

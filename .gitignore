@@ -76,3 +76,61 @@ Thumbs.db
 *.suo
 *.user
 *.lock
+
+
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication
+app.*.symbols
+
+# Obfuscation
+app.*.mapping
+
+# Android related
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+
+# iOS related
+**/ios/Flutter/App.framework
+**/ios/Flutter/App.msix
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/DerivedData/
+**/ios/.symlinks/
+
+# Web related
+**/web/favicon.png
+**/web/icons/
+
+# 윈도우 앱 관련 빌드 폴더 추가
+**/windows/flutter/ephemeral/
+**/windows/out/
+
+
+# --- 플러터 관련 무시 설정 ---
+dating_web/.dart_tool/
+dating_web/.flutter-plugins
+dating_web/.flutter-plugins-dependencies
+dating_web/.pub/
+dating_web/.pub-cache/
+dating_web/build/
+dating_web/windows/flutter/ephemeral/
+dating_web/windows/out/
+
+# --- 플러터 폴더 전체 무시 (확실하게) ---
+dating_web/android/
+dating_web/ios/
+dating_web/build/
+dating_web/.dart_tool/
+dating_web/.pub/
+dating_web/.pub-cache/
