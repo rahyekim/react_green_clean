@@ -1,13 +1,11 @@
 'use client'
 import React, { useState, useEffect } from "react"
-import { useRouter } from "next/navigation";
 
 import * as S from '../../../style/Sub.styles'
 
 export default function TermsPage (){
 
-    const router = useRouter();
-
+    const[allAgreed, setAllagreed]= useState(false);
     const [termsAgreed, setTermsAgreed]=useState(false);
     const [privacyAgreed, setPrivacyAgreed]=useState(false);
 
@@ -15,35 +13,32 @@ export default function TermsPage (){
     const [isTermsOpen, setIsTermsOpen]=useState(true);
     const [isPrivacyOpen, setIsPrivacyOpen]=useState(true);
 
-    //필수 항목이 모두 동의되었는지 확인(파생된 상태)
-    const isAllagreed = termsAgreed && privacyAgreed;
+    useEffect(()=>{
+        if(termsAgreed && privacyAgreed){
+            setAllagreed(true);
+        }else{
+            setAllagreed(false);
+        }
+    },[termsAgreed,privacyAgreed])
 
     //전체동의핸들러
     const handleAllagreed = (e:React.ChangeEvent<HTMLInputElement>)=>{
-        
         const isChecked = e.target.checked;
 
+        setAllagreed(isChecked);
         setTermsAgreed(isChecked);
         setPrivacyAgreed(isChecked);
     }
     
-    const handleNextStep = ()=>{
-        if(!isAllagreed){
-            alert('필수약관에 모두 동의해주세요');
-            return;
-        }
-        //다음 회원가입 페이지 이동 로직
-        router.push('/login')
-    }
     
     return(
+        <>
         <S.Wrapper>
             <S.StepContainer>
                 <S.Step $active={true}>
                     <S.StepNumber $active={true}>1</S.StepNumber>
                     <S.StepText $active={true}>약관동의</S.StepText>
                 </S.Step>
-
                 <S.StepDivider/>
 
                 <S.Step $active={false}>
@@ -58,7 +53,7 @@ export default function TermsPage (){
                 <S.CheckboxLabel>
                     <S.CheckboxInput
                     type="checkbox"
-                    checked={isAllagreed}
+                    checked={allAgreed}
                     onChange={handleAllagreed}
                     />
                     <S.CheckAllText>
@@ -79,9 +74,8 @@ export default function TermsPage (){
                         />
                         <S.TermTitle>이용 약관 (필수)</S.TermTitle>
                     </S.CheckboxLabel>
-                    
                     <S.ToggleButton 
-                    onClick={()=>setIsTermsOpen(prev=> !prev)}
+                    onClick={()=>setIsTermsOpen(!isTermsOpen)}
                     >{isTermsOpen? '닫기 ✕' : '보기 ›'}</S.ToggleButton>
                 </S.TermHeader>
 
@@ -102,7 +96,7 @@ export default function TermsPage (){
                         <S.TermTitle>개인정보 수집 및 동의 (필수)</S.TermTitle>
                     </S.CheckboxLabel>
                      <S.ToggleButton 
-                    onClick={()=>setIsPrivacyOpen(prev=> !prev)}
+                    onClick={()=>setIsPrivacyOpen(!isPrivacyOpen)}
                     >{isPrivacyOpen? '닫기 ✕' : '보기 ›'}</S.ToggleButton>
                 </S.TermHeader>
                 <S.TermContentBox $isOpen={isPrivacyOpen}>
@@ -111,14 +105,11 @@ export default function TermsPage (){
             </S.TermSection>
 
             <S.ButtonGroup>
-                <S.Button $variant="outline" onClick={()=>router.back()} //window.history.back()
-                >이전단계</S.Button>
-                <S.Button 
-                    $variant="solid"
-                    // disabled={!isAllagreed} //아예 안눌려서 alert안나옴..
-                    onClick={handleNextStep}
-                >다음단계</S.Button>
+                <S.Button $variant="outline">이전단계</S.Button>
+                <S.Button $variant="solid">다음단계</S.Button>
             </S.ButtonGroup>
         </S.Wrapper>
+
+        </>
     )
 }

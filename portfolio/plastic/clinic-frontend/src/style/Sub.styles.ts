@@ -7,6 +7,10 @@ width: 100%;
 max-width: 800px;
 margin: 0 auto;
 padding: 40px 20px;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+
 `;
 export const StepContainer= styled.div`
 display: flex;
@@ -73,7 +77,7 @@ flex-shrink: 0;
 width: 20px;
 height: 20px;
 border: 1px solid #d1d5db;
-border-radius: 2px;
+border-radius: 3px;
 background-color: #fff;
 cursor: pointer;
 position: relative;
@@ -130,7 +134,7 @@ border-radius: 6px;
 padding: 20px;
 font-size: 13px;
 color: #666;
-background-color: #fff;
+background-color: #f9f9f9;
 line-height: 1.6; //160%
 white-space: pre-wrap; 
 
@@ -141,9 +145,8 @@ white-space: pre-wrap;
 
 &::-webkit-scrollbar-thumb {
     background: #e5e5e5;
-    border-radius: 25px;
+    border-radius: 20px;
 }
-
 `;
 
 /*
@@ -155,7 +158,9 @@ export const ButtonGroup= styled.div`
 display: flex;
 justify-content: center;
 gap: 10px;
-margin-top: 60px;
+/* margin-top: 60px; */
+margin-top: auto; //margin-top: auto 가 남은공간 흡수
+/* 상단 여백을 자동으로 채워 버튼을 맨 아래로 밀어냄 */
 `;
 export const Button= styled.button<{$variant:'outline'|'solid'}>`
 width: 180px;
