@@ -50,3 +50,18 @@ FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
 FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE,
 UNIQUE KEY unique_interaction (sender_id, receiver_id)
 );
+
+-- 1. 우선 우리가 만든 데이팅 서랍장(dating_db)을 열겠다고 선언합니다.
+USE dating_db;
+
+-- 2. 스와이프(좋아요/싫어요) 기록을 저장할 matches 테이블을 만듭니다.
+CREATE TABLE matches (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 기록이 쌓일 때마다 자동으로 늘어나는 고유 번호표입니다.
+    sender_id INT NOT NULL, -- 스와이프 액션을 취한 사람(보낸 사람)의 유저 번호입니다.
+    receiver_id INT NOT NULL, -- 스와이프 대상이 된 사람(받은 사람)의 유저 번호입니다.
+    action ENUM('LIKE', 'DISLIKE') NOT NULL, -- 카드를 오른쪽으로 넘겼는지(LIKE), 왼쪽으로 넘겼는지(DISLIKE) 저장합니다.
+    is_matched BOOLEAN DEFAULT FALSE, -- 서로 좋아요를 눌러서 최종 매칭이 되었는지 여부입니다. (처음엔 무조건 FALSE)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 카드를 넘긴 날짜와 시간이 자동으로 기록됩니다.
+    
+    -- 동일한 사람에게 여러 번 중복해서 좋아요/싫어요를 누르는 것을 방지하는 안전장치입니다.
+    UNIQUE KEY unique_interaction (sender_id, receiver_id) )
