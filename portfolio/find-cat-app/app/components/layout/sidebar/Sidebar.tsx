@@ -49,9 +49,9 @@ export const Sidebar:React.FC = ()=>{
             </NavItem>
            
              <NavItem className="active">
-                <NavLink href="/">
+                <NavLink href="/admin/intergrate">
                     <i className="fas fa-fw fa-dog me-2"></i>
-                    <span>멍</span>
+                    <span>통합게시물설정</span>
                 </NavLink>
             </NavItem>
 

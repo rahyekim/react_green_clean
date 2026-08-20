@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StyledComponentsRegistry from "@/lib/registry";
 
-
 export const metadata: Metadata = {
   title: "어서 찾아주개냥",
   description: "유기동물 입양 및 정보 제공 플랫폼 ",
