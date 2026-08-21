@@ -1,0 +1,2 @@
+## 플러터 시작명령어
+flutter run -d chrome

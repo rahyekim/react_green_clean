@@ -6,6 +6,9 @@ import 'dart:convert'; //JSON 데이터를 다루기위한 변환 도구 가져�
 
 import 'package:flutter_card_swiper/flutter_card_swiper.dart'; //Tinder처럼 카드를 좌우로 슥슥 넘기는 기능
 
+//추가 앞으로 여기에 업뎃
+import 'screens/signup_profile_screen.dart';
+
 void main(){
   runApp(const DatingApp());  //DatingApp 위젯을 화면에 그림
 }
@@ -19,12 +22,12 @@ class DatingApp extends StatelessWidget{
   @override
   Widget build(BuildContext context){  //UI를 그리는 함수
     return MaterialApp( //구글의 material design 기준 앱 시작 
-      title: 'Dating Web',
+      title: 'SPARK Dating Web',
       debugShowCheckedModeBanner: false, //오른쪽 debug빨간띠 숨기기
       theme: ThemeData( // 앱 전체의 기본 디자인(테마)설정
-        primarySwatch: Colors.pink,
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink), //최신방식
-        scaffoldBackgroundColor: const Color(0xFFF5F5F7),
+        // primarySwatch: Colors.pink,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF12121A),
       ),
       home: const DatingHomeScreen(),
     );
@@ -77,6 +80,10 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
   //화면에 보여줄 유저정보를 차곡차곡 담아둘 빈 바구니(리스트)준비
   List<Profile> profiles =[];
   bool isLoading=true; //서버에서 데이터가져오는 중인지 표시하는 boolean
+
+  //add
+  int _selectedIndex = 0;
+
   
   @override  //이 화면이 사용자에게 딱 처음 처음보여지기 직전에 단한번만 실행되는 준비함수
   void initState(){
@@ -129,17 +136,38 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
     return Scaffold(   //앱의 뼈대(지붕,바닥,몸통)을 만들어주는 위젯
       //화면 맨위에 상단바
       appBar: AppBar(
-        title: const Text('💘 Dating Match'), 
-        backgroundColor: const Color.fromARGB(255, 240, 185, 203), 
-        centerTitle: true,),
+        //Text('💘 Dating Match'), // backgroundColor: const Color.fromARGB(255, 240, 185, 203), 
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Row(
+          children: [
+            Icon(Icons.auto_awesome, color: Color(0xFFFF4B93),size: 24,),
+            SizedBox(width: 4,),
+            Text('SPARK', style: TextStyle(color: Color(0XFFF4B93),fontSize: 22, fontWeight: FontWeight.w900, letterSpacing: 1.2),), 
+            ],
+        ),
+        actions: [
+          //알림아이콘
+          _buildTopIcon(Icons.notifications_none),
+          const SizedBox(width: 8,),
+          //설정아이콘 누르면 프로필(회원가입)화면으로 이동
+          GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignupProfileScreen()));
+            },
+            child: _buildTopIcon(Icons.settings_outlined),
+          ),
+          const SizedBox(width: 16,),
+        ],
+      ),
         //로딩중이면 화면 정중앙center에 뱅글뱅글 아이콘 spinner 아이콘 보여줌
       body: isLoading 
-      ? const Center(child: CircularProgressIndicator())
+      ? const Center(child: CircularProgressIndicator(color: Color(0xFFF4B93),))
       : profiles.isEmpty 
         ? const Center(child: Text('더이상 추천할 프로필이 없습니다'))
-        : Center(
-          child:SizedBox(
-            width:400, height:600, 
+        : SafeArea(
+          child:Padding(
+            padding: const EdgeInsets.all(20.0), //카드주변 여백
             child: CardSwiper(
               controller:controller, 
               cardsCount: profiles.length, 
@@ -191,10 +219,53 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
                   ],
                 ), 
               );
+              // return _buildSparkCard(profile); ????
             },
             ),
           ),
         ),
     );
   }
+
+//부품 상단바 둥근 배경 아이콘
+Widget _buildTopIcon(IconData icon){
+  return Container(
+    width: 40, height: 40, 
+    decoration: BoxDecoration(
+      color: const Color(0xFF22222E), borderRadius: BorderRadius.circular(12),
+    ),
+    child: Icon(icon, color: Colors.white, size: 22,),
+  );
 }
+
+//하단바 아이콘생성기 (선택되면 배경에 희미한 핑크색 빛이남)
+BottomNavigationBarItem _buildBottomNavItem(String label, IconData icon, int index){
+  bool isSelected = _selectedIndex  == index ;
+  return BottomNavigationBarItem(
+    icon: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFFFF4B93).withOpacity(0.15) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12)
+      ),
+      child: Icon(icon),
+    ),
+    label: label,
+  ); 
+}
+
+Widget _buildSparkCard (Profile profile){
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(24),
+      boxShadow: const[BoxShadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 5))]
+    ),
+    clipBehavior: Clip.antiAlias, //모서리 둥글게 자르기 
+  );
+
+}
+
+  
+}
+
+
