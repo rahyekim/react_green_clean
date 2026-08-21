@@ -12,7 +12,6 @@ export default function Intergrate(){
 
     const [boardType, setBoardType]=useState('YOUTUBE');
     const [formData, setFormData]=useState({
-        id:'',
         title:'',
         content:'',
         imageUrl:'',
@@ -25,7 +24,10 @@ export default function Intergrate(){
     const extractYoutubeId = (url:string)=>{
 
         if(!url.trim()) return;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        //유튜브 쇼츠추가
+        // const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+        //return match ? match[1] : null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
         const match = url.match(regExp);
         return (match && match[2].length === 11) ? match[2] : null;
     }
@@ -40,7 +42,7 @@ export default function Intergrate(){
             if(boardType ==='YOUTUBE' && name === 'youtubeUrl'){
                 const videoId = extractYoutubeId(value);
                 if(videoId){
-                    newData.thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hpdefault.jpg`;
+                    newData.thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
                 }
             }
            return newData;
@@ -50,7 +52,6 @@ export default function Intergrate(){
     const handleBoardTypeChange =(type:string)=>{
         setBoardType(type);
         setFormData({
-            id:'',
             title:'',
             content:'',
             imageUrl:'',
@@ -67,20 +68,58 @@ export default function Intergrate(){
         let endpoint ='';
         let payload= {};
 
+        if(boardType === 'YOUTUBE'){
+            endpoint = 'http://localhost:8080/api/youtube';
+            payload ={
+                title:formData.title,
+                youtubeUrl: formData.youtubeUrl,
+                thumbnailUrl:formData.thumbnailUrl,
+            };
+        }else if(boardType === 'FELLOW'){
+            endpoint = 'http://localhost:8080/api/fellow-news';
+            payload ={
+                title:formData.title,
+                content: formData.content,
+                imageUrl:formData.imageUrl,
+                videoUrl: formData.videoUrl,
+                attachmentUrl: formData.attachmentUrl,
+            };
+        }else if(boardType === 'HELP'){
+            endpoint = 'http://localhost:8080/api/need-help';
+            payload ={
+                title:formData.title,
+                content: formData.content,
+                imageUrl:formData.imageUrl,
+                videoUrl: formData.videoUrl,
+                attachmentUrl: formData.attachmentUrl,
+            };
+        }
+
         try{
-            const res = await axios.post('http://localhost:5000/')
+            const res = await axios.post(endpoint,payload)
+            alert(res.data || '성공적으로 등록되었습니다')
+            //등록완료후 폼비우기
+            setFormData({
+            title:'',
+            content:'',
+            imageUrl:'',
+            thumbnailUrl:'',
+            youtubeUrl:'',
+            videoUrl:'',
+            attachmentUrl:'',
+        });
+
         }catch(err:any){
             console.error("등록에러",err)
             alert('등록에러')
         }
-
     }
 
     return(
         <Layout>
             <S.PageHeader>
                 <h1 className="h3 mb-0 text-gray-800">
-                    통합 게시물 어쩌고
+                    통합 콘텐츠 등록관리
                 </h1>
             </S.PageHeader>
 
@@ -139,6 +178,7 @@ export default function Intergrate(){
                             <label className="font-weight-bold text-gray-800">제목</label>
                             <Form.Control
                             type="text"
+                            name="title"
                             placeholder="게시물 제목을 입력하세요"
                             value={formData.title}
                             onChange={handleChange}
