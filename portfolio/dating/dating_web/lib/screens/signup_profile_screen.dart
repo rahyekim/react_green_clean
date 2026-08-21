@@ -99,7 +99,7 @@ Widget _buildTopBar(){
                 child: Container(
                   height: 4, 
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Colors.pinkAccent, Colors.purpleAccent]),
+                    gradient: LinearGradient(colors: [pinkAccent, puppleAccent]),
                     borderRadius: BorderRadius.circular(2)),
                 ),)
         ],)),
@@ -139,50 +139,50 @@ Widget _buildPhotoSection(){
 
 // 메인 사진 등록 박스 디자인
 Widget _buildMainPhotoBox(){
-
+return Container();
 }
 
 //서브 사진 등록 박스 디자인 (간단한 + 모양)
 Widget _buildSubPhotoBox(){
-  
+  return Container();
 }
 
 // 🧱 부품 4: 닉네임 입력칸 
 Widget _buildNicknameSection(){
-  
+  return Container();
 }
 
 // 🧱 부품 5:나이성별입력칸(한줄나란히배치)
 Widget _buildAgeAndGenderSection(){
-  
+  return Container();
 }
 //성별 버튼 디자인 및 클릭시 색상 로직변경
 Widget _buildGenderButton(String gender){
-  
+  return Container();
 }
 //🧱 부품 6: 자기소개입력칸
 Widget _buildBioSection(){
-  
+  return Container();
 }
 
 // 🧱 부품 7: 관심사 선택칸 Wrap사용
 Widget _buildInterestSection(){
-  
+  return Container();
 }
 
 //🧱 부품 8:하단 다음단계 버튼
 Widget _buildNextButton(){
-  
+  return Container();
 }
 
 //공용도구
 Widget _buildSectionTitle(String title){
-
+return Container();
 }
 
 //공용도구2
 Widget _buildTextField(){
-  
+  return Container();
 }
 
 

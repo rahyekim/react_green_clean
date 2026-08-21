@@ -48,7 +48,7 @@ class DatingApp extends StatelessWidget{
     required this.bio,
     this.photoUrl,
   });
-
+// 백엔드에서 받은 JSON 데이터를 Profile 객체로 변환해주는 도구
   factory Profile.fromJson(Map<String, dynamic> json){
     return Profile(
       id:json['id'], 
@@ -91,6 +91,7 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
     fetchProfiles();
   }
 
+// 화면이 뜨기 전에 서버에 "유저 목록 좀 줘!"라고 요청하는 함수
   //백엔드 서버에 접속해서 유저 데이터를 가져오는 함수(시간이 걸리니까 async비동기씀)
   Future<void> fetchProfiles() async{
     
@@ -123,7 +124,10 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
       await http.post(
       Uri.parse('http://localhost:3000/api/swipe'),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'sender_id':1, 'receiver_id': targetUserId, 'action': action,}),
+      body: json.encode({
+        'sender_id':1, 
+        'receiver_id': targetUserId, 
+        'action': action,}),
       );
     }catch(e){
       print('서버통신실패(프론트UI만 동작 중입니다): $e');
@@ -143,7 +147,13 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
           children: [
             Icon(Icons.auto_awesome, color: Color(0xFFFF4B93),size: 24,),
             SizedBox(width: 4,),
-            Text('SPARK', style: TextStyle(color: Color(0XFFF4B93),fontSize: 22, fontWeight: FontWeight.w900, letterSpacing: 1.2),), 
+            Text(
+              'SPARK', 
+              style: TextStyle(
+                color: Color(0XFFFF4B93),
+                fontSize: 22, 
+                fontWeight: FontWeight.w900, 
+                letterSpacing: 1.2),), 
             ],
         ),
         actions: [
@@ -182,7 +192,180 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
               cardBuilder:(context, index, precentX, precentY){
                 //지금 그리고 있는 카드의 주인이 누구인지 데이터 꺼냄
                 final profile = profiles[index];
-                return Card( //둥근 모서리 그림자가 있는 예쁜 흰색 종이 깔아줌
+                return _buildSparkCard(profile);
+            },
+            ),
+          ),
+        ),
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+          ), 
+          child: BottomNavigationBar(
+            backgroundColor: const Color(0xFF1A1A24),
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _selectedIndex,
+            selectedItemColor: const Color(0xFFFF4B93), // 👈 선택된 아이콘/글씨 색상 추가! (핑크색)
+            unselectedItemColor: Colors.grey,
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
+            onTap: (index){
+              setState(()=>  _selectedIndex = index);
+              //기능추가
+              if(index==4){
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context)=> const SignupProfileScreen()
+                    ));
+              }
+            },
+            items:[
+                _buildBottomNavItem('매칭', Icons.local_fire_department, 0),
+                _buildBottomNavItem('커뮤니티', Icons.language, 1),
+                _buildBottomNavItem('일기', Icons.menu_book, 2),
+                _buildBottomNavItem('채팅', Icons.chat_bubble_outline, 3),
+                _buildBottomNavItem('MY', Icons.person_outline, 4),
+            ],
+          )),
+    );
+  }
+
+//부품 상단바 둥근 배경 아이콘
+Widget _buildTopIcon(IconData icon){
+  return Container(
+    width: 40, height: 40, 
+    decoration: BoxDecoration(
+      color: const Color(0xFF22222E), borderRadius: BorderRadius.circular(12),
+    ),
+    child: Icon(icon, color: Colors.white, size: 22,),
+  );
+}
+
+//하단바 아이콘생성기 (선택되면 배경에 희미한 핑크색 빛이남)
+BottomNavigationBarItem _buildBottomNavItem(String label, IconData icon, int index){
+  bool isSelected = _selectedIndex  == index ;
+  return BottomNavigationBarItem(
+    icon: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFFFF4B93).withOpacity(0.15) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12)
+      ),
+      child: Icon(icon),
+    ),
+    label: label,
+  ); 
+}
+//스와이프 카드 본체
+Widget _buildSparkCard (Profile profile){
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(24),
+      boxShadow: const[BoxShadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 5))]
+    ),
+    clipBehavior: Clip.antiAlias, //모서리 둥글게 자르기 
+    child: Stack(
+      fit: StackFit.expand,
+      children: [
+        //1층 배경 사진 또는 그라데이션
+        profile.photoUrl !=null ? Image.network(profile.photoUrl!, fit: BoxFit.cover) 
+        : Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [Color(0xFF4Ac2F5), Color(0xFF00C6B8)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter
+            )
+          ),
+          child: const Center(
+            child: Icon(Icons.person, size: 120, color: Colors.black12,),
+          ),
+        ),
+      //어두운 그림자...
+        Positioned(
+          bottom: 0, left: 0, right: 0, height: 250,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.transparent,Colors.black.withOpacity(0.9)],
+              begin: Alignment.topCenter, 
+              end: Alignment.bottomCenter),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 24, left: 24, right: 24,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [//이름,나이,인증뱃지
+              Row(
+                children: [
+                  Text(
+                    "${profile.nickname} ${profile.age}", 
+                    style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+                    ),
+                  const SizedBox(width: 8,),
+                  const Icon(Icons.verified, color: Colors.lightBlueAccent, size: 24,),
+                ],
+              ),
+              const SizedBox(width: 8,),
+              //직업 및 위치(임시로)
+              const Row(
+                children: [
+                  Icon(Icons.coffee, color: Colors.white70, size: 16, ),
+                  SizedBox(width: 6,),
+                  Text('바리스타 . 서울 노원구', style: TextStyle(color: Colors.white70, fontSize: 14),)
+                ],
+              ),
+             const SizedBox(height: 12,),
+             Text( 
+             profile.bio, 
+             style: const TextStyle(color: Colors.white, fontSize: 15,),
+             maxLines: 2,
+             overflow: TextOverflow.ellipsis,
+              ),
+            const SizedBox(height: 16,),
+              Row(
+                children: [
+                  _buildInterestChip('☕ 카페'),
+                  const SizedBox(width: 8,),
+                  _buildInterestChip('🎬 영화'),
+                  const SizedBox(width: 8,),
+                  _buildInterestChip('🐱 고양이'),
+                  const SizedBox(width: 8,),
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget _buildInterestChip(String text){
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.2),
+      borderRadius: BorderRadius.circular(20),
+      ),
+    child: Text(text, style: const TextStyle(color: Colors.white,fontSize: 13),),
+  );
+  
+
+}
+
+}
+
+
+
+
+
+
+
+/*
+Card( //둥근 모서리 그림자가 있는 예쁜 흰색 종이 깔아줌
                   elevation: 6, //종이가 바닥에서 얼마나 떠잇는지(그림자깊이)
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   clipBehavior: Clip.antiAlias, //사진이 종이밖으로 튀어나오면 깔끔하게 잘라냄 
@@ -219,53 +402,6 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
                   ],
                 ), 
               );
-              // return _buildSparkCard(profile); ????
-            },
-            ),
-          ),
-        ),
-    );
-  }
-
-//부품 상단바 둥근 배경 아이콘
-Widget _buildTopIcon(IconData icon){
-  return Container(
-    width: 40, height: 40, 
-    decoration: BoxDecoration(
-      color: const Color(0xFF22222E), borderRadius: BorderRadius.circular(12),
-    ),
-    child: Icon(icon, color: Colors.white, size: 22,),
-  );
-}
-
-//하단바 아이콘생성기 (선택되면 배경에 희미한 핑크색 빛이남)
-BottomNavigationBarItem _buildBottomNavItem(String label, IconData icon, int index){
-  bool isSelected = _selectedIndex  == index ;
-  return BottomNavigationBarItem(
-    icon: Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFFFF4B93).withOpacity(0.15) : Colors.transparent,
-        borderRadius: BorderRadius.circular(12)
-      ),
-      child: Icon(icon),
-    ),
-    label: label,
-  ); 
-}
-
-Widget _buildSparkCard (Profile profile){
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(24),
-      boxShadow: const[BoxShadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 5))]
-    ),
-    clipBehavior: Clip.antiAlias, //모서리 둥글게 자르기 
-  );
-
-}
-
-  
-}
 
 
+ */
