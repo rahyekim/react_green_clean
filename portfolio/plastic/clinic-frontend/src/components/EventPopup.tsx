@@ -8,13 +8,13 @@ const POPUP_LIST = [
     id: 1,
     imageUrl: "/images/event1.jpg", // 실제 이미지 경로로 변경 (image_df4702.png)
     top: 150,
-    left: 150,
+    left: 100,
   },
   {
     id: 2,
     imageUrl: '/images/event2.jpg', // 실제 이미지 경로로 변경 (image_df49f0.jpg)
     top: 150,
-    left: 150, // 첫 번째 팝업과 겹치지 않게 우측으로 밀어서 배치 (Cascading)
+    left: 520, // 첫 번째 팝업과 겹치지 않게 우측으로 밀어서 배치 (Cascading)
   },
 ]
 

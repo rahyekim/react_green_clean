@@ -25,7 +25,7 @@ position: relative;
 img{
     width: 100%;
     height: auto;
-    display: block;
+    display: block; //🌟
 }
 `;
 
