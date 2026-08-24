@@ -30,7 +30,7 @@ img{
 `;
 
 export const FormWrapper = styled.div`
-width: 100%;
+width: 100%; //부모너비에 맞추기
 background-color: #111;
 padding: 15px 15px 20px 15px;
 `;
@@ -42,9 +42,8 @@ box-sizing: border-box;
 `;
 export const Input = styled.input`
 flex: 1;
-min-width: 0;
-// 🌟이게 꼭 있어야 좁은 공간에서 
-//인풋이 찌그러지며 들어갑니다!🌟
+min-width: 0; // 🌟이게 꼭 있어야 좁은 공간에서 
+//고집을 꺾고 부모크기에 맞춰 인풋이 찌그러지며 들어갑니다!🌟
 height: 36px;
 padding: 0 8px;
 font-size: 13px;
@@ -61,7 +60,7 @@ background-color: #eee;
 }
 `;
 export const SubmitBtn = styled.button`
-flex-shrink: 0;
+flex-shrink: 0; //버튼이 다른 애들이 밀어도 절대 크기가 줄어들거나 찌그려 트리지 않게
 width: 80px;
 height: 36px;
 background-color: #fff176;
