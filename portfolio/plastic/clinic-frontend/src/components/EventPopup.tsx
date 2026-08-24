@@ -1,0 +1,91 @@
+'use client'
+
+import { useState } from "react"
+import * as S from './EventPopup.styles'
+
+const POPUP_LIST = [
+    {
+    id: 1,
+    imageUrl: "/images/event1.jpg", // 실제 이미지 경로로 변경 (image_df4702.png)
+    top: 150,
+    left: 150,
+  },
+  {
+    id: 2,
+    imageUrl: '/images/event2.jpg', // 실제 이미지 경로로 변경 (image_df49f0.jpg)
+    top: 150,
+    left: 150, // 첫 번째 팝업과 겹치지 않게 우측으로 밀어서 배치 (Cascading)
+  },
+]
+
+export default function EventPopup (){
+
+    const [visiblePopups, setVisiblePopups]=useState<number[]>(
+        POPUP_LIST.map(popup=> popup.id)
+    )
+    //특정 팝업 닫기 핸들러
+    const handleClose =(id:number)=>{
+        setVisiblePopups(prev=> (
+            prev.filter(popupId=> popupId !== id)
+        ))
+    };
+    //활성화된 팝업이 없으면 아무것도 랜더링 하징않음
+    if(visiblePopups.length === 0) return null;
+
+    return(
+        <>
+        {POPUP_LIST.map(popup=>{
+            //visiblepopup 해당 id가 있을때만 랜더링
+            if(!visiblePopups.includes(popup.id)) return null;
+
+            return(
+                <S.PopupContainer 
+                    key={popup.id} 
+                    $top={popup.top} 
+                    $left={popup.left}>
+                    <S.ImageWrapper>
+                        <img src={popup.imageUrl} alt={`이벤트 ${popup.id}`} />
+                    </S.ImageWrapper>
+                    <S.FormWrapper>
+                        <S.InputGroup>
+                            <S.Input
+                            type="text"
+                            placeholder="이름"
+                            />
+                            <S.Input
+                            type="tel"
+                            placeholder="연락처"
+                            />
+                            <S.Input
+                            type="text"
+                            placeholder="상담부위"
+                            />
+                            <S.SubmitBtn>상담신청</S.SubmitBtn>
+                        </S.InputGroup>
+
+                        <S.PrivacyLabel>
+                            <S.PrivacyCheckbox
+                            type="checkbox"/>
+                            <S.PrivacyText>
+                                개인정보 수집 · 이용에 관한 사항에 동의 [필수]
+                            </S.PrivacyText>
+                        </S.PrivacyLabel>
+                    </S.FormWrapper>
+
+                    <S.FooterWrapper>
+                        <S.CloseLabel>
+                            <S.CloseCheckbox type="checkbox"/>
+                            오늘 하루 보지 않음 
+                        </S.CloseLabel>
+                            <S.CloseBtn
+                            onClick={()=>handleClose(popup.id)}
+                            > X 
+                            </S.CloseBtn>
+                    </S.FooterWrapper>
+
+                </S.PopupContainer>
+            )
+        })}
+        </>
+    )
+}

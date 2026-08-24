@@ -1,19 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 // import "./globals.css";
+import { Globalstyle } from "@/style/Global.styles";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
+import QuickConsultBar from "@/components/QuickConsultBar";
+import EventPopup from '@/components/EventPopup'
 export default function RootLayout({ children }:{children:React.ReactNode}) {
   return (
-    <html lang="ko">
+    <html lang="ko" className="h-full">
       <body className="min-h-full flex flex-col">
+        <Globalstyle/> {/* 모든 페이지에 적용됩니다! */}
         <Header />
           <main className="flex-1">
             {children}
           </main>
         <Footer />
+        <QuickConsultBar/>
+        <EventPopup/>
       </body>
     </html>
   );

@@ -5,7 +5,7 @@ export const HeaderWrapper= styled.header`
 width: 100%;
 background-color: #fff;
 border-bottom: 1px solid #f0f0f0;
-position: relative;
+position: relative; //👈z-index활성화 용도
 z-index: 999;
 `;
 export const HeaderInner= styled.div`
@@ -87,6 +87,7 @@ display: flex;
 align-items: center;
 height: 40px;
 border: 1px solid #d1d5db;
+box-shadow: 1px 1px 6px rgba(0,0,0, .1);
 border-radius: 20px;
 
 padding: 0 16px;
@@ -161,9 +162,10 @@ display: none;
 
 @media (max-width: 1024px){
     display: inline-block; // 자식들이여러개라? inline?
+    height: 32px;
     border: 1px solid #111;
     border-radius: 16px;
-    padding: 0 12px; ///????
+    padding: 0 12px; 
     font-size: 13px;
     font-weight: bold;
     color: #111;

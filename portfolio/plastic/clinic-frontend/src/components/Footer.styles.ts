@@ -1,53 +1,246 @@
 import styled from "styled-components";
 
 
-
 export const FooterWrapper= styled.footer`
 width: 100%;
-border-top: 1px solid #eee;
-background-color: #eee;
+background-color: #000;
+color: #fff;
+padding: 60px 0 80px 0;
+position: relative; //🔸fixed
 z-index: 999;
-/* position: fixed; */
 bottom: 0;
-left: 0;
+right: 0;
+
+font-family: 'Malgum Gothic','Apple SD Gothic Neo', sans-serif;
 
 `;
 export const FooterInner= styled.div`
 max-width: 1860px;
-height: 80px;
-padding: 0 40px;
 margin: 0 auto;
+/* height: 180px;  //🔸 */
+padding: 0 40px;
 
+@media (max-width:1024px){
+    padding: 0 20px;
+}
+`;
+export const TopSection= styled.div`
 display: flex;
-align-items: center;
+justify-content: space-between;
+align-items: flex-start;
+padding-bottom: 40px;
+border-bottom: 1px solid #333;
+margin-bottom: 40px;
+
+@media (max-width:1024px){
+    flex-direction: column;
+    gap: 30px;
+}
+`;
+export const CsInfo= styled.div`
+flex: 1;
+`;
+export const PhoneNumber = styled.div`
+font-size: 32px;
+font-weight: 900;
+letter-spacing: 1px;
+margin-bottom:5px;
+`;
+export const Cstitle= styled.div`
+font-size: 14px;
+color: #999;
+font-weight: bold;
+`;
+export const ScheduleWrapper= styled.div`
+flex: 2;
+display: flex;
+gap: 60px;
+
+@media (max-width:768px) {
+    flex-direction: column;
+    gap:20px;
+}
+`;
+export const ScheduleBlock= styled.div`
+display: flex;
+flex-direction: column;
+gap: 8px;
+`;
+export const ScheduleTitle= styled.div`
+font-size: 14px;
+font-weight: bold;
+color: #fff;
+margin-bottom: 3px;
+`;
+export const ScheduleText= styled.div`
+font-size: 13px;
+color: #aaa;
+letter-spacing: -0.5px; //우리나라자간만 마이너스
+`;
+export const LocationButton= styled.button`
+flex: 0.5;
+height: 48px;
+padding: 0 30px;
+border: 1px solid #fff;
+background-color: transparent;
+color: #fff;
+font-weight: bold;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.3s;
+white-space: nowrap;
+max-width: 260px;
+
+&:hover{
+    background-color: #fff;
+    color: #000;
+}
+
+@media (max-width:1024px){
+    width: 100%; 
+    padding: 10px 0;
+}
+`;
+
+
+export const BottomSection= styled.div`
+display: flex;
+justify-content: space-between;
+align-items: flex-end;
+
+@media (max-width:1024px){
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+}
 
 `;
-export const TopSection= styled.div``;
-export const CsInfo= styled.div``;
-export const PhoneNumber = styled.div``;
-export const Cstitle= styled.div``;
-export const ScheduleWrapper= styled.div``;
-export const ScheduleBlock= styled.div``;
-export const ScheduleTitle= styled.div``;
-export const ScheduleText= styled.div``;
-export const LocationButton= styled.button``;
+export const CompanyInfo= styled.div`
+display: flex;
+flex-direction: column;
+gap: 10px;
+`;
+export const CompanyName= styled.h2`
+font-size: 24px;
+font-weight: 900;
+margin: 0 0 15px 0;
+`;
+export const InfoText= styled.p`
+margin: 0;
+font-size: 13px;
+color: #888;
+line-height: 1.6;
+letter-spacing: -0.3px;
+span{
+    margin: 0 8px;
+    color: #555;
+}
+`;
+export const BottomRight= styled.div`
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+gap: 20px;
 
+@media (max-width: 1024){
+    align-items: flex-start;
+    width: 100%;
+}
+`;
+export const PolicyButtons= styled.div`
+display: flex;
+gap: 10px;
+`;  //전화번호나이름쓰는공간이 있으면 무조건필요함..전화옴..
 
-export const BottomSection= styled.div``;
-export const CompanyInfo= styled.div``;
-export const CompanyName= styled.h2``;
-export const InfoText= styled.p``;
-export const BottomRight= styled.div``;
-export const PolicyButtons= styled.div``;  //전화번호나이름쓰는공간이 있으면 무조건필요함..전화옴..
+export const PolicyBtn = styled.button`
+background-color: #222;
+color: #aaa;
+border: none;
+padding: 8px 16px;
+border-radius: 8px;
+font-size: 12px;
+cursor: pointer;
 
-export const PolicyBtn = styled.button``;
-export const FamilySiteTitle= styled.div``;
-export const FamilySiteLogos= styled.div``;
+&:hover{
+    background-color: #333;
+    color: #fff;
+}
+`;
+export const FamilySiteTitle= styled.div`
+font-size: 13px;
+font-weight: bold;
+color: #fff;
+margin-bottom: 10px;
+`;
+export const FamilySiteLogos= styled.div`
+display: flex;
+gap: 15px;
+align-items: center;
+.logo-placeholder{
+    font-size: 11px;
+    color: #777;
+    border: 1px solid #444;
+    padding: 4px 8px;
+    border-radius: 15px;
+}
+`;
 //floating
-export const FloatingMenu= styled.div``;
-export const FabItem = styled.div``;
-export const FabIcon= styled.div<{$bgColor:string}>``;
-export const FabText= styled.span``;
+export const FloatingMenu= styled.div`
+position: fixed;
+right: 30px;
+bottom: 90px;
+
+display: flex;
+flex-direction: column;
+gap: 15px;
+z-index: 100;
+
+@media (max-width:768px) {
+    right: 15px;
+    bottom: 20px;
+    transform: scale(0.85);
+}
+`;
+export const FabItem = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 5px;
+cursor: pointer;
+`;
+export const FabIcon= styled.div<{$bgColor:string}>`
+width: 60px;
+height: 60px;
+border-radius: 50%;
+background-color: ${props=> props.$bgColor};
+display: flex;
+align-items: center;
+justify-content: center;
+
+font-weight: 900;
+font-size: 16px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+transition: transform 0.2s;
+
+&:hover{
+    transform: translateY(-5px);
+}
+
+svg{
+    width: 30px;
+    height: 30px;
+    color:#fff;
+}
+`;
+export const FabText= styled.span`
+background-color: #111;
+color: #fff;
+font-size: 11px;
+font-weight: bold;
+padding: 4px 8px;
+border-radius: 10px;
+letter-spacing: -0.5px;
+`;
 
 // export const = styled.div``;
 // export const = styled.div``;
