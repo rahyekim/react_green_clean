@@ -255,27 +255,126 @@ Widget _buildGenderButton(String gender){
 }
 //🧱 부품 6: 자기소개입력칸
 Widget _buildBioSection(){
-  return Container();
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildSectionTitle('자기소개'),
+      const SizedBox(height: 8,),
+      _buildTextField(hint:'커피한잔과함께 영화이야기 나눌 사람찾아요',maxLines:3),
+
+    ],
+  );
 }
 
 // 🧱 부품 7: 관심사 선택칸 Wrap사용
 Widget _buildInterestSection(){
-  return Container();
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildSectionTitle('관심사'),
+      const SizedBox(height: 12,),
+      Wrap( //자동줄바꿈
+        spacing: 10, //버튼과버튼사이틈
+        runSpacing: 10, //아래줄윗줄 틈 
+        children: _interestsData.map((interest){
+          bool isSelected = _selectedInterests.contains(interest['label']);
+          return GestureDetector( //터치(클릭)감지 투명 버튼역할
+            onTap: (){ //손가락으로 탭(터치)햇을때 실행
+            setState(() { //화면 다시 그려달라고 플러터에게 요청
+              if(isSelected){
+                _selectedInterests.remove(interest['label']);
+              }else{
+                _selectedInterests.add(interest['label']!);
+              }
+            });
+            },
+          child:Container( //실제 눈에 보이는 알약모약 박스
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: isSelected ? pinkAccent.withOpacity(0.15) : cardColor,
+              borderRadius: BorderRadius.circular(20), // 알약 모양을 위한 둥근 테두리 (추천!)
+              border: Border.all(
+                color: isSelected ? pinkAccent :Colors.transparent, width: 1.5),  
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(interest['icon']!, 
+              style: const TextStyle(fontSize: 14),),
+              const SizedBox(width: 6,),
+              Text(
+                interest['label']!,
+                style: TextStyle(
+                  color: isSelected ? pinkAccent : subTextColor,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 14,
+                ),
+                ),
+            ],),
+          ) ,
+          );
+        }).toList(),  //wrap의 childern은 tolist()로 받아야함
+    )
+    ],
+  );
 }
 
 //🧱 부품 8:하단 다음단계 버튼
 Widget _buildNextButton(){
-  return Container();
+  return Container(
+    width: double.infinity, //가로길이 양쪽 끝까지 꽉차게
+    height: 56,
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: [pinkAccent,puppleAccent]),
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Material( //잉크가 톡 퍼지는 애니메이션 리플효과
+    color: Colors.transparent,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () {
+        print('다음단계진행');
+      },
+      child: const Center(
+        child: Text('다음단계',
+        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ),
+    ),
+  );
 }
 
 //공용도구
 Widget _buildSectionTitle(String title){
-return Container();
+return Text(title, style: TextStyle(color: textColor, fontSize: 15, fontWeight: FontWeight.bold),);
 }
 
 //공용도구2
-Widget _buildTextField(){
-  return Container();
+Widget _buildTextField({required String hint, int maxLines=1, bool isNumber=false}){
+  return TextField( //사용자가 화면의 키보드를 통해 글씨를 입력할 수 있는 필드(칸)
+  maxLines: maxLines, //넘겨받은 줄 수만큼 높이 잡음 (자기소개3줄 나이1줄)
+  keyboardType: isNumber ? TextInputType.number : TextInputType.text, //키보드 숫자판 or 글자판 띄워줌
+  style: TextStyle(color: textColor, fontSize: 15),
+  decoration:  InputDecoration( //텍스트 입력창 겉모양 꾸미기
+    hintText: hint,
+    hintStyle: TextStyle(color: subTextColor),
+    filled: true,
+    fillColor: cardColor,
+    contentPadding: const EdgeInsets.all(16),
+    //가만히 있을떄 기본 테두리
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide.none),
+      //입력가능할때(화면에 보일때) 테두리
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: borderColor, width: 1)),
+      //사용자가입력하고 터치했을때 포커스테두리
+    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12),
+    borderSide: BorderSide(color: pinkAccent, width: 1.3) )
+  ),
+  );
 }
 
 
