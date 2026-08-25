@@ -7,7 +7,7 @@ left: ${(props)=>props.$left}px;
 width: 400px;
 background-color: rgba(0,0,0,.8);
 box-shadow: 0 10px 30px rgba(0,0,0,.5);
-z-index: 1000;
+z-index: 999;
 display: flex;
 flex-direction: column;
 align-items: center;

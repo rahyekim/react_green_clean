@@ -11,7 +11,7 @@ background-color: rgba(17,17,17,0.95);
 border-top: 1px solid #333;
 backdrop-filter: blur(5px);
 //그 반투명한 바 뒤 글,이미지 배경 요소 5px만큼 흐릿하게(blur) 
-z-index: 99999;
+z-index: 999;
 
 @media (max-width: 1024px) {
     display: none;

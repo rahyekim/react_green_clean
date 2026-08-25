@@ -1,20 +1,31 @@
 import type { Metadata } from "next";
 // import "./globals.css";
+import styled from "styled-components";
 import { Globalstyle } from "@/style/Global.styles";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuickConsultBar from "@/components/QuickConsultBar";
 import EventPopup from '@/components/EventPopup'
+
+//헤더 크기때문에 픽스햇을때 잘리는 크기만큼 패딩or마진
+const MainWrapper = styled.main`
+padding-top: 90px;
+@media (max-width: 1024px) {
+  padding-top: 60px;
+}
+
+/* min-height: 100vh; */
+`;
 export default function RootLayout({ children }:{children:React.ReactNode}) {
   return (
     <html lang="ko" className="h-full">
       <body className="min-h-full flex flex-col">
         <Globalstyle/> {/* 모든 페이지에 적용됩니다! */}
         <Header />
-          <main className="flex-1">
+          <MainWrapper className="flex-1">
             {children}
-          </main>
+          </MainWrapper>
         <Footer />
         <QuickConsultBar/>
         <EventPopup/>

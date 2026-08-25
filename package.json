@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
+    "bcrypt": "^6.0.0",
     "express": "^5.2.1",
     "jquery": "^4.0.0",
     "styled-components": "^6.5.3"

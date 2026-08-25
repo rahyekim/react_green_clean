@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from "react"
 
-import * as S from '../../../style/Sub.styles'
+import * as S from '../../../style/Terms.styles'
 
 export default function TermsPage (){
 

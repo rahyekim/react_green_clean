@@ -1,6 +1,9 @@
 'use client'
 
 import { useState } from "react"
+//현재 url경로를 가져오는 후크 추가
+import { usePathname } from "next/navigation"
+
 import * as S from './EventPopup.styles'
 
 const POPUP_LIST = [
@@ -20,6 +23,8 @@ const POPUP_LIST = [
 
 export default function EventPopup (){
 
+    const pathname = usePathname(); //💙
+
     const [visiblePopups, setVisiblePopups]=useState<number[]>(
         POPUP_LIST.map(popup=> popup.id)
     )
@@ -29,6 +34,13 @@ export default function EventPopup (){
             prev.filter(popupId=> popupId !== id)
         ))
     };
+
+    //💙중요한 곳에서는 보이지 않게 
+    //단일일경우
+    if(pathname.includes('/register') ) return null; 
+    //여러페이지에서 숨기고 싶을때 
+    //??
+
     //활성화된 팝업이 없으면 아무것도 랜더링 하징않음
     if(visiblePopups.length === 0) return null;
 

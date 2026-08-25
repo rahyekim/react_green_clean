@@ -36,12 +36,14 @@ export default function Header (){
                         </S.PhoneButton>
                         <S.CtaButton>상담예약</S.CtaButton>
 
-                        <S.IconButton naria-label="Language">
+                        <S.IconButton aria-label="Language">
                             <GlobeIcon/>
                         </S.IconButton>
 
-                        <S.IconButton naria-label="My page">
-                            <UserIcon/>
+                        <S.IconButton aria-label="My page">
+                            <Link href='/register/terms'>
+                                <UserIcon/>
+                            </Link>
                         </S.IconButton>
                     </S.DesktopOnly>
 

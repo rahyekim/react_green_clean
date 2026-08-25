@@ -1,19 +1,19 @@
 import styled from "styled-components";
 
 export const CarouselSection= styled.div`
+/* margin-top:99px; */
 position: relative;
 width: 100%;
 max-width: 2440px;
 margin: 0 auto ;
-overflow: hidden;
 `;
 export const EmblaViewport= styled.div`
-overflow: hidden; // 👈 밖으로 삐져나온 거 숨기기
+overflow: hidden; // (🌟필수) 밖으로 삐져나온 거 숨기기
 width: 100%;
 `;
 export const EmblaContainer= styled.div`
 display: flex;  //🌟
-flex-direction: row;
+flex-direction: row; //🌟
 width: 100%;
 `;
 export const EmblaSlide= styled.div`

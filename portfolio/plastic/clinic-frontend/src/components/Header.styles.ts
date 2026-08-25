@@ -5,7 +5,7 @@ export const HeaderWrapper= styled.header`
 width: 100%;
 background-color: #fff;
 border-bottom: 1px solid #f0f0f0;
-position: relative; //👈z-index활성화 용도
+position: fixed; 
 z-index: 999;
 `;
 export const HeaderInner= styled.div`

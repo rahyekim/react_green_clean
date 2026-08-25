@@ -10,6 +10,11 @@ padding: 40px 20px;
 display: flex;
 flex-direction: column;
 
+@media (max-width: 1024px) {
+    padding: 30px;
+    width: 85%;
+}
+
 `;
 export const StepContainer= styled.div`
 display: flex;
@@ -45,7 +50,7 @@ font-size: 16px;
 font-weight: ${({$active})=>$active ? 'bold' : 'normal'};
 color: ${({$active})=> $active ? '#000':'#999'} ;
 text-decoration: ${({$active})=> $active ? 'underline' : 'none'};
-text-underline-offset: 4px; //offset 글자와 밑줄간격
+text-underline-offset: 5px; //offset 글자와 밑줄간격
 `;
 
 export const StepDivider= styled.div`
@@ -157,20 +162,19 @@ export const ButtonGroup= styled.div`
 display: flex;
 justify-content: center;
 gap: 10px;
-/* margin-top: 60px; */
-margin-top: auto; //margin-top: auto 가 남은공간 흡수
-/* 상단 여백을 자동으로 채워 버튼을 맨 아래로 밀어냄 */
+margin-top: 60px;
 `;
 export const Button= styled.button<{$variant:'outline'|'solid'}>`
 width: 180px;
 height: 54px;
-font-size: l6px;
+font-size: 16px;
 font-weight: bold;
 border-radius: 4px;
 cursor: pointer;
 transition: all .2s;
 background-color: ${({$variant})=>$variant === 'outline' ? '#fff': '#000'};
-border: 1px solid; //자동으로 검은색#000 
+border: 1px solid ${({$variant})=>$variant ==='outline'? '#000' : 'transparent'}; 
+//자동으로 검은색#000 
 color: ${({$variant})=>$variant === 'outline' ? '#000' : '#fff'};
 
 &:hover{
@@ -181,14 +185,123 @@ color: ${({$variant})=>$variant === 'outline' ? '#000' : '#fff'};
     width: 100%;
 }
 `;
-//export const = styled.div``;
-//export const = styled.div``;
-export const Container= styled.div`
+
+
+//회원가입 폼(step 2)
+export const PageTitle = styled.h2`
+text-align: center;
+font-size: 28px;
+font-weight: 900;
+margin-bottom: 40px;
+`;
+
+export const FormContainer= styled.div`
+width: 100%;
+display: flex;
+flex-direction: column;
+gap: 24px;
+margin-top: 20px;
+`;
+
+export const FormGroup= styled.div`
+display: flex;
+flex-direction: column;
+gap: 10px;
+`;
+export const Label = styled.label`
+font-size: 15px;
+font-weight: bold;
+color: #222;
+`;
+export const Input= styled.input`
+width: 100%; //🔸
+height: 40px;
+padding: 0 15px;
+border: 1px solid #e5e5e5;
+border-radius: 10px;
+font-size: 15px;
+outline: none;
+&::placeholder{
+    color: #aaa
+}
+
+&:focus{
+    background-color: #eee;
+}
 
 `;
-export const Title = styled.h2`
-
+export const EmailWrapper= styled.div`
+display: flex;
+gap: 10px;
+@media (max-width:480px){
+    flex-direction: column;
+}
 `;
+export const Select = styled.select`
+width: 100%;
+height: 40px;
+padding: 0 15px;
+border: 1px solid #e5e5e5;
+border-radius: 10px;
+
+font-size: 15px;
+color: #555;
+outline: none;
+background-color: #fff;
+`;
+export const SubCheckboxLabel= styled.label`
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 14px;
+color: #333333;
+cursor: pointer;
+/* margin-top: 5px; */
+`;
+export const RadioWrapper= styled.div`
+display: flex;
+align-items: center;
+gap: 30px;
+height: 50px;
+`;
+export const RadioLabel= styled.label`
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+`;
+export const RadioInput= styled.input`
+appearance: none;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+border: 1px solid #ccc;
+outline: none;
+cursor: pointer;
+position: relative;
+
+&:checked{
+    border-color: #111;
+}
+
+&:checked::after{
+    content:'';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #333;
+}
+`;
+
+//export const = styled.div``;
+//export const = styled.div``;
+
 export const Section= styled.div<{$marginBottom?:string}>`
 
 `;
@@ -208,6 +321,8 @@ export const TotlAgreeText= styled.span`
 export const AgreeText= styled.span`
 
 `;
+
+
 
 //export const = styled.div``;
 //export const = styled.div``;
