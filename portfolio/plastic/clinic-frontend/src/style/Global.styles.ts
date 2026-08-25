@@ -4,11 +4,11 @@ import { createGlobalStyle } from "styled-components";
 
 export const Globalstyle = createGlobalStyle`
 
-//모든요소 테두리까지 포함해서 크기 계산 
+//모든요소(가상요소까지) 테두리까지 포함해서 크기 계산 
 *, *::before, *::after{
+
     box-sizing: border-box;
-    /* margin: 0;
-    padding: 0; */
+   
 }
 
 /* 2. body 마진 제거 */
