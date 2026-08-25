@@ -77,14 +77,16 @@ export default function TermsPage (){
                 })
             })
 
+            const result = await res.json();
+            //에러도 json으로 주니까 먼저 파싱!
+            
+            //200번대가 아니라면?
             if(!res.ok){
-                console.log('회원가입 에러발생')
-                alert('회원가입 처리 중 문제가 발생했습니다.');
+                alert(result.message || '회원가입 실패');
+                console.log('회원가입 중 에러발생')
                 return;
             }
-
-            const result = await res.json();
-
+            //성공처리
             if(result.success){
                 alert('회원가입이 완료되었습니다')
                 router.push('/');
@@ -93,6 +95,7 @@ export default function TermsPage (){
             }
 
         }catch(err){
+            
             console.error(err);
             alert('서버와 통신중에 오류가 발생')
 

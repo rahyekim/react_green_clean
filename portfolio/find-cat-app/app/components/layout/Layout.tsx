@@ -4,7 +4,6 @@ import React from 'react';
 import{ Sidebar} from '../layout/sidebar/Sidebar';
 import {Topbar} from '../layout/topbar/Topbar';
 import {Wrapper, ContentWrapper, MainContent,ContainerFluid} from './Layout.styled';
-
 interface LayoutProps {
     children: React.ReactNode;
 }

@@ -14,6 +14,10 @@ export const Topbar:React.FC = ()=>{
     // const navigate = useNavigate();
     const router = useRouter();
 
+    //
+    const [isDropdownOpen, setIsDropdownOpen]=useState(false);
+
+
 
     //2.화면이 처음 켜질때 딱 한번만 실행
     useEffect(()=>{
@@ -83,7 +87,10 @@ export const Topbar:React.FC = ()=>{
                     <a href="#"
                     className="nav-link dropdown-toggle d-flex align-items-center"
                     id="userDropdown"
-                    onClick={e=> e.preventDefault()}
+                    onClick={e=> {
+                        e.preventDefault();
+                        setIsDropdownOpen(!isDropdownOpen);
+                    }}
                     >
 {/* ⭐a태그의 기본 클릭이벤트(페이지최상단으로 올라가는 현상을) 막기위해⭐ */}
                         <span
@@ -96,10 +103,32 @@ export const Topbar:React.FC = ()=>{
                         className="rounded-circle"/>
                     </a>
 
-                    {/* 로그아웃버튼 추가 */}
-                    <button
-                    className="btn btn-sm btn-outline-secondary ml-2"
-                    onClick={handleLogout}>logout</button>
+                    {isDropdownOpen && (
+                        <div className="dropdown-menu dropdown-menu-right animated--grow-in show"
+                         aria-labelledby="userDropdown"
+                        >
+                            <a 
+                            className="dropdown-item"
+                            href="#"
+                            onClick={e=>e.preventDefault()}
+                            > <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"/>
+                            </a>
+
+                            <div className="dropdown-divider"></div>
+
+                            <a
+                            className="dropdown-item"
+                            href="#"
+                            onClick={e=> {
+                                e.preventDefault();
+                                handleLogout()}}
+                            >
+                                <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                로그아웃
+                            </a>
+                        </div>
+
+                    )}
 
                 </li>
             </TopBarNavBar>

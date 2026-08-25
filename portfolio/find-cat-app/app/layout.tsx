@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StyledComponentsRegistry from "@/lib/registry";
+import { GlobalStyle } from "./admin/css/GlobalStyle";
 
 export const metadata: Metadata = {
   title: "어서 찾아주개냥",
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: {children:React.ReactNode}) {
       </head>
       <body id="page-top" className="bg-primary text-gray-800">
         <StyledComponentsRegistry>
+        <GlobalStyle/>
           {children}
         </StyledComponentsRegistry>
       </body>
