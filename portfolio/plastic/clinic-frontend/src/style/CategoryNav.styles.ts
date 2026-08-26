@@ -2,6 +2,7 @@
 import styled from "styled-components";
 
 export const NavConatiner= styled.div`
+width: 100%;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -9,12 +10,11 @@ gap: 30px;
 padding-bottom: 15px;
 margin-top: 40px;
 
-border-bottom: 2px solid #ffd1df;
-width: 100%;
+border-bottom: 3px solid #ffd1df;
 
 @media (max-width: 768px) {
     justify-content: flex-start;
-    overflow-x:auto;
+    overflow-x: auto; 
     padding-left: 20px;
     padding-right: 20px;
 
@@ -37,10 +37,10 @@ ${({$active})=>$active && `
 &::after{
  content:'';
  position:absolute;
- bottom: -17px;
+ bottom: -19px; //⭐위치 아래로 조굼 내려와야
  left: 50%;
- transform: translateX(-50%);
- border-width: 0 10px 10px 10px ;
+ transform: translateX(-50%); //가로가운데정렬
+ border-width: 0 13px 13px 13px ; //⭐핵심 삼각형크기
  border-style: solid;
  border-color: transparent transparent #ffd1df transparent;
 }

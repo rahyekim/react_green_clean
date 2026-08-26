@@ -38,7 +38,12 @@ app.post('/api/register', async(req,res)=>{
             isSnsAgreed,
             isEmailAgreed,
             phone, 
-            gender
+            gender,
+            address1,
+            address2,
+            zipcode,
+            regidentNum
+
          }=req.body;
 
         //✅비밀번호 암호화!
@@ -63,7 +68,11 @@ app.post('/api/register', async(req,res)=>{
             IS_SNS_AGREED: isSnsAgreed ? 'Y' : 'N',
             IS_MAIL_AGREED: isEmailAgreed ? 'Y' : 'N',
             PHONE: phone,
-            GENDER: gender
+            GENDER: gender,
+            RESIDENT_NUM:regidentNum,
+            ZIPCODE:zipcode,
+            ADDRESS1:address1,
+            ADDRESS2:address2,
         };
 
         await memberRepository.save(newMember);

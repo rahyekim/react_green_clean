@@ -13,6 +13,7 @@ module.exports = new EntitySchema({
             type:"varchar2", 
             length:50,
             nullable:false, 
+            unique:true,
         },
         USER_ID:{
             type:"varchar2", 
@@ -29,12 +30,34 @@ module.exports = new EntitySchema({
             type:"varchar2", 
             length:100,
             nullable:false,
+            unique:true,
         },
         PHONE: {
             type:"varchar2", 
             length:20, 
             nullable:false, 
         },
+        RESIDENT_NUM:{
+            type:'varchar2',
+            length:255,
+            nullable:false,
+        },
+        ZIPCODE: {
+            type:'varchar2',
+            length:10,
+            nullable:true, //우편번호는(다음주소API연동용)
+        },
+        ADDRESS1: {
+            type:'varchar2',
+            length:200,
+            nullable:true,
+        },
+        ADDRESS2: {
+            type:'varchar2',
+            length:200,
+            nullable:true,
+        },
+        
         IS_SNS_AGREED:{
             type:"char",
             length:1,

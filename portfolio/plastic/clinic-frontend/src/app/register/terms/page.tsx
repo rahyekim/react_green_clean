@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
+import DaumPostcode from 'react-daum-postcode'
 
 import * as S from '../../../style/Terms.styles'
 
@@ -30,7 +31,15 @@ export default function TermsPage (){
         isEmailAgreed:false,
         phone:'' ,
         gender:'',
+        residentNumFront:'',
+        residentNumBack:'',
+        zipcode: '',
+        address1: '',
+        address2: '',
     });
+
+    //🔸주소검색 팝업 열림/닫힘
+    const [isPostcodeOpen, setIsPostcodeOpen]=useState(false);
 
     //필수 항목이 모두 동의되었는지 확인(파생된 상태)
     const isAllagreed = termsAgreed && privacyAgreed;
@@ -39,6 +48,11 @@ export default function TermsPage (){
     const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>)=>{
         const {name, value, type}= e.target;
         const checked =(e.target as HTMLInputElement).checked;
+        
+        //🔸주민번호 입력시 숫자만 입력되도록 처리(선택사항)
+        if(( name === 'residentNumFront' || name === 'residentNumBack') && !/^[0-9]*$/.test(value)){
+            return;
+        }
 
         setFormData(prev=> ({
             ...prev,
@@ -46,12 +60,70 @@ export default function TermsPage (){
         }));
     }
 
+    //다음주소 API완료 핸들러...
+    const handleCompletePostcode = (data:any)=>{
+
+        let fullAddress = data.address;
+        let extraAddress = '';
+
+        if( data.addressType === 'R'){
+            if(data.bname !== ''){
+                extraAddress += data.bname
+            }
+            if(data.buildingName !== ''){
+                extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
+            }
+
+            fullAddress += extraAddress !=='' ? `(${extraAddress})` : '';
+        }
+        //주소 및 우편번호 상태 업데이트 후 팝업닫기 
+        setFormData(prev=> ({
+            ...prev,
+            zipcode: data.zonecode, //🌟
+            address1: fullAddress,
+        }));
+        setIsPostcodeOpen(false);
+    }
+
+    //🔸🌟국가 공식 알고리즘 
+    const validationResidentNum = (front:string, back:string)=>{
+        //앞 6자리와 뒤 7자리를 하나로 합쳐서 13자리문자열로
+        const rrn = front+back;
+    
+        if(rrn.length !== 13){
+            return false; //🌟입력이 덜된것이므로false(거절)를 반환
+        }
+
+        let sum = 0;
+        //주민번호 검증 공식에 사용되는 '가중치(각자리에 곱할 고정숫자들)' 배열
+        const weights = [2,3,4,5,6,7,8,9,2,3,4,5];
+        //마지막 13번째 자리(검증번호)를 제외한 앞의 12자리 숫자를 하나씩 돌면서 계산
+        for (let i =0 ; i < 12 ; i++){
+            sum += parseInt(rrn[i]) * weights[i];
+        }
+        //국가공식규칙: 총합(sum)을 11로 나눈 나머지를 11에서 빼고 그결과를 다시 10으로 나눈 나머지를 구함
+        //이것이 진짜 검증용 1자리 숫자
+        const checkDigit = ( 11 -( sum % 11)) % 10;
+        //우리가 계산해낸 검증숫자(checkdigit)와 사용자가 입력한 마지막13번째 숫자가 똑같은지비교
+        return checkDigit === parseInt(rrn[12]) ; //true반환
+    }   
     //🔹회원가입 버튼 클릭=> 백엔드(node.js)로 전송
     const handleSumbit = async()=>{
         //필수입력값체크
         if(!formData.userName || !formData.userPW || !formData.userId){
             return alert('필수 항목을 입력해 주세요');
         }
+        //🔸주민번호 앞자리나 뒷자리가 비어있으면 경고
+        if(!formData.residentNumFront || !formData.residentNumBack){
+            return alert("주민등록 번호를 입력해주세요")
+        }
+        //🔸주민번호 검사 실행시 번호가 일치하지 않을 경우 
+        if(!validationResidentNum(formData.residentNumFront, formData.residentNumBack)){
+            return alert("유효하지않는 주민등록 번호입니다. 다시확인해주세요")
+        }
+        //이메일 앞부분(아이디) 비어있으면 경고창
+        if(!formData.email) return alert("이메일을 입력해주세요")
+
         if(formData.userPW !== formData.userPWconfirm){
             return alert('비밀번호가 일치하지 않습니다');
         }
@@ -60,6 +132,10 @@ export default function TermsPage (){
         formData.emailDomain === '' 
         ? formData.email 
         : `${formData.email}@${formData.emailDomain}`
+
+        //백엔드로 보낼 완전한 13자리 민증을 앞뒤로 붙여 조립
+        const fullResidentNum = 
+        `${formData.residentNumFront}${formData.residentNumBack}`
 
         try{
             const res= await fetch('http://localhost:5000/api/register',{
@@ -74,6 +150,10 @@ export default function TermsPage (){
                     isEmailAgreed:formData.isEmailAgreed,
                     phone: formData.phone,
                     gender: formData.gender,
+                    regidentNum: fullResidentNum,
+                    zipcode: formData.zipcode,
+                    address1: formData.address1,
+                    address2: formData.address2
                 })
             })
 
@@ -259,6 +339,30 @@ export default function TermsPage (){
                         />
                     </S.FormGroup>
 
+                    {/* 주민번호 */}
+                    <S.FormGroup>
+                        <S.Label>주민등록번호(필수)</S.Label>
+                        <div className="d-flex align-items-center justify-content-between">
+                            <S.Input
+                            type="text"
+                            name="residentNumFront"
+                            maxLength={6}
+                            placeholder="앞6자리"
+                            value={formData.residentNumFront}
+                            onChange={handleChange}
+                            />
+                            <span> - </span>
+                            <S.Input
+                            type="password"
+                            name="residentNumBack"
+                            maxLength={7}
+                            placeholder="뒤7자리"
+                            value={formData.residentNumBack}
+                            onChange={handleChange}
+                            />
+                        </div>
+                    </S.FormGroup>
+
                      <S.FormGroup>
                         <S.Label>이메일(필수)</S.Label>
                         <S.EmailWrapper>
@@ -291,6 +395,44 @@ export default function TermsPage (){
                             정보/이벤트 메일 수신에 동의합니다
                         </S.SubCheckboxLabel>
                     </S.FormGroup>
+                    {/* 주소넣기추가 */}
+                    <S.FormGroup>
+                        <S.Label> 주소 </S.Label>
+                        <S.Dflex>
+                            <S.Input 
+                            type="text"
+                            placeholder="우편번호"
+                            name="zipcode"
+                            value={formData.zipcode}
+                            onChange={handleChange}
+                            readOnly
+                            onClick={()=>setIsPostcodeOpen(true)}
+                            />
+                            <S.Button $variant="outline" $height="40px" onClick={()=>setIsPostcodeOpen(true)}>
+                                우편번호찾기
+                            </S.Button>
+                        </S.Dflex>
+                        <S.Input
+                        type="text" placeholder="기본주소" name="address1" value={formData.address1} readOnly
+                        />
+                         <S.Input
+                        type="text" placeholder="상세주소" name="address2" value={formData.address2} 
+                        onChange={handleChange} />
+                    </S.FormGroup>
+
+                    {/* 다음우편번호 팝업모달 */}
+                    {isPostcodeOpen && (
+                        <S.ModalBg onClick={()=>setIsPostcodeOpen(false)}>
+                            <S.ModalContent onClick={e=>e.stopPropagation()}>
+                                <S.RightBtn>
+                                    <button onClick={()=>setIsPostcodeOpen(false)}>
+                                        닫기 X
+                                    </button>
+                                </S.RightBtn>
+                                <DaumPostcode onComplete={handleCompletePostcode}/>
+                            </S.ModalContent>
+                        </S.ModalBg>
+                    )}
 
                     <S.FormGroup>
                         <S.Label>휴대폰 번호</S.Label>

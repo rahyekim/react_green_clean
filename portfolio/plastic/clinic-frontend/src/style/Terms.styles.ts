@@ -164,9 +164,9 @@ justify-content: center;
 gap: 10px;
 margin-top: 60px;
 `;
-export const Button= styled.button<{$variant:'outline'|'solid'}>`
+export const Button= styled.button<{$variant:'outline'|'solid' , $height?:string}>`
 width: 180px;
-height: 54px;
+height: ${props=> props.$height || "54px"};
 font-size: 16px;
 font-weight: bold;
 border-radius: 4px;
@@ -299,6 +299,47 @@ position: relative;
 }
 `;
 
+//다음팝업
+
+export const Dflex = styled.div`
+display: flex;
+gap:10px;
+margin-bottom: 10px;
+`;
+export const ModalBg= styled.div`
+position: fixed;
+top:0;
+left:0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.3);
+z-index: 9999;
+`;
+export const ModalContent= styled.div`
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%,-50%);
+width: 420px;
+height: 500px;
+z-index: 999999;
+
+padding: 8px;
+background-color: #fff;
+border-radius: 10px;
+border: 1px solid #ddd;
+box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+`;
+export const RightBtn= styled.div`
+display: flex;
+justify-content: flex-end;
+padding: 10px;
+
+button{
+    background-color: transparent;
+    border: none;
+}
+`;
 //export const = styled.div``;
 //export const = styled.div``;
 

@@ -50,7 +50,7 @@ export default function CategoryNav (){
                         {cat.name}
                     </S.CategoryText>
                 </S.CategoryItem>
-)})};
+)})}
         </S.NavConatiner>
         </>
     )
