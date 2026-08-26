@@ -321,7 +321,10 @@ top: 50%;
 left: 50%;
 transform: translate(-50%,-50%);
 width: 420px;
+max-width: 90%; //⭐⭐작은화면(360px)->324px 화면너비의90%까지만사용
+
 height: 500px;
+max-height: 90vh; //⭐⭐
 z-index: 999999;
 
 padding: 8px;
@@ -336,7 +339,8 @@ justify-content: flex-end;
 padding: 10px;
 
 button{
-    background-color: transparent;
+    /* background-color: transparent; */
+    background: none;
     border: none;
 }
 `;

@@ -1,3 +1,4 @@
+import { Image } from 'next/image';
 
 import styled from "styled-components";
 
@@ -49,18 +50,21 @@ ${({$active})=>$active && `
 export const ImgBox= styled.div<{$active:boolean}>`
 position: relative;
 overflow: hidden;
+box-sizing: border-box;
 
 width: 76px;
 height: 76px;
 border-radius: 50%;
 margin-bottom: 10px;
+padding: 3px;
 
 border: ${({$active})=>$active ? '4px solid #ffd1df' : '4px solid transparent'};
-box-sizing: border-box;
 transition: all .2s ease-in-out;
 
 img{
     width: 100%;
+    height: 100%;
+    border-radius: 50%;
     object-fit: cover;
 }
 `;

@@ -342,7 +342,7 @@ export default function TermsPage (){
                     {/* 주민번호 */}
                     <S.FormGroup>
                         <S.Label>주민등록번호(필수)</S.Label>
-                        <div className="d-flex align-items-center justify-content-between">
+                        <S.EmailWrapper className="d-flex align-items-center justify-content-between">
                             <S.Input
                             type="text"
                             name="residentNumFront"
@@ -360,7 +360,7 @@ export default function TermsPage (){
                             value={formData.residentNumBack}
                             onChange={handleChange}
                             />
-                        </div>
+                        </S.EmailWrapper>
                     </S.FormGroup>
 
                      <S.FormGroup>

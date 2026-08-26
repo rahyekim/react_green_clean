@@ -12,10 +12,23 @@ display: flex;
 flex-direction: column;
 align-items: center;
 border-radius: 20px 20px 0 0 ;
-overflow: hidden;
 
-/* 🌟 브라우저 렌더링 잔상을 깔끔하게 잡아주는 치트키! 🌟 */
-transform: translateZ(0);
+overflow: hidden;
+border: none;
+
+animation: popupIn 0.25s ease-out;
+
+@keyframes popupIn { //투명 → 살짝 작음 → 원래 크기
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 `;
 
 export const  ImageWrapper= styled.div`
@@ -41,7 +54,7 @@ margin-bottom: 12px;
 box-sizing: border-box;
 `;
 export const Input = styled.input`
-flex: 1;
+flex: 1;       //🌟
 min-width: 0; // 🌟이게 꼭 있어야 좁은 공간에서 
 //고집을 꺾고 부모크기에 맞춰 인풋이 찌그러지며 들어갑니다!🌟
 height: 36px;
@@ -115,7 +128,8 @@ letter-spacing: -0.5px;
 span{
     color: #aaa;
     text-decoration: underline;
-    margin-left: 4px;
+    margin-left: 5px;
+    text-underline-offset: 2px;
     cursor: pointer;
 }
 `;

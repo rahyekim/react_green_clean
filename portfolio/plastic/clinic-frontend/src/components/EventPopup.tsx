@@ -5,6 +5,7 @@ import { useState } from "react"
 import { usePathname } from "next/navigation"
 
 import * as S from './EventPopup.styles'
+import path from "path"
 
 const POPUP_LIST = [
     {
@@ -23,8 +24,10 @@ const POPUP_LIST = [
 
 export default function EventPopup (){
 
+    //현재경로 확인
     const pathname = usePathname(); //💙
 
+    // 현재 켜져 있는 팝업들의 ID를 배열로 관리 (초기값은 모든 팝업 ID)
     const [visiblePopups, setVisiblePopups]=useState<number[]>(
         POPUP_LIST.map(popup=> popup.id)
     )
@@ -39,7 +42,10 @@ export default function EventPopup (){
     //단일일경우
     if(pathname.includes('/register') ) return null; 
     //여러페이지에서 숨기고 싶을때 
-    //??
+    //배열.some(조건)👉 "하나라도있어?"
+    const hidePopupRoutes = ['/register', '/login', '/mypage'];
+    const shouldHide = hidePopupRoutes.some(route=> pathname.includes(route));
+    if(shouldHide) return null;
 
     //활성화된 팝업이 없으면 아무것도 랜더링 하징않음
     if(visiblePopups.length === 0) return null;
@@ -58,6 +64,7 @@ export default function EventPopup (){
                     <S.ImageWrapper>
                         <img src={popup.imageUrl} alt={`이벤트 ${popup.id}`} />
                     </S.ImageWrapper>
+
                     <S.FormWrapper>
                         <S.InputGroup>
                             <S.Input
@@ -80,6 +87,7 @@ export default function EventPopup (){
                             type="checkbox"/>
                             <S.PrivacyText>
                                 개인정보 수집 · 이용에 관한 사항에 동의 [필수]
+                                <span>자세히보기</span>     
                             </S.PrivacyText>
                         </S.PrivacyLabel>
                     </S.FormWrapper>
@@ -89,10 +97,10 @@ export default function EventPopup (){
                             <S.CloseCheckbox type="checkbox"/>
                             오늘 하루 보지 않음 
                         </S.CloseLabel>
-                            <S.CloseBtn
-                            onClick={()=>handleClose(popup.id)}
-                            > X 
-                            </S.CloseBtn>
+                        <S.CloseBtn
+                        onClick={()=>handleClose(popup.id)}
+                        > X 
+                        </S.CloseBtn>
                     </S.FooterWrapper>
 
                 </S.PopupContainer>
