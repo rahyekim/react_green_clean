@@ -88,6 +88,76 @@ app.post('/api/swipe', async(req,res)=>{
 
 })
 
+//새로운 유저를 맞이할 준비 (회원가입)
+app.post('/api/signup', async(req,res)=>{
+
+    //프론트앤드 사용자가보낸 가입정보꺼냄
+    const {email, password, nickname, age, gender, photo, birthdate, bio} =req.body;
+
+    //필수정보 다 있는지 확인 (문지기역할)
+    if(!nickname || !age || !gender ){
+        return res.status(400).json({
+            success:false,
+            message: '필수정보를 모두 입력해주세요'
+        })
+        //트랜잭션을 위해서 단독 커넥션 하나 빌려옴
+        const connection = await pool.getConnection();
+
+    }
+    try{
+        await connection.beginTransaction(); //롤백 
+        //mariaDB 에 새로운 유저정보를 등록 insert
+        const [result] = await connection.query(
+            `insert into users(email, password, nickname, age, gender, bio)values(?,?,?,?,?,?)`,
+             [emeail,pasword,nickname, age, gender, bio] );
+            
+             //방금가입된 사람의 고유ID번호
+             const newUserId = userResult.insertId;
+
+             //user_photos 테이블에 사진저장
+             if(photos && photos.length >0){ 
+                //여러장의 사진을 한번에 저장하기위해 배열 형태로 묶어줌
+                const photoValues = photos.map(p=>[newUserId, p.url, p.isMain]);
+                await connection.query(
+                    `insert into user_photos (user_id, photo_url, is_main) values ?`,
+                    [photoValues]
+                );
+             }
+
+             if(interests && interests.length >0 ){
+                const interestsValues = interests.map(interest=> [newUserId, interest])
+                await connection.query(
+                    `insert into user_interests (user_id, interests) values ?`,[interestsValues]
+                )
+             }
+
+             await connection.commit();
+             
+             //성공적으로 가입되었다고 안내
+             res.json({
+                success:true,
+                message: '회원가입이 완료되었습니다! 승인여부 확인후 2-3일 내로 처리해드리겠습니다'
+             })
+    }catch(err){
+        await connection.rollback();
+
+        console.error(err);
+        //만약 DB에 이메일이나 닉네임이 unique로 설정되어잇는데 똑같은 값이 들어오면 ER_DUP_ENTR냄 뱉어냄
+        if(err.code === 'ER_DUP_ENTRY'){
+            return res.status(409).json({
+                success:false,
+                message: '이미가입된정보가 존재합니다'
+            });
+        }
+        //그외 사고발생시
+        res.status(500).json({
+            success:false, message: "회원가입 처리중에 서버에러가 발생"
+        })
+    }finally{
+        connection.release();
+    }
+})
+
 const PORT=3000
 app.listen(PORT, ()=>{
     console.log(`백엔드 서버가 http://localhost:${PORT} 에서 열심히 돌아가고있습니다`)
