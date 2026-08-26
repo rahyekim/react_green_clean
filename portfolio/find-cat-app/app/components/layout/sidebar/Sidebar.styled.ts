@@ -3,23 +3,33 @@
 import styled from "styled-components"
 import Link from 'next/link'; // ✅
 
-export const SideBarContainer = styled.ul`
 
-width: 14rem !important; //224px
-/* min-height: 100vh;  */
-height: 100%; /* 🔥 추천! 부모 높이(100vh)그대로 따라가라*/
+//SB amdin 2테마는 className으로 스타일이 먹기때문에 기본뼈대 태그만 저장
+export const SideBarContainer = styled.ul<{$isCollapsed:boolean}>`
+
+background-color: #4e73df;
+min-height: 100vh;
+width: ${props=> props.$isCollapsed ? '90px' : '224px'} !important;
+transition: width 0.3s ease-in-out;
+overflow-x: hidden ; //⭐접혔을 때 텍스트 튀어나오지않도록 방어
+
+/* width: 14rem !important; //224px
+/* min-height: 100vh;  
+height: 100%;  🔥 추천! 부모 높이(100vh)그대로 따라가라
 background-color: #4e73df;
 background-image: linear-gradient(180deg, #4e73df 10%, #224ade 100% );
  //180도(위->아래)로..상단->하단색 변하는 그라데이션..
 background-size: cover;
 margin: 0;
 padding: 0;
-list-style: none; /* ul 기본 점 제거 */
+list-style: none; /* ul 기본 점 제거 
 display: flex;
-flex-direction: column; /* 메뉴들을 위에서 아래로 정렬 */
+flex-direction: column; 메뉴들을 위에서 아래로 정렬 */
 `;
-
-export const SideBarBrand =styled.a`
+export const BrandText = styled.div<{$isCollapsed:boolean}>`
+display: ${({$isCollapsed})=>$isCollapsed ? "none" : "block"};
+`;
+export const SideBarBrand =styled(Link)`
 
 height: 4.375rem;  //70px;(로고사이즈)
 text-decoration: none;
@@ -32,38 +42,97 @@ letter-spacing: 0.05rem; /* 자간 간격 */
 z-index: 1; //배경이나 다른자식들한테 로고가 묻혀서 클릭막히는거 방지
 color:#fff;
 
+white-space: nowrap; //⭐
+overflow: hidden;
+
 display: flex;
 align-items: center;
 justify-content: center;
 
+/* flex-direction:  ${({$isCollapsed})=>$isCollapsed ? "column" : "row"}; */
+
 &:hover{
-    color:#fff3cd;
+    color:#fff;
     text-decoration: none;
 }
+.sidebar-brand-icon{
+    font-size: 2rem;   //로고만 왕크게
+}
+
 `;
 
 export const NavItem = styled.li`
-
+width: 100%;
 position: relative; /* 드롭다운이나 뱃지 등 서브 요소의 기준점 */
 `;
 
-export const NavLink = styled.a`
-    /* ⭐block: 메뉴 가로 전체 영역(width: 100%)이 전부 클릭할 수 있는 버튼 */
-    display: block; 
-    width:100%; 
-    padding:1rem; // 글자+padding : 클릭영역...
-    /*메뉴링크: display:block+padding  */
-    text-align: left;
-    color: rgba(255, 255, 255, .85) ;//빛의조합 섞을수록 하얀색 투명도 80%
-    font-weight: 700;
+export const NavLink = styled(Link)<{$isCollapsed:boolean}>`
+/* ⭐block: 메뉴 가로 전체 영역(width: 100%)이 전부 클릭할 수 있는 버튼 */
+display: flex; 
+align-items: center;
+width:100%; 
+/* padding:1rem; // 글자+padding : 클릭영역... */
+/*메뉴링크: display:block+padding  */
+text-align: left;
+color: rgba(255, 255, 255, .85) ;//빛의조합 섞을수록 하얀색 투명도 80%
+font-weight: 700;
+text-decoration: none;
+white-space: nowrap; //⭐
+
+//사이드바가 접히면 아이콘 가운데만 정렬되도록 조정
+justify-content: ${({$isCollapsed})=> $isCollapsed ? "center": "flex-start"};
+
+padding: ${({$isCollapsed})=> $isCollapsed ? "1rem 0" : "1rem 1.5rem"};
+
+span{
+    display: ${({$isCollapsed})=> $isCollapsed ? "none" : "inline"};
+    margin-left: 15px;
+}
+
+&:hover{
+    color:#fff;
     text-decoration: none;
-    &:hover{
-        color:#fff;
+
+    i, svg{
+        transform: scale(1.2);
     }
-    svg,i{
-        margin-right: 0.25rem; /* 4px 간격 */
-        //4px 여백 아이콘 오른쪽 여백 🏠  Home
-    }
+}
+svg,i{
+
+    transition: transform 0.2s ease; //⭐부드럽게 커짐
+}
+`;
+
+export const ToggleBtnWrapper = styled.div`
+
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 1rem 0;
+
+
+`;
+
+export const ToggleBtn = styled.button`
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background-color: rgba(255,255,255, .2);
+border: none;
+color: white;
+cursor: pointer;
+
+outline: none !important; //⭐포커스클릭할때 생기는 기본테두리
+
+display: flex;
+align-items: center;
+justify-content: center;
+transition: background-color .2s ease;
+
+&:hover{
+    background-color: rgba(255,255,255, .3); 
+    
+}
 `;
 
 export const Divider = styled.hr`

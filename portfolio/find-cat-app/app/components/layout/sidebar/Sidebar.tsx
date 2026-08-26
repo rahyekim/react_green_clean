@@ -1,91 +1,109 @@
 'use client'
 
-import React from "react"
-import { SideBarContainer,SideBarBrand,NavLink,NavItem,Divider } from "./Sidebar.styled"
-
+import React, { useState } from "react"
+import * as S from './Sidebar.styled'
 
 export const Sidebar:React.FC = ()=>{
 
+    const [isCollapsed, setIsCollapsed]=useState(false);
+
+    const handleToggle = ()=>{
+        setIsCollapsed(prev=> !prev)
+    }
 
     return(
         <>
-        <SideBarContainer className="sidebar sidebar-dark accordion">
+        <S.SideBarContainer 
+        className="sidebar sidebar-dark accordion"
+        $isCollapsed={isCollapsed}
+        >
             {/*메뉴 접기/펴기 동작 연결용 */}
-            <SideBarBrand href="/">
+            <S.SideBarBrand href="/admin">
                 <div className="sidebar-brand-icon rotate-n-15">
                     {/*left 아이콘자리, 아이콘 -15도 회전 */}
                     <i className="fas fa-paw"></i> 
                 </div>
                     {/* right 브랜드text자리 */}
-                <div className="sidebar-brand-text mx-3">
+                <S.BrandText 
+                className="sidebar-brand-text mx-3"
+                 $isCollapsed={isCollapsed}>
                     Admin
-                </div>
-            </SideBarBrand>
+                </S.BrandText>
+            </S.SideBarBrand>
 
-            <Divider className="my-0"/>
+            <S.Divider className="my-0"/>
 
-            <NavItem className="active">
-                <NavLink href="/admin">
+             {/* 1. 대시보드 (메인) 링크 */}
+            <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/admin">
                     <i className="fas fa-fw fa-home me-2"></i>
                     <span>DashBoard</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
 
-            <Divider className="my-0 mb-2"/>
+            <S.Divider className="my-0 mb-2"/>
 
             {/*  */}
-             <NavItem className="active">
-                <NavLink href="/admin/pick">
+             <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/admin/pick">
                     <i className="fas fa-fw fa-heart me-2"></i>
                     <span>추천동물 설정</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
             {/*  */}
-             <NavItem className="active">
-                <NavLink href="/admin/campaign">
+             <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/admin/campaign">
                     <i className="fas fa-fw fa-cat me-2"></i>
                     <span>입양 캠페인</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
            
-             <NavItem className="active">
-                <NavLink href="/admin/intergrate">
+             <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/admin/intergrate">
                     <i className="fas fa-fw fa-dog me-2"></i>
                     <span>통합게시물설정</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
 
-            <NavItem className="active">
-                <NavLink href="/">
+            <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/">
                     <i className="fas fa-fw fa-cog me-2"></i>
                     <span>설정</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
 
-             <NavItem className="active">
-                <NavLink href="/">
+             <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/">
                     <i className="fas fa-fw fa-dove me-2"></i>
                     <span>설정</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
 
-             <NavItem className="active">
-                <NavLink href="/">
+             <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/">
                     <i className="fas fa-fw fa-carrot me-2"></i>
                     <span>설정</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
 
-              <NavItem className="active">
-                <NavLink href="/">
+              <S.NavItem className="active">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/">
                     <i className="fas fa-fw fa-bone me-2"></i>
                     <span>설정</span>
-                </NavLink>
-            </NavItem>
+                </S.NavLink>
+            </S.NavItem>
 
-            <Divider className="mt-2"/>
+            <S.Divider />
+
+            <S.ToggleBtnWrapper>
+                <S.ToggleBtn onClick={handleToggle}>
+                    <i className=
+                    {`fas fa-fw ${isCollapsed ? 'fa-angle-right': 'fa-angle-left'}`}></i>
+            
+                </S.ToggleBtn>
+            </S.ToggleBtnWrapper>
         
-        </SideBarContainer>
+        </S.SideBarContainer>
     
         </>
     )

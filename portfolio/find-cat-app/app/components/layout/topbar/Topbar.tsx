@@ -43,7 +43,6 @@ export const Topbar:React.FC = ()=>{
 
         //2.로그인 페이지('/login')로 사용자를 이동시킴
         router.push('/admin/login') //🌟
-        // navigate('/login');
     }
     
 
@@ -93,8 +92,7 @@ export const Topbar:React.FC = ()=>{
                     }}
                     >
 {/* ⭐a태그의 기본 클릭이벤트(페이지최상단으로 올라가는 현상을) 막기위해⭐ */}
-                        <span
-                        className="mr-2 d-none d-lg-inline text-gray-600 small me-2">
+                        <span className="mr-2 d-none d-lg-inline text-gray-600 small me-2">
                             {userName}
                         </span>
                         <TopbarProfile 
