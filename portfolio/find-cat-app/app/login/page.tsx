@@ -1,12 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation';
 
 import * as S from '../../css/style.styled'
 
 import Header from '../components/Header';
 
 export default function Login(){
+
+    const router = useRouter();
 
     const [email, setEmail]=useState('');
     const [password, setPassword]=useState('');
@@ -26,12 +29,14 @@ export default function Login(){
                     email, password
                 })
             });
-            if(!res.ok) {
-                alert("이메일 또는 비밀번호가 일치하지 않습니다")
-                return;
-            }
             //로그인성공 
             const data = await res.json();
+
+            if(!res.ok) {
+                alert(data.message || "이메일 또는 비밀번호가 일치하지 않습니다")
+                return;
+            }
+           
 
             //✅localStorage는 오직 문자열(String) 데이터만 저장
             localStorage.setItem('user', JSON.stringify(data))
@@ -48,21 +53,18 @@ headers: {"Authorization": `Bearer ${token}`}
             //백엔드에서 받아온 회원의 닉네임(data.nickname)으로 인사함
             alert(`환영합니다 ${data.nickname}님`)
             //로그인성공-> 웹사이트 홈페이지로 이동
-            window.location.href='/';
+            router.push('/')
+            // window.location.href='/';
             
         }catch(err){
             console.error("로그인에러",err)
             alert('서버와 연결할수 없습니다. 백엔드 서버가 켜져 있는지 확인해주세요');
         }
+    };
 
-        //🌟카카오 로그인🌟 연동 
-        
-        const handleKaKaoLogin = async()=>{
-            window.location.href= 'http://localhost:8080/oauth2/authorization/kakao'
-
-            
-            
-        }
+    //🌟카카오 로그인🌟 연동 
+    const handleKaKaoLogin = async()=>{
+        window.location.href= 'http://localhost:8080/oauth2/authorization/kakao'
         
     }
     return(
@@ -96,6 +98,7 @@ headers: {"Authorization": `Bearer ${token}`}
                         <br/>
                         <S.BaseBtn
                         $variant='kakao'
+                        onClick={handleKaKaoLogin}
                         >카카오로 간편하게 시작하기</S.BaseBtn>
                         <br/>
                         <S.BaseBtn

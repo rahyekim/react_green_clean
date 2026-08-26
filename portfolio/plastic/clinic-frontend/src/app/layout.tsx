@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-// import "./globals.css";
 import styled from "styled-components";
 import { Globalstyle } from "@/style/Global.styles";
 

@@ -553,12 +553,12 @@ export const ModalBg= styled.div`
 display: flex;
 justify-content: center;
 
-//모달 창을 세로 기준 화면 💡맨 위에서 10vh(화면 높이의 10%)만큼 떨어진 위치
+//모달 창을 세로 기준 화면 💡맨 위에서 상하좌우 10vh(화면 높이의 10%)만큼 떨어진 위치
 align-items: flex-start;
 padding: 10vh;
-/* align-items: center; */
+/* padding-top:10vh => 상단위치만*/ 
 
-position: fixed;
+position: fixed; //전부0으로 붙어서 전체 꽉 차도록 고정
 top:0;
 left: 0;
 right: 0;

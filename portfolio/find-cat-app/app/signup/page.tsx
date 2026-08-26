@@ -1,13 +1,15 @@
 'use client'
 
 import React, {useState, useRef} from "react"
+import { useRouter } from "next/navigation";
 import * as S from '../../css/style.styled'
 import { Password, PestControlOutlined, PestControlRodent, PetsOutlined, PetsRounded, PetsSharp, PetsTwoTone, Phone } from "@mui/icons-material";
 import DaumPostcodeEmbed, {Address} from 'react-daum-postcode';
-import { profile } from "console";
 
 import Header from "../components/Header";
 export default function SignupPage(){
+
+    const router = useRouter();
 
 //🌟가입방법: step0.가입종류-> step1.약관(동의)=> step2.휴대폰(인증)=>step3.정보입력
     const [step, setStep]=useState(0);
@@ -236,7 +238,8 @@ export default function SignupPage(){
             //4단계 결과처리
             if(res.status===201 || res.ok){
                 alert("🎉 어서찾아주시개냥 회원이 되신것을 환영합니다");
-                window.location.href = '/login';
+                router.push('/login')
+                // window.location.href = '/login';
             }else{
                 //백엔드에서 400등 에러를 뱉었을 경우
                 const errText = await res.text();
@@ -361,6 +364,7 @@ export default function SignupPage(){
                             <label>
                                 <input
                                 type="checkbox"
+                                name="marketingAgreed"
                                 checked={formData.marketingAgreed}
                                 onChange={e=>setFormData({...formData, marketingAgreed:e.target.checked})}
                                 /> 마케팅 정보 email, SMS 수신동의 (선택)
