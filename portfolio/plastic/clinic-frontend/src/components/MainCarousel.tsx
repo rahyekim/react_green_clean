@@ -5,9 +5,9 @@ import useEmblaCarousel from "embla-carousel-react"
 import * as S from './MainCarousel.styles'
 
 const MAIN_SLIDES =[
-    {id:1, imageUrl:'/images/main-banner1.jpg', title: '예쁘면다야!'},
-    {id:2, imageUrl:'/images/banner2.jpg', title: '레이어핏 울쎄라'},
-    {id:3, imageUrl:'/images/main-banner3.jpg', title: '여름시즌 한정이벤트!'},
+    {id:1, imageUrl:'/images/main/banner/banner1.jpg', title: '예쁘면다야!'},
+    {id:2, imageUrl:'/images/main/banner/banner2.jpg', title: '레이어핏 울쎄라'},
+    {id:3, imageUrl:'/images/main/banner/main-banner3.jpg', title: '여름시즌 한정이벤트!'},
 ];
 export default function MainCarousel (){
 
