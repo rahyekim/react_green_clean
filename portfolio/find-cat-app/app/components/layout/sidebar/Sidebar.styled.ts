@@ -43,7 +43,7 @@ z-index: 1; //배경이나 다른자식들한테 로고가 묻혀서 클릭막�
 color:#fff;
 
 white-space: nowrap; //⭐
-overflow: hidden;
+overflow: hidden; //⭐
 
 display: flex;
 align-items: center;
