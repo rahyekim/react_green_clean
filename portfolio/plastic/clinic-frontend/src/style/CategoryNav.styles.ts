@@ -38,7 +38,7 @@ ${({$active})=>$active && `
 &::after{
  content:'';
  position:absolute;
- bottom: -19px; //⭐위치 아래로 조굼 내려와야
+ bottom: -18px; //⭐위치 아래로 조굼 내려와야
  left: 50%;
  transform: translateX(-50%); //가로가운데정렬
  border-width: 0 13px 13px 13px ; //⭐핵심 삼각형크기

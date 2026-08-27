@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 
 export const FooterWrapper= styled.footer`
-position: relative; //🔸fixed
+/* position: relative; //🔸fixed
 bottom: 0;
-right: 0;
+right: 0; */
 
 width: 100%;
 z-index: 999;
@@ -34,8 +34,10 @@ padding-bottom: 40px;
 border-bottom: 1px solid #333;
 margin-bottom: 40px;
 
-@media (max-width:1024px){
+@media (max-width:768px){
     flex-direction: column;
+    align-items: center; //⭐ 가운데정렬
+    text-align: center;  //⭐ 텍스트 가운데
     gap: 30px;
 }
 `;
@@ -110,17 +112,21 @@ display: flex;
 justify-content: space-between;
 align-items: flex-end;
 
-@media (max-width:1024px){
+@media (max-width:768px){
     flex-direction: column;
-    align-items: flex-start;
+    /* align-items: flex-start; */
+    align-items: center;
+    text-align: center;
     gap: 40px;
 }
+
 
 `;
 export const CompanyInfo= styled.div`
 display: flex;
 flex-direction: column;
 gap: 10px;
+white-space: nowrap;
 `;
 export const CompanyName= styled.h2`
 font-size: 24px;
@@ -144,8 +150,8 @@ flex-direction: column;
 align-items: flex-end;
 gap: 20px;
 
-@media (max-width: 1024){
-    align-items: flex-start;
+@media (max-width: 768px){
+    align-items: center;
     width: 100%;
 }
 `;

@@ -35,6 +35,7 @@ font-size: 16px;
 font-weight: 600;
 color: #fff;
 margin-right: 10px;
+white-space: nowrap;
 `;
 export const Input= styled.input`
 width: 180px;
@@ -47,6 +48,7 @@ padding: 0 15px;
 font-size: 14px;
 outline: none;
 transition: border-color 0.2s;
+min-width: 0;
 
 &::placeholder{
     color: #888;
@@ -89,6 +91,7 @@ display: flex;
 align-items: center;
 gap: 6px;
 cursor: pointer;
+white-space: nowrap;
 `;
 export const  Checkbox= styled.input`
 appearance: none;

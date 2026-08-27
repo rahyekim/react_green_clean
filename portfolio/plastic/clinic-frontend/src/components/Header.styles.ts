@@ -28,6 +28,7 @@ display: flex;
 align-items: center; 
 justify-content: flex-start; // 왼쪽 정렬
 flex:1; // 👈flex 1 1 0%
+min-width: 0;
 
 
 `;
@@ -49,9 +50,11 @@ align-items: center;
 justify-content: center; // 내부 요소(아이템)들을 중앙으로
 gap: 40px;
 flex: 2; // 👈 여기가 핵심! 공간을 1만큼 차지함
-
 white-space: nowrap;
 
+@media (max-width: 1200px) {
+    gap: 24px;
+}
 @media (max-width: 1024px){
     display: none;
 }
@@ -149,6 +152,7 @@ svg{
 export const DesktopOnly= styled.div`
 display: flex;
 align-items: center;
+justify-content: flex-end;
 gap: 12px;
 
 @media (max-width: 1024px){
