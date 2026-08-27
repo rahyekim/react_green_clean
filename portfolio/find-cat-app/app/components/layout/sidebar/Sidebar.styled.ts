@@ -127,8 +127,8 @@ outline: none !important; //⭐포커스클릭할때 생기는 기본테두리
 display: flex;
 align-items: center;
 justify-content: center;
-transition: background-color .2s ease;
 
+transition: background-color .2s ease;
 &:hover{
     background-color: rgba(255,255,255, .3); 
     

@@ -12,7 +12,7 @@ export default function Footer (){
                 <S.TopSection>
                     <S.CsInfo>
                         <S.PhoneNumber>02.932.2222</S.PhoneNumber>
-                        <S.Cstitle>CS</S.Cstitle>
+                        <S.Cstitle>CS CENTER</S.Cstitle>
                     </S.CsInfo>
                     
                     <S.ScheduleWrapper>
@@ -57,7 +57,7 @@ export default function Footer (){
                                 실비보험 안내
                             </S.PolicyBtn>
                              <S.PolicyBtn>
-                                비급여
+                                비급여 진료비용 안내
                             </S.PolicyBtn>
                         </S.PolicyButtons>
 

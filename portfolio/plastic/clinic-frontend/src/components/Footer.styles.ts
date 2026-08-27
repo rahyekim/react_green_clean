@@ -2,22 +2,24 @@ import styled from "styled-components";
 
 
 export const FooterWrapper= styled.footer`
+position: relative; //🔸fixed
+bottom: 0;
+right: 0;
+
 width: 100%;
+z-index: 999;
+
 background-color: #000;
 color: #fff;
 padding: 60px 0 80px 0;
-position: relative; //🔸fixed
-z-index: 999;
-bottom: 0;
-right: 0;
 
 font-family: 'Malgum Gothic','Apple SD Gothic Neo', sans-serif;
 
 `;
 export const FooterInner= styled.div`
+width: 100%;
 max-width: 1860px;
 margin: 0 auto;
-/* height: 180px;  //🔸 */
 padding: 0 40px;
 
 @media (max-width:1024px){
