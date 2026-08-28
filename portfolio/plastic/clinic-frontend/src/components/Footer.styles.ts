@@ -110,7 +110,7 @@ max-width: 260px;
 export const BottomSection= styled.div`
 display: flex;
 justify-content: space-between;
-align-items: flex-end;
+align-items: flex-end; //baseline밑줄에 맞춤
 
 @media (max-width:768px){
     flex-direction: column;

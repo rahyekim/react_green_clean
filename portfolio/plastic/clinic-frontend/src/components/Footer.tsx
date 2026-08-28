@@ -61,7 +61,7 @@ export default function Footer (){
                             </S.PolicyBtn>
                         </S.PolicyButtons>
 
-                        <div className="">
+                        <div>
                             <S.FamilySiteTitle>Family</S.FamilySiteTitle>
                             <S.FamilySiteLogos>
                                 <div className="logo-placeholder">

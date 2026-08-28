@@ -25,7 +25,7 @@ export default function Footer (){
              </Link>
         
             <Link href='/shelter'>
-                <S.NavItem>
+                <S.NavItem $active={pathname==='/shelter'}>
                 <PetsIcon/>
                 <span>보호소</span>
                 </S.NavItem>

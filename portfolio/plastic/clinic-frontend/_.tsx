@@ -118,3 +118,7 @@ export const ErrorText = styled.span`
     {/* 에러가 있을 때만 빨간 글씨 띄우기! */}
     {errors.userName && <S.ErrorText>{errors.userName}</S.ErrorText>}
 </S.FormGroup>
+
+const hidePopupRoutes = ['/register', '/login', '/mypage'];
+
+const isHide = hidePopupRoutes.some(route=> Pathnamame.include(route))

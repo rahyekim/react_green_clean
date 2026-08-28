@@ -10,6 +10,8 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart'; //Tinder처럼 �
 import 'screens/signup_profile_screen.dart';
 //로그인
 import 'screens/login_screen.dart';
+//
+import 'screens/splash_screen.dart';
 
 void main(){
   runApp(const DatingApp());  //DatingApp 위젯을 화면에 그림
@@ -32,7 +34,8 @@ class DatingApp extends StatelessWidget{
         scaffoldBackgroundColor: const Color(0xFF12121A),
       ),
       //첫화면을 변경 할때는 아래를 바꿈
-      home: const LoginScreen(),
+      //home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

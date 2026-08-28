@@ -4,8 +4,6 @@ import styled, {css} from 'styled-components';
 
 // export const  = styled.div``;
 
-
-
 export const AppWrapper = styled.div`
 display: flex;
 justify-content: center;
@@ -49,7 +47,7 @@ background-color: #fff;
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 15px 20px; ///????
+padding: 16px 20px; 
 `;
 
 export const Logo = styled.h4`

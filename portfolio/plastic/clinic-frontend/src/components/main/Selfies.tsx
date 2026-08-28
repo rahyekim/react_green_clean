@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from "react";
-import * as S from '@/style/Terms.styles';
+import * as S from '@/style/Selfi.styles';
 
 
 //슬라이더에 들어갈 임시 데이터배열
@@ -57,8 +57,9 @@ export default function Selfied (){
                                     <span>♥</span>{item.likes}
                                 </S.SelfieLikeBadge>
                                 <S.SelfieViewCount>
-                                    {item.views}명이 보고있어요
-                                    <span>SELFIED</span>
+                                    <S.AccentText>{item.views}명</S.AccentText>
+                                   이 보고있어요
+                                    <S.Selfied>SELFIED</S.Selfied>
                                 </S.SelfieViewCount>
                             </S.SelfieCardOverlay>
                         </S.SelfieCard>

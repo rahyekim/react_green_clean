@@ -45,7 +45,7 @@ export default function EventPopup (){
     //배열.some(조건)👉 "하나라도있어?"
     const hidePopupRoutes = ['/register', '/login', '/mypage'];
     const shouldHide = hidePopupRoutes.some(route=> pathname.includes(route));
-    if(shouldHide) return null;
+    if(shouldHide) return null; //숨겨라!(null) return;하면 undefiend로 무얼그려야할지모르겟다아 오류뿜음 
 
     //활성화된 팝업이 없으면 아무것도 랜더링 하징않음
     if(visiblePopups.length === 0) return null;
