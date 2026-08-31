@@ -5,7 +5,7 @@ import { Temporal } from "@js-temporal/polyfill";
 // type props={
 //     children: React.ReactNode;
 // }
-// {children}:props 와 같음 
+// {children}:props 와 같음   🌟🌟🌟다시보기
 
 export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
 

@@ -73,17 +73,19 @@ export default function Shelter(){
                     </S.AlertInfo>
                     <S.ToggleBtn $isOn={isAlertOn}
                     onClick={()=>setIsAlertOn(prev=>!prev)}
-                    > 버튼
+                    > 
                         <div className="handle"/>
                     </S.ToggleBtn>
                 </S.AlertBanner>
 
                 <S.Divider/>
+
                 <S.RecommendSection>
                     <S.SectionHeader>
                         <A.H2Size20>이달의 추천동물</A.H2Size20>
                         <Link href="#more" className="more-link">
-                        더보기<ChevronRightIcon sx={{fontSize:'18px'}}/>
+                            더보기
+                            <ChevronRightIcon sx={{fontSize:'18px'}}/>
                         </Link>
                     </S.SectionHeader>
 
@@ -113,9 +115,9 @@ export default function Shelter(){
                         <S.AnimalInfo>
                             <S.BadgeGroup>
                                 <S.Badge $type="status">완료</S.Badge>
-                                <S.Badge $type="femail">여아</S.Badge>
+                                <S.Badge $type="female">여아</S.Badge>
                                 <S.Badge $type="male">남아</S.Badge>
-                                <S.Badge $type="unkown">완료</S.Badge>
+                                <S.Badge $type="unknown">미정</S.Badge>
                             </S.BadgeGroup>
 
                             <S.InfoGrid>
@@ -132,7 +134,9 @@ export default function Shelter(){
                     </S.AnimalCard>
                 </S.ListSection>
             </A.Container>
+
             <Footer/>
+
         </A.AppWrapper>
         </>
     )

@@ -66,9 +66,9 @@ export const Sidebar:React.FC = ()=>{
             </S.NavItem>
 
             <S.NavItem className="active">
-                <S.NavLink  $isCollapsed={isCollapsed} href="/">
+                <S.NavLink  $isCollapsed={isCollapsed} href="/admin/shelter">
                     <i className="fas fa-fw fa-cog me-2"></i>
-                    <span>설정</span>
+                    <span>보호소 설정</span>
                 </S.NavLink>
             </S.NavItem>
 

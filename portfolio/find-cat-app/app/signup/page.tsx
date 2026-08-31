@@ -197,7 +197,7 @@ export default function SignupPage(){
             if(profileFile){
                 //이미지는 JSON이아니라 FormData라는 택배 상자에 담아서 보내야
                 const imageFormData = new FormData(); 
-                imageFormData.append('file', profileFile);
+                imageFormData.append('file', profileFile); //(이름표key, 넣을물건value)
     
                 const res = await fetch(`/api/members/upload-profile`,{
                     method:"POST",
