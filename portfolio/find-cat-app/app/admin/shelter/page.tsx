@@ -50,8 +50,25 @@ export default function Shelter (){
     const handleSubmit = async(e:React.FormEvent)=>{
         e.preventDefault();
 
-        //👍🌟formData는 일반 객체 {} => Object.entries()로 배열 형태로 바꿔 [[],[]....]🌟
+        
         const submitData = new FormData();
+        
+        // 💡/// 핵심: 현재 선택된 방식에 따라 사용하지 않는 데이터는 확실히 지워줌!
+        const currentData = { ...formData };
+        if (imgInputType === 'LINK') {
+            currentData.imageFile = null; // 링크로 보낼땐 파일 비우기
+        } else {
+            currentData.imageUrl = '';    // 파일로 보낼땐 링크 비우기
+        // 객체를 2차원 배열로 바꿔서 폼데이터에 담기
+    Object.entries(currentData).forEach(([key, value]) => {
+        // 값이 null이 아니고 빈 문자열도 아닐 때만 담기 (단, 파일은 null이 아닐 때)
+        if (value !== null && value !== '') {
+            submitData.append(key, value);
+        }
+    });
+        
+        
+            //👍🌟formData는 일반 객체 {} => Object.entries()로 배열 형태로 바꿔 [[],[]....]🌟
         Object.entries(formData).forEach(([key,value])=> {
             if(value !== null){
                 submitData.append(key,value)
@@ -180,7 +197,12 @@ export default function Shelter (){
                                 name="imgInputType"
                                 label="URL(링크)로 입력"
                                 checked={imgInputType==='LINK'}
-                                onChange={()=>setImgInputType('LINK')}
+                                onChange={()=>{
+                                    setImgInputType('LINK')
+                                    // 💡 링크로 바꿨을 때 업로드했던 파일(imageFile)을 null로 비워줌
+                                    setFormData(prev=>({...prev, imageFile:null}) )
+
+                                }}
                                 style={{marginRight:'20px'}}
                                 />
                                 <Form.Check
@@ -189,7 +211,11 @@ export default function Shelter (){
                                 name="imgInputType"
                                 label="직접 업로드"
                                 checked={imgInputType==='UPLOAD'}
-                                onChange={()=>setImgInputType('UPLOAD')}
+                                onChange={()=>{
+                                    setImgInputType('UPLOAD');
+                                    //💡 업로드로 바꿨을 때 입력했던 링크(imageUrl)를 빈 문자열로 비워줌
+                                    setFormData(prev=> ({...prev, imageUrl:""}))
+                                }}
                                 />
                             </div>
                             {(formData.imageUrl || formData.imageFile) && (

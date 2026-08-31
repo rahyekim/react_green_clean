@@ -49,8 +49,8 @@ class PrivacyScreen extends StatelessWidget{
   ),); 
 }
 
-class PaymentHisgoryScreen extends StatelessWidget{
-  const PaymentHisgoryScreen({super.key});
+class PaymentHistoryScreen extends StatelessWidget{
+  const PaymentHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context)=>  
@@ -156,7 +156,8 @@ class _MyPageScreenState extends State<MyPageScreen>{
       backgroundColor: bgColor,
       elevation: 0,
       title: const Text('마이페이지', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),),
-      actions: [ IconButton(
+      actions: [ 
+        IconButton(
         icon: const Icon(Icons.settings , color: Colors.white70),
         onPressed: (){
           print('설정클릭');
@@ -183,30 +184,243 @@ class _MyPageScreenState extends State<MyPageScreen>{
   }
 
   Widget _buildProfileCard(){
-    return Container();
+    return Container(
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          blurRadius: 10,
+          offset: const Offset(0, 5)
+          )],
+        ),
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.bottomCenter,
+            clipBehavior: Clip.none, // 프로필 이미지가 살짝 걸쳐질 때 잘리지 않도록 설정
+            children: [
+              // 상단 그라데이션 배경 영역
+              Container(
+                height: 100,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [purpleAccent.withOpacity(0.4) , cardColor],
+                    begin: Alignment.topCenter, 
+                    end: Alignment.bottomCenter
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24), 
+                      topRight: Radius.circular(24)
+                      )
+                    ),
+                  ),
+                // 하단에 겹쳐지는 프로필 아이콘 영역
+                Positioned(
+                    bottom:0 , 
+                    child: Stack(
+                    children: [
+                      Container(
+                      width: 80,
+                      height:80,
+                      decoration:BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color:pinkAccent, width:2),
+                          color: Colors.pink[100],
+                        ),
+                        child: const Center(
+                          child: Text('🌸', style: TextStyle(fontSize:40))
+                        )),
+                        ////
+                        ///????
+                    ]),
+                  ),
+             ],
+            ), 
+            const SizedBox(height: 16,),
+            const Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('별빛소나타', style:TextStyle(color: Colors.white, fontSize:24 , fontWeight: FontWeight.bold)),
+              SizedBox(width: 6,),
+              Icon(Icons.verified, color: Colors.lightBlueAccent, size: 20,)
+            ],),
+            const SizedBox(height: 8,),
+            Text('28세 서울 마포구', style: TextStyle(color:subTextColor, fontSize: 14),),
+            const SizedBox(height: 12,),
+            Text('커피 한잔과 함께 ....', style: TextStyle(color: subTextColor, fontSize: 13),),
+            const SizedBox(height: 24,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildStatItem('142', '좋아요'),
+                _buildVerticalDivider(),
+                _buildStatItem('23', '매칭'),
+                _buildVerticalDivider(),
+                _buildStatItem('8', '일기'),
+              ],
+            ),
+            const SizedBox(height: 24,),
+            OutlinedButton(
+              style:OutlinedButton.styleFrom(
+                side: BorderSide(color: subTextColor.withOpacity(0.3),)
+                ,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 12),
+              ), 
+            onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProfileEditScreen() ));
+            },
+            child: const Text('프로필 편집', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)
+          ),
+          const SizedBox(height: 20,),
+        ],
+      ),
+    );
   }
 
   Widget _buildPremiumBanner(){
-    return Container();
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: goldColor.withOpacity(0.3), width: 1),
+      ),
+      child: Row(
+        children: [
+          const Text('👑', style: TextStyle(fontSize: 32,),),
+          const SizedBox(width: 16,),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('SPARK PREMIUM', style: TextStyle(color: goldColor, fontSize: 16, fontWeight: FontWeight.bold),),
+                const SizedBox(height: 4,),
+                Text('무제한 좋아요 슈퍼 좋아요 누가 나를 좋아했는지 확인', style: TextStyle(color: subTextColor, fontSize: 12),),
+              ],
+
+          )),
+          ElevatedButton(  //BeveledRectangleBorder??
+            style: ElevatedButton.styleFrom(
+              backgroundColor: goldColor, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+            onPressed: (){
+              print("인앱 결제 프로세스 시작");
+            }, child: const Text('업그레이드', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),))
+        ],
+      ),
+    );
   }
+
   Widget _buildMenuList(){
-    return Container();
+    return Container(
+      decoration: BoxDecoration(
+        color: cardColor, borderRadius: BorderRadius.circular(16),),
+      child: Column(
+        children: [
+          _buildMenuTile(
+            icon: '📸', title: '사진 관리',
+            onTap:(){
+              _askPhotoPermission((){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const PhotoManagement()));
+              });
+            },
+          ),
+          _buildMenuDivider(),
+          _buildMenuTile(icon:'🔒', title:'개인정보 보호',
+          onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>const PrivacyScreen()))
+          ),
+          _buildMenuDivider(),
+          _buildMenuTile(
+            icon:'💳', title:'결제 내역', 
+            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> const PaymentHistoryScreen()))
+          ),
+          _buildMenuDivider(),
+          ListTile(
+            leading: const Text('🚪', style: TextStyle(fontSize: 20),),
+            title: const Text('로그아웃', style: TextStyle(color: Colors.redAccent, fontSize: 16, fontWeight: FontWeight.bold),),
+            trailing: const Icon(Icons.chevron_right, color:Colors.white24,),
+            onTap: (){
+              print("로그아웃처리");
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   //조립용 도구
+
+ 
+
   Widget _buildStatItem(String number, String label){
-    return Column();
+    return Column(
+      children: [
+      Text(number, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),),
+      const SizedBox(height: 4,),
+      Text(label, style: TextStyle(color:subTextColor, fontSize:12, fontWeight: FontWeight.bold ),)
+      ]
+
+    );
   }
-  Widget _buildVertivalDivider(){
-    return Container();
+  Widget _buildVerticalDivider(){
+    return Container(
+      height: 30, width: 1, color: subTextColor.withOpacity(0.2),
+    );
   }
+
+    Widget _buildMenuTile({required String icon, required String title, required VoidCallback onTap}){
+    return ListTile(
+      leading: Text(icon, style: const TextStyle(fontSize: 20),),
+      title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+      trailing: const Icon(Icons.chevron_right, color: Colors.white),
+      onTap: onTap,
+    );
+   }
+  
+  Widget _buildMenuDivider(){
+    return Divider(color: bgColor, thickness: 2, height: 2,);
+  }
+
   Widget _buildBottomNav(){
-    return Theme();
+    return Theme(
+      data:  Theme.of(context).copyWith(splashColor: Colors.transparent, highlightColor: Colors.transparent),
+      child: BottomNavigationBar(
+        backgroundColor: const Color(0xFF1A1A24),
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        selectedItemColor: pinkAccent,
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        onTap: (index){
+          setState(() => _selectedIndex=index,);
+        },
+        items: [
+          _buildBottomNavItem('매칭', Icons.local_fire_department, 0),
+          _buildBottomNavItem('커뮤니티', Icons.language, 1),
+          _buildBottomNavItem('일기', Icons.menu_book, 2),
+          _buildBottomNavItem('채팅', Icons.chat_bubble_outline, 3),
+          _buildBottomNavItem('MY', Icons.person_outline, 4),
+          ]
+      )
+    );
   }
 
   BottomNavigationBarItem _buildBottomNavItem(String label, IconData icon, int idx){
-    return BottomNavigationBarItem(icon: icon);
+    bool isSelected = _selectedIndex == idx;
+    return BottomNavigationBarItem(icon: 
+    Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: isSelected? pinkAccent.withOpacity(0.15) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(icon),
+    ),
+    label: label, 
+    );
   }
+
+  
 }
 
 
