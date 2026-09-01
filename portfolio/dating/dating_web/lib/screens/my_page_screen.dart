@@ -230,8 +230,15 @@ class _MyPageScreenState extends State<MyPageScreen>{
                         child: const Center(
                           child: Text('🌸', style: TextStyle(fontSize:40))
                         )),
-                        ////
-                        ///????
+                        Positioned(
+                          bottom: 0, right: 0,
+                          child: Container(
+                            width: 20, height: 20,
+                            decoration: BoxDecoration(
+                              color: Colors.greenAccent, shape: BoxShape.circle,
+                              border: Border.all(color: cardColor,width: 3)
+                            ),
+                          ))
                     ]),
                   ),
              ],
@@ -293,7 +300,7 @@ class _MyPageScreenState extends State<MyPageScreen>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('SPARK PREMIUM', style: TextStyle(color: goldColor, fontSize: 16, fontWeight: FontWeight.bold),),
+                Text('SPARK PREMIUM', style: TextStyle(color: goldColor, fontSize: 16, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 4,),
                 Text('무제한 좋아요 슈퍼 좋아요 누가 나를 좋아했는지 확인', style: TextStyle(color: subTextColor, fontSize: 12),),
               ],

@@ -10,8 +10,11 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart'; //Tinder처럼 �
 import 'screens/signup_profile_screen.dart';
 //로그인
 import 'screens/login_screen.dart';
-//
+//첫화면 
 import 'screens/splash_screen.dart';
+//마이페이지
+import 'screens/my_page_screen.dart';
+
 
 void main(){
   runApp(const DatingApp());  //DatingApp 위젯을 화면에 그림
@@ -39,20 +42,92 @@ class DatingApp extends StatelessWidget{
     );
   }
 }
-  //프로필 데이터를 담아둘 모델
-  class Profile{
-    final int id;
-    final String nickname;
-    final int age;
-    final String bio;
-    final String? photoUrl;
 
-    Profile({ //클래스 생성자(필수값과 선택 값 지정)
-    required this.id,
-    required this.nickname,
-    required this.age,
-    required this.bio,
-    this.photoUrl,
+//공통 뼈대 화면 하단바 푸터를 고정해 두고 알맹이만 갈아끼우는 rootscreen
+class RootScreen extends StatefulWidget {
+  final int initialIndex;
+  const RootScreen({super.key, this.initialIndex=0});
+
+  @override
+  State<RootScreen> createState()=> _RootScreenState();
+
+}
+
+class _RootScreenState extends State<RootScreen>{
+
+  final Color pinkAccent = const Color(0xFFFF4B93);
+  late int _selectedIndex;
+  //하단탭을 누를때 교체될 알맹이 화면들...
+  final List<Widget> _pages =[
+    const DatingHomeScreen(), //0
+    const Center(child: Text('커뮤니티화면 준비중'),), //1
+    const Center(child: Text('일기화면 준비중'),), //2
+    const Center(child: Text('채팅화면 준비중'),), //3
+    const MyPageScreen(), //4
+  ];
+
+  @override
+  void initState(){
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+}
+
+//레이아웃 픽스형 교체로 인한... 변경 
+//항상 모든개발을 할때 시간이 걸리더라도 루트 레이아웃을 만들자
+@override
+Widget build(BuildContext context){
+  body: _pages[_selectedIndex],
+  bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ), 
+        child: BottomNavigationBar(
+          backgroundColor: const Color(0xFF1A1A24),
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          selectedItemColor: const Color(0xFFFF4B93), // 👈 선택된 아이콘/글씨 색상 추가! (핑크색)
+          unselectedItemColor: Colors.grey,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          onTap: (index){
+            setState(()=>  _selectedIndex = index);
+            //기능추가
+            if(index==4){
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context)=> const SignupProfileScreen()
+                  ));
+            }
+          },
+          items:[
+              _buildBottomNavItem('매칭', Icons.local_fire_department, 0),
+              _buildBottomNavItem('커뮤니티', Icons.language, 1),
+              _buildBottomNavItem('일기', Icons.menu_book, 2),
+              _buildBottomNavItem('채팅', Icons.chat_bubble_outline, 3),
+              _buildBottomNavItem('MY', Icons.person_outline, 4),
+          ],
+        )); 
+}
+
+
+
+//프로필 데이터를 담아둘 모델
+class Profile{
+  final int id;
+  final String nickname;
+  final int age;
+  final String bio;
+  final String? photoUrl;
+
+  Profile({ //클래스 생성자(필수값과 선택 값 지정)
+  required this.id,
+  required this.nickname,
+  required this.age,
+  required this.bio,
+  this.photoUrl,
   });
 // 백엔드에서 받은 JSON 데이터를 Profile 객체로 변환해주는 도구
   factory Profile.fromJson(Map<String, dynamic> json){
@@ -140,102 +215,108 @@ class _DatingHomeScreenState extends State<DatingHomeScreen>{
     }
   }
 
-  //여기서부터 진짜 눈에 보이는 화면UI 그리기 시작
   @override
   Widget build(BuildContext context){
-    return Scaffold(   //앱의 뼈대(지붕,바닥,몸통)을 만들어주는 위젯
-      //화면 맨위에 상단바
-      appBar: AppBar(
-        //Text('💘 Dating Match'), // backgroundColor: const Color.fromARGB(255, 240, 185, 203), 
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Row(
-          children: [
-            Icon(Icons.auto_awesome, color: Color(0xFFFF4B93),size: 24,),
-            SizedBox(width: 4,),
-            Text(
-              'SPARK', 
-              style: TextStyle(
-                color: Color(0XFFFF4B93),
-                fontSize: 22, 
-                fontWeight: FontWeight.w900, 
-                letterSpacing: 1.2),), 
-            ],
-        ),
-        actions: [
-          //알림아이콘
-          _buildTopIcon(Icons.notifications_none),
-          const SizedBox(width: 8,),
-          //설정아이콘 누르면 프로필(회원가입)화면으로 이동
-          GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignupProfileScreen()));
-            },
-            child: _buildTopIcon(Icons.settings_outlined),
-          ),
-          const SizedBox(width: 16,),
-        ],
-      ),
-        //로딩중이면 화면 정중앙center에 뱅글뱅글 아이콘 spinner 아이콘 보여줌
-      body: isLoading 
-      ? const Center(child: CircularProgressIndicator(color: Color(0xFFF4B93),))
-      : profiles.isEmpty 
-        ? const Center(child: Text('더이상 추천할 프로필이 없습니다'))
-        : SafeArea(
-          child:Padding(
-            padding: const EdgeInsets.all(20.0), //카드주변 여백
-            child: CardSwiper(
-              controller:controller, 
-              cardsCount: profiles.length, 
-              onSwipe: (previousIndex, currentIndex, direction) { 
-                //사용자가 손가락이나 마우스로 카드를 넘기는 순간 실행
-                final swiperProfile = profiles[previousIndex]; //방금 화면밖으로 날아간 사람이 누구인지확인
-                final action = direction == CardSwiperDirection.right? 'LIKE' : 'DISLIKE';
-                handleSwipe(swiperProfile.id, action);
-                //결정된 조아요/싫어요 결과를 서버로 전송하는 함수를 호출
-                return true;
-              }, //한장한장 카드모양을 직접 예쁘게 꾸미는 공장
-              cardBuilder:(context, index, precentX, precentY){
-                //지금 그리고 있는 카드의 주인이 누구인지 데이터 꺼냄
-                final profile = profiles[index];
-                return _buildSparkCard(profile);
-            },
-            ),
-          ),
-        ),
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          ), 
-          child: BottomNavigationBar(
-            backgroundColor: const Color(0xFF1A1A24),
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _selectedIndex,
-            selectedItemColor: const Color(0xFFFF4B93), // 👈 선택된 아이콘/글씨 색상 추가! (핑크색)
-            unselectedItemColor: Colors.grey,
-            selectedFontSize: 12,
-            unselectedFontSize: 12,
-            onTap: (index){
-              setState(()=>  _selectedIndex = index);
-              //기능추가
-              if(index==4){
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(
-                    builder: (context)=> const SignupProfileScreen()
-                    ));
-              }
-            },
-            items:[
-                _buildBottomNavItem('매칭', Icons.local_fire_department, 0),
-                _buildBottomNavItem('커뮤니티', Icons.language, 1),
-                _buildBottomNavItem('일기', Icons.menu_book, 2),
-                _buildBottomNavItem('채팅', Icons.chat_bubble_outline, 3),
-                _buildBottomNavItem('MY', Icons.person_outline, 4),
-            ],
-          )),
+    return Scaffold(
+      
     );
+}
+  //여기서부터 진짜 눈에 보이는 화면UI 그리기 시작
+  // @override
+  // Widget build(BuildContext context){
+  //   return Scaffold(   //앱의 뼈대(지붕,바닥,몸통)을 만들어주는 위젯
+  //     //화면 맨위에 상단바
+  //     appBar: AppBar(
+  //       //Text('💘 Dating Match'), // backgroundColor: const Color.fromARGB(255, 240, 185, 203), 
+  //       backgroundColor: Colors.transparent,
+  //       elevation: 0,
+  //       title: const Row(
+  //         children: [
+  //           Icon(Icons.auto_awesome, color: Color(0xFFFF4B93),size: 24,),
+  //           SizedBox(width: 4,),
+  //           Text(
+  //             'SPARK', 
+  //             style: TextStyle(
+  //               color: Color(0XFFFF4B93),
+  //               fontSize: 22, 
+  //               fontWeight: FontWeight.w900, 
+  //               letterSpacing: 1.2),), 
+  //           ],
+  //       ),
+  //       actions: [
+  //         //알림아이콘
+  //         _buildTopIcon(Icons.notifications_none),
+  //         const SizedBox(width: 8,),
+  //         //설정아이콘 누르면 프로필(회원가입)화면으로 이동
+  //         GestureDetector(
+  //           onTap: (){
+  //             Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignupProfileScreen()));
+  //           },
+  //           child: _buildTopIcon(Icons.settings_outlined),
+  //         ),
+  //         const SizedBox(width: 16,),
+  //       ],
+  //     ),
+  //       //로딩중이면 화면 정중앙center에 뱅글뱅글 아이콘 spinner 아이콘 보여줌
+  //     body: isLoading 
+  //     ? const Center(child: CircularProgressIndicator(color: Color(0xFFF4B93),))
+  //     : profiles.isEmpty 
+  //       ? const Center(child: Text('더이상 추천할 프로필이 없습니다'))
+  //       : SafeArea(
+  //         child:Padding(
+  //           padding: const EdgeInsets.all(20.0), //카드주변 여백
+  //           child: CardSwiper(
+  //             controller:controller, 
+  //             cardsCount: profiles.length, 
+  //             onSwipe: (previousIndex, currentIndex, direction) { 
+  //               //사용자가 손가락이나 마우스로 카드를 넘기는 순간 실행
+  //               final swiperProfile = profiles[previousIndex]; //방금 화면밖으로 날아간 사람이 누구인지확인
+  //               final action = direction == CardSwiperDirection.right? 'LIKE' : 'DISLIKE';
+  //               handleSwipe(swiperProfile.id, action);
+  //               //결정된 조아요/싫어요 결과를 서버로 전송하는 함수를 호출
+  //               return true;
+  //             }, //한장한장 카드모양을 직접 예쁘게 꾸미는 공장
+  //             cardBuilder:(context, index, precentX, precentY){
+  //               //지금 그리고 있는 카드의 주인이 누구인지 데이터 꺼냄
+  //               final profile = profiles[index];
+  //               return _buildSparkCard(profile);
+  //           },
+  //           ),
+  //         ),
+  //       ),
+  //       bottomNavigationBar: Theme(
+  //         data: Theme.of(context).copyWith(
+  //           splashColor: Colors.transparent,
+  //           highlightColor: Colors.transparent,
+  //         ), 
+  //         child: BottomNavigationBar(
+  //           backgroundColor: const Color(0xFF1A1A24),
+  //           type: BottomNavigationBarType.fixed,
+  //           currentIndex: _selectedIndex,
+  //           selectedItemColor: const Color(0xFFFF4B93), // 👈 선택된 아이콘/글씨 색상 추가! (핑크색)
+  //           unselectedItemColor: Colors.grey,
+  //           selectedFontSize: 12,
+  //           unselectedFontSize: 12,
+  //           onTap: (index){
+  //             setState(()=>  _selectedIndex = index);
+  //             //기능추가
+  //             if(index==4){
+  //               Navigator.push(
+  //                 context, 
+  //                 MaterialPageRoute(
+  //                   builder: (context)=> const SignupProfileScreen()
+  //                   ));
+  //             }
+  //           },
+  //           items:[
+  //               _buildBottomNavItem('매칭', Icons.local_fire_department, 0),
+  //               _buildBottomNavItem('커뮤니티', Icons.language, 1),
+  //               _buildBottomNavItem('일기', Icons.menu_book, 2),
+  //               _buildBottomNavItem('채팅', Icons.chat_bubble_outline, 3),
+  //               _buildBottomNavItem('MY', Icons.person_outline, 4),
+  //           ],
+  //         )),
+  //   );
   }
 
 //부품 상단바 둥근 배경 아이콘

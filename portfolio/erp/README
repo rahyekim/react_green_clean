@@ -1,0 +1,17 @@
+npx create-next-app@latest erp-frontend --typescript 
+
+npx create-next-app@latest erp-frontend —typescript —eslint —app —src-dir —import-alias "@/*"
+
+
+ALTER SESSION SET "_ORACLE_SCRIPT"=true;
+CREATE USER "ERP_USR" IDENTIFIED BY "1234";
+GRANT CONNECT TO "ERP_USR";
+GRANT RESOURCE TO "ERP_USR";
+alter user ERP_USR default tablespace users quota unlimited on users;
+
+Spring>
+lombok
+Spring Data JPA
+Srpint security
+OAuth2 Client
+Spring Web

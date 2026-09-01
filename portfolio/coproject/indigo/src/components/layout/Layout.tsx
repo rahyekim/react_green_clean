@@ -29,7 +29,9 @@ export const Layout:React.FC<LayoutProps> =({children})=>{
                 <TopBar />
 
                 <MainContent id="content">
-                    <ContainerFluid>{children}</ContainerFluid>
+                    <ContainerFluid>
+                        {children}
+                    </ContainerFluid>
                 </MainContent>
                 
             </ContentWrapper>

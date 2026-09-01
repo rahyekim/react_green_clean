@@ -1,71 +1,27 @@
-import React from "react";
-import { TopBar } from "./components/topBar/TopBar";
-import { SideBar } from "./components/sideBar/SideBar";
-import { Wrapper,ContainerFluid,ContentWrapper,MainContent } from "./components/layout/Layout.styles";
-import { TopBarContainer,TopBarNavBar,TopBarSearch  } from "./components/topBar/TopBar.styles";
-
-interface LayoutProps{
-    children: React.ReactNode
-}
-
-export const Layout =({children}:LayoutProps)=>{
-
-    return(
-        <>
-        <Wrapper>
-            <SideBar/>
-            
-            <ContentWrapper>
-                <TopBar/>
-
-                <MainContent>
-                    <ContainerFluid>{children}</ContainerFluid>
-                </MainContent>
-            </ContentWrapper>
-
-        </Wrapper>
-        
-        </>
-    )
-    
-}
+import { Navigate } from "react-router-dom";
+import { Temporal } from "@js-temporal/polyfill";
+import { use, useState } from "react";
 
 
-/*
-wrapper : flex:display height:100vh width:100% overflow:hidden
-    ㄴ sidebar 
-    ㄴ contentWrapper d-flex flex-direction:column overflow:hidden flex:1
-            ㄴ topbar
-            ㄴ maincontent flex:1 overflow-y=auto
+export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
 
- */
+   const [email, setEmail]=useState(()=>{
+    return localStorage.getItem('savedEmail') || ''
+   })
 
+   const [rememberme, setRememberme]=useState(()=>{
+    return !!localStorage.getItem('savedEmail')
+   })
+    const userName = localStorage.getItem('userName');
+    const expiryStr = localStorage.getItem('loginExpiry')
 
+   if(!userName || !expiryStr){
+        alert("관리자로그인")
+        return <Navigate to='/login' replace/>
+   }
 
-export const TopBar= ()=>{
-    return(
-        <TopBarContainer>
-            <button>
-                <i className="fa fa-bars"></i>
-            </button>
-            <TopBarSearch> 
-                {/* margin-right:auto */}
-                <div className="input-group">
-                    <input type="text" />
-                    <button>
-                        <i></i>
-                    </button>
-                </div>
-            </TopBarSearch>
-            <TopBarNavBar>
-                <li>
-                    <a href="">
-                        <span>사용자</span>
-                        <img src="" alt="" />
-                    </a>
-                </li>
-            </TopBarNavBar>
-        </TopBarContainer>
-    )
+   const expiryTime = Temporal.Now.instant().add({hours:1})
+   
+   localStorage.setItem('loginExpiry', expiryTime.toString())
 }
 
