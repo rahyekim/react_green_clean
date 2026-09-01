@@ -50,36 +50,33 @@ export default function Shelter (){
     const handleSubmit = async(e:React.FormEvent)=>{
         e.preventDefault();
 
-        
         const submitData = new FormData();
         
         // 💡/// 핵심: 현재 선택된 방식에 따라 사용하지 않는 데이터는 확실히 지워줌!
-        const currentData = { ...formData };
-        if (imgInputType === 'LINK') {
-            currentData.imageFile = null; // 링크로 보낼땐 파일 비우기
-        } else {
-            currentData.imageUrl = '';    // 파일로 보낼땐 링크 비우기
-        // 객체를 2차원 배열로 바꿔서 폼데이터에 담기
-    Object.entries(currentData).forEach(([key, value]) => {
-        // 값이 null이 아니고 빈 문자열도 아닐 때만 담기 (단, 파일은 null이 아닐 때)
-        if (value !== null && value !== '') {
-            submitData.append(key, value);
-        }
-    });
-        
-        
-            //👍🌟formData는 일반 객체 {} => Object.entries()로 배열 형태로 바꿔 [[],[]....]🌟
+    //     const currentData = { ...formData };
+    //     if (imgInputType === 'LINK') {
+    //         currentData.imageFile = null; // 링크로 보낼땐 파일 비우기
+    //     } else {
+    //         currentData.imageUrl = '';    // 파일로 보낼땐 링크 비우기
+    //     // 객체를 2차원 배열로 바꿔서 폼데이터에 담기
+    // Object.entries(currentData).forEach(([key, value]) => {
+    //     // 값이 null이 아니고 빈 문자열도 아닐 때만 담기 (단, 파일은 null이 아닐 때)
+    //     if (value !== null && value !== '') {
+    //         submitData.append(key, value);
+    //     }
+    // });
+    //👍🌟formData는 일반 객체 {} => Object.entries()로 배열 형태로 바꿔 [[],[]....]🌟
         Object.entries(formData).forEach(([key,value])=> {
-            if(value !== null){
+            if(value !== null && value !== ''){
                 submitData.append(key,value)
             }
         })
         try{
-            const res= await axios.post('http://localhost:8080/api/shelter-animals', submitData,
-               { headers:{
-                    'Content-Type': 'multipart/form-data'
-                }}
-            )
+            const res= await axios.post('http://localhost:8080/api/shelter-animals', submitData,{
+                headers:{
+                  'Content-Type': 'multipart/form-data',
+                },
+            })
             alert('보호동물이 성공적으로 등록되었습니다')
         }catch(err){
             console.error('등록에러: ', err);
@@ -261,6 +258,7 @@ export default function Shelter (){
                             rows={5}
                             name="content"
                             value={formData.content}
+                            onChange={handleChange}
                             placeholder="동물의 건강상태, 성격, 발견 당시 상황을 적어주세요"
                             required
                             />

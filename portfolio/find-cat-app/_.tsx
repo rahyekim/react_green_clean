@@ -58,3 +58,11 @@ const handleChange = (e:React.ChangeEvent<any>)=>{
 }
 
 }
+
+const getFullImgUrl = (url:string)=>{
+    if(!url) return 'http://'
+    if(url.startsWith('/uploads/')){
+        return `http://localhost:8080${url}`
+    }
+    return url;
+}

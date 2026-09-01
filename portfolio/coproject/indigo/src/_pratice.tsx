@@ -1,10 +1,11 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Temporal } from "@js-temporal/polyfill";
 import { use, useState } from "react";
 
 
 export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
 
+   const navigate = useNavigate()
    const [email, setEmail]=useState(()=>{
     return localStorage.getItem('savedEmail') || ''
    })
@@ -20,8 +21,16 @@ export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
         return <Navigate to='/login' replace/>
    }
 
-   const expiryTime = Temporal.Now.instant().add({hours:1})
    
-   localStorage.setItem('loginExpiry', expiryTime.toString())
+   if(rememberme){
+      localStorage.setItem('email',email.trim())
+   }else{
+      localStorage.removeItem('savedEmail')
+   }
+
+   navigate('/login')
+
+
+   
 }
 

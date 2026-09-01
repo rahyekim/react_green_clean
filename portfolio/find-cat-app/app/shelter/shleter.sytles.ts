@@ -289,7 +289,7 @@ ${({$type})=> {
 export const InfoGrid=styled.div`
 display: grid;
 grid-template-columns: 60px 1fr;
-row-gap: 60px;
+row-gap: 20px;
 font-size: 0.85rem;
 
 .label{
@@ -298,6 +298,7 @@ font-size: 0.85rem;
 .value{
     color: #111;
     font-weight: 500;
+    min-width: 0; //⭐
     white-space: nowrap; //⭐
     overflow: hidden; //⭐
     text-overflow: ellipsis; //⭐

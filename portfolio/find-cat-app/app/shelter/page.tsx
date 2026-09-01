@@ -1,10 +1,11 @@
 'use client'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from 'next/link';
+import axios from "axios";
+
 import * as S from './shleter.sytles';
 import * as A from '@/css/style.styled';
 import Footer from "../components/Footer";
-import Header from "../components/Header";
 
 //Mui
 import { 
@@ -16,11 +17,52 @@ import {
     ChevronRight  as ChevronRightIcon,
  } from "@mui/icons-material";
 
+ //백엔드에서 받아올 데이터 타입정의
+ interface Animal{
+    id: number;
+    status: 'ACTIVE' | 'COMPLETED';
+    gender: 'MALE' | 'FEMALE' | 'UNKNOWN';
+    breed: string;
+    noticeNo: string;
+    regDate: string;
+    rescueLocation: string;
+    content:string;
+    imageUrl:string;
+
+ }
 export default function Shelter(){
 
     const [activeTap, setActiveTap]=useState('보호동물');
     const [isAlertOn, setIsAlertOn]=useState(false);
 
+    //백엔드에서 가져온 동물 리스트 담을 상태
+    const [animals, setAnimals]=useState<Animal[]>([]);
+
+    useEffect(()=>{
+
+        const fetchAnimals =async()=>{
+            
+            try{
+                const res = await axios.get('http://localhost:8080/api/shelter-animals');
+                if(res){
+                    setAnimals(res.data)
+                }
+            }catch(err){
+                console.error('동물데이터를 불러오는데 실패했습니다', err)
+            }
+        }
+        fetchAnimals();
+    }, []);
+
+    //이미지 주소 변환함수
+    const getFullImgUrl = (url:string)=>{
+        if(!url) return 'http://via.placeholder.com/110'
+        if(url.startsWith('/uploads/')){
+            return `http://localhost:8080${url}`;
+        }
+        return url;
+    }
+    
     return(
         <>
         <A.AppWrapper>
@@ -92,7 +134,7 @@ export default function Shelter(){
                     <S.RecommendScroll>
                         <S.RecommendCard>
                             <S.RecommendImgBox>
-                                <img src="" alt="" />
+                                <img src="https://via.placeholder.com/140" alt="추천동물" />
                                 <PlayIcon className="play-icon" sx={{fontSize:'18px'}}/>
                             </S.RecommendImgBox>
 
@@ -108,30 +150,41 @@ export default function Shelter(){
                 <S.Divider/>
 
                 <S.ListSection>
-                    <S.AnimalCard>
+                    {animals.length === 0 ? (
+                        <div className="">
+                            등록된 보호 동물이 없습니다
+                        </div>
+                    ) : ( 
+                        animals.map(animal=> (
+                    <S.AnimalCard key={animal.id}>
                         <S.AnimalImgBox>
-                            <img src="" alt="" />
+                            <img src={getFullImgUrl(animal.imageUrl)}
+                             alt={animal.breed}/>
                         </S.AnimalImgBox>
                         <S.AnimalInfo>
                             <S.BadgeGroup>
-                                <S.Badge $type="status">완료</S.Badge>
-                                <S.Badge $type="female">여아</S.Badge>
-                                <S.Badge $type="male">남아</S.Badge>
-                                <S.Badge $type="unknown">미정</S.Badge>
+                                <S.Badge $type="status">
+                                    {animal.status === 'COMPLETED' ? '완료' : '공고중'}
+                                </S.Badge>
+                                <S.Badge $type={animal.gender === 'FEMALE' ? 'female' : animal.gender === 'MALE' ? 'male' : 'unknown' }>
+                                    {animal.gender === 'FEMALE' ? '공주' : animal.gender === 'MALE' ? '왕자' : '미상' }
+                                </S.Badge>
                             </S.BadgeGroup>
 
                             <S.InfoGrid>
                                 <span className="label">품종</span>
-                                <span className="value">[고양이] 삼색고양이</span>
+                                <span className="value">{animal.breed}</span>
                                 <span className="label">공고번호</span>
-                                <span className="value">충북-청주-2026...</span>
+                                <span className="value">{animal.noticeNo}</span>
                                 <span className="label">등록날짜</span>
-                                <span className="value">2026-08-06</span>
+                                <span className="value">{animal.regDate}</span>
                                 <span className="label">구조장소</span>
-                                <span className="value">용암삼일무지개아파트</span>           
+                                <span className="value">{animal.rescueLocation}</span>           
                             </S.InfoGrid>
                         </S.AnimalInfo>
                     </S.AnimalCard>
+                        ))
+                    )};
                 </S.ListSection>
             </A.Container>
 
