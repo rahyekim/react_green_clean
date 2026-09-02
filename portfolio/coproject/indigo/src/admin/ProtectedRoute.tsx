@@ -20,7 +20,8 @@ export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
         return <Navigate to='/login'replace/>;
     } //🌟replace는 뒤로 가기 했을 때 이상한 페이지로 꼬이는 걸 방지
     
-    try{
+    //🛡️try-catch 필수적인방어막
+    try{ 
         //🌟 세션 시간 체크(Temporal사용)
         //2. 문자열로 저장된 만료 시간을 다시 Temporal.Instant 객체로 변환
         const expiryTime = Temporal.Instant.from(expiryStr);

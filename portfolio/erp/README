@@ -15,3 +15,12 @@ Spring Data JPA
 Srpint security
 OAuth2 Client
 Spring Web
+
+npm install react-bootstrap bootstrap (단수)
+npm install styled-components (복수)
+npm install -D @types/styled-components
+
+next config=> 
+compiler:{
+    styledComponents: true,
+  }

@@ -12,8 +12,6 @@ interface WorkImg {
     file: File | null;
 }
 
-
-
 export default function WorkSetting (){
 
 

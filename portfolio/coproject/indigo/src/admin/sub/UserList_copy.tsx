@@ -17,6 +17,48 @@ interface Users {
     detail_address:string;
 }
 
+/*
+🛠️ 1. 필요한 상태(State) 값 3가지
+🔹currentPage: 현재 내가 보고 있는 페이지 번호 (예: 2페이지)
+🔹totalItems: 전체 데이터의 총 개수 (예: 37개)
+🔹itemsPerPage: 한 페이지에 보여줄 글 개수 (예: 10개)
+
+총페이지수: Math.ceil(totalitems / itemsPerPage) 
+ */
+const PageNation = ()=>{
+    const [users, setUsers]= useState();
+    const [currentPage, setCurrentPage]=useState(1);
+    const totalItems =37;
+    const itemsPerPage= 10;
+
+    const pageLimit = 5; //화면에보여줄페이지버튼개수
+    const currentGroup = Math.floor(currentPage-1 / pageLimit) //현재페이지가 몇그룹에 속해잇는지
+    const totalPages = Math.ceil(totalItems/itemsPerPage)
+    
+    //현재그룹의 시작페이지와 끝페이지구하기
+    const startPage = currentGroup * pageLimit +1 // 1,2,3,4,5
+    const endPage = Math.min(startPage + pageLimit -1, totalPages) //6,7,8,9,10
+
+    const pageNumbers = Array.from({length: endPage - startPage + 1}, (_,i)=> startPage+1) 
+
+    const pageNums = Array.from({length:endPage-startPage}, (_,idx)=> idx+1)
+
+    return(
+        <>
+        <button 
+        onClick={()=>setCurrentPage(prev=> Math.max(prev-1,1))} //최대숫자찾기
+        disabled={currentPage===1}
+        >이전</button>
+
+        <button
+        onClick={()=>setCurrentPage(prev=> Math.min(prev+1,totalPages))} //최소숫자찾기
+        disabled={currentPage===totalPages} 
+        >다음</button>
+        </>
+    )
+
+}
+
 
 export const UserList = ()=>{
     
