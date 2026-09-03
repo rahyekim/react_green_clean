@@ -39,7 +39,7 @@ const PageNation = ()=>{
     const startPage = currentGroup * pageLimit +1 // 1,2,3,4,5
     const endPage = Math.min(startPage + pageLimit -1, totalPages) //6,7,8,9,10
 
-    const pageNumbers = Array.from({length: endPage - startPage + 1}, (_,i)=> startPage+1) 
+    const pageNumbers = Array.from({length: endPage - startPage + 1}, (_,i)=> startPage+i) 
 
     const pageNums = Array.from({length:endPage-startPage}, (_,idx)=> idx+1)
 
