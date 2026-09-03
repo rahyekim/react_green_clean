@@ -64,11 +64,10 @@ max-width: 500px;
 
 export const Row = styled.div`
 display: flex;
-gap: 1rem;
+gap: 0.5rem;
 
 @media (max-width: 768px){
     flex-direction: column;
-    gap: 0;
 }
 `;
 
@@ -78,7 +77,7 @@ flex: 1;
 
 export const Input = styled.input`
 width: 100%;
-padding: 0.5rem 1rem;
+padding: 0.8rem 1rem;
 border: none;
 border-bottom: 1px solid #ddd;
 outline:none;
@@ -117,7 +116,7 @@ gap: 0.5rem;
 export const Button = styled.button`
 background-color: #4e73df ;
 color: white;
-font-size: 0.8rem;
+font-size: 0.875rem;
 border-radius: 0.8rem;
 border: none;
 padding: 0.8rem;
@@ -146,20 +145,28 @@ border-radius: 0.8rem;
 background-color: ${({$provider})=>$provider === 'insta'? '#e1306c': '#FEE500'};
 color: ${({$provider})=>$provider === 'insta' ? '#eee': '#111'};
 border: none;
-font-size: 0.9rem;
+font-size: 0.875rem;
 text-align: center;
 `;
 
 export const Divider = styled.hr`
 margin: 0.5rem;
-border-top: 1px solid rgba(0,0,0,.1);
+border-top: 0.1px solid #eee;
 `;
 
 export const StyledLink = styled(Link)`
-font-size: 0.875rem;
+font-size: 0.8rem;
 text-decoration: none;
 `;
 
-export const LinkWrapper = styled.div``;
+export const LinkWrapper = styled.div`
+display: flex;
+align-items: flex-start;
+justify-content: center;
+gap: 0.3rem;
+color: #4e73df ;
+margin-top: 0.5rem;
+
+`;
 
 

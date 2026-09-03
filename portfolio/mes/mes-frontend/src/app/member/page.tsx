@@ -206,7 +206,7 @@ export default function Member(){
                         type="submit"
                         > 가입하기</S.Button>
                         
-                        <S.Divider $margin="0.5rem"/>
+                        <S.Divider/>
 
                         <S.SocialButton $provider="insta"
                         onClick={handleInstargramLogin}

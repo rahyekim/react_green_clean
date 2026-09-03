@@ -23,12 +23,12 @@ display: flex;
 
 export const Track = styled.div`
 display: flex; //가로로 나란히 배치
-width: fit-content; //내용물 크기에 딱 맞추겠다(원본+복제본)
+width: fit-content; //🌟내용물 크기에 딱 맞추겠다(원본+복제본)
 white-space: nowrap; 
 `;
 
 //똑같은 텍스트 그룹 2개 교대 보여주기위한 애니메이션 적용
-export const TextGrop= styled.div`
+export const TextGroup= styled.div`
 display: flex;
 animation: ${rolling} 20s linear infinite;
 //무한 루프 애니메이션 

@@ -4,6 +4,7 @@ import MainCarousel from "@/components/MainCarousel";
 import RollingBanner from "@/components/RollingBanner";
 import CategoryNav from "@/components/CategoryNav";
 import Selfied from "@/components/main/Selfies"
+import EventRanking from "@/components/EventRank";
 export default function Home() {
   return (
     <>
@@ -11,6 +12,7 @@ export default function Home() {
     <RollingBanner/>
     <CategoryNav/>
     <Selfied/>
+    <EventRanking/>
     </>
   );
 }

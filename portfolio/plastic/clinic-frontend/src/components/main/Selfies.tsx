@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from "react";
-import * as S from '@/style/Selfi.styles';
+import * as S from '@/assets/css/Selfi.styles';
 
 
 //슬라이더에 들어갈 임시 데이터배열

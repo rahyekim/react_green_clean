@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import styled from "styled-components";
-import { Globalstyle } from "@/style/Global.styles";
+import { Globalstyle } from "@/assets/css/Global.styles";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
