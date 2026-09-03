@@ -13,7 +13,7 @@ export const AppDatasource = new DataSource({
     username: process.env.DB_USER as string,
     password: process.env.DB_PASSWORD as string,
     database: process.env.DB_SERVICE_NAME || 'FREEPDB1',
-    synchronize: true,
+    synchronize: false,  //처음에만 한번 켜두고 false해두기
     logging: true,
     entities: [__dirname + '/../entities/**/*.{js,ts}'],
     extra: {

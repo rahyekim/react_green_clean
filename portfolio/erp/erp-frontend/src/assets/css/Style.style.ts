@@ -8,7 +8,7 @@ align-items: center;
 
 min-height: 100vh;
 padding: 1rem;
-background-color: ${props=> props.theme.colors.background};
+background-color: ${props=> props.theme?.colors?.background || '#536692'};
 
 
 `;
@@ -39,7 +39,7 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 
-@media (max-width:992px){ //모바일에서 
+@media (max-width:992px){ 
     width:100%;
 }
 `;
@@ -129,26 +129,24 @@ background-color: #858796;
     background-color: #717384;
 }
 `;
-export const SocialButton = styled.button<{$provider: 'kakao' | 'insta'}>`
-width: 100%;
-padding: 0.8rem;
-/* margin-bottom: 0.5rem; */
-background-color: ${({$provider})=>$provider === 'insta' ? '#e1306c': '#FEE500'};
-color: ${({$provider})=>$provider === 'insta' ? '#eee': '#111'};
-border-radius: 10rem;
-border: none;
-font-size: 0.9rem;
-cursor: pointer;
-text-align: center;
+// export const SocialButton = styled.button<{$provider: 'kakao' | 'insta'}>`
+// width: 100%;
+// padding: 0.8rem;
+// /* margin-bottom: 0.5rem; */
+// background-color: ${({$provider})=>$provider === 'insta' ? '#e1306c': '#FEE500'};
+// color: ${({$provider})=>$provider === 'insta' ? '#eee': '#111'};
+// border-radius: 10rem;
+// border: none;
+// font-size: 0.9rem;
+// cursor: pointer;
+// text-align: center;
 
-`;
+// `;
 export const Divider= styled.hr<{$margin?:string}>`
 margin: ${props=>props.$margin || '1.5rem'};
 border: 0;
 border-top: 1px solid rgba(0,0,0,.1);
-
 `;
-
 
 export const StyledLink= styled(Link)`
 font-size: 0.875rem;
@@ -169,6 +167,51 @@ align-items: flex-start;
 gap: 0.3rem;
 color: #4e73df ;
 `;
+
+//---------------여기까지 Member 회원가입이랑 같음---------------------------
+
+export const CheckboxWrapper = styled.div`
+display: flex;
+align-items: center;
+gap: 0.5rem;
+padding-left: 0.5rem;
+margin-bottom: 0.5rem;
+`;
+
+export const CheckboxLabel= styled.label`
+font-size: 0.8rem;
+color: #6e707e;
+cursor: pointer;
+`;
+
+
+export const SocialButton= styled(Button)<{$provider:'google'|'insta'}>`
+width: 100%;
+padding: 0.8rem;
+/* margin-bottom: 0.5rem; */
+background-color: ${({$provider})=>$provider === 'google' ? '#e1306c': '#FEE500'};
+color: ${({$provider})=>$provider === 'google' ? '#eee': '#111'};
+border-radius: 10rem;
+border: none;
+font-size: 0.9rem;
+cursor: pointer;
+text-align: center;
+
+&:hover {
+    color: #eee;
+  }
+`;
+
+export const Description= styled.div`
+///?????
+font-size: 0.875rem;
+color: #6e707e;
+margin-bottom: 1.5rem;
+line-height: 1.5;
+`;
+// export const = styled.div``;
+// export const = styled.div``;
+// export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;

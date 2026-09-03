@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/app/lib/registry";
 import ThemeProviderWrapper from "@/components/ThemeProviderWrapper";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import * as S from "@/assets/css/LayoutWrapper.style"
+import ConditionalLayout from "@/components/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: { 
@@ -19,13 +17,9 @@ export default function RootLayout({ children }: Readonly<{children: React.React
       <body>
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
-            <S.PageWrapper>  
-            <Header/>
-            <S.MainContent> {/*flex:1*/}
-              {children}
-            </S.MainContent>
-            <Footer/>
-            </S.PageWrapper>
+            <ConditionalLayout>
+                {children}
+            </ConditionalLayout>
           </ThemeProviderWrapper>
         </StyledComponentsRegistry>
       </body>

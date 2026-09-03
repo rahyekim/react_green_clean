@@ -11,4 +11,5 @@ min-height: 100vh; //🌟내용물이 없어도 화면꽉차게 기본값
 
 export const MainContent= styled.main`
 flex: 1;
+width:100%;
 `;

@@ -216,14 +216,14 @@ export default function Member(){
                     onClick={handleKaKaoLogin}
                     >카카오로 로그인</S.SocialButton>
 
-                </S.Form>
-
                 <S.Divider/>
 
+                </S.Form>
+
                 <S.LinkWrapper>
-                    <S.StyledLink href='/forget'>비밀번호 찾기</S.StyledLink>
+                    <S.StyledLink href='/forgot'>비밀번호 찾기</S.StyledLink>
                     <span> | </span>
-                    <S.StyledLink href='/login'>로그인</S.StyledLink>
+                    <S.StyledLink href='/'>로그인</S.StyledLink>
                 </S.LinkWrapper>
                 
                 </S.FormColumn>

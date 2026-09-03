@@ -1,11 +1,10 @@
 
-export const theme = {
+export const theme ={
     colors:{
         background: '#536692',
         primary: '#4e73df',
         text: '#333',
-
     }
 }
 
-export type Theme = typeof theme; //타입명만 Theme대문자T
+export type Theme = typeof theme;

@@ -24,3 +24,6 @@ next config=>
 compiler:{
     styledComponents: true,
   }
+
+npm install axios 
+npm i @fortawesome/fontawesome-free

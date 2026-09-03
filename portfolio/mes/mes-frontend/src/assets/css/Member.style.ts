@@ -1,0 +1,165 @@
+'use client'
+
+import styled from "styled-components"
+import Link from "next/link"
+
+export const Container= styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+
+min-height: 100vh;
+padding: 1rem;
+background-color: ${props=> props.theme.colors.background};
+`;
+export const Card= styled.div`
+display: flex;
+width: 100%;
+max-width: 1200px;
+
+background: #fff;
+border-radius: 1rem;
+box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,.15);
+overflow: hidden;
+
+`;
+export const ImgColumn= styled.div`
+flex:4;
+overflow: hidden;
+img{
+    display: block;
+}
+
+@media (max-width:992px){ //모바일에서 숨킴
+    display: none;
+}
+`;
+export const FormColumn= styled.div`
+flex: 6;
+padding: 3rem;
+display: flex;
+flex-direction:column;
+justify-content: center;
+align-items: center;
+@media (max-width:992px){ //모바일에서는 꽉차게
+    width: 100%;
+}
+
+`;
+
+export const Title = styled.h1`
+font-size: 1.5rem;
+font-weight: 400;
+color: #3a3b45;
+margin-bottom: 1.5rem;
+`;
+
+export const Form = styled.form`
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+width: 70%;
+max-width: 500px;
+`;
+
+export const Row = styled.div`
+display: flex;
+gap: 1rem;
+
+@media (max-width: 768px){
+    flex-direction: column;
+    gap: 0;
+}
+`;
+
+export const Col = styled.div`
+flex: 1;
+`;
+
+export const Input = styled.input`
+width: 100%;
+padding: 0.5rem 1rem;
+border: none;
+border-bottom: 1px solid #ddd;
+outline:none;
+
+&:focus{
+    border-bottom: 1px solid #aab0e9;
+}
+
+&:read-only{
+    background-color: #eaecf4;
+    border-radius: 8px;
+}
+`;
+
+export const RadioGroup = styled.div`
+display: flex;
+align-items: center;
+gap: 1rem;
+padding: 0 1rem;
+`;
+
+export const RadioLabel = styled.label`
+display: flex;
+align-items: center;
+gap: 0.3rem;
+font-size: 0.8rem;
+color: #6e707e;
+cursor: pointer;
+`;
+
+export const AddressWrapper = styled.div`
+display: flex;
+gap: 0.5rem;
+`;
+
+export const Button = styled.button`
+background-color: #4e73df ;
+color: white;
+font-size: 0.8rem;
+border-radius: 0.8rem;
+border: none;
+padding: 0.8rem;
+width: 100%;
+cursor: pointer;
+transition: background-color 0.15s ease-in-out;
+&:hover{
+  background-color: #2e59d9; 
+}
+`;
+
+export const SearchButton = styled(Button)`
+width: auto;
+white-space: nowrap;
+min-width: 100px;
+background-color: #858796;
+&:hover{
+    background-color: #717384;
+}
+`;
+
+export const SocialButton = styled.button<{$provider:'kakao'|'insta'}>`
+width: 100%;
+padding: 0.8rem;
+border-radius: 0.8rem;
+background-color: ${({$provider})=>$provider === 'insta'? '#e1306c': '#FEE500'};
+color: ${({$provider})=>$provider === 'insta' ? '#eee': '#111'};
+border: none;
+font-size: 0.9rem;
+text-align: center;
+`;
+
+export const Divider = styled.hr`
+margin: 0.5rem;
+border-top: 1px solid rgba(0,0,0,.1);
+`;
+
+export const StyledLink = styled(Link)`
+font-size: 0.875rem;
+text-decoration: none;
+`;
+
+export const LinkWrapper = styled.div``;
+
+
