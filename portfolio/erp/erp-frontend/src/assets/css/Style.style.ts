@@ -203,12 +203,98 @@ text-align: center;
 `;
 
 export const Description= styled.div`
-///?????
+text-align: center;
 font-size: 0.875rem;
 color: #6e707e;
 margin-bottom: 1.5rem;
 line-height: 1.5;
 `;
+
+
+//calendar캘린더
+export const CalTopMargin= styled.div`
+margin-top: 2rem; 
+`;
+export const CalWrapper= styled.div`
+width: 100%;
+max-width: 1000px;
+margin: 0 auto;
+background-color: #eee;
+border: 1px solid  #e0e0e0;
+border-radius: 20px;
+box-shadow: 0 4px 6px rgba(0,0,0,.5);
+
+padding: 40px 20px 30px 20px; ////
+`;
+export const CalHeader= styled.h2`
+text-align: center;
+font-size: 32px; 
+font-weight: 700;
+margin: 0;
+margin-bottom: 1.5rem;
+color: #333;
+`;
+export const Grid= styled.div`
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 8px;
+`;
+export const Dayname= styled.div`
+text-align: center;
+font-size: 1rem;
+padding-bottom: 10px;
+
+//부모 안에서 n번째에 있는 자식 요소
+&:nth-child(1){
+    color: #ff4d4f;
+}
+
+&:nth-child(7){
+    color: #1890ff;
+}
+
+`;
+export const Tooltip= styled.div`
+
+`;
+
+interface DayCellProps{
+    $isEmpty?:boolean;
+    $isToday?:boolean;
+    $isHoliday?:boolean;
+    $isSunday?:boolean;
+    $isSaturday?:boolean;
+}
+export const DayCell= styled.div<DayCellProps>`
+position: relative;
+display: flex;
+flex-direction: column;
+align-items: center;
+height: 80px;
+border-radius: 8px;
+border: 1px solid #eee;
+font-size: 1.2rem;
+background-color: ${({$isEmpty})=>$isEmpty ? 'transparent': '#eee2e2'}; //#fafafa
+pointer-events: ${({$isEmpty})=>$isEmpty ? 'none':'auto'};
+
+color: ${({$isHoliday, $isSunday, $isSaturday})=>{
+    if($isHoliday || $isSunday ) return '#ff4d4f';
+    if($isSaturday) return '#1890ff';
+    return '#333';
+}};
+
+font-weight: ${({$isToday})=>$isToday ? 'bold':'normal'};
+border: ${({$isToday})=>$isToday ? '2px dashed #4e73df': '1px solid transparent'};
+
+transition: background-color 0.2s ;
+&:hover{
+    background-color: ${({$isEmpty})=>$isEmpty ? "transparent":'#f8dced'}; //#f0f0f0
+}
+
+
+`;
+
+// export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;

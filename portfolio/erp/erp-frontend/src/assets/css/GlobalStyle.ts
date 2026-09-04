@@ -83,6 +83,8 @@ html , body{
     color: ${(props)=>props.theme.colors.text};
     font-family: 'Pretendard';
     font-weight: 400;
+    font-size: 14px; ///rem쓰려면!
+
 }
 
 a{
