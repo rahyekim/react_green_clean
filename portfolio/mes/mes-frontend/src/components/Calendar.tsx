@@ -8,7 +8,11 @@ import { fetchHolidays } from "@/app/api/holidays"
 
     // 1. 일정(Schedule) 타입 정의 
 interface Schedule{
-    // id, date, content, status, createdAt 등의 필드 작성하기
+    id: string;
+    date: number;
+    content: string;
+    status: '대기' | '완료' | '진';
+    createdAt: string;
 }
 
 // 2. 캘린더 메인 컴포넌트 (Props 기본값과 타입 지정)
@@ -17,7 +21,7 @@ export default function Calendar(
     month = Temporal.Now.plainDateISO().month
     }:{year?:number, month?:number}
 ){
-
+    const [schedule, setSchedule]=useState<Schedule[]>([]);
     // 3. Temporal을 이용해 선택된 연/월 객체 만들기
     const targetYearMonth= Temporal.PlainYearMonth.from({year,month})
 
@@ -36,12 +40,14 @@ export default function Calendar(
         fetchHolidays(year,month).then(setHolidays); //함축된(단축)버전 .then(res=> setHolidays(res))
     },[year,month])
 
-    // 6. 오늘 날짜 계산 및 특정 날짜의 공휴일 찾아주는 헬퍼 함수 작성하기
+    // 6. 오늘 날짜 계산 
     const today = Temporal.Now.plainDateISO();
+    //2026년 9월이 이번달인가? 2026년 10월 =>false
     const isThisMonth = today.year === year && today.month === month;
 
     // 7. 달력 앞쪽 빈칸(empty)과 실제 날짜 칸(days)을 반복문(for)으로 채우기
-    //조건에 맞는 아이템 하나(객체)를 리턴/<-> filter([])/some(boolean)
+    //조건에 맞는 아이템 하나(객체)를 리턴(없으면 undefiend)<-> filter([])/some(boolean)
+    //{date:1, name:'신정'}
     const getHoliday = (day:number)=> holidays.find(h=> h.date === day)
 
     // 달력 칸들을 담을 배열 선언
@@ -51,24 +57,58 @@ export default function Calendar(
     // 힌트: 1일이 시작하기 전의 요일 인덱스(firstDayIndex)만큼 빈 칸을 채워야 합니다!
     for(let i = 0; i < firstDayIdx; i++){
         // 빈 셀(<S.DayCell $isEmpty />)을 days 배열에 push 하기
+        days.push(<S.DayCell key={`empty-${i}`} $isEmpty/>)
     }
 
     // 2. [실제 날짜 채우기]
     // 힌트: 1일부터 해당 월의 마지막 날(daysInMonth)까지 반복문을 돕니다.
     for(let d = 1; d <= daysInMonth; d++){
         // (1) 오늘 날짜에 해당하는 공휴일이 있는지 찾기 (getHoliday 활용)
-        
+        const holiday= getHoliday(d)
         // (2) 현재 날짜의 요일 인덱스 구하기 (일요일인지, 토요일인지 판별)
-        
+        const currentDayofWeek= (firstDayIdx+d-1) % 7;
+        const isSunday = currentDayofWeek===0; 
+        const isSaturday= currentDayofWeek ===6;
         // (3) S.DayCell 컴포넌트를 생성해서 days 배열에 push 하기
         // (오늘인지, 공휴일인지, 주말인지 props 전달하고 날짜 숫자 및 이모지/툴팁 조건부 렌더링하기)
+        days.push(
+            <S.DayCell 
+            key={d}
+            $isToday={isThisMonth && today.day===d}
+            $isHoliday={!!holiday}
+            $isSaturday={isSaturday}
+            $isSunday={isSunday}
+            ><span>{d}</span>
+            {holiday && <S.Tooltip>{holiday.name}</S.Tooltip>}
+            {holiday?.name === '성탄절' && <span>🎄</span>}
+            {holiday?.name.includes('추석') && <span>🌕🐇</span>}
+            </S.DayCell>
+        )
     }
 
     // 8. 최종 UI 렌더링 반환 (JSX)
     return(
+        <>
         <S.CalTopMargin>
-            {/* CalWrapper, CalHeader, Grid, Dayname, days 등을 배치하기 */}
+            <S.CalWrapper>
+                <S.CalHeader>
+                    {year}년 {month}월 
+                </S.CalHeader>
+
+                <S.Grid>
+                    {['일','월','화','수','목','금','토'].map(day=>(
+                        <S.Dayname key={day}>
+                            {day}
+                        </S.Dayname>
+                    ))}
+                    {days}
+                </S.Grid>
+            </S.CalWrapper>
         </S.CalTopMargin>
+
+        {/* 분리한 스케쥴 모달 컴포넌트 렌더링 */}
+
+        </>
     )
 }
 

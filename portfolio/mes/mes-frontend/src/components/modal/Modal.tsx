@@ -3,14 +3,14 @@
 import React from "react"
 import * as S from '@/assets/css/Style.style'
 
-interface  ModalLayoutProps{
+interface  ModalProps{
     isOpen: boolean;
     onClose: ()=> void;
     title: string;
     children: React.ReactNode;
 }
 
-export default function ModalLayout({isOpen, onClose, title, children}: ModalLayoutProps){
+export default function Modal({isOpen, onClose, title, children}: ModalProps){
 
     if(!isOpen) return null;
 

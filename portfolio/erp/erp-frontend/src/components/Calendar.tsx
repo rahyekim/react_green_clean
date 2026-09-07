@@ -5,7 +5,6 @@ import { Temporal } from "@js-temporal/polyfill"
 import * as S from '@/assets/css/Style.style'
 import { Holiday } from "@/app/types/holiday"
 import { fetchHolidays } from "@/app/api/holidays"
-import ModalLayout from "./modal/ModalLayout"
 import ScheduleModal from "./modal/ScheduleModal"
 
 //1.일정 타입 정의 추가
@@ -30,13 +29,15 @@ export default function Calendar(
     // 연도와 월 데이터를 넣어서 PlainYearMonth 객체를 생성!
     const targetYearMonth = Temporal.PlainYearMonth.from({year,month})
     //해당 월의 1일 날짜 정보 추출 //1:월요일
+    const firstDayDate=
+    targetYearMonth.toPlainDate({day:1}) //2026-06 + -01(day:1)
 /*
     Temporal의 dayOfWeek(요일)는 1(월요일) ~ 7(일요일)입니다
     일요일부터 시작하는 달력 그리드를 위해 0(일) ~ 6(토) 인덱스로 변환합니다.
 */  
-    const firstDayDate=
-    targetYearMonth.toPlainDate({day:1}) //2026-06 + -01(day:1)
-    const firstDayIndex= 
+    // Temporal의 dayOfWeek (1:월 ~ 7:일) -> 0:일 ~ 6:토 로 변환
+    // 달의 1일 요일👉 달력 앞에 빈칸 몇 개 만들지 결정할 때
+    const firstDayIndex=  
     firstDayDate.dayOfWeek ===7 ? 0 : firstDayDate.dayOfWeek;
 
     //해당 월의 마지막 날짜(총 일수) 직관적으로 가져옴
@@ -74,6 +75,7 @@ export default function Calendar(
     for(let d=1 ; d <= daysInMonth ; d++){
         const holiday= getHoliday(d);
 
+        //지금 반복문의 d는 무슨요일?=> 토요일 일요일 판별 
         const currentDayofWeek = (firstDayIndex+d -1) % 7;
         const isSunday = currentDayofWeek === 0;
         const isSaturday = currentDayofWeek === 6;
@@ -96,6 +98,14 @@ export default function Calendar(
             </S.DayCell>
         )
     }
+
+    /*
+    <S.DayCell>은 화면에 바로 그려지는 DOM 노드가 아니라 "이런 모양으로 컴포넌트를 만들어줘"라는
+    정보가 담긴 자바스크립트 객체이므로 
+    일반 자바스크립트 배열(const days = [])에 숫자나 문자열을 push 하듯이, 
+    JSX 객체도 얼마든지 push로 배열에 집어넣을 수 있다 대신 key값은 꼭 필수!
+     */
+
     return(
         <>
         <S.CalTopMargin>

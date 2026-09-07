@@ -1,17 +1,26 @@
 'use client'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Temporal } from '@js-temporal/polyfill'
-import ModalLayout from './ModalLayout'
+import Modal from './Modal'
 import * as S from '@/assets/css/Style.style'
 
 // 1. 일정(Schedule) 인터페이스 정의
 export interface Schedule{
-    // id, date, content, status, createdAt 타입 정의하기
+    id: string;
+    date: number;
+    content: string;
+    status: '대기' | '진행' |'완료' ;
+    createdAt: string;
 }
 
 // 2. 모달 Props 인터페이스 정의
 interface ScheduleModalProps{
-    // isOpen, onClose, month, selectedDate, schedules, setSchedules 타입 정의하기
+    isOpen:boolean;
+    onClose: ()=>void;
+    month:number;
+    selectedDate: number | null;
+    schedules: Schedule[];
+    setSchedules:React.Dispatch<React.SetStateAction<Schedule[]>>;
 }
 
 export default function ScheduleModal({
@@ -46,7 +55,7 @@ export default function ScheduleModal({
         }
 
         return(
-            <ModalLayout 
+            <Modal
                 isOpen={isOpen} 
                 onClose={onClose}
                 title={`${month}월 ${selectedDate}일 업무 일정`}
@@ -56,6 +65,6 @@ export default function ScheduleModal({
                 {/* 9. 버튼 그룹 영역 (등록/수정, 닫기) */}
 
                 {/* 10. 선택된 날짜의 일정 목록 렌더링 영역 (filter와 map 활용) */}
-            </ModalLayout>
+            </Modal>
         )
 }

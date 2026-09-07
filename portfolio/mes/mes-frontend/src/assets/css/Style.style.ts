@@ -1,3 +1,4 @@
+import { FS } from './../../../node_modules/next/dist/build/turborepo-access-trace/types.d';
 import styled from 'styled-components'
 import Link from 'next/link'
 
@@ -190,7 +191,7 @@ cursor: pointer;
 `;
 
 
-export const SocialButton= styled(Button)<{$provider:'google'|'insta'}>`
+export const SocialButton= styled.button<{$provider:'google'|'insta'}>`
 width: 100%;
 padding: 0.8rem;
 /* margin-bottom: 0.5rem; */
@@ -202,9 +203,6 @@ font-size: 0.9rem;
 cursor: pointer;
 text-align: center;
 
-&:hover {
-    color: #eee;
-  }
 `;
 
 
@@ -286,30 +284,63 @@ transition: background-color 0.2s ease, color 0.2s ease;
   }
 `;
 
-//calendar 달력
-
+//calendar 캘린더달력
 export const CalTopMargin = styled.div`
   // 캘린더 상단 여백 껍데기
+  margin-top: 1rem;
+  
 `;
 
 export const CalWrapper = styled.div`
   // 캘린더 전체를 감싸는 메인 카드 박스 껍데기 (최대 너비, 그림자, 둥근 모서리 등)
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+
+  background-color: #eee;
+  border-radius: 20px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0,0,0,.2);
+
+  overflow: hidden;
 `;
 
 export const CalHeader = styled.h2`
   // 캘린더 상단 연도/월 타이틀 껍데기 (가운데 정렬)
+  text-align: center;
+  font-size:30px; 
+  font-weight:700;
+  margin-bottom:1.5rem; 
+  color:#333;
 `;
 
 export const Grid = styled.div`
   // 7열 그리드 레이아웃 껍데기
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
 `;
 
 export const Dayname = styled.div`
   // 요일 이름(일~토) 표시 영역 껍데기 (첫째 주 일요일, 토요일 색상 분기)
+  text-align: center;
+  font-size: 1rem;
+  padding-bottom: 10px;
+
+  &:nth-child(1){
+    color: #ff4d4f;
+  }
+
+  &:nth-child(7){
+    color: #1890ff;
+  }
 `;
+
 
 export const Tooltip = styled.div`
   // 툴팁 영역 껍데기
+  font-size: 0.7rem;
 `;
 
 interface DayCellProps {
@@ -322,6 +353,44 @@ interface DayCellProps {
 
 export const DayCell = styled.div<DayCellProps>`
   // 개별 날짜 칸 껍데기 (빈 칸 여부, 오늘, 공휴일, 주말에 따른 조건부 스타일링)
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  white-space: nowrap;
+
+  min-height: 80px;
+  border-radius: 10px;
+  background-color: ${({$isEmpty})=>$isEmpty ? 'transparent': '#fefefe'}; 
+  font-size:1rem;
+
+  pointer-events: ${({$isEmpty})=> $isEmpty ? 'none': 'auto'};
+  //빈셀(Empty Cell)클릭(1일시작전)=> 모달, hover 효과발생 버그 방지
+
+  color: ${({$isHoliday, $isSunday, $isSaturday})=> {
+    if($isHoliday || $isSunday) return "#ff4d4f";
+    if($isSaturday) return "#1890ff";
+    return '#333'
+  }};
+
+${({ $isToday }) =>
+  $isToday &&
+  `
+    // font-weight: bold;
+    // span {
+    //   background-color: #4e73df;
+    //   color: white;
+    //   border-radius: 50%;
+    //   padding: 2px 8px;
+    // }
+
+    background-color: #fff3ed;
+    color: #ff6b6b;
+    font-weight: bold;
+    border: 1px dashed #ff6b6b;
+`}
+  
+  
 `;
 
 

@@ -382,7 +382,7 @@ export const ModalHeader= styled.div`
 display: flex;
 justify-content: space-between;
 align-items: center;
-margin-bottom: 20px;
+margin-bottom: 1rem;
 `;
 export const ModalTitle= styled.h3`
 font-size: 1.2rem;
@@ -443,7 +443,6 @@ export const ScheduleList= styled.ul`
 list-style: none;
 padding: 0;
 margin: 16px 0 0 0 ;
-///????
 max-height: 150px;
 overflow-y: auto;
 border-top: 1px solid #ddd;

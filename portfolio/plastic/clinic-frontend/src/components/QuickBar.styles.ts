@@ -7,10 +7,14 @@ bottom: 0;
 left: 0;
 width: 100%;
 
-background-color: rgba(17,17,17,0.95);
+background-color: rgba(17,17,17,0.95); //반투명해야 뒤가보임
 border-top: 1px solid #333;
+
+/* 뒤쪽 배경에 블러 효과 부여 */
 backdrop-filter: blur(5px);
 //그 반투명한 바 뒤 글,이미지 배경 요소 5px만큼 흐릿하게(blur) 
+-webkit-backdrop-filter: blur(5px); //safari지원용
+
 z-index: 999;
 
 @media (max-width: 1024px) {
