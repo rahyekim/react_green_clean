@@ -1,7 +1,7 @@
 
 import { Holiday } from "@/app/types/holiday";
 
-export const fetchHolidays = 
+export const fetchHolidays =      //함수 return(반환값)
 async(year:number,month:number) : Promise<Holiday[]>=>{
     
     if(month===9){

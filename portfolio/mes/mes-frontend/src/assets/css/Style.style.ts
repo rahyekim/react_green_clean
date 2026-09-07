@@ -206,3 +206,141 @@ text-align: center;
     color: #eee;
   }
 `;
+
+
+// mypage 레이아웃
+export const CalendarLayout = styled.div`
+  // 좌우 패널을 가로로 배치하고 간격을 주는 
+  display: flex;
+  gap: 24px;
+
+  @media (max-width:1024px){
+    flex-direction: column;
+}
+`;
+
+export const LeftPanel = styled.div`
+  // 왼쪽 고정형 사이드바 영역  (모바일에서는 100%)
+width: 320px;
+flex-shrink: 0;
+
+  @media (max-width:768px) {
+   width : 100% ; //반응형레이아웃 pc화면전까지(세로정렬일때)
+  }
+`;
+
+export const RightPanel = styled.div`
+  // 오른쪽 본문 영역  (남은 공간 유연하게 차지)
+  flex: 1;
+  min-width: 0;
+`;
+
+// sidebar 내부 컴포넌트
+export const AsideContainer = styled.div`
+  // 사이드바 내부 전체를 감싸는 세로 정렬 박스 
+width: 100%;
+height: 100%;
+padding: 24px 0;
+
+display: flex;
+flex-direction: column;
+
+background-color:#fff;
+`;
+
+export const MenuSection = styled.div`
+margin-bottom: 24px;
+`;
+
+export const SectionTitle = styled.h3`
+  // 섹션 제목(카테고리명) 
+color: #94a3b8;
+font-size: 0.75rem;  
+font-weight: 700;
+margin-bottom: 5px;
+padding: 0px 24px;
+letter-spacing: 0.05em;
+`;
+
+export const MenuList = styled.ul`
+  // 기본 리스트 스타일을 제거하는 메뉴 목록 
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
+export const MenuItem = styled(Link)`
+  // 라우터 링크를 활용한 개별 메뉴 아이템  (호버 효과 포함)
+display: block;
+padding: 10px 24px;
+color: #475569;
+font-size: 0.95rem;
+font-weight: 500;
+text-decoration: none;
+transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover{
+    color: #2563eb;
+    background-color: #f1f5f9;
+    border-right: 3px solid #2563eb;
+  }
+`;
+
+//calendar 달력
+
+export const CalTopMargin = styled.div`
+  // 캘린더 상단 여백 껍데기
+`;
+
+export const CalWrapper = styled.div`
+  // 캘린더 전체를 감싸는 메인 카드 박스 껍데기 (최대 너비, 그림자, 둥근 모서리 등)
+`;
+
+export const CalHeader = styled.h2`
+  // 캘린더 상단 연도/월 타이틀 껍데기 (가운데 정렬)
+`;
+
+export const Grid = styled.div`
+  // 7열 그리드 레이아웃 껍데기
+`;
+
+export const Dayname = styled.div`
+  // 요일 이름(일~토) 표시 영역 껍데기 (첫째 주 일요일, 토요일 색상 분기)
+`;
+
+export const Tooltip = styled.div`
+  // 툴팁 영역 껍데기
+`;
+
+interface DayCellProps {
+    $isEmpty?: boolean;
+    $isToday?: boolean;
+    $isHoliday?: boolean;
+    $isSunday?: boolean;
+    $isSaturday?: boolean;
+}
+
+export const DayCell = styled.div<DayCellProps>`
+  // 개별 날짜 칸 껍데기 (빈 칸 여부, 오늘, 공휴일, 주말에 따른 조건부 스타일링)
+`;
+
+
+
+//일정모달 
+export const ModalOverlay= styled.div``;
+export const ModalContainer= styled.div``;
+export const ModalHeader= styled.div``;
+export const ModalTitle= styled.h3``;
+export const CloseButton= styled.button``;
+export const ModalBody= styled.div``;
+
+export const FormGroup= styled.div``;
+export const Select= styled.select``;
+export const TextArea= styled.textarea``;
+export const ButtonGroup= styled.div``;
+export const ScheduleList= styled.ul``;
+export const ScheduleItem= styled.li``;
+export const ScheduleHeader= styled.div``;
+export const Badge= styled.span<{$status:'대기'|'진행'|'완료'}>``;
+export const SmallButton = styled.button``;
+export const ScheduleDot= styled.div``;

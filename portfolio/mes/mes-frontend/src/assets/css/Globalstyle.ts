@@ -77,6 +77,7 @@ body{
     background-color: #f8f9fc;
     font-family: 'Escoredream';
     font-weight: 400;
+    font-size: 14px;
 
 }
 

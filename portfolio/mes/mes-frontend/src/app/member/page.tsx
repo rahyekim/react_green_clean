@@ -221,7 +221,7 @@ export default function Member(){
                     </S.Form>
 
                     <S.LinkWrapper>
-                        <S.StyledLink href='/forget'>비밀번호 찾기</S.StyledLink>
+                        <S.StyledLink href='/forgot'>비밀번호 찾기</S.StyledLink>
                         <span> | </span>
                         <S.StyledLink href='/login'>로그인</S.StyledLink>
                     </S.LinkWrapper>

@@ -3,20 +3,23 @@ import styled from "styled-components";
 //footer
 export const SiteFooterWrapper = styled.footer`
 background-color: #181818;
-padding: 10px 15px 90px 15px ;
+padding:20px 25px 120px 25px;
 width: 100%;
 /* display: flex;
 justify-content: space-between; ///????
 align-items: center;  */
 border-top: 1px solid #eee;
+
+@media (max-width:768px){
+     padding-bottom: 40px;
+}
 `;
 export const SiteFooterInner = styled.div`
 max-width: 1860px;
 width: 100%;
 margin: 0 auto;
-padding: 10px 15px;
 @media (max-width:1024px){
-    /////
+     padding:0 20px;
 }
 `;
 export const SiteFooterTop = styled.div`
@@ -24,12 +27,13 @@ display: flex;
 justify-content: space-between;
 align-items: flex-start;
 padding-bottom: 40px;
-padding-top: 40px;
+padding-top: 30px;
 margin-bottom: 40px;
-
+border-bottom:1px solid #333;
 
 @media  (max-width:1024px) {
-  flex-direction:column ;
+  flex-direction:column ; 
+  gap: 30px;
 }
 `;
 export const SiteFooterCs = styled.div`
@@ -66,7 +70,7 @@ export const SiteFooterScheduleTitle = styled.div`
 font-size: 14px;
 font-weight: bold;
 color: #eee;
-margin-bottom: 3px;
+margin-bottom: 4px;
 `;
 export const SiteFooterScheduleText = styled.div`
 font-size: 13px;
@@ -96,7 +100,7 @@ transition: all 0.3s ease-in-out;
 
 @media (max-width:1024px){
     width: 100%;
-    margin-top: 30px;
+    margin-top: 10px;
     padding: 10px;
     max-width: 250px;
 
@@ -107,23 +111,22 @@ display: flex;
 justify-content: space-between;
 align-items: flex-end;
 
-padding-top: 20px;
-border-top: 0.5px solid #777;
 
 @media (max-width:1024px) {
    flex-direction: column;
    align-items: flex-start;
-   gap: 30px;
+   gap: 40px;
 }
 `;
 export const SiteFooterCompany= styled.div`
 display: flex;
 flex-direction: column;
+gap:10px;
 `;
 export const SiteFooterCompanyName = styled.h2`
 font-size:24px;
 font-weight: 800;
-margin-bottom: 20px;
+margin:0 0 15px 0;
 color: white;
 `;
 export const SiteFooterInfoText = styled.p`
@@ -131,7 +134,7 @@ margin: 0;
 font-size: 14px;
 color: #999;
 line-height: 1.6; //행간
-letter-spacing: 0.3px;
+letter-spacing: -0.3px;
 `;
 export const SiteFooterBottomRight = styled.div`
 display: flex;
@@ -154,7 +157,7 @@ border: 1px solid rgba(255,255,255,.1);
 border-radius: 5px;
 color: white;
 font-size: 12px;
-padding: 8px 12px;
+padding: 8px 16px;
 cursor: pointer;
 transition: all 0.2s ;
 
@@ -164,7 +167,7 @@ transition: all 0.2s ;
 }
 `;
 export const SiteFooterFamilyTitle = styled.div`
-font-size: 16px;
+font-size: 15px;
 font-weight: bold;
 color: #ccc;
 margin-bottom: 20px;
@@ -174,10 +177,10 @@ display: flex;
 gap: 15px;
 align-items: center;
 flex-wrap: wrap;
-font-size: 12px;
-color: #999;
 
 .logo-placeholder{
+    font-size: 12px;
+    color: #999;
     border-radius: 15px;
     border: 1px solid #999;
     padding: 3px 10px;
@@ -203,7 +206,7 @@ z-index: 999999;
 export const FloatingMenuItem = styled.div`
 display: flex;
 flex-direction: column;
-/* align-items: center; */
+align-items: center;
 gap: 5px;
 cursor: pointer;
 `;
@@ -232,15 +235,15 @@ svg{
 `;
 export const FloatingMenuText = styled.span`
 text-align: center;
-font-size: 12px;
+font-size: 11px;
 color: #fff;
 font-weight: bold;
-letter-spacing: 0.5px;
+letter-spacing: -0.5px;
 
 background-color: #111;
 border-radius: 10px;
 border: 1px solid #222;
 
-padding: 3px 8px;
+padding: 4px 8px;
 cursor: pointer;
 `;

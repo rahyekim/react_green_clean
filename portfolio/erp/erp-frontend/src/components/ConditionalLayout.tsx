@@ -15,11 +15,11 @@ export default function ConditionalLayout ({children}:{children:React.ReactNode}
 
     return(
             <S.PageWrapper>
-                {!isHidden && <Header/>}
+                {/* {!isHidden && <Header/>} */}
                 <S.MainContent>  {/*flex:1*/}
                     {children}
                 </S.MainContent>
-                {!isHidden && <Footer/>}
+                {/* {!isHidden && <Footer/>} */}
             </S.PageWrapper>
     )
 }

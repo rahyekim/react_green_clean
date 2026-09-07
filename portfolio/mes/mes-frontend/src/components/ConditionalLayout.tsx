@@ -25,11 +25,11 @@ export default function ConditionalLayout({children}:{children:React.ReactNode})
     return(
         <S.PageWrapper> 
             {/* isHidden이 false일때만 헤더푸터를 보여줌*/}
-            {!isHidden && <Header/>}
+            {/* {!isHidden && <Header/>} */}
             <S.MainContent>
                 {children}
             </S.MainContent>
-            {!isHidden && <Footer/>}
+            {/* {!isHidden && <Footer/>} */}
         </S.PageWrapper>
     );
 

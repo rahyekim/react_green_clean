@@ -106,13 +106,12 @@ background-color: #334155;
 //양옆 패딩은 유지해야 사라질때 이상없음
 padding: ${({$isOpen})=>$isOpen ? '16px 24px' : '0 24px'};
 max-height: ${({$isOpen})=>$isOpen ? '300px': '0'};
-overflow: hidden;
-min-width:0;
+overflow: hidden; //🌟 메뉴가닫힐때 글씨가 밖으로 튀어나옴방지
 box-shadow: 0 4px 6px rgba(0,0,0,.1);
 
 transition: all 0.3s ease-in-out;
 z-index: 9999;
-//나자신(&) 아래 직계자식 a
+//나자신(&) 아래 직계자식 a 까지만 
 & > a{
     padding: 11px 0; 
     border-bottom: 1px solid #475569;

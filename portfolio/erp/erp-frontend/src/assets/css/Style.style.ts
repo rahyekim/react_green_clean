@@ -290,14 +290,181 @@ transition: background-color 0.2s ;
 &:hover{
     background-color: ${({$isEmpty})=>$isEmpty ? "transparent":'#f8dced'}; //#f0f0f0
 }
-
+cursor: pointer;
 
 `;
+//mypage
+export const CalendarLayout= styled.div`
+display:flex;
+gap: 24px;
 
-// export const = styled.div``;
-// export const = styled.div``;
-// export const = styled.div``;
-// export const = styled.div``;
-// export const = styled.div``;
+@media (max-width:1024px){
+    flex-direction: column;
+}
+`;
+export const LeftPanel= styled.div`
+width: 320px;
+flex-shrink: 0;
+//PC 화면 (> 1024px): 너비 320px의 고정형 사이드바
+//모바일/태블릿 화면 (≤ 1024px): 너비 100%로 퍼져서 화면을 시원하게 채우는 박스
+@media (max-width:1024px){
+    width: 100%; ///🌟반응형 레이아웃(세로 정렬)
+} 
+`;
+export const RightPanel= styled.div`
+flex: 1;
+min-width: 0;
+`;
+
+//sidebar
+export const AsideContainer= styled.div`
+width: 100%;
+height: 100%;
+padding: 24px 0;
+display: flex;
+flex-direction: column; 
+background-color:#fff;
+`;
+export const MenuSection= styled.div`
+margin-bottom: 24px;
+`;
+export const SectionTitle= styled.h3`
+padding: 0px 24px;
+font-size: 0.75rem;  
+font-weight: 700;
+margin-bottom: 8px;
+letter-spacing: 0.05em; //em
+`;
+export const MenuList= styled.ul`
+list-style: none;
+padding: 0;
+margin: 0;
+
+`;
+export const MenuItem= styled(Link)`
+display: block;
+padding: 10px 24px;
+color: #475569;
+text-decoration: none;
+font-size: 0.95rem;
+font-weight: 500;
+transition: background-color 0.2s ease, color 0.2s ease;
+
+&:hover{
+    background-color: #f1f5f9;
+    color: #2563eb;
+    border-right: 3px solid #2563eb;
+}
+`;
+
+//일정모달 
+export const ModalOverlay= styled.div`
+position: fixed;
+width: 100%; 
+height: 100%;
+inset: 0; // top, right, bottom, left 모두 0 (꽉 채우기)
+z-index: 999;
+background-color: rgba(0,0,0,.7);
+
+display: flex;
+justify-content: center;
+align-items: center;
+`;
+export const ModalContainer= styled.div`
+background-color: #eee;
+width: 100%;
+max-width: 400px;
+padding: 24px;
+border-radius: 15px;
+box-shadow: 0 4px 12px rgba(0,0,0,.2);
+`;
+export const ModalHeader= styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+`;
+export const ModalTitle= styled.h3`
+font-size: 1.2rem;
+font-weight: 800;
+color: #333;
+margin: 0;
+`;
+export const CloseButton= styled.button`
+background: #fff;
+width: 20px;
+height: 20px;
+border: 1px solid #fff;
+border-radius: 50%;
+font-size: 1.2rem;
+color: #666;
+transition: all 0.3s ;
+&:hover{
+    color: #111;
+    border-color: #d1d3e2;
+}
+cursor: pointer;
+`;
+export const ModalBody= styled.div`
+`;
+
+export const FormGroup= styled.div`
+display: flex;
+flex-direction: column;
+gap: 8px;
+margin-bottom: 1.3rem;
+`;
+export const Select= styled.select`
+padding: 8px;
+border: 1px solid #d1d3e2;
+border-radius: 15px;
+outline: none;
+font-size: 0.9rem;
+padding-left: 20px;
+`;
+export const TextArea= styled.textarea`
+padding: 8px;
+border: 1px solid #d1d3e2;
+border-radius: 15px;
+outline: none;
+resize: none; 
+height: 80px;
+font-size: 0.9rem;
+padding-left: 20px;
+`;
+export const ButtonGroup= styled.div`
+display: flex;
+justify-content: flex-end;
+gap: 8px;
+width: 100%;
+white-space: nowrap;
+`;
+export const ScheduleList= styled.ul`
+list-style: none;
+padding: 0;
+margin: 16px 0 0 0 ;
+///????
+max-height: 150px;
+overflow-y: auto;
+border-top: 1px solid #ddd;
+`;
+export const ScheduleItem= styled.li`
+display: flex;
+flex-direction: column;
+gap: 8px;
+padding: 12px 0;
+border-bottom: 1px solid #ddd;
+`;
+export const ScheduleHeader= styled.div``;
+export const Badge= styled.span<{$status:'대기'|'진행'|'완료'}>``;
+export const SmallButton = styled.button`
+background-color: transparent;
+border: 1px solid #d1d3e2;
+border-radius: 8px;
+padding: 4px 8px;
+font-size: 0.75rem;
+cursor: pointer;
+`;
+export const ScheduleDot= styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;

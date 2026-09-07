@@ -5,14 +5,26 @@ import { Temporal } from "@js-temporal/polyfill"
 import * as S from '@/assets/css/Style.style'
 import { Holiday } from "@/app/types/holiday"
 import { fetchHolidays } from "@/app/api/holidays"
+import ModalLayout from "./modal/ModalLayout"
+import ScheduleModal from "./modal/ScheduleModal"
 
+//1.일정 타입 정의 추가
+interface Schedule{
+    id: string;
+    date: number;
+    content: string;
+    status: '대기' | '진행' | '완료';
+    createdAt: string;
+}
 
 //🌟plain(타임존정보가없는순수한날짜) ISO 8601 달력 형식(YYYY-MM-DD)으로 반환
-export default function Calendar( 
-    {year = Temporal.Now.plainDateISO().year,
-    month = Temporal.Now.plainDateISO().month,
+// 빈값호출=기본값(default값) 지정
+export default function Calendar(  
+    {year = Temporal.Now.plainDateISO().year, //1️⃣ 매개변수(Props)와 기본값 설정
+    month = Temporal.Now.plainDateISO().month, 
     }:
-    {year?: number; month?:number}){
+    {year?: number; month?:number} //2️⃣ 이 매개변수의 "타입" 정의
+){ 
 
     // 입력받은 연/월을 기준으로 Temporal 객체 생성
     // 연도와 월 데이터를 넣어서 PlainYearMonth 객체를 생성!
@@ -32,6 +44,11 @@ export default function Calendar(
 
     const [holidays,setHolidays]=useState<Holiday[]>([]);
     
+    //🔹모달에 관련된 추가 
+    const [schedules, setSchedules]=useState<Schedule[]>([]);
+    const [selectedDate, setSelectedDate]=useState<number|null>(null);
+    const [isModalOpen, setIsModalOpen]=useState(false);
+
     useEffect(()=>{
         fetchHolidays(year,month).then(setHolidays);
     }, [year,month])
@@ -40,8 +57,14 @@ export default function Calendar(
     const today = Temporal.Now.plainDateISO();
     const isthisMonth = today.year === year && today.month===month;
 
+    //🔹
+    const handleDayClick = (day:number)=>{
+        setSelectedDate(day);
+        setIsModalOpen(true)
+    }
+
     const getHoliday = (day:number)=> holidays.find(h=> h.date === day);
-    const days =[];
+    const days =[]; //// 달력 칸들을 담을 배열 선언
 
     //달력 빈칸 만들기
     for(let i=0; i< firstDayIndex ; i++){
@@ -54,20 +77,27 @@ export default function Calendar(
         const currentDayofWeek = (firstDayIndex+d -1) % 7;
         const isSunday = currentDayofWeek === 0;
         const isSaturday = currentDayofWeek === 6;
+
+        //🔹해당 날짜에 등록된 일정이 있는 지 확인(파란 점 표시용)
+        const hasSchedule = schedules.some(sch=> sch.date ===d);
+
         days.push(
             <S.DayCell key={d} 
                 $isToday={isthisMonth && today.day=== d}
                 $isHoliday={!!holiday}
-                $isSaturday={isSaturday}
+                $isSaturday={isSaturday} //토요일여부전달
                 $isSunday={isSunday}
-                > <span>{d}</span>
+                onClick={()=>handleDayClick(d)}
+                > <span>{d}</span>  {/* flex구조에서 씹히지않도록 span으로 감쌈 */}
                 {holiday && <S.Tooltip>{holiday.name}</S.Tooltip>}
                 {holiday?.name === '성탄절' && <span>🎄</span>} 
                 {holiday?.name.includes('추석') && <span>🌕🐇</span>} 
+                {hasSchedule && <S.ScheduleDot/>} 
             </S.DayCell>
         )
     }
     return(
+        <>
         <S.CalTopMargin>
             <S.CalWrapper>
                 <S.CalHeader>
@@ -83,5 +113,16 @@ export default function Calendar(
                 </S.Grid>
             </S.CalWrapper>
         </S.CalTopMargin>
+        {/* 분리한 스케쥴 모달 컴포넌트 렌더링 */}
+        <ScheduleModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        month={month}
+        selectedDate={selectedDate}
+        schedules={schedules}
+        setSchedules={setSchedules}
+        >
+        </ScheduleModal>
+    </>
     )
 }
