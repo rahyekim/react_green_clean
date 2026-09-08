@@ -20,8 +20,17 @@ export default function Calendar(
     {year = Temporal.Now.plainDateISO().year,
     month = Temporal.Now.plainDateISO().month
     }:{year?:number, month?:number}
-){
+){  
+    //🔹모달
     const [schedule, setSchedule]=useState<Schedule[]>([]);
+    const [selectedDate, setSelectedDate]=useState<number|null>(null)
+    const [isModalOpen, setIsModalOpen]=useState(false);
+
+    const handleDayClick =(day:number)=>{
+        setSelectedDate(day);
+        setIsModalOpen(true);
+    } 
+    
     // 3. Temporal을 이용해 선택된 연/월 객체 만들기
     const targetYearMonth= Temporal.PlainYearMonth.from({year,month})
 
@@ -32,10 +41,11 @@ export default function Calendar(
     firstDayDate.dayOfWeek === 7 ? 0 : firstDayDate.dayOfWeek;
 
     const daysInMonth = targetYearMonth.daysInMonth;
+    
+  
 
     // 5. 공휴일 데이터 관리를 위한 useState와 useEffect 작성하기
     const [holidays, setHolidays]=useState<Holiday[]>([])
-
     useEffect(()=>{
         fetchHolidays(year,month).then(setHolidays); //함축된(단축)버전 .then(res=> setHolidays(res))
     },[year,month])
@@ -78,13 +88,16 @@ export default function Calendar(
             $isHoliday={!!holiday}
             $isSaturday={isSaturday}
             $isSunday={isSunday}
-            ><span>{d}</span>
+            onClick={()=>handleDayClick(d)}
+            > <span>{d}</span>
             {holiday && <S.Tooltip>{holiday.name}</S.Tooltip>}
             {holiday?.name === '성탄절' && <span>🎄</span>}
             {holiday?.name.includes('추석') && <span>🌕🐇</span>}
             </S.DayCell>
         )
     }
+
+  
 
     // 8. 최종 UI 렌더링 반환 (JSX)
     return(

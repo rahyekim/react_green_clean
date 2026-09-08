@@ -17,7 +17,7 @@ export default function Modal({isOpen, onClose, title, children}: ModalProps){
     //event전파금지 e.stopPropagation
     return(
         <S.ModalOverlay onClick={onClose}>
-            <S.ModalContainer onClick={(e)=>e.stopPropagation}>
+            <S.ModalContainer onClick={(e)=>e.stopPropagation()}>
                 <S.ModalHeader>
                     <S.ModalTitle>{title}</S.ModalTitle>
                     <S.CloseButton onClick={onClose}>X</S.CloseButton>

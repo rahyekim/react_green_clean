@@ -90,11 +90,15 @@ export default function Calendar(
                 $isSaturday={isSaturday} //토요일여부전달
                 $isSunday={isSunday}
                 onClick={()=>handleDayClick(d)}
-                > <span>{d}</span>  {/* flex구조에서 씹히지않도록 span으로 감쌈 */}
+                > 
+                    <S.DayHeader>
+                        <span>{d}</span>  {/* flex구조에서 씹히지않도록 span으로 감쌈 */}
+                        {hasSchedule && <S.ScheduleDot/>} 
+                    </S.DayHeader>
+                    
                 {holiday && <S.Tooltip>{holiday.name}</S.Tooltip>}
                 {holiday?.name === '성탄절' && <span>🎄</span>} 
                 {holiday?.name.includes('추석') && <span>🌕🐇</span>} 
-                {hasSchedule && <S.ScheduleDot/>} 
             </S.DayCell>
         )
     }

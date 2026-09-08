@@ -217,12 +217,12 @@ margin-top: 2rem;
 `;
 export const CalWrapper= styled.div`
 width: 100%;
-max-width: 1000px;
+max-width: 600px;
 margin: 0 auto;
 background-color: #eee;
 border: 1px solid  #e0e0e0;
 border-radius: 20px;
-box-shadow: 0 4px 6px rgba(0,0,0,.5);
+box-shadow: 0 4px 6px rgba(0,0,0,.4);
 
 padding: 40px 20px 30px 20px; ////
 `;
@@ -254,10 +254,31 @@ padding-bottom: 10px;
 }
 
 `;
+
+//🔹툴팁🔸
 export const Tooltip= styled.div`
-
+visibility: hidden;
+  position: absolute;
+  bottom: 110%; //맨위 바깥으로 10%더띄움
+  left: 50%;
+  transform: translateX(-50%); //가운데정렬
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 `;
-
+export const DayHeader= styled.div`
+display: flex;
+align-items: flex-start;
+gap: 2px;
+/* width: 100%; //이거하면 날짜가 첫머리로감 */ 
+`;
 interface DayCellProps{
     $isEmpty?:boolean;
     $isToday?:boolean;
@@ -291,6 +312,12 @@ transition: background-color 0.2s ;
     background-color: ${({$isEmpty})=>$isEmpty ? "transparent":'#f8dced'}; //#f0f0f0
 }
 cursor: pointer;
+
+//🔹툴팁 자식🔸
+&:hover ${Tooltip} {
+    visibility: visible;
+    opacity: 1;
+  }
 
 `;
 //mypage
@@ -391,19 +418,29 @@ color: #333;
 margin: 0;
 `;
 export const CloseButton= styled.button`
-background: #fff;
+/* background: #fff;
 width: 20px;
 height: 20px;
 border: 1px solid #fff;
-border-radius: 50%;
-font-size: 1.2rem;
+border-radius: 50%; */
+border: none;
+font-size:2rem;
+font-weight: 300;
+line-height: 1;
 color: #666;
-transition: all 0.3s ;
+cursor: pointer;
+
+display: flex;
+align-items: center;
+justify-content: center;
+transform: rotate(45deg);
+transition: transform 0.2s ease, color 0.2s ease ;
+
 &:hover{
     color: #111;
     border-color: #d1d3e2;
+    transform: rotate(135deg);
 }
-cursor: pointer;
 `;
 export const ModalBody= styled.div`
 `;
@@ -436,16 +473,44 @@ export const ButtonGroup= styled.div`
 display: flex;
 justify-content: flex-end;
 gap: 8px;
-width: 100%;
 white-space: nowrap;
+margin-top: 16px;
+
+& > button{
+    width: auto !important;
+    min-width: 80px;
+    padding: 8px 16px !important;
+    flex: none;
+}
 `;
 export const ScheduleList= styled.ul`
 list-style: none;
-padding: 0;
+padding: 0 10px;
 margin: 16px 0 0 0 ;
-max-height: 150px;
+max-height: 250px;
 overflow-y: auto;
 border-top: 1px solid #ddd;
+
+/* 💡 1. 스크롤바 전체 너비 설정 */
+  &::-webkit-scrollbar {
+    width: 5px; 
+  }
+
+  /* 💡 2. 스크롤바 배경 (지나다니는 길) */
+  &::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+
+  /* 💡 3. 스크롤바 막대 (움직이는 바) */
+  &::-webkit-scrollbar-thumb {
+    background: #d1d3e2; /* 연한 회색빛 막대 */
+    border-radius: 3px;  /* 둥글게 처리 */
+  }
+
+  /* 💡 4. 마우스 올렸을 때 막대 색상 */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #b0b3c6; 
+  }
 `;
 export const ScheduleItem= styled.li`
 display: flex;
@@ -454,8 +519,26 @@ gap: 8px;
 padding: 12px 0;
 border-bottom: 1px solid #ddd;
 `;
-export const ScheduleHeader= styled.div``;
-export const Badge= styled.span<{$status:'대기'|'진행'|'완료'}>``;
+export const ScheduleHeader= styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-size: 0.85rem;
+color: #666;
+width: 100%;
+`;
+
+export const Badge= styled.span<{$status:'대기'|'진행'|'완료'}>`
+padding: 4px 8px;
+border-radius: 12px;
+font-size: 0.75rem;
+font-weight: bold;
+color: white; 
+background-color: ${props=>props.$status === '진행' && '#3d8df6' };
+background-color: ${props=>props.$status === '완료' && '#109b81' };
+background-color: ${props=>props.$status === '대기' && '#f59e0b' };
+
+`;
 export const SmallButton = styled.button`
 background-color: transparent;
 border: 1px solid #d1d3e2;
@@ -464,6 +547,72 @@ padding: 4px 8px;
 font-size: 0.75rem;
 cursor: pointer;
 `;
-export const ScheduleDot= styled.div``;
+export const ScheduleDot= styled.div`
+width: 6px;
+height: 6px;
+background-color: #3d8ef6;
+border-radius: 50%;
+margin-top: 8px;
+`;
+
+//🌟💙🌟커스텀 셀렉트 박스 컨테이너🌟💙🌟
+export const CustomSelectContainer= styled.div`
+position: relative;
+width: 100%;
+z-index: 999;
+
+`;
+export const SelectTrigger= styled.div`
+padding: 10px 12px;
+border: 1px solid #d1d3e2;
+border-radius: 16px;
+background-color: #fff;
+font-size: 0.9rem;
+cursor: pointer;
+
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+color: #333;
+&:hover{
+    border-color: #bac8f3;
+}
+`;
+
+//💙드롭다운 리스트 영역💙
+export const SelectList= styled.ul`
+position: absolute;
+top: 100%;  
+left:0;
+width: 100%;
+margin: -1px 0 0 0 ;
+padding: 0;
+list-style: none;
+background-color: #fff;
+border: 1px solid #e2e8f0;
+border-radius: 16px;
+box-shadow: 0 4px 12px rgba(0,0,0,.1);
+z-index: 50;
+overflow: hidden;
+`;
+
+interface SelectItemProps{
+    $isSelected?:boolean
+}
+//드롭다운 개별 항목
+export const SelectItem= styled.li<SelectItemProps>`
+padding: 10px 12px;
+font-size: 0.9rem;
+cursor: pointer;
+color: ${({$isSelected})=>$isSelected ? '#4e73df':'#475569'};
+background-color:  ${({$isSelected})=>$isSelected ? '#f8f9fc': 'transparent'};
+font-weight:  ${({$isSelected})=>$isSelected ? 'bold': 'normal'};;
+
+&:hover{
+    background-color: #f1f5f9;
+}
+`;
+
 // export const = styled.div``;
 // export const = styled.div``;

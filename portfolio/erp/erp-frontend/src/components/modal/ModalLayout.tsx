@@ -17,10 +17,10 @@ export default function ModalLayout({isOpen, onClose, title, children}: ModalLay
     //event전파금지 e.stopPropagation
     return(
         <S.ModalOverlay onClick={onClose}>
-            <S.ModalContainer onClick={(e)=>e.stopPropagation}>
+            <S.ModalContainer onClick={(e)=>e.stopPropagation()}>
                 <S.ModalHeader>
                     <S.ModalTitle>{title}</S.ModalTitle>
-                    <S.CloseButton onClick={onClose}>X</S.CloseButton>
+                    <S.CloseButton onClick={onClose}>+</S.CloseButton>
                 </S.ModalHeader>
                 
                 <S.ModalBody>{children}</S.ModalBody>
