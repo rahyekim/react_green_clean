@@ -1,0 +1,37 @@
+// 1. DB 종류 설정 (mysql / mariadb 공용)
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 2. 클라이언트 생성기 설정
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 3. 회원 테이블 모델 정의
+model User {
+  id                 BigInt    @id @default(autoincrement())
+  email              String    @unique @db.VarChar(255)
+  password           String    @db.VarChar(255)
+  nickname           String    @db.VarChar(50)
+  age                Int
+  gender             String    // 'M', 'F', 'O'
+  bio                String?   @db.Text
+  
+  address            String?   @db.VarChar(255)
+  latitude           Decimal?  @db.Decimal(10, 8)
+  longitude          Decimal?  @db.Decimal(11, 8)
+  
+  profileImageMain   String?   @map("profile_image_main") @db.VarChar(255)
+  profileImageSub1   String?   @map("profile_image_sub1") @db.VarChar(255)
+  profileImageSub2   String?   @map("profile_image_sub2") @db.VarChar(255)
+  
+  interests          Json?     
+  status             String    @default("ACTIVE")
+  
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@map("users") 
+}

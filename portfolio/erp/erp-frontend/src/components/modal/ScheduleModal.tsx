@@ -39,7 +39,7 @@ export default function ScheduleModal({
         setFormContent('');
         setFormStatus('대기');
         setEditingId(null);
-        setIsSelectOpen(false); //💙
+        setIsSelectOpen(false); //💙//모달 열릴때 드롭다운 닫기
        } 
 
     },[isOpen, selectedDate])
@@ -74,6 +74,7 @@ export default function ScheduleModal({
         setEditingId(null);
     };
 
+    //수정버튼 누르면 폼 채워주기 
     const handleEdit = (sch: Schedule)=>{
         setFormContent(sch.content);
         setFormStatus(sch.status);
@@ -97,13 +98,8 @@ export default function ScheduleModal({
         title={`${month}월 ${selectedDate}일 업무 일정`}
         > 
             <S.FormGroup>
-                {/* <S.Select value={formStatus} 
-                onChange={e=>
-                setFormStatus(e.target.value as  '대기' | '진행' |'완료' )}>
-                    <option value="대기">대기</option>
-                    <option value="진행">진행</option>
-                    <option value="완료">완료</option>
-                </S.Select> */}
+                
+                {/* 💙커스텀셀렉트💙 */}
                 <S.CustomSelectContainer>
                     <S.SelectTrigger onClick={()=>setIsSelectOpen(prev=>!prev)}>
                         {formStatus}
@@ -165,3 +161,11 @@ export default function ScheduleModal({
         </ModalLayout>
     )
 }
+
+{/* <S.Select value={formStatus} 
+                onChange={e=>
+                setFormStatus(e.target.value as  '대기' | '진행' |'완료' )}>
+                    <option value="대기">대기</option>
+                    <option value="진행">진행</option>
+                    <option value="완료">완료</option>
+                </S.Select> */}

@@ -158,7 +158,7 @@ app.post('/api/signup', async(req,res)=>{
     }
 })
 
-const PORT=3000
+const PORT=3306
 app.listen(PORT, ()=>{
     console.log(`백엔드 서버가 http://localhost:${PORT} 에서 열심히 돌아가고있습니다`)
 })

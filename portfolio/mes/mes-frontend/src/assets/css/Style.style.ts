@@ -294,7 +294,7 @@ export const CalTopMargin = styled.div`
 export const CalWrapper = styled.div`
   // 캘린더 전체를 감싸는 메인 카드 박스 껍데기 (최대 너비, 그림자, 둥근 모서리 등)
   width: 100%;
-  max-width: 1000px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
 
@@ -302,14 +302,12 @@ export const CalWrapper = styled.div`
   border-radius: 20px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 4px 6px rgba(0,0,0,.2);
-
-  overflow: hidden;
 `;
 
 export const CalHeader = styled.h2`
   // 캘린더 상단 연도/월 타이틀 껍데기 (가운데 정렬)
   text-align: center;
-  font-size:30px; 
+  font-size:25px; 
   font-weight:700;
   margin-bottom:1.5rem; 
   color:#333;
@@ -318,8 +316,11 @@ export const CalHeader = styled.h2`
 export const Grid = styled.div`
   // 7열 그리드 레이아웃 껍데기
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr)); //💙💘
   gap: 8px;
+
+  //minmax(최소값0:min-width:0 👍✨, 최대값1fr:균등하게쫙쫙늘어남) =
+  
 `;
 
 export const Dayname = styled.div`
@@ -338,6 +339,7 @@ export const Dayname = styled.div`
 `;
 
 
+//💘
 export const Tooltip = styled.div`
   // 툴팁 영역 껍데기
   font-size: 0.7rem;
@@ -363,15 +365,19 @@ export const DayCell = styled.div<DayCellProps>`
   border-radius: 10px;
   background-color: ${({$isEmpty})=>$isEmpty ? 'transparent': '#fefefe'}; 
   font-size:1rem;
-
+  transition: all 0.3s ;
   pointer-events: ${({$isEmpty})=> $isEmpty ? 'none': 'auto'};
-  //빈셀(Empty Cell)클릭(1일시작전)=> 모달, hover 효과발생 버그 방지
+  //💘빈셀(Empty Cell)클릭(1일시작전)=> 모달, hover 효과발생 버그 방지
 
   color: ${({$isHoliday, $isSunday, $isSaturday})=> {
     if($isHoliday || $isSunday) return "#ff4d4f";
     if($isSaturday) return "#1890ff";
     return '#333'
   }};
+
+  &:hover{
+  background-color:${({ $isEmpty }) => ($isEmpty ? "transparent" : "#f8e3e3")};
+  }
 
 ${({ $isToday }) =>
   $isToday &&
@@ -413,3 +419,37 @@ export const ScheduleHeader= styled.div``;
 export const Badge= styled.span<{$status:'대기'|'진행'|'완료'}>``;
 export const SmallButton = styled.button``;
 export const ScheduleDot= styled.div``;
+
+//
+// 🌟💙🌟커스텀 셀렉트 박스 컨테이너🌟💙🌟
+export const CustomSelectContainer = styled.div`
+  /* 💡 여기에 필요한 위치(position)와 너비, z-index를 채워보세요! */
+`;
+
+export const SelectTrigger = styled.div`
+  /* 💡 패딩, 테두리, 둥글기, 배경색, 글자 크기, cursor 등을 채워보세요! */
+  /* 💡 flex를 활용해 양쪽 정렬(space-between)하는 속성도 넣어보세요! */
+  
+  /* 💡 마우스 올렸을 때(hover) 테두리 색상 변화도 작성해보세요! */
+`;
+
+// 💙드롭다운 리스트 영역💙
+export const SelectList = styled.ul`
+  /* 💡 절대 위치(position: absolute)와 위치 선정(top, left), 너비 설정하기 */
+  /* 💡 리스트 기본 스타일 제거 (list-style, margin, padding) */
+  /* 💡 배경색, 테두리, 그림자(box-shadow), z-index, 넘치는 내용 숨기기(overflow) 채우기 */
+`;
+
+interface SelectItemProps {
+    $isSelected?: boolean;
+}
+
+// 드롭다운 개별 항목
+export const SelectItem = styled.li<SelectItemProps>`
+  /* 💡 기본 패딩, 폰트 사이즈, cursor 채우기 */
+  
+  // 💡 $isSelected에 따른 조건부 스타일링 채우기 (글자색, 배경색, 폰트 굵기) 
+  // 힌트: color:  
+
+  /* 💡 마우스 올렸을 때(hover) 배경색 변경 채우기 */
+`;

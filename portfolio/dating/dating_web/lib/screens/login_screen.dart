@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup_profile_screen.dart';
+import '../main.dart';
 
 //사용자가 글씨를 입력하고 체크박스를 누를때 화면이 변해야 하므로 StatefulWidget
 
@@ -174,7 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: (){
-            print('이메일:${_emailController.text}, 비번:${_passwordController.text}');
+            // print('이메일:${_emailController.text}, 비번:${_passwordController.text}');
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const RootScreen()));
           },
           child: const Center(child: Text('로그인', 
           style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold), 

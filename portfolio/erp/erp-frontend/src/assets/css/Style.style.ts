@@ -417,6 +417,9 @@ font-weight: 800;
 color: #333;
 margin: 0;
 `;
+
+export const ModalBody= styled.div``;
+
 export const CloseButton= styled.button`
 /* background: #fff;
 width: 20px;
@@ -433,16 +436,14 @@ cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: center;
-transform: rotate(45deg);
+transform: rotate(45deg); //✨🌟 +를 회전시켜
 transition: transform 0.2s ease, color 0.2s ease ;
 
 &:hover{
     color: #111;
-    border-color: #d1d3e2;
+    /* border-color: #d1d3e2; */
     transform: rotate(135deg);
 }
-`;
-export const ModalBody= styled.div`
 `;
 
 export const FormGroup= styled.div`

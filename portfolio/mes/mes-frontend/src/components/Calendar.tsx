@@ -5,6 +5,7 @@ import { Temporal } from "@js-temporal/polyfill"
 import * as S from '@/assets/css/Style.style'
 import { Holiday } from "@/app/types/holiday"
 import { fetchHolidays } from "@/app/api/holidays"
+import ScheduleModal from "./modal/ScheduleModal"
 
     // 1. 일정(Schedule) 타입 정의 
 interface Schedule{
@@ -17,19 +18,35 @@ interface Schedule{
 
 // 2. 캘린더 메인 컴포넌트 (Props 기본값과 타입 지정)
 export default function Calendar(
-    {year = Temporal.Now.plainDateISO().year,
-    month = Temporal.Now.plainDateISO().month
+    {year : initialYear = Temporal.Now.plainDateISO().year,
+    month : initialMonth = Temporal.Now.plainDateISO().month
     }:{year?:number, month?:number}
 ){  
     //🔹모달
-    const [schedule, setSchedule]=useState<Schedule[]>([]);
+    const [schedules, setSchedules]=useState<Schedule[]>([]);
     const [selectedDate, setSelectedDate]=useState<number|null>(null)
     const [isModalOpen, setIsModalOpen]=useState(false);
+
+    //
+    const [year, setYear]=useState(initialYear);
+    const [month, setMonth]=useState(initialMonth);
 
     const handleDayClick =(day:number)=>{
         setSelectedDate(day);
         setIsModalOpen(true);
     } 
+
+    const handlePrevMonth =()=>{
+        const prev= Temporal.PlainYearMonth.from({year,month}).subtract({months:1})
+        setYear(prev.year)
+        setMonth(prev.month)
+    }
+
+    const handleNextMonth = ()=>{
+        const next = Temporal.PlainYearMonth.from({year,month}).add({months:1});
+        setYear(next.year)
+        setMonth(next.month)
+    }
     
     // 3. Temporal을 이용해 선택된 연/월 객체 만들기
     const targetYearMonth= Temporal.PlainYearMonth.from({year,month})
@@ -97,7 +114,6 @@ export default function Calendar(
         )
     }
 
-  
 
     // 8. 최종 UI 렌더링 반환 (JSX)
     return(
@@ -105,7 +121,11 @@ export default function Calendar(
         <S.CalTopMargin>
             <S.CalWrapper>
                 <S.CalHeader>
+                    {/* 💡 이전달 버튼 */}
+                    <button onClick={handlePrevMonth}>&lt;</button>
                     {year}년 {month}월 
+                    {/* 💡 다음달 버튼 */}
+                    <button onClick={handleNextMonth}>&gt;</button>
                 </S.CalHeader>
 
                 <S.Grid>
@@ -120,6 +140,14 @@ export default function Calendar(
         </S.CalTopMargin>
 
         {/* 분리한 스케쥴 모달 컴포넌트 렌더링 */}
+        <ScheduleModal
+        isOpen={isModalOpen}
+        onClose={()=>setIsModalOpen(false)}
+        month={month}
+        selectedDate={selectedDate}
+        schedules={schedules}
+        setSchedules={setSchedules}
+        />
 
         </>
     )

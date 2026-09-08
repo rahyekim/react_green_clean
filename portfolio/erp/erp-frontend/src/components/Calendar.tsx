@@ -31,6 +31,7 @@ export default function Calendar(
     //해당 월의 1일 날짜 정보 추출 //1:월요일
     const firstDayDate=
     targetYearMonth.toPlainDate({day:1}) //2026-06 + -01(day:1)
+    //const firstDayDate = Temporal.PlainDate.from({ year, month, day: 1 });
 /*
     Temporal의 dayOfWeek(요일)는 1(월요일) ~ 7(일요일)입니다
     일요일부터 시작하는 달력 그리드를 위해 0(일) ~ 6(토) 인덱스로 변환합니다.
@@ -39,8 +40,8 @@ export default function Calendar(
     // 달의 1일 요일👉 달력 앞에 빈칸 몇 개 만들지 결정할 때
     const firstDayIndex=  
     firstDayDate.dayOfWeek ===7 ? 0 : firstDayDate.dayOfWeek;
-
-    //해당 월의 마지막 날짜(총 일수) 직관적으로 가져옴
+     //일요일(7)을 배열 인덱스(0)로 변환
+    //해당 월의 마지막 날짜(총 일수) 
     const daysInMonth= targetYearMonth.daysInMonth;
 
     const [holidays,setHolidays]=useState<Holiday[]>([]);
@@ -95,7 +96,7 @@ export default function Calendar(
                         <span>{d}</span>  {/* flex구조에서 씹히지않도록 span으로 감쌈 */}
                         {hasSchedule && <S.ScheduleDot/>} 
                     </S.DayHeader>
-                    
+
                 {holiday && <S.Tooltip>{holiday.name}</S.Tooltip>}
                 {holiday?.name === '성탄절' && <span>🎄</span>} 
                 {holiday?.name.includes('추석') && <span>🌕🐇</span>} 
