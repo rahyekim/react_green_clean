@@ -10,6 +10,8 @@ import ScheduleModal from "./modal/ScheduleModal"
     // 1. 일정(Schedule) 타입 정의 
 interface Schedule{
     id: string;
+    year?: number;  // 💡 연도 추가
+    month?: number; // 💡 월 추가
     date: number;
     content: string;
     status: '대기' | '완료' | '진';
@@ -96,6 +98,8 @@ export default function Calendar(
         const currentDayofWeek= (firstDayIdx+d-1) % 7;
         const isSunday = currentDayofWeek===0; 
         const isSaturday= currentDayofWeek ===6;
+
+        const hasSchedule= schedules.some(sch=> sch.year=== year && sch.month=== month && sch.date === d)
         // (3) S.DayCell 컴포넌트를 생성해서 days 배열에 push 하기
         // (오늘인지, 공휴일인지, 주말인지 props 전달하고 날짜 숫자 및 이모지/툴팁 조건부 렌더링하기)
         days.push(
@@ -107,6 +111,7 @@ export default function Calendar(
             $isSunday={isSunday}
             onClick={()=>handleDayClick(d)}
             > <span>{d}</span>
+            {hasSchedule && <S.ScheduleDot/>}
             {holiday && <S.Tooltip>{holiday.name}</S.Tooltip>}
             {holiday?.name === '성탄절' && <span>🎄</span>}
             {holiday?.name.includes('추석') && <span>🌕🐇</span>}
@@ -122,10 +127,10 @@ export default function Calendar(
             <S.CalWrapper>
                 <S.CalHeader>
                     {/* 💡 이전달 버튼 */}
-                    <button onClick={handlePrevMonth}>&lt;</button>
-                    {year}년 {month}월 
+                    <S.CircleButton onClick={handlePrevMonth}>&lt;</S.CircleButton>
+                    <div> {year}년 {month}월 </div>
                     {/* 💡 다음달 버튼 */}
-                    <button onClick={handleNextMonth}>&gt;</button>
+                    <S.CircleButton onClick={handleNextMonth}>&gt;</S.CircleButton>
                 </S.CalHeader>
 
                 <S.Grid>
@@ -143,6 +148,7 @@ export default function Calendar(
         <ScheduleModal
         isOpen={isModalOpen}
         onClose={()=>setIsModalOpen(false)}
+        year={year}
         month={month}
         selectedDate={selectedDate}
         schedules={schedules}

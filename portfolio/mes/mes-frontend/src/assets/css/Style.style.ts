@@ -125,6 +125,7 @@ export const SearchButton= styled(Button)`
 width: auto;
 min-width: 100px;
 background-color: #858796;
+padding: 4px 8px;
 
 &:hover{
     background-color: #717384;
@@ -311,6 +312,11 @@ export const CalHeader = styled.h2`
   font-weight:700;
   margin-bottom:1.5rem; 
   color:#333;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 `;
 
 export const Grid = styled.div`
@@ -339,10 +345,23 @@ export const Dayname = styled.div`
 `;
 
 
-//💘
+//💘visibility(마우스이벤트차단)+opacity(부드러운효과)
 export const Tooltip = styled.div`
   // 툴팁 영역 껍데기
   font-size: 0.7rem;
+  opacity: 0;
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  visibility: hidden; //자리미리확보
+  background-color: gray;
+  border-radius: 10px;
+  padding: 5px;
+  color: #fff;
+  z-index: 10;
+  transition: all 0.2s ease;
+  
 `;
 
 interface DayCellProps {
@@ -355,6 +374,7 @@ interface DayCellProps {
 
 export const DayCell = styled.div<DayCellProps>`
   // 개별 날짜 칸 껍데기 (빈 칸 여부, 오늘, 공휴일, 주말에 따른 조건부 스타일링)
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -395,49 +415,235 @@ ${({ $isToday }) =>
     font-weight: bold;
     border: 1px dashed #ff6b6b;
 `}
+
+&:hover ${Tooltip} {
+  opacity:1;
+  visibility:visible;
+}
   
   
 `;
 
-
-
 //일정모달 
-export const ModalOverlay= styled.div``;
-export const ModalContainer= styled.div``;
-export const ModalHeader= styled.div``;
-export const ModalTitle= styled.h3``;
-export const CloseButton= styled.button``;
+export const ModalOverlay= styled.div`
+position: fixed;
+top:0;
+left: 0; 
+right: 0;
+bottom: 0; //inset:0
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 10;
+`;
+export const ModalContainer= styled.div`
+background-color: #eee;
+max-width: 400px;
+width: 100%;
+padding: 24px;
+border-radius: 20px;
+box-shadow: 0 4px 12px rgba(0,0,0,.2);
+
+`;
+export const ModalHeader= styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1rem;
+`;
+export const ModalTitle= styled.h3`
+margin: 0;
+font-size: 1.2rem;
+font-weight: 700;
+color: #333;
+`;
+export const CloseButton= styled.button`
+transform: rotate(45deg);
+font-size: 2rem;
+color: #666;
+border: none;
+font-weight: 300;
+line-height: 1; //회전 중심을 잡고 여백을 없애기 위해 유지 추천!
+cursor: pointer;
+
+width: 25px;
+height: 25px;
+border-radius: 50%;
+background-color: #ddd;
+display: flex;
+justify-content: center;
+align-items: center;
+
+transition: all 0.2s;
+&:hover{
+  color: #111;
+  background-color: #fff;
+}
+`;
 export const ModalBody= styled.div``;
 
-export const FormGroup= styled.div``;
+export const FormGroup= styled.div`
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-bottom: 1.3rem;
+`;
 export const Select= styled.select``;
-export const TextArea= styled.textarea``;
-export const ButtonGroup= styled.div``;
-export const ScheduleList= styled.ul``;
-export const ScheduleItem= styled.li``;
-export const ScheduleHeader= styled.div``;
-export const Badge= styled.span<{$status:'대기'|'진행'|'완료'}>``;
-export const SmallButton = styled.button``;
-export const ScheduleDot= styled.div``;
+export const TextArea= styled.textarea`
+resize: none;
+border: none;
+outline: none;
+border-radius: 16px;
+height: 80px;
+padding: 15px;
+  border: 1px solid transparent;
+
+
+&:focus{
+  /* box-shadow: 0 2px 6px rgba(0,0,0,.2); */
+  border: 1px solid #bac8f3;
+}
+`;
+export const ButtonGroup= styled.div`
+display: flex;
+justify-content: flex-end;
+gap: 8px;
+`;
+
+export const CustomButton= styled.button<{$primary?:boolean}>`
+background-color: ${props=>props.$primary ? '#4e73df': '#858796'}  ; //
+color: white;
+border: none; 
+border-radius: 20px;
+font-size: 0.9rem;
+cursor: pointer;
+padding: 4px 12px;
+min-width: 60px;
+white-space: nowrap;
+
+transition: background-color 0.15s ease-in-out;
+&:hover{
+  background-color:${props=>props.$primary ? '#2e59d9': '#717384'} 
+}
+`;
+
+export const ScheduleList= styled.ul`
+margin-top: 16px;
+border-top: 1px solid #ddd;
+max-height: 200px;
+overflow-y: auto;
+list-style: none;
+padding: 0 10px;
+
+//스크롤
+&::-webkit-scrollbar{
+  width: 5px;
+}
+&::-webkit-scrollbar-thumb{
+  background: #ddd;
+  border-radius: 99px;
+}
+
+&::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+&::-webkit-scrollbar-thumb:hover{
+  background: #ccc;
+}
+`;
+export const ScheduleItem= styled.li`
+padding: 10px;
+margin-top: 3px;
+border-bottom: 1px solid #ddd;
+color: #666;
+font-size: 0.75rem;
+
+display: flex;
+flex-direction: column;
+gap: 6px;
+
+`;
+export const ScheduleHeader= styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 10px;
+`;
+export const Badge= styled.span<{$status:'대기'|'진행'|'완료'}>`
+border-radius: 20px;
+background-color: ${({$status})=>$status === '대기' ? '#f59e0b' : $status==='진행' ? '#3d8df6' :'#109b81'};
+padding: 4px 8px;
+color: white;
+font-size: 0.7rem;
+font-weight: bold;
+`;
+export const SmallButton = styled.button`
+border-radius: 20px;
+outline: none;
+border: 1px solid #d1d3e2;
+font-size: 0.7rem;
+padding: 4px 12px;
+cursor: pointer;
+transition: border-color 0.2s;
+&:hover{
+  border-color: #777;
+}
+`;
+export const ScheduleDot= styled.div`
+width: 12px;
+height: 3px;
+background-color: pink;
+border-radius: 20px;
+`;
 
 //
 // 🌟💙🌟커스텀 셀렉트 박스 컨테이너🌟💙🌟
 export const CustomSelectContainer = styled.div`
   /* 💡 여기에 필요한 위치(position)와 너비, z-index를 채워보세요! */
+  position: relative;
+  width: 100%;
+  z-index: 999;
 `;
 
 export const SelectTrigger = styled.div`
-  /* 💡 패딩, 테두리, 둥글기, 배경색, 글자 크기, cursor 등을 채워보세요! */
-  /* 💡 flex를 활용해 양쪽 정렬(space-between)하는 속성도 넣어보세요! */
-  
-  /* 💡 마우스 올렸을 때(hover) 테두리 색상 변화도 작성해보세요! */
+  padding: 10px 20px;
+  background-color: #fff;
+  border-radius: 20px;
+  border: 1px solid #d1d3e2;
+  font-size: 0.8rem;
+  color: #333;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: space-between;
+  &:hover{
+      border-color: #bac8f3;
+
+  }
 `;
 
 // 💙드롭다운 리스트 영역💙
 export const SelectList = styled.ul`
-  /* 💡 절대 위치(position: absolute)와 위치 선정(top, left), 너비 설정하기 */
-  /* 💡 리스트 기본 스타일 제거 (list-style, margin, padding) */
-  /* 💡 배경색, 테두리, 그림자(box-shadow), z-index, 넘치는 내용 숨기기(overflow) 채우기 */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+
+  padding: 0; //💙
+  margin: -1px 0 0 0;
+
+  border-radius: 16px;
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  list-style: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,.1);
+  z-index: 999;
+  overflow: hidden;
+  cursor: pointer;
 `;
 
 interface SelectItemProps {
@@ -447,9 +653,31 @@ interface SelectItemProps {
 // 드롭다운 개별 항목
 export const SelectItem = styled.li<SelectItemProps>`
   /* 💡 기본 패딩, 폰트 사이즈, cursor 채우기 */
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  color: #475569;
   
-  // 💡 $isSelected에 따른 조건부 스타일링 채우기 (글자색, 배경색, 폰트 굵기) 
-  // 힌트: color:  
+  ${({$isSelected})=> $isSelected && `
+    color: #4e73df;
+    background-color: #f8f9fc;
+    font-weight: bold;
+  ` } 
 
-  /* 💡 마우스 올렸을 때(hover) 배경색 변경 채우기 */
+  &:hover{
+    background-color: #f1f5f9;
+  }
+`;
+
+export const CircleButton = styled.div`
+width: 23px;
+height: 23px;
+border-radius: 50%;
+background-color: pink;
+display: flex;
+justify-content: center;
+align-items: center;
+font-weight: 400;
+font-size: 20px;
+color: #eee;
+cursor: pointer;
 `;

@@ -257,7 +257,7 @@ padding-bottom: 10px;
 
 //🔹툴팁🔸
 export const Tooltip= styled.div`
-visibility: hidden;
+  visibility: hidden;
   position: absolute;
   bottom: 110%; //맨위 바깥으로 10%더띄움
   left: 50%;

@@ -1,32 +1,12 @@
 ## 플러터 시작명령어
 flutter run -d chrome
 
-port:3306 
-CREATE DATABASE dating_db;
-USE dating_db;
 
-CREATE DATABASE dating_db;
-USE dating_db;
+flutter pub add http
 
-CREATE TABLE users(
-id BIGINT AUTO_INCREMENT PRIMARY KEY,
-email VARCHAR(255) NOT NULL UNIQUE,
-PASSWORD VARCHAR(255) NOT NULL,
-nickname VARCHAR(50) NOT NULL,
-age INT NOT NULL,
-gender ENUM('M','F','O') NOT NULL,
-bio TEXT ,
-address VARCHAR(255) NOT NULL,
 
-); => ORM 으로 해라.........
+## backend: ORM 이 대세
 
-npm init -y
-
-npm install prisma —save-dev
-
-# 3. Prisma 초기화 (기본 폴더와 설정 파일들이 생성됩니다)
-npx prisma init
-
-npx prisma migrate dev --name init
-
-npx prisma@latest migrate dev —name init
+npm install sequelize mysql2
+npm install multer
+mkdir uploads

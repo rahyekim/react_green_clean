@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+
+import 'package:http/http.dart' as http; // 서버통신용 도구 추가
+
+//json변환용 도구 추가
+import 'dart:convert';
+
 /*
 StatefulWidget (껍데기): 이름표 "나 이런 화면이야" 하고 외부에 알려주는 껍데기.
 
@@ -27,6 +33,12 @@ class _SignupProfileScreenState extends State<SignupProfileScreen>{
   final Color textColor = Colors.white;
   final Color subTextColor = const Color(0xFFA0A0B0);
 
+  //💘add 사용자가 입력한 글씨를 빼오기 위한 컨트롤러
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
+
+
   //선택한 데이터를 기억하는 변수들(상태관리)
   String _selectedGender = '여성';
   final List<String> _selectedInterests = ['카페','영화','독서'];
@@ -43,6 +55,32 @@ class _SignupProfileScreenState extends State<SignupProfileScreen>{
     {'icon': '🎮', 'label': '게임'},
   ]; 
 
+  //💘 백엔드로 회원가입 데이터를 쏘는 핵심함수 
+  Future<void> _signUptoBackend() async{
+    //컨트롤러에서 글씨를 꺼냄
+    final nickname = _nicknameController.text;
+    final ageText = _ageController.text;
+    final bio = _bioController.text;
+
+   //필수값 검사(빈칸방지)
+   if(nickname.isEmpty || ageText.isEmpty){
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('닉네임과 나이를 입력해주세요'))
+    );
+    return;
+   }
+
+   //백엔드 DB타입에 맞게 데이터 가공
+   final int age = int.parse(ageText);
+   final String genderEnum = _selectedGender == '남성' ? 'M' : 'F';
+   final dummyEmail = 'user_${DateTime.now().millisecondsSinceEpoch}@test.com';
+   final dummyPassword = 'password123!';
+
+   //4. 백엔드 서버 주소 (안드로이드 에뮬레이터에서는 localhost 대신 10.0.2.2를 씁니다)
+   final url = Uri.parse('http://10.0.2.2:3000/api/signup');
+
+
+  }
    //📱 [4] 실제로 화면을 그리는 build 함수
   @override
   Widget build(BuildContext context){

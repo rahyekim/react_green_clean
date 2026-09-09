@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react'
 import { Temporal } from '@js-temporal/polyfill'
 import Modal from './Modal'
 import * as S from '@/assets/css/Style.style'
-import { randomUUID } from 'crypto'
 
 // 1. 일정(Schedule) 인터페이스 정의
 export interface Schedule{
     id: string;
+    year?: number;  // 💡 연도 추가
+    month?: number; // 💡 월 추가
     date: number;
     content: string;
     status: '대기' | '진행' |'완료' ;
@@ -18,6 +19,7 @@ export interface Schedule{
 interface ScheduleModalProps{
     isOpen:boolean;
     onClose: ()=>void;
+    year:number;
     month:number;
     selectedDate: number | null;
     schedules: Schedule[];
@@ -25,7 +27,7 @@ interface ScheduleModalProps{
 }
 
 export default function ScheduleModal({
-    isOpen, onClose, month, selectedDate, schedules, setSchedules}: ScheduleModalProps){
+    isOpen, onClose, year, month, selectedDate, schedules, setSchedules}: ScheduleModalProps){
 
         // 3. 입력메모, 상태, 수정 중인 아이디를 관리할 state 선언하기
         const [formContent, setFormContent]=useState('');
@@ -65,6 +67,8 @@ export default function ScheduleModal({
                 setSchedules(prev=> [
                     ...prev,{
                     id: crypto.randomUUID(), //브라우저기본내장기능:안전하고 현대적인 고유 ID 생성 방법
+                    year: year,     // 🔸 현재 연도 저장
+                    month: month,   // 🔸 현재 월 저장
                     date: selectedDate,
                     content: formContent,
                     status: formStatus,
@@ -116,18 +120,51 @@ export default function ScheduleModal({
 
                         {isSelectOpen && (
                             <S.SelectList>
-                                {}
+                                {['대기','진행','완료'].map(status=>(
+                                    <S.SelectItem key={status}
+                                    $isSelected={formStatus===status}
+                                    onClick={()=>{
+                                        setFormStatus(status as '대기'|'진행'|'완료');
+                                        setIsSelectOpen(false);
+                                    }}>
+                                        {status}
+                                    </S.SelectItem>
+                                ))}
                             </S.SelectList>
                         )}
                     </S.CustomSelectContainer>
+
+                    <S.TextArea
+                    placeholder='일정 내용을 입력하세요'
+                    value={formContent}
+                    onChange={e=>setFormContent(e.target.value)}
+                    />
                 </S.FormGroup>
                 
                 {/* 9. 버튼 그룹 영역 (등록/수정, 닫기) */}
                 <S.ButtonGroup>
-
+                    <S.CustomButton onClick={onClose}>닫기</S.CustomButton>
+                    <S.CustomButton $primary onClick={handleSave}>
+                        {editingId ? '수정' : '등록'}</S.CustomButton>
                 </S.ButtonGroup>
 
                 {/* 10. 선택된 날짜의 일정 목록 렌더링 영역 (filter와 map 활용) */}
+                <S.ScheduleList>
+                    {schedules.filter(sch=> sch.year === year && sch.month === month && sch.date === selectedDate).map(sch=> (
+                        <S.ScheduleItem key={sch.id}>
+                            <S.ScheduleHeader>
+                                <S.Badge $status={sch.status}>{sch.status}</S.Badge>
+                                <span>{sch.createdAt} 작성</span>
+                            </S.ScheduleHeader>
+                            <div className="">{sch.content}</div>
+                            <S.ButtonGroup>
+                                <S.SmallButton onClick={()=>handleEdit(sch)}>수정</S.SmallButton>
+                                <S.SmallButton onClick={()=>handleDelete(sch.id)}>삭제</S.SmallButton>
+                            </S.ButtonGroup>
+                        </S.ScheduleItem>
+                    ))}
+
+                </S.ScheduleList>
             </Modal>
         )
 }

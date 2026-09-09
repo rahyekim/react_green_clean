@@ -20,7 +20,7 @@ export default function Modal({isOpen, onClose, title, children}: ModalProps){
             <S.ModalContainer onClick={(e)=>e.stopPropagation()}>
                 <S.ModalHeader>
                     <S.ModalTitle>{title}</S.ModalTitle>
-                    <S.CloseButton onClick={onClose}>X</S.CloseButton>
+                    <S.CloseButton onClick={onClose}>+</S.CloseButton>
                 </S.ModalHeader>
                 
                 <S.ModalBody>{children}</S.ModalBody>
