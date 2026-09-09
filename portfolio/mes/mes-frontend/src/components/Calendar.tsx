@@ -64,8 +64,11 @@ export default function Calendar(
   
 
     // 5. 공휴일 데이터 관리를 위한 useState와 useEffect 작성하기
-    const [holidays, setHolidays]=useState<Holiday[]>([])
+    const [holidays, setHolidays]=useState<Holiday[]>([]);
+
     useEffect(()=>{
+        //달이 바뀌자마자 이전달의 공휴일데이터 싹 비워줌! (잔상줄이려궁..)
+        setHolidays([]);
         fetchHolidays(year,month).then(setHolidays); //함축된(단축)버전 .then(res=> setHolidays(res))
     },[year,month])
 
@@ -113,8 +116,7 @@ export default function Calendar(
             > <span>{d}</span>
             {hasSchedule && <S.ScheduleDot/>}
             {holiday && <S.Tooltip>{holiday.name}</S.Tooltip>}
-            {holiday?.name === '성탄절' && <span>🎄</span>}
-            {holiday?.name.includes('추석') && <span>🌕🐇</span>}
+            {holiday?.emoji && <span>{holiday.emoji}</span>}
             </S.DayCell>
         )
     }

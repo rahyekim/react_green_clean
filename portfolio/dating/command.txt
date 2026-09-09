@@ -3,10 +3,11 @@ flutter run -d chrome
 
 
 flutter pub add http
-
+flutter pub add image_picker
 
 ## backend: ORM 이 대세
 
 npm install sequelize mysql2
 npm install multer
 mkdir uploads
+

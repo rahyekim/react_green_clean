@@ -5,6 +5,11 @@ import 'package:http/http.dart' as http; // 서버통신용 도구 추가
 //json변환용 도구 추가
 import 'dart:convert';
 
+//file객체사용
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
 /*
 StatefulWidget (껍데기): 이름표 "나 이런 화면이야" 하고 외부에 알려주는 껍데기.
 
@@ -37,11 +42,29 @@ class _SignupProfileScreenState extends State<SignupProfileScreen>{
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
 
   //선택한 데이터를 기억하는 변수들(상태관리)
   String _selectedGender = '여성';
   final List<String> _selectedInterests = ['카페','영화','독서'];
+
+  //add 선택할 사진을 담을 변수 (최대3장)
+  final List<File?> _selectedImages = [null, null, null];
+  final ImagePicker _picker = ImagePicker();
+
+  //갤러리 열어서 사진 고르기 함수
+  Future<void> _pickImage(int index) async{
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if(pickedFile !=null){
+      setState(() {
+        _selectedImages[index] = File(pickedFile.path);
+        //고른 사진 화면에 표시 
+      });
+    }
+  }
 
   //화면에 뿌려줄 관심사 버튼 데이터 목록
   final List<Map<String, String>> _interestsData =[
@@ -61,20 +84,59 @@ class _SignupProfileScreenState extends State<SignupProfileScreen>{
     final nickname = _nicknameController.text;
     final ageText = _ageController.text;
     final bio = _bioController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
 
    //필수값 검사(빈칸방지)
-   if(nickname.isEmpty || ageText.isEmpty){
+   if(nickname.isEmpty || ageText.isEmpty || email.isEmpty || password.isEmpty){
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('닉네임과 나이를 입력해주세요'))
     );
     return;
    }
 
-   //백엔드 DB타입에 맞게 데이터 가공
-   final int age = int.parse(ageText);
-   final String genderEnum = _selectedGender == '남성' ? 'M' : 'F';
-   final dummyEmail = 'user_${DateTime.now().millisecondsSinceEpoch}@test.com';
-   final dummyPassword = 'password123!';
+     //사진 null 검사(빈칸방지)
+   if(_selectedImages[0] == null){
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('대표사진은 필수로 등록해야합니다'))
+    );
+    return;
+   }
+
+   //파일을 전송할때 일반 http.post대신 multipart 리퀘스트 사용
+   var request = http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:3000/api/signup'));
+    request.fields['email']= email;
+    request.fields['nickname']= nickname;
+    request.fields['age']= ageText;
+    request.fields['gender']= _selectedGender == '남성' ? 'M' : 'F';
+    request.fields['bio']=bio;
+
+    //이미지 파일 포장
+    for( int i = 0 ; i<_selectedImages.length ; i++){
+      if(_selectedImages[i] !=null){
+        request.files.add(
+        await http.MultipartFile.fromPath('photos', _selectedImages[i]!.path)
+        );
+      }
+
+       try{
+        var streamResponse = await request.send();
+        var response = await http.Response.fromStream(streamResponse);
+        final data = jsonDecode(response.body);
+        
+        if(response.statusCode == 200 && data['success'] == true){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['message'])));
+        }else{
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['message'] ?? '가입실패')));
+        }
+      }catch(e){
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('서버통신에러')));
+        
+      }
+    }
+
+   
 
    //4. 백엔드 서버 주소 (안드로이드 에뮬레이터에서는 localhost 대신 10.0.2.2를 씁니다)
    final url = Uri.parse('http://10.0.2.2:3000/api/signup');
