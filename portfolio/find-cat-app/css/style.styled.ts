@@ -48,6 +48,8 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 padding: 16px 20px; 
+
+border-bottom: 1px solid #eee;
 `;
 
 export const Logo = styled.h4`
@@ -545,7 +547,7 @@ color: #555;
 cursor: pointer;
 `;
 export const MT70 = styled.div`
-margin-top: 80px;
+margin-top: 68px;
 `;
 export const ModalBg= styled.div`
 display: flex;

@@ -15,9 +15,9 @@ export default function RootLayout({ children }: Readonly<{children: React.React
     <html lang="ko">
       <body>
         <StyledProvider>
-          <ConditionalLayout>
+          {/* <ConditionalLayout> */}
               {children}
-          </ConditionalLayout>
+          {/* </ConditionalLayout> */}
         </StyledProvider>
       </body>
     </html>

@@ -5,16 +5,16 @@ import { Temporal } from "@js-temporal/polyfill"
 import * as S from '@/assets/css/Style.style'
 import { Holiday } from "@/app/types/holiday"
 import { fetchHolidays } from "@/app/api/holidays"
-import ScheduleModal from "./modal/ScheduleModal"
+import ScheduleModal from "@/components/modal/ScheduleModal"
 
     // 1. 일정(Schedule) 타입 정의 
 interface Schedule{
     id: string;
-    year?: number;  // 💡 연도 추가
-    month?: number; // 💡 월 추가
+    year: number;  // 💡 연도 추가
+    month: number; // 💡 월 추가
     date: number;
     content: string;
-    status: '대기' | '완료' | '진';
+    status: '대기' | '완료' | '진행';
     createdAt: string;
 }
 
@@ -29,9 +29,19 @@ export default function Calendar(
     const [selectedDate, setSelectedDate]=useState<number|null>(null)
     const [isModalOpen, setIsModalOpen]=useState(false);
 
-    //
+    //💡년, 월 
     const [year, setYear]=useState(initialYear);
     const [month, setMonth]=useState(initialMonth);
+
+     //✨공휴일 데이터 관리를 위한 useState와 useEffect 작성하기
+    const [holidays, setHolidays]=useState<Holiday[]>([]);
+      
+    useEffect(()=>{
+        //달이 바뀌자마자 이전달의 공휴일데이터 싹 비워줌! (잔상줄이려궁..)
+        setHolidays([]);
+        fetchHolidays(year,month).then(setHolidays); //함축된(단축)버전 .then(res=> setHolidays(res))
+    },[year,month])
+
 
     const handleDayClick =(day:number)=>{
         setSelectedDate(day);
@@ -61,17 +71,6 @@ export default function Calendar(
 
     const daysInMonth = targetYearMonth.daysInMonth;
     
-  
-
-    // 5. 공휴일 데이터 관리를 위한 useState와 useEffect 작성하기
-    const [holidays, setHolidays]=useState<Holiday[]>([]);
-
-    useEffect(()=>{
-        //달이 바뀌자마자 이전달의 공휴일데이터 싹 비워줌! (잔상줄이려궁..)
-        setHolidays([]);
-        fetchHolidays(year,month).then(setHolidays); //함축된(단축)버전 .then(res=> setHolidays(res))
-    },[year,month])
-
     // 6. 오늘 날짜 계산 
     const today = Temporal.Now.plainDateISO();
     //2026년 9월이 이번달인가? 2026년 10월 =>false

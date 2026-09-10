@@ -1,6 +1,5 @@
-//웹 서버를 만들기 위한 가장 기본적인 도구인 express를 가져옵니다.
 const express = require('express');
-
+//웹 서버를 만들기 위한 가장 기본적인 도구인 express를 가져옵니다.
 const cors = require('cors');
 //플러터 앱과 백엔드 서버의 주소가 달라도 통신이 되게끔 허락해주는 보안 도구입니다.
 
@@ -8,44 +7,56 @@ const cors = require('cors');
 const {Sequelize, DataTypes, Op} = 
 require('sequelize');
 
+//bcrypt
+const bcrypt = require('bcrypt');
+
+//모델 임포트
+const sequelize = require('./config/database');
+const User = require('./models/User');
+const Match = require('./models/Match');
+const Diary = require('./models/Diary');
+const Admin = require('./models/Admin');
 //express 도구를 실행해서 'app'이라는 이름의 서버 객체를 만듭니다.
 const app = express();
+
+//서버의 기본 규칙(미들웨어)을 설정합니다.
+app.use(cors());
+app.use(express.json());
 
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+//업로드 폴더가 없으면 자동 생성
 if(!fs.existsSync('uploads')) fs.mkdirSync('uploads');
-
-//외부(플러터)에서도 업로드된 사진을 url로 볼 수 있게 허용
-app.use('/uploads', express.static('uploads'))
-//사진 저장 규칠 설정
+//외부(플러터)에서 업로드된 사진을 URL로 볼 수 있게 허용
+app.use('/uploads', express.static('uploads'));
+//사진 저장 규칙 설정
 const storage = multer.diskStorage({
-    destination:(req,file,cb)=> cb(null, 'uploads/'),
-    filename: (req,file,cb) => cb(null, Date.now() + path.extname(file.originalname))
+destination:(req, file, cb) => cb(null, 'uploads/'), 
+filename:(req, file, cb) => cb(null, Date.now() + path.extname(
+ file.originalname))  
 });
-const upload= multer({storage});
+const upload = multer({storage});
 
 /*
 서버 역할을 할 핵심 객체를 만듭니다
 express 도구를 실행해서 'app'이라는 
 이름의 서버 준비를 마칩니다
 */
-//서버의 기본 규칙(미들웨어)을 설정합니다.
-app.use(cors());
-app.use(express.json());
+
 
 //MariaDB(주방)와 연결할 통로(커넥션 풀)를 만듭니다.
-const sequelize = new Sequelize('dating_db','root','',{
-    host:'localhost',
-    dialect:'mysql',
-    logging:false,
-});
+// const sequelize = new Sequelize('dating_db','root','1234',{
+//     host:'localhost',
+//     dialect:'mysql',
+//     logging:false,
+// });
 
 //🚀 3. 실제 영업 시작 (API 엔드포인트)
 //회원가입..
 //새로운 유저를 맞이할 준비! (회원가입)
-app.post('/api/signup', upload.array('photos',3), async (req, res) => {
+app.post('/api/signup', upload.array('photos', 3),async (req, res) => {
 //1. 프론트엔드(사용자)가 보낸 가입 정보들을 꺼냅니다.
 const {email, password, nickname,age,
     gender,photos, bio} =req.body;
@@ -54,21 +65,26 @@ if (!email || !password || !nickname
     || !age || !gender ) {
     return res.status(400).json({
         success:false,
-        mesaage:'필수 정보를 모두 입력 사항입니다.'
+        message:'필수 정보를 모두 입력 사항입니다.'
     });
 }
 //트랜잭션을 엽니다
 const t = await sequelize.transaction();
 try{
 //사진처리
-let profile_image_main = req.files[0]? `/uploads/${req.files[0].filename}`:null;
-let profile_image_sub1 = req.files[1]? `/uploads/${req.files[1].filename}`:null;
-let profile_image_sub2 = req.files[2]? `/uploads/${req.files[2].filename}`:null;
+let profile_image_main = 
+req.files[0] ? `/uploads/${req.files[0].filename}` :null;
+let profile_image_sub1 = 
+req.files[1] ? `/uploads/${req.files[1].filename}` :null;
+let profile_image_sub2 = 
+req.files[2] ? `/uploads/${req.files[2].filename}` :null;
 
+//add
+const hashedPassword = await bcrypt.hash(password, 10);
 
 const newUser = await User.create({
     email, 
-    password, 
+    password:hashedPassword,//무언가 새로 바꾸면 적용을 필히.. 
     nickname, 
     age, 
     gender, 
@@ -115,14 +131,24 @@ app.post('/api/login', async (req, res) => {
 DB의 User 테이블에서 이메일과 비번이 똑같은 사람 1명
 (findOne)을 찾습니다.
 */
+try{
 const user = 
-await User.findOne({where:{ email, password}});
+await User.findOne({where:{ email}});
 //// 만약 못 찾았다면? (null)
 if(!user){
  // 401(권한없음) 에러를 앱으로 돌려보냅니다.
  return res.status(401).json({
     success:false, message:'이메일이나 비밀번호가 틀렸습니다'
  });
+}
+
+//add bcrypt
+const isMatch = 
+await bcrypt.compare(password, user.password);
+if(!isMatch){
+return res.status(401).json({
+success:false, message:'이메일이나 비밀번호가 틀렸습니다'    
+});   
 }
  
  //상태 검사 1: 관리자가 아직 승인 안 한 대기 상태라면?
@@ -143,7 +169,12 @@ if(!user){
 //모든 관문을 통과했다면 정상 로그인 성공!
 res.json({ success:true, message:'로그인 성공', user});
 
-})
+} catch (error) {
+    console.error("로그인 에러:", error);
+res.status(500).json({
+success:false, message:'서버 에러가 발생 했습니다'});   
+}
+});
 
 //💘 매칭 수락 및 포인트 차감 (트랜잭션)
 
@@ -263,11 +294,93 @@ res.json({
 
 });
 
+//admin start
+app.post('/api/admin/login', async(req, res) => {
+    const { email, password } = req.body;
+
+    try {
+const admin = await Admin.findOne({where:{email}});
+
+if(!admin) {
+    return res.status(401).json({
+success:false, message:'Nop 관리자 이메일'        
+    });
+}
+
+const isMatch = 
+await bcrypt.compare(password, admin.password);
+
+if(!isMatch) {
+    return res.status(401).json({
+success:false, message:'nop password'        
+    });
+}
+
+res.json({
+    success:true, name:admin.name,
+    message:'관리자 대시보드에 로그인하셨습니다'
+});
+    } catch(error) {
+console.error("어드민 로그인 에러", error);
+res.status(500).json({
+success:false, message:'서버 통시 에러'
+});
+    }
+});
+
+//유저 목록 조회
+app.get('/api/admin/users', async (req, res) => {
+    try{
+const users = await User.findAll({ order:[['id','DESC']]});
+res.json({success:true, users});
+    }catch(error){
+res.status(500).json({ 
+    success:false, message:'유저 목록 로딩 실패'});
+    }
+});
+
+app.patch('/api/admin/users/:id/approve', async(req, res) => {
+    try {
+const user = await User.findByPk(req.params.id);
+if(!user) return res.status(404).json({
+    success:false, message:'유저를 찾을수 없습니다'
+});
+await user.update({status:'ACTIVE'});
+res.json({success:true, message:'승인 완료'});
+    }catch(error) {
+res.status(500).json({
+    success:false, message:'승인처리실패'
+});
+    }
+})
+//admin end
 
 
 const PORT = 3000;
 app.listen(PORT, async () => {
     await sequelize.authenticate();
-    console.log("🔥데이터베이스 연결확인 완료");
+// 👉 1. 기존에 꼬여있는 테이블들을 밀어버리기 위해 '관계 보호 장치'를 잠시 끕니다.
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+
+    //add
+    await sequelize.sync({alter:true});
+
+    // 👉 3. 테이블이 예쁘게 만들어졌으니 '관계 보호 장치'를 다시 켭니다.
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+
+//add 관리자 계정이 DB에 하나도 없으면 자동생성
+const Admin = require('./models/Admin');
+const adminCount = await Admin.count();
+if (adminCount === 0){
+const hashedAdminPassword = await bcrypt.hash('1234', 10);
+await Admin.create({
+email:'test@test.com',
+password:hashedAdminPassword,
+name:'최고관리자'    
+})
+console.log('기본 관리자 계정 생성완료(test@test.com / 1234)');
+}
+
+    console.log("데이터베이스 연결확인 완료");
     console.log(`백앤드 서버가 http://localhost:${PORT} 에서 열심히 돌아가고 있습니다`)
 })

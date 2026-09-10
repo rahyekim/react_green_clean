@@ -28,6 +28,24 @@ class DatingApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF12121A),
       ),
+      //여러번 쓰지말고 여기서 해결
+      builder: (context, child) {
+        //builder MaterialApp 안에서 모든 화면이 화면에 띄워지기 직전에 공통으로 거쳐가는 마스터 틀
+        //child안에는 우리가 만든 각각의 화면(MapSearchScreen,MypageScreen)이 담겨서 들어옴 
+        return Container( //가장 바깥쪽 전체 화면을 덮는 커다란 도화지(container) 를 깝니다
+          color: Colors.black,
+          //중앙에 배치될 실제 모바일 앱 영역을 나타나는 박스(container)
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 480),
+              clipBehavior: Clip.hardEdge,  //overflow:hidden
+              decoration: const BoxDecoration(
+                color:Color(0xFF1212A),
+              ),
+              child: child, //scaffold로 만든 로그인,지도 마이페이지등을 바로 이자리에 쏙
+            ))
+        );
+      },
       // 🚀 앱이 켜지면 가장 먼저 스플래시 화면으로 갑니다.
       home: const SplashScreen(),
     );

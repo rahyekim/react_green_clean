@@ -57,23 +57,29 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: bgColor,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          _buildBackgroudGlow(),
-          SafeArea(child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth:480),
+            child: Stack(
+            fit: StackFit.expand,
             children: [
-              _buildIconBox(), 
-              const SizedBox(height: 24,), 
-              _buildLogoText(), 
-              const SizedBox(height:16),
-              _buildSubText(),
-              const SizedBox(height:48),
-              _buildProgressBar(),
+              _buildBackgroudGlow(),
+              SafeArea(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildIconBox(), 
+                  const SizedBox(height: 24,), 
+                  _buildLogoText(), 
+                  const SizedBox(height:16),
+                  _buildSubText(),
+                  const SizedBox(height:48),
+                  _buildProgressBar(),
+                ],
+              ))
             ],
-          ))
-        ],
+          ),),
+        ),
       ),
     );
   }

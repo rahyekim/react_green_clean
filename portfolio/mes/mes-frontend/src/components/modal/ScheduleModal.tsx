@@ -7,8 +7,8 @@ import * as S from '@/assets/css/Style.style'
 // 1. 일정(Schedule) 인터페이스 정의
 export interface Schedule{
     id: string;
-    year?: number;  // 💡 연도 추가
-    month?: number; // 💡 월 추가
+    year: number;  // 💡 연도 추가
+    month: number; // 💡 월 추가
     date: number;
     content: string;
     status: '대기' | '진행' |'완료' ;
@@ -76,16 +76,18 @@ export default function ScheduleModal({
                 }])
 
             }
+            //💡 저장 시 입력 폼과 관련된 모든 상태를 확실하게 초기화!
             setFormContent('');
             setEditingId(null);
             setFormStatus('대기');
+            setIsSelectOpen(false);
         };
 
         // 6. 수정 모드=> 폼 채워넣기
         const handleEdit = (sch: Schedule)=>{
             // 선택한 일정의 내용과 상태를 form에 채우고 editingId 설정하기
             setFormContent(sch.content);
-            setEditingId(sch.id);
+            setEditingId(sch.id); //editingId등록
             setFormStatus(sch.status);
         }
 
@@ -97,7 +99,7 @@ export default function ScheduleModal({
 
             if(editingId === id){
                 setFormContent('');
-                setEditingId(null);
+                setEditingId(null); 
                 setFormStatus('대기');
             }
         }

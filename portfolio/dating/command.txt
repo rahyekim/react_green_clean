@@ -11,3 +11,4 @@ npm install sequelize mysql2
 npm install multer
 mkdir uploads
 
+npm install bcrypt
