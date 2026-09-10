@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import Link from 'next/link';
 import axios from "axios";
 
-import * as S from './shleter.sytles';
+import * as S from '@/app/shelter/shleter.sytles';
 import * as A from '@/css/style.styled';
 import Footer from "../components/Footer";
 
@@ -31,6 +31,7 @@ import {
 
  }
 export default function Shelter(){
+    
 
     const [activeTap, setActiveTap]=useState('보호동물');
     const [isAlertOn, setIsAlertOn]=useState(false);
