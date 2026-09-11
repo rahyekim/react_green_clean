@@ -50,8 +50,6 @@ export default function Shelter (){
     const handleSubmit = async(e:React.FormEvent)=>{
         e.preventDefault();
 
-        const submitData = new FormData();
-        
         // 💡/// 핵심: 현재 선택된 방식에 따라 사용하지 않는 데이터는 확실히 지워줌!
     //     const currentData = { ...formData };
     //     if (imgInputType === 'LINK') {
@@ -65,7 +63,14 @@ export default function Shelter (){
     //         submitData.append(key, value);
     //     }
     // });
-    //👍🌟formData는 일반 객체 {} => Object.entries()로 배열 형태로 바꿔 [[],[]....]🌟
+
+    
+   //브라우저가 만들어준 특수한 '택배 상자'📦 파일(이미지)담으려면필요
+        const submitData = new FormData();
+
+    //💘 forEach반복문 실행하려면 {} 일반객체는 안됨... 
+    //entries = 목록 // Object.entires(객체) = 목록으로 만들어라
+    //👍 formData는 일반 객체 {} => Object.entries()로 2차배열 형태로 바꿔 [[],[]....] 반복문실행🌟
         Object.entries(formData).forEach(([key,value])=> {
             if(value !== null && value !== ''){
                 submitData.append(key,value)

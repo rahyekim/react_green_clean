@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 // 💡 [경로 수정 완료] main.dart에 있는 DatingHomeScreen으로 넘어가기 위해 불러옵니다.
+//GPS 위치권한 패키지
+import 'package:geolocator/geolocator.dart';
+//카카오 지도 웹뷰
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 import '../main.dart'; 
+
 
 class MapSearchScreen extends StatefulWidget {
   const MapSearchScreen({super.key});
@@ -15,17 +21,129 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   final Color pinkAccent = const Color(0xFFFF4B93);
   final Color subTextColor = const Color(0xFFA0A0B0);
 
-  // 필터 상태 관리
+  // 필터 상태 관리 // 추후 관리자 페이지에서 db로 받아와서 setting되도록 ..바꿈
   int _selectedCategoryIndex = 0;
   final List<String> categories = ['동네 친구', '커피 한잔', '술 한잔', '영화/문화'];
   
-  String _selectedRadius = '반경 3km';
-  final List<String> radiusOptions = ['반경 1km', '반경 3km', '반경 5km', '반경 10km'];
+  //관리자에서 키로수를 변경하거나..할 수 있게 변경해야함
+  String _selectedRadius = '반경 1km';
+  final List<String> radiusOptions = ['반경 1km', '반경 3km', '반경 5km'];
   
   String _selectedAge = '20대 초중반';
   final List<String> ageOptions = ['20대 초중반', '20대 후반', '30대 초반', '상관없음'];
 
-  // 하단 대기 유저 더미 데이터
+  Position? _currentPosition ;
+  bool _isLoadingLocation = true;
+
+  //화면 진입시 위치기반 권한 스낵바 띄우기
+  @override
+  void initState(){
+    super.initState();
+    //화면이 그려진 직후에 예쁜 스낵바를 띄우기위해 addPostFrameCallback 사용
+    // _getCurrentLocation();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _checkAndRequestPermissionSnackbar();
+    });
+  }
+    //새로 추가되면서 1단계...스낵바를 먼저 띄워서 유저 설득
+  Future<void> _checkAndRequestPermissionSnackbar() async{
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if(!serviceEnabled){
+      _showErrorSnackbar('휴대폰의 GPS위치서비스가 꺼져 있습니다');
+      return;
+    }
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if(permission == LocationPermission.denied){
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('원활한 주변 인연 매칭을 위해 위치 권한이 필요해요 💘',style: TextStyle(fontWeight: FontWeight.bold),), 
+            backgroundColor: pinkAccent.withOpacity(0.2),
+            duration: const Duration(days: 365),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            margin: const EdgeInsets.all(16),
+            action: SnackBarAction(
+              label: '권한 허용하기',textColor: Colors.white,
+              onPressed: () async{
+                permission = await Geolocator.requestPermission();
+                if(permission == LocationPermission.whileInUse || permission == LocationPermission.always){
+                  _getActualLocation(); //허용되면 위치 가져오기
+                }else{
+                  _showErrorSnackbar('위치권한이 거부되었습니다');
+                }
+              },
+            )
+        ));
+      }
+    }else if(permission == LocationPermission.deniedForever){
+      _showErrorSnackbar('위치권한이 영구적으로 거부되었습니다. 설정에서 변경해주세요');
+    }else{
+      _getActualLocation();
+    }
+  }
+
+  //gps 위치권한 요청 및 현재 위치 가져오기
+  Future<void> _getCurrentLocation() async{
+    bool serviceEnabled;
+    LocationPermission permission ;
+    
+    // 1. 스마트폰 자체의 위치 서비스(GPS)가 켜져 있는지 확인
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if(!serviceEnabled){
+      return Future.error('위치 서비스가 비활성화 되어잇습니다');
+    }
+
+    // 2. 현재 앱이 위치 권한을 가지고 있는지 확인
+    permission = await Geolocator.checkPermission();
+
+    // 3. 권한이 거부된 상태라면 팝업창 띄워서 다시 요청
+    if(permission == LocationPermission.denied){
+      permission = await Geolocator.requestPermission(); //위치 권한을 요청하는 팝업창⚠️한번더물음
+      if (permission == LocationPermission.denied) {
+        return Future.error('위치권한이 거부되었습니다.');
+      }
+    }
+    // 4. 사용자가 '다시 묻지 않음' 등으로 영구 거부한 경우
+    if(permission == LocationPermission.deniedForever){
+      return Future.error('위치권한이 영구적으로 거부되었습니다. 설정에서 변경해주세요');
+    }
+
+    // 5. 모든 관문을 통과했다면 현재 위치(위도, 경도) 가져오기
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high); //정확도 높은 위치
+    setState(() { //화면상태업데이트
+      _currentPosition = position;
+      _isLoadingLocation= false;
+    });
+  }
+  // 2단계: 실제 위치 가져오기
+  Future<void> _getActualLocation() async{
+    try{
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _currentPosition =position;
+        _isLoadingLocation=false;
+      });
+    }catch(e){
+      _showErrorSnackbar('위치 가져오는데 실패했습니다');
+    }
+  }
+
+// 에러 스낵바
+  void  _showErrorSnackbar(String message){
+    if(mounted){
+     ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.redAccent,
+        behavior: SnackBarBehavior.floating,
+        ));
+       setState(() => _isLoadingLocation =false); //로딩끄기
+    }
+  }
+
+  //하단 대기 유저 더미 데이터
   final List<Map<String, dynamic>> nearbyUsers = [
     {'distance': '800m', 'gender': '여', 'name': '지은', 'interest': '카페 탐방'},
     {'distance': '1.2km', 'gender': '남', 'name': '민준', 'interest': '한강 산책'},
@@ -46,53 +164,41 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              title: const Row(
+              title: Row(
                 children: [
                   Icon(Icons.location_on, color: Color(0xFFFF4B93), size: 24),
                   SizedBox(width: 8),
-                  Text('서울 마포구 연남동', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text(
+                    _isLoadingLocation ? '위치 찾는중...' : '내위치 확인완료',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                 ],
               ),
             ),
-            body: Column(
+           body: Column(
               children: [
-                // 🗺️ 상단 지도 영역 (유저 화면의 40% 차지)
                 Expanded(
                   flex: 4,
-                  child: _buildMapPlaceholder(),
+                  child: _buildKakaoMap(),
                 ),
-                
-                // 🎛️ 하단 필터 및 검색 영역 (유저 화면의 60% 차지)
                 Expanded(
                   flex: 6,
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: bgColor,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24),
-                      ),
-                      boxShadow: [
-                        BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 10, offset: const Offset(0, -5))
-                      ],
+                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10, offset: const Offset(0, -5))],
                     ),
                     child: Column(
                       children: [
                         _buildCategoryTabs(),
                         const Divider(color: Color(0xFF22222E), thickness: 1),
-                        
-                        // 필터 드롭다운 영역
                         Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
                             children: [
-                              _buildDropdownRow('원하는 나이', _selectedAge, ageOptions, (val) => setState(() => _selectedAge = val!)),
-                              const SizedBox(height: 16),
                               _buildDropdownRow('탐색 반경', _selectedRadius, radiusOptions, (val) => setState(() => _selectedRadius = val!)),
                               const SizedBox(height: 24),
-                              
-                              // 🚀 검색(매칭) 시작 버튼
                               SizedBox(
                                 width: double.infinity,
                                 height: 56,
@@ -102,11 +208,9 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                   ),
                                   onPressed: () {
-                                    // 검색하기 누르면 기존의 '스와이프 매칭 화면(DatingHomeScreen)'으로 이동합니다.
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const DatingHomeScreen()), 
-                                    );
+                                    //기존 스와이프 매칭 화면으로 넘어가기 
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const DatingHomeScreen()));
+                                    // 👉 백엔드로 내 위치와 반경을 보내어 근처 유저를 검색합니다.
                                   },
                                   child: const Text('주변 인연 찾기', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                                 ),
@@ -114,8 +218,6 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                             ],
                           ),
                         ),
-                        
-                        // 주변 대기 유저 리스트
                         Expanded(child: _buildNearbyUsersList()),
                       ],
                     ),
@@ -127,6 +229,49 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
         ),
       ),
     );
+  }
+
+  //🗺️ 카카오 지도 렌더링 영역
+  Widget _buildKakaoMap(){
+    if(_isLoadingLocation || _currentPosition ==null){
+      return const Center(child: CircularProgressIndicator(color: Color(0xFFFF4B93)));
+    }
+        return InAppWebView(
+          initialData: InAppWebViewInitialData(data: """
+          <!DOCTYPE html>
+          <html>
+          <head>
+          <meta charset="utf-8"/>
+          <title>Kakao Map</title>
+          <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a0bf46b6f85adb1c911c864cba503e22"></script>
+          <style>
+            body,html{margin:0; padding:0; height:100%;}
+            #map{width:100%; height:100%;}
+          </style>
+          </head>
+          <body>
+            <div id="map"></div>
+            <script>
+            var container = document.getElementById('map');
+            //내 현재 위치 좌표 객체 생성
+            var currentLatLng = new kakao.maps.LatLng(${_currentPosition!.latitude}, ${_currentPosition!.longitude})
+            var options = {
+              center: currentLatLng,
+              level: 3
+            };
+            // 2. 지도 생성
+            var map = new kakao.maps.Map(container, options);
+
+             // 3. 내 위치에 마커 렌더링
+            var marker = new kakao.maps.Marker({
+              position: currentLatLng
+            });
+            marker.setMap(map);
+            </script>
+          </body>
+          </html>
+"""),
+        );
   }
 
   // 🗺️ 가짜 지도 화면 (카카오/구글맵 연동 전)
@@ -290,4 +435,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
       ],
     );
   }
+  
+
+  
 }

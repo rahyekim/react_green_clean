@@ -122,7 +122,24 @@ res.status(500).json({
 
 }
 });
+//2차회원가입
+app.patch('/api/users/:id/secondary-signup', async(req,res)=>{
+    const userID = req.params.id;
+    const {phone_number, occupation, address} = req.body;
 
+    try{
+        const user = await User.findByPk(userID);
+        if(!user){
+            return res.status(404).json({success:false, message:"유저를 찾을 수 없습니다"});
+        }
+        await user.update({phone_number, occupation, address});
+        return res.json({success:true, message:'추가 정보 입력이 완료되었습니다'});
+
+    }catch(err){
+        console.error('2차 회원가입 에러')
+        return res.status(500).json({success:false, message:"정보 저장중 에러가 발생"});
+    }
+})
 //로그인
 app.post('/api/login', async (req, res) => {
     // req.body에서 사용자가 앱에 입력한 이메일과 비밀번호를 꺼냅니다.
@@ -143,12 +160,9 @@ if(!user){
 }
 
 //add bcrypt
-const isMatch = 
-await bcrypt.compare(password, user.password);
+const isMatch = await bcrypt.compare(password, user.password);
 if(!isMatch){
-return res.status(401).json({
-success:false, message:'이메일이나 비밀번호가 틀렸습니다'    
-});   
+return res.status(401).json({success:false, message:'이메일이나 비밀번호가 틀렸습니다'});   
 }
  
  //상태 검사 1: 관리자가 아직 승인 안 한 대기 상태라면?

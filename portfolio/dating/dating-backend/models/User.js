@@ -10,6 +10,8 @@ const User = sequelize.define('User', {
   gender: { type: DataTypes.ENUM('M', 'F', 'O'), allowNull: false },
   bio: { type: DataTypes.TEXT },
   address: { type: DataTypes.STRING(255) },
+  phone_number: { type: DataTypes.STRING(20), allowNull:true },
+  occupation: { type: DataTypes.STRING(50), allowNull:true },
   latitude: { type: DataTypes.DECIMAL(10, 8) },
   longitude: { type: DataTypes.DECIMAL(11, 8) },
   profile_image_main: { type: DataTypes.STRING(255) },
