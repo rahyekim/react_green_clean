@@ -64,7 +64,54 @@ export default function Shelter (){
     }
 
     return(
-        <></>
+        <Layout>
+           <Form.Check
+           type="radio"
+           name="imgInputType"
+           label="URL링크로 입력"
+           checked={imgInputType==='LINK'}
+           onChange={()=>{
+            setImgInputType('LINK');
+            setFormData(prev=> ({...prev, imgFile:null}))
+           }}
+           />
+
+           <Form.Check
+           type="radio"
+           name="imgInputType"
+           label='직접업로드'
+           checked={imgInputType=='UPLOAD'}
+           onChange={()=>{
+            setImgInputType('UPLODAD');
+            setFormData(prev=> ({...prev, imageUrl:''}))
+           }}
+           />
+           {(formData.imageUrl || formData.imgFile) && (
+            <img src={formData.imgFile ? URL.createObjectURL(formData.imgFile) : formData.imageUrl}/>
+           )}
+
+           {imgInputType === 'LINK' && (
+            <Form.Control
+            type="url"
+            name="imgUrl"
+            value={formData.imageUrl}
+            placeholder=""
+            onChange={handleChange}
+            required={imgInputType==='LINK'}
+            />
+           )}
+
+           {imgInputType === 'UPLOAD' && (
+            <Form.Control
+            type="file"
+            name="imageFile"
+            accept="image/*"
+            placeholder=""
+            onChange={handleFileChange}
+            required={imgInputType==='UPLOAD'}
+            />
+           )}
+        </Layout>
     )
     
     
