@@ -1,118 +1,143 @@
 'use client'
 
-import React, { useEffect, useState } from "react";
-import { Layout } from "@/app/components/layout/Layout";
-import * as S from '@/app/admin/DashBoard.styled'
-import axios from 'axios';
-import { Row,Col,Card,Button,Form } from "react-bootstrap"
+import React, {useState, useRef, use} from "react"
+import { useRouter } from "next/navigation";
+import * as S from '@/css/style.styled'
+import { Password, PestControlOutlined, PestControlRodent, PetsOutlined, PetsRounded, PetsSharp, PetsTwoTone, Phone } from "@mui/icons-material";
+import DaumPostcodeEmbed, {Address} from 'react-daum-postcode';
+import Header from '@/app/components/Header'
 
-axios.defaults.withCredentials=true;
+export default function SignupPage(){
 
+    const router = useRouter();
 
-export default function Shelter (){
+    const [step, setStep]= useState(0);
+    const [formData, setFormData] =useState({
+        agreeTerms:false,
+        agreePrivacy:false,
+        agreeAge:false,
+        marketingAgreed:false,
 
-    const [imgInputType, setImgInputType]=useState('LINK');
+        email: '',
+        nickname: '',
+        password: '',
+        passwordConfirm: '' , 
+        name:'',
+        phone: '',
+        address: '',
+        detailAddress:'',
+        userType: 'GENERAL' //사업자/소비자
+    })
 
-    const [formData, setFormData]=useState({
-        status: 'ACTIVE',
-        gender: 'UNKNOWN',
-        breed:'',
-        noticeNo:'',
-        regDate: '',
-        rescueLocation: '',
-        imageUrl:'',
-        imgFile: null as File | null,
-        content:'',
-    });
+    const [profilePreview,setProfilePreview]=useState<string>('');
+    const [profileFile, setProfileFile]=useState<File|null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [isOpenPostcode, setIsOpenPostcode]=useState(false);
+
+    const[showTerms, setShowTerms] = useState(false);
+    const[showPrivacy, setShowPrivacy]=useState(false);
+
 
     const handleFileChange =(e:React.ChangeEvent<HTMLInputElement>)=>{
-        if(e.target.files?.[0]){
-            const file = e.target.files[0];
+        const file = e.target.files?.[0];
 
-            setFormData(prev=> ({
-                ...prev,
-                imgFile:file,
-                imgUrl:'',
-            }))
+        if(!file) return;
+
+        if(!file.type.startsWith('image/')){
+            alert('이미지파일만 등록가능합니다');
+            return;
         }
+        if(profilePreview) URL.revokeObjectURL(profilePreview);
+
+        const imgUrl = URL.createObjectURL(file);
+        setProfileFile(file);
+        setProfilePreview(imgUrl);
     }
 
-    const handleChange = (e:React.ChangeEvent<any>)=>{
-        const {name, value} = e.target;
+    const handleCompletePostcode = (data:Address)=>{
+        let fullAddress = data.address; //서울강남구테헤란로123
+        let extraAddress = ''; // 추가주소: (역삼동,역삼빌딩)
+
+        if(data.addressType === 'R'){
+            if(data.bname !== '') extraAddress+= data.bname;
+            if(data.buildingName !=='') {
+                extraAddress += extraAddress !== ''? `, ${data.buildingName}` : data.buildingName;
+            }
+            fullAddress += extraAddress !==''? `(${extraAddress})` : '';
+        }
+
+        setFormData(prev=> ({...prev, address: fullAddress}));
+        setIsOpenPostcode(false);
+    }
+    
+
+    const isAllagreed = 
+    formData.agreeAge && formData.agreePrivacy && formData.agreeTerms && formData.marketingAgreed;
+    
+
+    const hasAllagreed = (e:React.ChangeEvent<HTMLInputElement>)=>{
+        const isChecked = e.target.checked;
         setFormData(prev=>({
             ...prev,
-            [name]: value,
+            agreeAge: isChecked,
+            agreePrivacy: isChecked,
+            agreeTerms: isChecked,
+            marketingAgreed: isChecked
         }))
-    }   
-
-    const handleSubmit = async(e:React.FormEvent)=>{
-       e.preventDefault();
-
-       const submitData= new FormData();
-       Object.entries(formData).forEach(([key,value])=>{
-        if(value !==null && value !== ''){
-            submitData.append(key,value);
+    }
+    const handleStep1Next = ()=>{
+        if(!formData.agreeAge || !formData.agreePrivacy || !formData.agreeTerms){
+            alert('필수약관에 모두 동의해주세요');
+            return;
         }
-    })
-        try{
-            const res= await axios.post('/api/shelter-animals', submitData,{
-                headers: {'Content-Type':'multipart/form-data'}
-            })
-        }catch(err){
-            alert('서버오류가 발생했습니다.잠시후 다시 실행해주세요')
-        }
+        setStep(2);
     }
 
-    return(
-        <Layout>
-           <Form.Check
-           type="radio"
-           name="imgInputType"
-           label="URL링크로 입력"
-           checked={imgInputType==='LINK'}
-           onChange={()=>{
-            setImgInputType('LINK');
-            setFormData(prev=> ({...prev, imgFile:null}))
-           }}
-           />
+    const handleBoxClick =()=>{
+        fileInputRef.current?.click();
+    }
 
-           <Form.Check
-           type="radio"
-           name="imgInputType"
-           label='직접업로드'
-           checked={imgInputType=='UPLOAD'}
-           onChange={()=>{
-            setImgInputType('UPLODAD');
-            setFormData(prev=> ({...prev, imageUrl:''}))
-           }}
-           />
-           {(formData.imageUrl || formData.imgFile) && (
-            <img src={formData.imgFile ? URL.createObjectURL(formData.imgFile) : formData.imageUrl}/>
-           )}
+    const handleChange =(e:React.ChangeEvent<HTMLInputElement>)=>{
+        setFormData(prev=>({
+            ...prev,
+            [e.target.name]: e.target.type === 'checkbox'
+            ? e.target.checked
+            : e.target.value
+        }))
+    }
 
-           {imgInputType === 'LINK' && (
-            <Form.Control
-            type="url"
-            name="imgUrl"
-            value={formData.imageUrl}
-            placeholder=""
-            onChange={handleChange}
-            required={imgInputType==='LINK'}
-            />
-           )}
+    const handleGederalSignup = ()=>{
+        setStep(1);
+    }
 
-           {imgInputType === 'UPLOAD' && (
-            <Form.Control
-            type="file"
-            name="imageFile"
-            accept="image/*"
-            placeholder=""
-            onChange={handleFileChange}
-            required={imgInputType==='UPLOAD'}
-            />
-           )}
-        </Layout>
-    )
+    const handleSubmit = async()=>{
+        //빈칸방어
+
+        //비밀번호 더블체크
+
+        //프로필추가
+        try{
+            let finalImgUrl=''; //DB에 들어갈 이미지 주소
+        }catch(err){
+            if(profileFile){
+                const imgFormData = new FormData();
+                imgFormData.append('file',profileFile);
+
+                const res = await fetch(`/api/members/upload-profile`,{
+                    method:'POST',
+                    body:imgFormData
+                })
+
+                if(!res.ok) throw new Error('이미지업로드실패')
+            }
+
+        }
+    }
     
+    return(
+        <>
+        </>
+    )
     
 }

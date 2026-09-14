@@ -2,11 +2,12 @@
 
 import React, {useState, useRef} from "react"
 import { useRouter } from "next/navigation";
-import * as S from '../../css/style.styled'
 import { Password, PestControlOutlined, PestControlRodent, PetsOutlined, PetsRounded, PetsSharp, PetsTwoTone, Phone } from "@mui/icons-material";
 import DaumPostcodeEmbed, {Address} from 'react-daum-postcode';
 
-import Header from "../components/Header";
+import * as S from '@/css/style.styled'
+import Header from '@/app/components/Header'
+
 export default function SignupPage(){
 
     const router = useRouter();

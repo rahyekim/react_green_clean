@@ -35,6 +35,65 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   Position? _currentPosition ;
   bool _isLoadingLocation = true;
 
+  //_updateUserstatus 함수가 작동하려면 'id'가 필수이므로 각각 고유 id달아줌
+  // 👥 [핵심 추가] 거리별 가짜 회원 리스트 (필터링을 위해 distanceValue 추가)
+  final List<Map<String, dynamic>> _allDummyUsers = [
+    {'id':1, 'distanceValue': 0.3, 'distance': '300m', 'gender': '여', 'name': '지은', 'interest': '카페 탐방', 'status':'NONE'},
+    {'id':2,'distanceValue': 0.8, 'distance': '800m', 'gender': '남', 'name': '민준', 'interest': '한강 산책', 'status':'NONE'},
+    {'id':3,'distanceValue': 1.2, 'distance': '1.2km', 'gender': '여', 'name': '수연', 'interest': '영화 보기', 'status':'SENT'},
+    {'id':4,'distanceValue': 2.5, 'distance': '2.5km', 'gender': '남', 'name': '동현', 'interest': '술 한잔', 'status':'NONE'},
+    {'id':5,'distanceValue': 2.8, 'distance': '2.8km', 'gender': '여', 'name': '서연', 'interest': '맛집 탐방', 'status':'NONE'},
+    {'id':6,'distanceValue': 3.5, 'distance': '3.5km', 'gender': '남', 'name': '지훈', 'interest': '코딩 스터디', 'status':'RECEIVED'},
+    {'id':7,'distanceValue': 4.1, 'distance': '4.1km', 'gender': '여', 'name': '유진', 'interest': '드라이브', 'status':'SENT'},
+    {'id':8,'distanceValue': 4.9, 'distance': '4.9km', 'gender': '남', 'name': '현우', 'interest': '동네 산책', 'status':'SENT'},
+    // 반경 5km 밖의 유저 (필터링 테스트용 - 평소엔 안 보여야 함)
+    {'id':9,'distanceValue': 6.5, 'distance': '6.5km', 'gender': '여', 'name': '보영', 'interest': '자전거 타기', 'status':'SENT'}, 
+  ];
+
+  //반경에 맞춰 리스트를 걸러주는 함수..
+  List<Map<String, dynamic>> get _filteredUsers {
+    double maxDisitance = 1.0; //기본값 1km
+    if(_selectedRadius == '반경 3km') maxDisitance = 3.0;
+    if(_selectedRadius == '반경 5km') maxDisitance = 5.0;
+    //distanceValue가 선택된 반경보다 작거나 같은 유저만 리스트로 반환
+    return _allDummyUsers.where((user)=> user['distanceValue'] <= maxDisitance).toList();
+  }
+  //유저 상태 변경 및 스낵바 알림 함수
+  //누구를userId, 어떤상태로 newStatus, 이름이 뭔지 userName 전달받음
+  void _updateUserStatus(int userId, String newStatus, String userName){
+    //데이터변경구역 setState를 써서 데이터가 바뀌면 화면을 다시 그리도록함
+    setState(() {
+      //전체 유저리스트()안에서 방금 버튼을 누른 유저의 id와 똑같은 사람을 찾아 그 줄번호를 기억합니다
+      final userIndex = _allDummyUsers.indexWhere((u)=> u['id'] == userId);
+      //만약 일치하는 유저를 찾았다면 (-1은 못찾음)
+      if(userIndex != -1){
+        //해당유저의 기존상태(status)를 지우고 새로운 상태(sent,matched,none)로 덮어 씌움
+        _allDummyUsers[userIndex]['status'] = newStatus;
+      }
+    }); //여기까지 실행되면 버튼 모양이 즉각적으로 요청됨 수락 등으로 바뀜
+
+    String message = ''; //화면 아래 띄울 알림 메세지 담을 빈 상자
+    if(newStatus == 'SENT') message = '$userName님에게 매칭을 요청했습니다';
+    if(newStatus == 'NONE') message = '$userName님 요청을 거절했습니다';
+    if(newStatus == 'MATCHED') message = '$userName님과 매칭성사';
+
+    //메세지 상자가 비어있지 않고 화면이 정상적으로 켜져 있다면(mounted)
+    if(message.isNotEmpty && mounted){
+      //혹시 방금 전 띄운 알림창이 아직 안 사라졌다면 겹치지 않게 강제로 숨켜준다
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      //새로운 알림창 
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message, style: const TextStyle(fontWeight: FontWeight.bold)),
+          //배경색 설정: 매칭성사 일때만 파란색, 나머지는 전부 핑크
+          backgroundColor: newStatus == 'MATCHED' ? Colors.blueAccent : pinkAccent,
+          //바닥에 딱 붙지 않고 살짝 위로
+          behavior: SnackBarBehavior.floating,
+          //알림창이 딱 2초 동안만 보였다가 스르르 사라짐
+          duration: const Duration(seconds: 2),
+          ));
+    }
+  }
   //화면 진입시 위치기반 권한 스낵바 띄우기
   @override
   void initState(){
@@ -149,9 +208,11 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
     {'distance': '1.2km', 'gender': '남', 'name': '민준', 'interest': '한강 산책'},
     {'distance': '2.5km', 'gender': '여', 'name': '수연', 'interest': '영화 보기'},
   ];
-
+ 
   @override
   Widget build(BuildContext context) {
+    //추가 
+    final displayedUsers = _filteredUsers;
     return Container(
       color: Colors.black,
       child: Center(
@@ -197,7 +258,9 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
                             children: [
-                              _buildDropdownRow('탐색 반경', _selectedRadius, radiusOptions, (val) => setState(() => _selectedRadius = val!)),
+                             _buildDropdownRow('탐색 반경', _selectedRadius, radiusOptions, (val) {
+                                setState(() => _selectedRadius = val!);
+                              }),
                               const SizedBox(height: 24),
                               SizedBox(
                                 width: double.infinity,
@@ -218,7 +281,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                             ],
                           ),
                         ),
-                        Expanded(child: _buildNearbyUsersList()),
+                        Expanded(child: _buildNearbyUsersList(displayedUsers)),
                       ],
                     ),
                   ),
@@ -272,6 +335,116 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
           </html>
 """),
         );
+  }
+
+  // 🚀 [새로 추가/변경인 부분] 기존 박스를 진짜 '버튼' 위젯들로 UI를 업그레이드한 구역입니다.
+  Widget _buildStatusActionButtons(Map<String, dynamic> user) {
+    final status = user['status'];
+    final userId = user['id'];
+    final userName = user['name'];
+
+    if (status == 'NONE') {
+      // 1. [아무 상태 아님 -> 요청 가능]
+      return SizedBox(
+        height: 32,
+        // 👉 [추가됨] 단순 박스 대신 터치 효과가 있는 진짜 버튼(ElevatedButton)을 적용했습니다.
+        child: ElevatedButton(
+          // 👉 [추가됨] 버튼의 배경색(핑크), 글자색(흰색), 모서리 둥글기 등을 깔끔하게 세팅합니다.
+          style: ElevatedButton.styleFrom(
+            backgroundColor: pinkAccent,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            elevation: 0, // 👉 [추가됨] 그림자를 없애서 요즘 유행하는 깔끔한 플랫 디자인으로 만듭니다.
+          ),
+          onPressed: () => _updateUserStatus(userId, 'SENT', userName),
+          child: const Text('요청', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+        ),
+      );
+    } else if (status == 'SENT') {
+      // 2. [내가 이미 요청을 보낸 상태]
+      return SizedBox(
+        height: 32,
+        // 👉 [추가됨] 이미 눌러서 비활성화된 느낌을 주기 위해 버튼 색을 어두운 회색(cardColor)으로 바꿨습니다.
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: cardColor,
+            foregroundColor: subTextColor,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            // 👉 [추가됨] 얇은 테두리(BorderSide)를 줘서 어두운 배경에 묻히지 않고 버튼처럼 보이게 구분해줍니다.
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color: subTextColor.withOpacity(0.3)),
+            ),
+            elevation: 0,
+          ),
+          // 👉 [추가됨] onPressed에 기능을 아예 안 넣으면(null), 버튼이 회색으로 '비활성화'되어 안 눌리게 됩니다!
+          onPressed: null, 
+          child: const Text('요청됨', style: TextStyle(fontSize: 13)),
+        ),
+      );
+    } else if (status == 'RECEIVED') {
+      // 3. [상대방이 나에게 요청을 보낸 상태]
+      // 👉 [추가됨] 수락과 거절 버튼 2개를 나란히 띄우기 위해 Row(가로 정렬 위젯)로 묶었습니다.
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 32,
+            // 👉 [추가됨] '수락'은 눈에 띄어야 하므로 파란색 바탕의 일반 버튼(ElevatedButton)으로 만들었습니다.
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                elevation: 0,
+              ),
+              onPressed: () => _updateUserStatus(userId, 'MATCHED', userName),
+              child: const Text('수락', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          const SizedBox(width: 6), // 👉 [추가됨] 수락 버튼과 거절 버튼 사이의 띄어쓰기 간격입니다.
+          SizedBox(
+            height: 32,
+            // 👉 [추가됨] '거절'은 덜 강조하기 위해 배경색이 투명하고 테두리만 있는 버튼(OutlinedButton)을 썼습니다!
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: subTextColor,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                side: BorderSide(color: subTextColor.withOpacity(0.5)),
+              ),
+              onPressed: () => _updateUserStatus(userId, 'NONE', userName),
+              child: const Text('거절', style: TextStyle(fontSize: 13)),
+            ),
+          ),
+        ],
+      );
+    } else if (status == 'MATCHED') {
+      // 4. [서로 매칭이 성사된 상태]
+      return SizedBox(
+        height: 32,
+        // 👉 [추가됨] 글자 옆에 예쁜 하트나 전화기 모양의 '아이콘'을 넣을 수 있는 'ElevatedButton.icon'을 썼습니다.
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.purpleAccent,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            elevation: 0,
+          ),
+          onPressed: () {
+            // 👉 [추가됨] 추후 여기에 백엔드 통화 기능이나 채팅창으로 이동하는 코드를 연결하면 됩니다.
+          },
+          // 👉 [추가됨] 버튼 왼쪽 위에 작은 하트 아이콘(Icons.favorite)을 띄워줍니다.
+          icon: const Icon(Icons.favorite, size: 14),
+          label: const Text('매칭됨', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+        ),
+      );
+    }
+    
+    return const SizedBox.shrink();
   }
 
   // 🗺️ 가짜 지도 화면 (카카오/구글맵 연동 전)
@@ -387,45 +560,48 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   }
 
   // 👥 주변 대기 유저 리스트
-  Widget _buildNearbyUsersList() {
+ Widget _buildNearbyUsersList(List<Map<String, dynamic>> users) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
           child: Text(
-            '근처 접속 중인 유저 $_selectedRadius',
+            '근처 접속 중인 유저 $_selectedRadius(총 ${users.length}명)',
             style: TextStyle(color: subTextColor, fontSize: 13),
           ),
         ),
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-            itemCount: nearbyUsers.length,
+            itemCount: users.length,
             separatorBuilder: (context, index) => Divider(color: cardColor, thickness: 1),
             itemBuilder: (context, index) {
-              final user = nearbyUsers[index];
+              final user = users[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
                   children: [
-                    // 💡 [수정 완료] SizedBox로 width를 주어 정렬이 안 틀어지게 고정했습니다.
                     SizedBox(
-                      width: 60, 
+                      width: 50, 
                       child: Text(user['distance'], style: TextStyle(color: pinkAccent, fontWeight: FontWeight.bold, fontSize: 14))
                     ),
                     SizedBox(
-                      width: 40, 
+                      width: 30, 
                       child: Text(user['gender'], style: const TextStyle(color: Colors.white, fontSize: 14))
                     ),
+                    // 💡 [수정 2] 빈 공간을 꽉 채우는 Expanded 안에 이름과 관심사를 위아래(Column)로 예쁘게 묶습니다.
                     Expanded(
-                      child: Text(user['name'], style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold))
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(user['name'], style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+                          Text(user['interest'], style: TextStyle(color: subTextColor, fontSize: 12)),
+                        ],
+                      ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(8)),
-                      child: Text(user['interest'], style: TextStyle(color: subTextColor, fontSize: 12)),
-                    )
+                    // 💡 [수정 3] 여기서 드디어 아까 만들어둔 진짜 '상태 액션 버튼' 함수를 불러옵니다! 이 줄이 핵심입니다.
+                    _buildStatusActionButtons(user),
                   ],
                 ),
               );
@@ -435,7 +611,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
       ],
     );
   }
+}
   
 
   
-}
