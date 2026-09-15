@@ -109,7 +109,7 @@ async function startup(){
         await AppDataSource.initialize();
         console.log('🚀 TypeORM 오라클 DB연결 완료')
     
-        //지정한 포트(5000)에서 클라이언트의 요청을 기다리기(listen) 시작
+        //지정한 포트(4000)에서 클라이언트의 요청을 기다리기(listen) 시작
         app.listen(PORT, ()=>{
             console.log(`서버가 http://localhost:${PORT}에서 실행 중입니다..🏖️`)
         })

@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
-import DaumPostcode from 'react-daum-postcode'
+import DaumPostcode,{Address} from 'react-daum-postcode'
 import * as S from '@/assets/css/Signup.styles'
 
 export default function TermsPage (){
@@ -60,7 +60,7 @@ export default function TermsPage (){
     }
 
     //다음주소 API완료 핸들러...
-    const handleCompletePostcode = (data:any)=>{
+    const handleCompletePostcode = (data:Address)=>{
 
         let fullAddress = data.address;
         let extraAddress = '';
@@ -137,7 +137,7 @@ export default function TermsPage (){
         `${formData.residentNumFront}${formData.residentNumBack}`
 
         try{
-            const res= await fetch('http://localhost:5000/api/register',{
+            const res= await fetch('http://127.0.0.1:4000/api/register',{
                 method: 'POST',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
@@ -181,7 +181,6 @@ export default function TermsPage (){
         }
     }
     
-
     //전체동의핸들러
     const handleAllagreed = (e:React.ChangeEvent<HTMLInputElement>)=>{
         

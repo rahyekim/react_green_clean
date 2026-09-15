@@ -29,3 +29,6 @@ CREATE USER "PLASTIC_USR" IDENTIFIED BY "1234";
 GRANT CONNECT TO "PLASTIC_USR";
 GRANT RESOURCE TO "PLASTIC_USR";
 alter user PLASTIC_USR default tablespace users quota unlimited on users;
+--------------------------
+#관리자
+ALTER TABLE MEMBER_TB ADD IS_ADMIN NUMBER DEFAULT 0 NOT NULL;

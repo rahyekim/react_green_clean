@@ -5,6 +5,9 @@ import RollingBanner from "@/components/RollingBanner";
 import CategoryNav from "@/components/CategoryNav";
 import Selfied from "@/components/main/Selfies"
 import EventRanking from "@/components/EventRank";
+import VlogSlider from "@/components/main/VlogSlider";
+import Safety from "@/components/main/Safety";
+
 export default function Home() {
   return (
     <>
@@ -13,6 +16,8 @@ export default function Home() {
     <CategoryNav/>
     <Selfied/>
     <EventRanking/>
+    <VlogSlider/>
+    <Safety/>
     </>
   );
 }
