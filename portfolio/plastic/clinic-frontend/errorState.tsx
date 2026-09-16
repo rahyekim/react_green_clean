@@ -1,167 +1,219 @@
-/*
-🥊 try...catch가 잡는 것 vs !res.ok가 잡는 것
-
-🔸catch가 실행되는 상황 (네트워크 에러)
-백엔드 서버(Node.js)가 꺼져 있어서 아예 연결을 못 할 때 (ERR_CONNECTION_REFUSED)
-
-인터넷 선이 뽑혀 있거나 도메인을 아예 못 찾을 때
-
-즉, 서버랑 말 한마디도 못 섞어보고 통신 자체가 실패했을 때만 catch로 빠집니다.
-
-🔹!res.ok가 필요한 상황 (서버는 응답을 줬는데, 내용이 에러일 때)
-
-서버랑은 연결이 잘 되었고 통신도 성공했습니다. (예: 400 Bad Request, 401 Unauthorized, 500 Internal Server Error 등)
-
-이때 fetch는 "통신(요청과 응답) 자체는 성공했다"고 판단하기 때문에, catch문으로 가지 않고 코드가 정상적으로 아래로 흘러갑니다.
-
-하지만 서버가 보낸 상태 코드는 에러(ok: false)이기 때문에, 우리가 if (!res.ok)로 걸러줘야 하는 것
-
-💯 100점 만점에 100점
-
-서버가 아예 안 켜져 있거나 인터넷이 끊김 ➡️ 네트워크 통신 불가 ➡️ catch로 직행 (서버 목소리도 못 들음)
-
-서버는 잘 켜져 있어서 응답(400번대, 500번대 에러 코드 등)을 줌 ➡️ 통신은 성공 ➡️ try 안으로 들어옴 (서버가 "나 에러 났어!" 하고 알려줌)
-
-서버가 준 에러 코드는 통신 자체는 성공한 것이기 때문에 try {} 안으로 무조건 골인
- */
+'use client';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useRouter } from 'next/navigation';
+import * as S from '@/assets/css/login.style';
 
 
-
-/*
-🛠️ Step 1: 에러 상태(state) 만들기
-🛠️ Step 2: handleSumbit (회원가입 버튼 클릭 시) 검증 로직 바꾸기
-alert을 띄우는 대신, setErrors를 이용해 각 항목별 에러 상태를 채워줍니다.
-🛠️ Step 3: 스타일 컴포넌트(Styles)에 에러 텍스트 추가하기
-Terms.styles.ts 파일에 에러 메시지를 띄울 빨간 글씨 스타일을 하나 만들어줍니다.
-🛠️ Step 4: JSX 코드에서 인풋창 밑에 에러 텍스트 배치하기
-이제 step2 폼 안에서 인풋창 바로 밑에 errors.항목명이 있을 때만
- 빨간 글씨가 나타나도록 조건부 렌더링(&&)을 걸어줍니다. 그리고 value와 onChange={handleChange}도 연결해 줘야 폼 데이터가 정상적으로 수집되겠죠?
- */
-// 각 입력값의 에러 메시지를 관리할 상태
-const [errors, setErrors] = useState({
-    userName: '',
-    userId: '',
-    userPW: '',
-    userPWconfirm: '',
-    email: '',
-    phone: ''
-});
-
-
-
-const handleSumbit = async () => {
-    // 임시로 에러 객체 생성
-    let newErrors = { userName: '', userId: '', userPW: '', userPWconfirm: '', email: '', phone: '' };
-    let isValid = true;
-
-    if (!formData.userName) {
-        newErrors.userName = '이름을 입력해주세요.';
-        isValid = false;
-    }
-    if (!formData.userId) {
-        newErrors.userId = '아이디를 입력해주세요.';
-        isValid = false;
-    }
-    if (!formData.userPW) {
-        newErrors.userPW = '비밀번호를 입력해주세요.';
-        isValid = false;
-    }
-    if (formData.userPW !== formData.userPWconfirm) {
-        newErrors.userPWconfirm = '비밀번호가 일치하지 않습니다.';
-        isValid = false;
-    }
-
-    // 에러 상태 업데이트
-    setErrors(newErrors);
-
-    // 하나라도 틀렸으면 여기서 중단!
-    if (!isValid) return;
-
-    // TODO: 여기서 백엔드(Node.js)로 fetch 요청 보내기!
-    try {
-        const response = await fetch('http://localhost:5000/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        });
-        const data = await response.json();
-        if (data.succee) {
-            alert('회원가입 성공!'); // 또는 성공 팝업/페이지 이동
-            router.push('/login');
-        } else {
-            alert(data.message);
-        }
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-// 예시 (Terms.styles.ts)
 export const ErrorText = styled.span`
-    color: #ff4d4f; /* 빨간색 */
-    font-size: 12px;
-    margin-top: 4px;
-    display: block;
+  font-size: 0.75rem;
+  color: #e74a3b;
+  margin-top: 0.2rem;
+  margin-left: 1rem;
+  display: block;
 `;
+export default function ChangePw() {
+    const router = useRouter();
 
+    // 1. 입력값 상태
+    const [formData, setFormData] = useState({
+        userId: '',
+        currentPw: '',
+        newPw: '',
+        confirmNewPw: '',
+    });
 
+    // 2. 에러 메시지 상태
+    const [errors, setErrors] = useState({
+        userId: '',
+        currentPw: '',
+        newPw: '',
+        confirmNewPw: '',
+    });
 
-<S.FormGroup>
-    <S.Label>이름(필수)</S.Label>
-    <S.Input 
-        type="text" 
-        name="userName" 
-        value={formData.userName} 
-        onChange={handleChange} 
-        placeholder="이름을 입력해주세요"
-    />
-    {/* 에러가 있을 때만 빨간 글씨 띄우기! */}
-    {errors.userName && <S.ErrorText>{errors.userName}</S.ErrorText>}
-</S.FormGroup>
+    // 3. 타이핑할 때 실행되는 함수 (실시간 일치 검사 포함✨)
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        
+        // 먼저 입력값 업데이트
+        setFormData(prev => ({
+            ...prev,
+            [name]: value,
+        }));
 
-const hidePopupRoutes = ['/register', '/login', '/mypage'];
+        // 일단 해당 칸의 에러는 초기화
+        let errorMsg = '';
 
-const isHide = hidePopupRoutes.some(route=> Pathnamame.include(route))
+        // ★ [실시간 체크 1] '새 비밀번호 확인'을 치고 있는데 '새 비밀번호'와 다를 때
+        if (name === 'confirmNewPw' && value !== formData.newPw) {
+            errorMsg = '비밀번호가 일치하지 않습니다.';
+        }
 
+        // ★ [실시간 체크 2] '새 비밀번호'를 고치고 있는데 이미 입력된 '확인' 값과 다를 때
+        if (name === 'newPw' && formData.confirmNewPw && value !== formData.confirmNewPw) {
+            setErrors(prev => ({
+                ...prev,
+                confirmNewPw: '비밀번호가 일치하지 않습니다.'
+            }));
+        } else if (name === 'newPw') {
+            // 값이 일치해지면 확인란 에러 자동 삭제
+            setErrors(prev => ({
+                ...prev,
+                confirmNewPw: ''
+            }));
+        }
 
-
-const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    // 1. 어떤 인풋인지(name)와 입력된 값(value)을 가져옴
-    const { name, value } = e.target;
-
-    // 2. 값이 비어있다면 해당 name의 에러 메시지를 설정
-    if (!value.trim()) {
+        // 에러 상태 반영
         setErrors(prev => ({
             ...prev,
-            [name]: '필수 입력 항목입니다.'
+            [name]: errorMsg
         }));
-    } else {
-        // 3. 값이 있다면 에러 메시지 초기화
-        setErrors(prev => ({
-            ...prev,
-            [name]: ''
-        }));
-    }
-};
+    };
 
-// 1. 인풋을 다시 클릭(포커스)했을 때 해당 인풋의 에러를 지움
-const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { name } = e.target;
-    setErrors(prev => ({
-        ...prev,
-        [name]: ''
-    }));
-};
+    // 4. 포커스가 벗어났을 때 (빈 칸 체크)
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
 
-<div>
-    <S.Input 
-        type='text'
-        name='userId' // ← 이 name 값이 위 handleBlur의 [name]으로 들어갑니다!
-        placeholder='아이디(userID)'
-        value={formData.userId}
-        onChange={handleChange}
-        onBlur={handleBlur} // ← 여기에 바로 연결!
-    />
-    {/* 에러가 있을 때만 바로 밑에 빨간 글씨 출력 */}
-    {errors.userId && <S.ErrorText>{errors.userId}</S.ErrorText>}
-</div>
+        if (!value.trim()) {
+            setErrors(prev => ({
+                ...prev,
+                [name]: '필수 입력 항목입니다.'
+            }));
+        }
+    };
+
+    // 5. 최종 제출 버튼 눌렀을 때
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        let newErrors = {
+            userId: '',
+            currentPw: '',
+            newPw: '',
+            confirmNewPw: '',
+        };
+        let isValid = true;
+
+        if (!formData.userId.trim()) {
+            newErrors.userId = '아이디를 입력해주세요.';
+            isValid = false;
+        }
+        if (!formData.currentPw.trim()) {
+            newErrors.currentPw = '현재 비밀번호를 입력해주세요.';
+            isValid = false;
+        }
+        if (!formData.newPw.trim()) {
+            newErrors.newPw = '새 비밀번호를 입력해주세요.';
+            isValid = false;
+        }
+        if (!formData.confirmNewPw.trim()) {
+            newErrors.confirmNewPw = '새 비밀번호 확인을 입력해주세요.';
+            isValid = false;
+        } else if (formData.newPw !== formData.confirmNewPw) {
+            newErrors.confirmNewPw = '비밀번호가 일치하지 않습니다.';
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+
+        if (!isValid) {
+            alert('모든 항목을 올바르게 입력해주세요.');
+            return;
+        }
+
+        try {
+            const res = await fetch('http://127.0.0.1:4000/api/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await res.json();
+
+            if (res.ok) {
+                alert('비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요');
+                router.push('/admin');
+            } else {
+                alert(result.message || '비밀번호 변경에 실패했습니다');
+            }
+        } catch (err) {
+            console.error('비밀번호 변경 에러', err);
+            alert('서버와 통신 중 오류가 발생했습니다.');
+        }
+    };
+
+    return (
+        <S.Wrapper>
+            <S.Card>
+                <S.Header>
+                    <S.Title>🔹비밀번호 변경🔹</S.Title>
+                    <S.Desc>
+                        계정 보호를 위해 기존 비밀번호와<br /> 새롭게 사용할 비밀번호를 입력해주세요.
+                    </S.Desc>
+                </S.Header>
+                <S.Form onSubmit={handleSubmit}>
+                    
+                    {/* 아이디 */}
+                    <div>
+                        <S.Input 
+                            type='text'
+                            name='userId'
+                            placeholder='아이디(userID)'
+                            value={formData.userId}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {errors.userId && <ErrorText>{errors.userId}</ErrorText>}
+                    </div>
+
+                    {/* 현재 비밀번호 */}
+                    <div>
+                        <S.Input 
+                            type='password'
+                            name='currentPw'
+                            placeholder='현재 비밀번호'
+                            value={formData.currentPw}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {errors.currentPw && <ErrorText>{errors.currentPw}</ErrorText>}
+                    </div>
+
+                    {/* 새 비밀번호 */}
+                    <div>
+                        <S.Input 
+                            type='password'
+                            name='newPw'
+                            placeholder='새 비밀번호'
+                            value={formData.newPw}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {errors.newPw && <ErrorText>{errors.newPw}</ErrorText>}
+                    </div>
+
+                    {/* 새 비밀번호 확인 */}
+                    <div>
+                        <S.Input 
+                            type='password'
+                            name='confirmNewPw'
+                            placeholder='새 비밀번호 확인'
+                            value={formData.confirmNewPw}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {errors.confirmNewPw && <ErrorText>{errors.confirmNewPw}</ErrorText>}
+                    </div>
+
+                    <S.Button type='submit'>비밀번호 변경하기</S.Button>
+                </S.Form>
+
+                <S.Divider />
+
+                <S.LinkGroup>
+                    <S.StyledLink onClick={() => router.push('/register/terms')}>아직 계정이 없으신가요? 회원가입</S.StyledLink>
+                    <S.StyledLink onClick={() => router.push('/admin')}>이미 계정이 있으신가요? 로그인</S.StyledLink>
+                </S.LinkGroup>
+            </S.Card>
+        </S.Wrapper>
+    );
+}
