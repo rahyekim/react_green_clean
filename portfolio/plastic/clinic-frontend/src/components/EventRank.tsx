@@ -1,6 +1,6 @@
 'use client'
 import React, {useRef} from 'react';
-import * as S from '@/assets/css/EventRank.style';
+import * as S from '@/assets/css/eventRank.style';
 
 const EVENT_DATA= [
     {id:1, rank:'1', name:'다다코성형', price:'149', img: '/images/main/circular/1.jpg',

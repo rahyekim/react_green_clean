@@ -2,6 +2,7 @@
 
 import styled from 'styled-components' // next.comfig.ts 에 compiler 추가 
 
+
 export const Wrapper= styled.div`
 width: 100%;
 max-width: 800px;
@@ -346,24 +347,5 @@ button{
 `;
 
 
-export const Section= styled.div<{$marginBottom?:string}>`
-
-`;
-export const SectionTitle= styled.h3`
-
-`;
-export const TermsBox= styled.div<{$bg?:string}>`
-
-`;
-
-export const Checkbox= styled.input<{$isLarge?:boolean}>`
-
-`;
-export const TotlAgreeText= styled.span`
-
-`;
-export const AgreeText= styled.span`
-
-`;
 
 

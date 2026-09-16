@@ -2,6 +2,10 @@
 
 import styled from "styled-components";
 
+
+// 💘Barrel 패턴💘
+export * from './changePw.style';
+
 // 🎯 SB Admin 시그니처: 블루 그라데이션 전체 화면 배경
 export const LoginWrapper = styled.div`
   background-color: #4e73df;
@@ -99,7 +103,7 @@ export const LoginButton = styled.button`
 
 export const Divider = styled.hr`
   margin: 1.5rem 0;
-  border: 0;
+  border: 0; //💘기본으로 설정된 테두리(border)를 완전히 없애는 초기화
   border-top: 1px solid #e3e6f0;
 `;
 
@@ -121,3 +125,4 @@ export const StyledLink = styled.a`
     color: #224abe;
   }
 `;
+

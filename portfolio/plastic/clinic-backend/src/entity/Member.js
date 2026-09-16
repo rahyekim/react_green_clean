@@ -78,6 +78,11 @@ module.exports = new EntitySchema({
         REG_DATE:{
             type:'date',
             createDate:true,
+        },
+        IS_ADMIN:{
+            type:'number',
+            default:0,
+            nullable:false,
         }
     }
 

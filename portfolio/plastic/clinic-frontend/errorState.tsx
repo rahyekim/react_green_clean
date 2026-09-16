@@ -122,3 +122,46 @@ export const ErrorText = styled.span`
 const hidePopupRoutes = ['/register', '/login', '/mypage'];
 
 const isHide = hidePopupRoutes.some(route=> Pathnamame.include(route))
+
+
+
+const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // 1. 어떤 인풋인지(name)와 입력된 값(value)을 가져옴
+    const { name, value } = e.target;
+
+    // 2. 값이 비어있다면 해당 name의 에러 메시지를 설정
+    if (!value.trim()) {
+        setErrors(prev => ({
+            ...prev,
+            [name]: '필수 입력 항목입니다.'
+        }));
+    } else {
+        // 3. 값이 있다면 에러 메시지 초기화
+        setErrors(prev => ({
+            ...prev,
+            [name]: ''
+        }));
+    }
+};
+
+// 1. 인풋을 다시 클릭(포커스)했을 때 해당 인풋의 에러를 지움
+const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    setErrors(prev => ({
+        ...prev,
+        [name]: ''
+    }));
+};
+
+<div>
+    <S.Input 
+        type='text'
+        name='userId' // ← 이 name 값이 위 handleBlur의 [name]으로 들어갑니다!
+        placeholder='아이디(userID)'
+        value={formData.userId}
+        onChange={handleChange}
+        onBlur={handleBlur} // ← 여기에 바로 연결!
+    />
+    {/* 에러가 있을 때만 바로 밑에 빨간 글씨 출력 */}
+    {errors.userId && <S.ErrorText>{errors.userId}</S.ErrorText>}
+</div>

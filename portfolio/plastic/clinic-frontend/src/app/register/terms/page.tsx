@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
 import DaumPostcode,{Address} from 'react-daum-postcode'
-import * as S from '@/assets/css/Signup.styles'
+import * as S from '@/assets/css/signup.styles'
 
 export default function TermsPage (){
 
