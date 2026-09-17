@@ -1,19 +1,27 @@
 import {css} from 'styled-components'
 
 export const FlexCenter =css`
-
 display: flex;
 justify-content: center;
 align-items: center;
-
 `;
 
 export const FlexBetween =css`
-
 display: flex;
 justify-content: space-between;
 align-items: center;
+`;
 
+export const FlexEnd =css`
+display: flex;
+justify-content: flex-end;
+align-items: center;
+`;
+
+export const FlexStart =css`
+display: flex;
+justify-content: flex-start;
+align-items: center;
 `;
 
 export const FlexColumn =css`
@@ -38,7 +46,6 @@ border-radius: 10rem;
 
 export const LinearGradient = css`
 background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
-
 `;
 
 export const BoxShadow = css`
@@ -61,4 +68,12 @@ cursor: pointer;
 
 export const TextCenter = css`
 text-align: center;
+`;
+
+export const ErrorText = css`
+  font-size: 0.75rem;
+  color: #e74a3b;
+  margin-top: 0.2rem;
+  margin-left: 1rem;
+  display: block;
 `;

@@ -46,7 +46,7 @@ padding: 0;
 
 export const Form= styled.form`
 ${FlexColumn};
-gap: 1.2rem;
+gap: 1rem;
 `;
 export const Input= styled.input`
   width: 100%;

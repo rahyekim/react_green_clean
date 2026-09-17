@@ -4,6 +4,8 @@ import React, {useState} from 'react'
 import { useRouter } from 'next/navigation'
 
 import * as S from '@/assets/css/login.style'
+import usePopup from '@/hooks/usePopup';
+import Popup from '@/components/ui/Popup';
 
 export default function LoginPage(){
     
@@ -14,6 +16,8 @@ export default function LoginPage(){
         userPW:'',
         
     });
+
+    const {openPopup, closePopup, popupConfig} = usePopup();
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         const {name, value} = e.target;
@@ -27,7 +31,7 @@ export default function LoginPage(){
         e.preventDefault(); //폼 새로고침 방지
         //입력창 비움 방지
         if(!formData.userId || !formData.userPW){
-            alert('아이디 또는 비밀번호를 모두 입력해주세요')
+            openPopup('입력 오류','아이디 또는 비밀번호를 모두 입력해주세요')
             return;
         }
         try{
@@ -40,7 +44,7 @@ export default function LoginPage(){
 
             //분기
             if(res.ok) {
-                alert('로그인성공✨');
+                openPopup('환영합니다', '로그인성공✨');
                 //관리자라면
                 if(Number(result.isAdmin) === 1){
                     router.push('/admin/total');
@@ -48,12 +52,12 @@ export default function LoginPage(){
                     router.push('/')
                 }
             }else{
-                alert(result.message || '로그인실패');
+                openPopup('알림', result.message || '로그인실패');
             }
 
         }catch(err){
             console.error('로그인에러:',err);
-            alert('서버통신중 오류발생');
+            openPopup('오류','서버통신중 오류발생');
         }
     }
 
@@ -103,6 +107,13 @@ export default function LoginPage(){
                 </S.LinkGroup>
             </S.LoginCard>
         </S.LoginWrapper>
+
+        <Popup
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        onClose={closePopup}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}</Popup>
         </>
     )
 

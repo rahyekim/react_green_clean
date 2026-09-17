@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import DaumPostcode,{Address} from 'react-daum-postcode'
 import * as S from '@/assets/css/signup.styles'
 
+//popup스타일 불러오기
+import Popup from "@/components/ui/Popup";
+
 export default function TermsPage (){
 
     const router = useRouter();
@@ -39,7 +42,30 @@ export default function TermsPage (){
 
     //🔸주소검색 팝업 열림/닫힘
     const [isPostcodeOpen, setIsPostcodeOpen]=useState(false);
+    
+    //💙add 커스텀 팝업관리를 위한 상태(openPopup대체용)
+    const [popupConfig, setPopupConfig]=useState({
+        isOpen:false,
+        title:'',
+        message: '',
+        onConfirm: undefined as (()=>void) | undefined,
+    });
 
+    //💙 팝업 열기 함수
+    const openPopup = (title:string, message:string, onConfirm?:()=>void)=>{
+        setPopupConfig({
+            isOpen:true,
+            title,
+            message,
+            onConfirm
+        })
+    };
+
+    //💙팝업 닫기 함수
+    const closePopup = ()=>{
+        setPopupConfig(prev=>({...prev, isOpen:false}));
+    }
+    
     //필수 항목이 모두 동의되었는지 확인(파생된 상태)
     const isAllagreed = termsAgreed && privacyAgreed;
 
@@ -110,21 +136,28 @@ export default function TermsPage (){
     const handleSumbit = async()=>{
         //필수입력값체크
         if(!formData.userName || !formData.userPW || !formData.userId){
-            return alert('필수 항목을 입력해 주세요');
+             openPopup('입력 오류','필수 항목을 입력해 주세요');
+             return;
         }
         //🔸주민번호 앞자리나 뒷자리가 비어있으면 경고
         if(!formData.residentNumFront || !formData.residentNumBack){
-            return alert("주민등록 번호를 입력해주세요")
+            openPopup('입력 오류',"주민등록 번호를 입력해주세요");
+            return ;
         }
         //🔸주민번호 검사 실행시 번호가 일치하지 않을 경우 
         if(!validationResidentNum(formData.residentNumFront, formData.residentNumBack)){
-            return alert("유효하지않는 주민등록 번호입니다. 다시확인해주세요")
+            openPopup('인증 실패',"유효하지않는 주민등록 번호입니다. 다시확인해주세요")
+            return;
         }
         //이메일 앞부분(아이디) 비어있으면 경고창
-        if(!formData.email) return alert("이메일을 입력해주세요")
+        if(!formData.email) {
+            openPopup('입력 오류',"이메일을 입력해주세요");
+            return;
+        }
 
         if(formData.userPW !== formData.userPWconfirm){
-            return alert('비밀번호가 일치하지 않습니다');
+            openPopup('비밀번호 오류','비밀번호가 일치하지 않습니다');
+            return;
         }
         //이메일 주소 조합 (직접선택시 domain='')
         const fullEmail = 
@@ -161,22 +194,26 @@ export default function TermsPage (){
             
             //200번대가 아니라면?
             if(!res.ok){
-                alert(result.message || '회원가입 실패');
+                openPopup('가입 실패',result.message || '회원가입 실패');
                 console.log('회원가입 중 에러발생')
                 return;
             }
             //성공처리
             if(result.success){
-                alert('회원가입이 완료되었습니다')
-                router.push('/');
+                openPopup(
+                    '가입 완료', 
+                    '회원가입이 성공적으로 완료되었습니다! 환영합니다 🎉',
+                    ()=>router.push('/'),
+                )
+              
             }else{
-                alert(result.message);
+                openPopup('가입 실패', result.message || '가입에 실패 했습니다');
             }
 
         }catch(err){
             
             console.error(err);
-            alert('서버와 통신중에 오류가 발생')
+            openPopup('서버 오류','서버와 통신중에 오류가 발생')
 
         }
     }
@@ -192,14 +229,30 @@ export default function TermsPage (){
     
     const handleNextStep = ()=>{
         if(!isAllagreed){
-            alert('필수약관에 모두 동의해주세요');
+            openPopup('약관 동의','필수약관에 모두 동의해주세요');
             return;
         }
         //다음 회원가입 페이지 이동 로직
         setStep(2);
     }
+
+    const handleCancelConfirm = ()=>{
+        openPopup('확인', '회원가입을 취소하시겠습니까?', () => router.push('/'));
+    }
     
+    const handlePrev = ()=>{ // ()=>router.back(),window.history.back()
+        openPopup(
+            '이전 단계', 
+            '작성 중인 내용이 초기화될 수 있습니다. \n약관 동의 단계로 돌아가시겠습니까?', 
+            ()=>{ //팝업 닫아주고 => 1단계로 이동 => 스크롤 맨위로 이동
+                closePopup(); 
+                setStep(1);
+                window.scrollTo(0,0);
+            }
+        ); 
+    }
     return(
+        <>
         <S.Wrapper>
             {/* 2.회원가입 폼일때 보여줄 상단 타이틀 추가 */}
             {step === 2 && <S.PageTitle>회원가입</S.PageTitle>}
@@ -279,11 +332,11 @@ export default function TermsPage (){
             </S.TermSection>
 
             <S.ButtonGroup>
-                <S.Button $variant="outline" onClick={()=>router.back()} //window.history.back()
-                >이전단계</S.Button>
+                <S.Button $variant="outline" onClick={handleCancelConfirm} //window.history.back()
+                >취소</S.Button>
                 <S.Button 
                     $variant="solid"
-                    // disabled={!isAllagreed} //아예 안눌려서 alert안나옴..
+                    // disabled={!isAllagreed} //아예 안눌려서 openPopup안나옴..
                     onClick={handleNextStep}
                 >다음단계</S.Button>
             </S.ButtonGroup>
@@ -479,15 +532,26 @@ export default function TermsPage (){
 
                 <S.ButtonGroup>
                     <S.Button $variant="outline" 
-                    onClick={()=>setStep(1)} //router.back(), window.history.back()
-                    >취소</S.Button>
+                    onClick={handlePrev} //router.back(), window.history.back()
+                    >이전 단계</S.Button>
                     <S.Button 
                         $variant="solid"
                         onClick={handleSumbit}
-                    >회원가입</S.Button>
+                    >회원 가입</S.Button>
                 </S.ButtonGroup>
                 </>
             )}
         </S.Wrapper>
+
+        {/* 커스텀 팝업 랜더링 */}
+        <Popup
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        onClose={closePopup}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}</Popup>
+        
+        </>
+        
     )
 }

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/navigation';
-import * as S from '@/assets/css/login.style';
+import * as S from '@/assets/css/changePw.style';
 
 
 export const ErrorText = styled.span`
@@ -43,6 +43,27 @@ export default function ChangePw() {
 
         // 일단 해당 칸의 에러는 초기화
         let errorMsg = '';
+
+        // ★ [추가] '새 비밀번호'를 입력할 때 '현재 비밀번호'와 같은지 검사
+        if (name === 'newPw') {
+            if (value && value === formData.currentPw) {
+                errorMsg = '현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.';
+            }
+        }
+
+        // ★ [추가] '현재 비밀번호'를 변경할 때, 이미 입력되어 있던 '새 비밀번호'와 같아지는지 검사
+        if (name === 'currentPw') {
+            if (value && value === formData.newPw) {
+                // 새 비밀번호 쪽의 에러를 갱신해주기 위해 아래에서 처리
+                setErrors(prev => ({
+                    ...prev,
+                    newPw: '현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.'
+                }));
+            } else if (formData.newPw && value !== formData.newPw && errors.newPw === '현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.') {
+                // 다르게 수정되면 에러 해제
+                setErrors(prev => ({ ...prev, newPw: '' }));
+            }
+        }
 
         // ★ [실시간 체크 1] '새 비밀번호 확인'을 치고 있는데 '새 비밀번호'와 다를 때
         if (name === 'confirmNewPw' && value !== formData.newPw) {
@@ -145,7 +166,7 @@ export default function ChangePw() {
         <S.Wrapper>
             <S.Card>
                 <S.Header>
-                    <S.Title>🔹비밀번호 변경🔹</S.Title>
+                    <S.Title>🔹에러테스트🔹</S.Title>
                     <S.Desc>
                         계정 보호를 위해 기존 비밀번호와<br /> 새롭게 사용할 비밀번호를 입력해주세요.
                     </S.Desc>
