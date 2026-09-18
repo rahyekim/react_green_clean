@@ -2,11 +2,16 @@
 import React,{useState} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as S from '@/assets/css/changePw.style'
+import usePopup from "@/hooks/usePopup";
+import Popup from "@/components/ui/Popup";
 
 export default function ResetPwPage(){
 
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    const {popupConfig, openPopup, closePopup}=usePopup();
+    
 
     const userId = searchParams.get('userId');
 
@@ -21,9 +26,20 @@ export default function ResetPwPage(){
 
     const handleResetPassword = async(e:React.FormEvent)=>{
         e.preventDefault();
-        if (!userId) return alert('잘못된 접근입니다. 이메일 링크를 다시 확인해 주세요.');
-        if (!pwData.newPW || !pwData.confirmNewPW) return alert('비밀번호를 모두 입력해 주세요.');
-        if (pwData.newPW !== pwData.confirmNewPW) return alert('비밀번호가 서로 일치하지 않습니다.');
+
+        if (!userId) {
+            openPopup('오류','잘못된 접근입니다. 이메일 링크를 다시 확인해 주세요.');
+            return;
+
+        }
+        if (!pwData.newPW || !pwData.confirmNewPW){
+            openPopup('입력 오류','비밀번호를 모두 입력해 주세요.');
+            return;
+        } 
+        if (pwData.newPW !== pwData.confirmNewPW){
+            openPopup('비밀번호 오류','비밀번호가 서로 일치하지 않습니다.');
+            return;
+        } 
 
         try{
             const res= await fetch('http://127.0.0.1:4000/api/reset-password', {
@@ -37,18 +53,19 @@ export default function ResetPwPage(){
             })
             const result = await res.json();
             if(res.ok){
-                alert('비밀번호가 성공적으로 변경되었습니다! 새 비밀번호로 로그인해 주세요.');
+                openPopup('성공','비밀번호가 성공적으로 변경되었습니다! 새 비밀번호로 로그인해 주세요.');
                 router.push('/admin');
             }else{
-                alert(result.message || '비밀번호 변경에 실패했습니다.');
+                openPopup('변경 실패', result.message || '비밀번호 변경에 실패했습니다.');
             }
         }catch(err){
             console.error('재설정 에러:', err);
-            alert('서버 오류가 발생했습니다.');
+            openPopup('서버 오류','서버 오류가 발생했습니다.');
         }
     }
 
     return(
+        <>
        <S.Wrapper>
             <S.Card>
                 <S.Header>
@@ -80,5 +97,13 @@ export default function ResetPwPage(){
                 </S.Form>   
             </S.Card>
         </S.Wrapper>
-    )
+
+        <Popup
+        isOpen={popupConfig.isOpen}
+        onClose={closePopup}
+        title={popupConfig.title}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}</Popup>
+        </>
+)
 }

@@ -3,8 +3,8 @@ import Link from "next/link"
 import { useState } from "react"
 
 import * as S from './Header.styles'
-import GlobeIcon from "./icons/GlobeIcon"
-import UserIcon from "./icons/UserIcon"
+import GlobeIcon from "../icons/GlobeIcon"
+import UserIcon from "../icons/UserIcon"
 
 export default function Header (){
 

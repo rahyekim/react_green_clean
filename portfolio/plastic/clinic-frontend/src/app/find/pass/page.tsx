@@ -2,11 +2,15 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as S from '@/assets/css/changePw.style';
+import usePopup from '@/hooks/usePopup';
+import Popup from '@/components/ui/Popup';
 
 export default function MockPassPage() {
 
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    const {openPopup, popupConfig, closePopup}=usePopup();
     
     // 🎯 이전 페이지에서 URL에 달아 보낸 userId를 쏙 빼옵니다.
     const userId = searchParams.get('userId'); 
@@ -26,7 +30,8 @@ export default function MockPassPage() {
         e.preventDefault();
 
         if (!authData.userName || !authData.phone) {
-            return alert('이름과 휴대폰 번호를 모두 입력해 주세요.');
+            openPopup('입력 오류','이름과 휴대폰 번호를 모두 입력해 주세요.');
+            return;
         }
 
         try {
@@ -44,18 +49,19 @@ export default function MockPassPage() {
             const result = await response.json();
             
             if(response.ok) {
-                alert('본인인증 완료! 등록된 이메일로 비밀번호 재설정 링크가 발송되었습니다.');
+                openPopup('성공','본인인증 완료! 등록된 이메일로 비밀번호 재설정 링크가 발송되었습니다.');
                 router.push('/admin'); //로그인창으로 
             } else {
-                alert(result.message || '인증에 실패했습니다. 입력하신 정보를 다시 확인해 주세요.');
+                openPopup('오류', result.message || '인증에 실패했습니다. 입력하신 정보를 다시 확인해 주세요.');
             }
         } catch (error) {
             console.error('인증 및 발송 에러:', error);
-            alert('서버와 통신 중 오류가 발생했습니다.');
+            openPopup('오류', '서버와 통신 중 오류가 발생했습니다.');
         }
     };
 
     return (
+        <>
         <S.Wrapper>
             {/* 💡 카드를 살짝 좁게 만들어서 진짜 모바일 인증창 같은 느낌을 줍니다 */}
             <S.Card style={{ maxWidth: '400px' }}> 
@@ -97,5 +103,13 @@ export default function MockPassPage() {
                 </S.Form>   
             </S.Card>
         </S.Wrapper>
+
+        <Popup
+        isOpen={popupConfig.isOpen}
+        onClose={closePopup}
+        title={popupConfig.title}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}</Popup>
+        </>
     );
 }

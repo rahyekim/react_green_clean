@@ -8,7 +8,7 @@ import React from "react";
 //조건부로 사라져야 하는 컴포넌트를 불러옴 
 import Header from "./Header";
 import Footer from "./Footer";
-import EventPopup from "./EventPopup";
+import EventPopup from "../EventPopup";
 import QuickConsultBar from "./QuickConsultBar";
 
 //💘헤더 크기때문에 픽스햇을때 잘리는 크기만큼 패딩or마진

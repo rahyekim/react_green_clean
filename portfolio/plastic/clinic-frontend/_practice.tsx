@@ -1,38 +1,25 @@
-import { Address } from "react-daum-postcode";
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
+export default function middleware(request:NextRequest){
 
+    const {pathname} = request.nextUrl;
+    const token = request.cookies.get('admin_token')?.value;
 
-const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-    const {name,value,type}=e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-
-    if((name === 'residentFront' || name === 'residentBack') &&  !/^[0-9]*$/.test(value)) return;
-
-    setFomData(prev=>({
-        ...prev,
-        [name]: type==='checkbox' ?  checked: value,
-    }));
-}
-
-const handleCompletePostcode =( data:Address)=>{
-    let fullAddress = data.address;
-    let extraAddress = '';
-
-    if(data.addressType==='R'){
-        if(data.bname){
-            extraAddress+= data.bname;
+    if(request.nextUrl.pathname.startsWith('/admin') && pathname !== '/admin'){
+        if(!token){
+            return NextResponse.redirect(new URL('/admin', request.url));
         }
-        if(data.buildingName){
-            extraAddress += extraAddress !== '' ?  `, ${data.buildingName}` : data.buildingName;
-        }
-
-        fullAddress+= extraAddress !=='' ? `(${extraAddress})` : ''
     }
 
-    setFormData(prev=>({
-        ...prev,
-        zipcode : data.zonecode,
-        address1: fullAddress,
-    }))
+    if(pathname === '/admin' && token){
+        return NextResponse.redirect(new URL('/admin/root', request.url));
+    }
 
+    return NextResponse.next();
+}
+
+
+export const config ={
+    matcher: ['/admin/:path*']
 }

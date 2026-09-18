@@ -12,6 +12,12 @@ justify-content: space-between;
 align-items: center;
 `;
 
+export const FlexTopBetween =css`
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+`;
+
 export const FlexEnd =css`
 display: flex;
 justify-content: flex-end;
@@ -32,6 +38,11 @@ flex-direction: column;
 export const FlexRow =css`
 display: flex;
 flex-direction: row;
+`;
+
+export const FlexWrap =css`
+display: flex;
+flex-wrap: wrap;
 `;
 
 export const BlueButtonTheme =css`
@@ -63,6 +74,8 @@ padding: 0.75rem 1rem;
 font-size: 0.8rem;
 border-radius: 10rem;
 font-weight: bold;
+outline: none;
+border: none;
 cursor: pointer;
 `;
 
@@ -76,4 +89,24 @@ export const ErrorText = css`
   margin-top: 0.2rem;
   margin-left: 1rem;
   display: block;
+`;
+
+
+export const CircleBtn = css`
+width: 2.5rem;
+height: 2.5rem;
+border-radius: 50%;
+border: none;
+outline: none;
+color: white;
+cursor: pointer;
+`;
+
+
+export const Transparent = css`
+background-color: transparent;
+padding: 0.35rem 0.8rem;
+border-radius: 0.35rem;
+font-size: 0.85rem;
+font-weight: 600;
 `;

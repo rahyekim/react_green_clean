@@ -1,12 +1,16 @@
 'use client';
-import React, {FormEvent, useState} from 'react';
+import React, {useState} from 'react';
 import { useRouter } from 'next/navigation';
 
 import * as S from '@/assets/css/login.style'
+import usePopup from '@/hooks/usePopup';
+import Popup from '@/components/ui/Popup';
 
 export default function ChangePw(){
 
     const router = useRouter();
+
+    const {popupConfig, openPopup, closePopup}=usePopup();
 
     const [userId, setUserId]=useState('');
 
@@ -20,7 +24,7 @@ export default function ChangePw(){
         e.preventDefault();
 
         if(!userId ) {
-            alert('아이디를 먼저 입력해주세요');
+            openPopup('입력 오류','아이디를 먼저 입력해주세요');
             return;
         }
 
@@ -29,6 +33,7 @@ export default function ChangePw(){
 
     }
     return(
+        <>
         <S.Wrapper>
             <S.Card>
                 <S.Header>
@@ -57,6 +62,14 @@ export default function ChangePw(){
                 </S.LinkGroup>
             </S.Card>
         </S.Wrapper>
+
+        <Popup
+            isOpen={popupConfig.isOpen}
+            onClose={closePopup}
+            title={popupConfig.title}
+            onConfirm={popupConfig.onConfirm}
+            >{popupConfig.message}</Popup>
+        </>
         
     )
 }

@@ -1,4 +1,3 @@
-
 'use client'
 import React, {useState} from 'react'
 import { useRouter } from 'next/navigation'
@@ -42,12 +41,16 @@ export default function LoginPage(){
             });
             const result = await res.json();
 
+            
             //분기
             if(res.ok) {
                 openPopup('환영합니다', '로그인성공✨');
                 //관리자라면
                 if(Number(result.isAdmin) === 1){
-                    router.push('/admin/total');
+                    //🍪cookie과자만들기🍪
+                    // (key=value) 쿠키이름=true(value) path=어디든 유효기간=1일 🚀
+                    document.cookie = "admin_token=true; path=/; max-age=86400;"
+                    router.push('/admin/root');
                 }else{
                     router.push('/')
                 }
