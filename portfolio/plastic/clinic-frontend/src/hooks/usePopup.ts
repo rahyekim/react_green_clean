@@ -1,9 +1,16 @@
 import { useState } from "react";
 
+interface PopupConfig {
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm?: () => void;
+}
+
 export default function usePopup(){
 
      //💙add 커스텀 팝업관리를 위한 상태(openPopup대체용)
-    const [popupConfig, setPopupConfig]=useState({
+    const [popupConfig, setPopupConfig]=useState<PopupConfig>({
         isOpen:false,
         title:'',
         message:'',

@@ -9,7 +9,7 @@ interface PopupProps{
     title:string;  //상단 제목 
     onClose:()=>void; //닫기함수
     onConfirm?:()=>void; //확인함수(옵션)
-    children:React.ReactNode; //팝업 안에 들어갈 내용
+    children:React.ReactNode; //팝업 안에 들어갈 내용(message)
 }
 export default function Popup({
     isOpen,title,onClose,onConfirm,children}:PopupProps){

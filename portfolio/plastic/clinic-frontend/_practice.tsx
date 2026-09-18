@@ -1,25 +1,31 @@
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
+import React, { useState } from "react";
+import * as S from '@/assets/css/popup.styles';
 
-export default function middleware(request:NextRequest){
-
-    const {pathname} = request.nextUrl;
-    const token = request.cookies.get('admin_token')?.value;
-
-    if(request.nextUrl.pathname.startsWith('/admin') && pathname !== '/admin'){
-        if(!token){
-            return NextResponse.redirect(new URL('/admin', request.url));
-        }
-    }
-
-    if(pathname === '/admin' && token){
-        return NextResponse.redirect(new URL('/admin/root', request.url));
-    }
-
-    return NextResponse.next();
+interface PopupProps {
+    isopen: boolean;
+    title: string;
+    onclose: ()=>void;
+    children:React.ReactNode;
+    onConfirm?: ()=>void;
 }
 
+export default function Popup(props:PopupProps){
 
-export const config ={
-    matcher: ['/admin/:path*']
+    const {isopen, title, onclose, onConfirm,children}=props;
+    
+    if(!isopen) return null;
+
+    return(
+        <>
+        <S.PopupOverlay onClick={onclose}>
+            <S.PopContainer onClick={e=>e.stopPropagation()}>
+                <S.PopHeader>
+                    <S.PopTitle>{title}</S.PopTitle>
+                    <S.CloseIcon>&times;</S.CloseIcon>
+                </S.PopHeader>
+            </S.PopContainer>
+
+        </S.PopupOverlay>
+        </>
+    )
 }
