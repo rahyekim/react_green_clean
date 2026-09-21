@@ -4,8 +4,7 @@ import * as S from '@/assets/css/admin/NavSetting.style'
 import usePopup from '@/hooks/usePopup';
 import Popup from '@/components/ui/Popup';
 import {
-    FiSave, FiPlus, FiTrash2, FiImage, FiType,
-    FiDelete
+    FiSave, FiPlus, FiTrash2, FiImage, FiType,FiUpload,
 }from 'react-icons/fi'
 
 interface MenuItem{
@@ -15,6 +14,7 @@ interface MenuItem{
 }
 export default function Nav(){
 
+    const {popupConfig, closePopup, openPopup}=usePopup();
     const [logoType, setLogoType]=useState<'TEXT'|'IMAGE'>('TEXT');
     const [logoText, setLogoText]=useState<string>('성형외과 로고');
     const [logoFileName, setLogoFileName] = useState<string>('');
@@ -27,8 +27,6 @@ export default function Nav(){
         {id:crypto.randomUUID(), name:'쁘띠시술', url:'/'},
         {id:crypto.randomUUID(), name:'커뮤니티', url:'/'},
     ])
-    //상태관리 팝업
-    const [isPopupOpen, setIsPopupOpen]=useState(false);
 
     //로고 이미지 파일 선택핸들러
     const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -48,10 +46,17 @@ export default function Nav(){
         ])
     }
     const handleDelete = (id:string)=>{
-        setMenus(prev=>(
-            prev.filter(menu=> menu.id !== id)
-        ));
-    }
+        openPopup(
+            '알림', 
+            '삭제하시겠습니까?',
+            ()=>{
+                setMenus(prev=>(
+                    prev.filter(menu=> menu.id !== id)
+                ));
+                closePopup();
+            }
+        );
+    };
 
     const handleMenuChange = (id:string, field:keyof MenuItem, value:string)=>{
         setMenus(prev=>(
@@ -73,7 +78,7 @@ export default function Nav(){
             menus: menus
         };
         console.log('저장될데이터:', payload);
-        setIsPopupOpen(true);
+        openPopup('저장 완료', '네비게이션 설정이 성공적으로 저장되었습니다')
     };
     
     return(
@@ -83,7 +88,7 @@ export default function Nav(){
                 <S.PageTitle>네비게이션 관리</S.PageTitle>
                 <S.SaveButton onClick={handleSave}>
                     <FiSave size={18}/>
-                    설정저장하기
+                    <span>설정저장하기</span>
                 </S.SaveButton>
             </S.PageHeader>
 
@@ -100,14 +105,17 @@ export default function Nav(){
                             $isActive={logoType==='TEXT'}
                             onClick={()=>setLogoType('TEXT')}
                             > 
-                                <FiType size={18}/> 텍스트로고
+                                <FiType size={18}/> 
+                                <span>텍스트로고</span>
+
                             </S.RadioLabel>
 
                             <S.RadioLabel 
                             $isActive={logoType==='IMAGE'}
                             onClick={()=>setLogoType('IMAGE')}
                             > 
-                                <FiImage size={18}/> 이미지로고
+                                <FiImage size={18}/> 
+                                <span>이미지로고</span>
                             </S.RadioLabel>
                         </S.RadioGroup>
 
@@ -133,8 +141,10 @@ export default function Nav(){
                                     onChange={handleFileChange}
                                     id='logo-upload'
                                     />
-                                <S.FileLabel htmlFor='logo-upload'>파일선택</S.FileLabel>
-                                <span className='filename'>{logoFileName || '선택된파일이 없습니다'}</span>
+                                    <S.FileLabel htmlFor='logo-upload'>
+                                       <FiUpload size={20}/> 파일선택
+                                    </S.FileLabel>
+                                    <span className='filename'>{logoFileName || '선택된파일이 없습니다'}</span>
                                 </S.FileInputWrapper>
                                 </>
                             )}
@@ -180,11 +190,11 @@ export default function Nav(){
         </S.NavContainer>
         
         <Popup
-        isOpen={isPopupOpen}
-        title="저장완료"
-        onClose={()=>setIsPopupOpen(false)}
-        // onConfirm={()=>setIsPopupOpen(false)}
-        >네비게이션 설정이 성공적으로 저장되었습니다</Popup>
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        onClose={closePopup}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}</Popup>
         </>
     )
 }

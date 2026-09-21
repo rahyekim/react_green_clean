@@ -123,6 +123,13 @@ export default function Consult(){
                 </S.ConsultTableCard>
 
             </S.ConsultContainer>
+
+            <Popup
+            isOpen={popupConfig.isOpen}
+            title={popupConfig.title}
+            onClose={closePopup}
+            onConfirm={popupConfig.onConfirm}
+            >{popupConfig.message}</Popup>
         </>
     )
 }

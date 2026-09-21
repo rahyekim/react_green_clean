@@ -94,11 +94,7 @@ export default function Tone(){
                                 </S.ModeButton>
                             </S.ToggleWrapper>
                         </S.ColorOptWrapper>
-                        <S.SelectedText>
-                            현재상태 : 
-                            <strong> {isDarkMode ? "다크모드 활성화됨" : "라이트모드(기본값)"}</strong>
-                        </S.SelectedText>
-
+                        {/* 알약 */}
                         <S.ColorOptWrapper>
                                 <S.ToggleSwitch 
                                 $isActive={!isDarkMode}
@@ -106,10 +102,21 @@ export default function Tone(){
                                 >
                                    <S.SwitchHandle $isActive={isDarkMode} />
                                    <S.SwitchText $isActive={isDarkMode}>
-                                        {isDarkMode ? '다크모드' : '라이트모드'}
+                                        {isDarkMode 
+                                        ?(<>
+                                        <FiMoon size={20}/> 다크모드
+                                        </>) 
+                                        : <>
+                                        <FiSun size={20}/> 라이트모드
+                                        </>}
                                     </S.SwitchText>
                                 </S.ToggleSwitch>
                         </S.ColorOptWrapper>
+                        <S.SelectedText>
+                            현재상태 : 
+                            <strong> {isDarkMode ? "다크모드 활성화됨" : "라이트모드(기본값)"}</strong>
+                        </S.SelectedText>
+
                     </S.CardBody>
                 </S.SettingCard>
 

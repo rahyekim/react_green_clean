@@ -1,7 +1,7 @@
 'use client'
 
 import  React, { useRef } from 'react'
-import * as S from '@/assets/css/vlogSlider.styles'
+import * as S from '@/assets/css/VlogSlider.styles'
 
 //브이로그 임시데이터
 const VLOG_DATA = [

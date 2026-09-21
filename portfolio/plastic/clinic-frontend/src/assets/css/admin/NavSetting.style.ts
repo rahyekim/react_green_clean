@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BlueButtonTheme, BoxShadow, FlexBetween, FlexCenter, FlexColumn, FlexRow, TransitionAll } from "../Common.style";
+import { BlueButtonTheme, BoxShadow, FlexBetween, FlexCenter, FlexColumn, FlexRow, FlexStart, TransitionAll } from "../Common.style";
 
 export const NavContainer= styled.div`
 width: 100%;
@@ -27,7 +27,14 @@ padding: 0.6rem 1.2rem;
 ${BoxShadow}
 ${TransitionAll}
 cursor: pointer;
+min-width: 0;
+white-space: nowrap;
 
+@media (max-width:768px){
+  span{
+    display: none;
+  }
+}
 `;
 export const ContentGrid= styled.div`
 ${FlexColumn} 
@@ -71,6 +78,8 @@ gap: 10px;
 margin-bottom: 1.5rem;
 `;
 export const RadioLabel = styled.label<{$isActive:boolean}>`
+/* min-width: 0;
+white-space: nowrap; */
 cursor: pointer;
 ${FlexCenter};
 gap: 0.5rem;
@@ -86,6 +95,12 @@ background-color: #eaecf4;
 border: 1px solid #4e73df; 
 color: #4e73df;
 `}
+
+@media (max-width:768px) {
+      & > span{
+        display: none;
+      }
+}
 
 &:hover{
     background-color:#f8f9fc;
@@ -105,6 +120,7 @@ export const NavLabel= styled.label`
 font-size: 0.85rem;
 font-weight: 700;
 color: #5a57a9;
+margin-bottom: 10px;
 
 
 `;
@@ -120,9 +136,7 @@ ${TransitionAll}
 &:focus{
     border-color: #4273df;
 }
-
 `;
-
 
 export const FileInputWrapper= styled.div`
 ${FlexCenter}
@@ -130,15 +144,23 @@ gap: 1.2rem;
 .filename{
     font-size: 0.9rem;
     color: #858796;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
  `;
 
 export const FileInput= styled.input`
 display: none;
 `;
 export const FileLabel= styled.label`
+${FlexCenter}
+gap: 10px;
 background: #fff;
 border: 1px solid #d1d3ee;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
 padding: 0.5rem 1rem;
 border-radius: 0.35rem;
 font-size: 0.85rem;
@@ -148,21 +170,29 @@ cursor: pointer;
 
 //텍스트 찌그러짐 방지
 white-space: nowrap;
+
 flex-shrink: 0;
+text-overflow: ellipsis;
 &:hover{
     background-color: #eaecf4;
 }
+
 `;
 export const MenuList= styled.div`
 /* 🌟 flex 대신 grid로 변경 */
   display: grid;
-  /* 핵심: 화면 너비가 허락하는 한 알아서 3~4개씩 카드를 꽉 채워 배치 (최소 220px 유지) */
+  /* 핵심: 화면 너비가 허락하는 한 알아서 2개씩 카드를 꽉 채워 배치 
+  (최소 400px 유지) */
 grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 gap: 1rem;
+overflow: hidden;
+
 background-color: #f8f9fc;
 border-radius: 10px;
 border: 1px solid #e3e6f0;
-${BoxShadow}
+/* ${BoxShadow} */
+box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+
 padding: 1rem;
 
 @media (max-width: 768px) {
@@ -175,13 +205,20 @@ padding: 1rem;
 }
 `;
 export const MenuItem= styled.div`
+min-width: 0;
+box-sizing: border-box;
 ${FlexCenter};
 gap: 15px;
 background-color: #f8f9fc;
 border-radius: 8px;
 border: 1px dashed #e3e6f0;
+
 padding: 18px;
-box-sizing: border-box;
+
+&:hover {
+    border-color: #cfd5e6;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  }
 `;
 export const DeleteButton= styled.button`
 background: transparent;
@@ -199,18 +236,26 @@ ${TransitionAll}
 `;
 export const AddButton= styled.button`
 ${FlexCenter}
-border: none;
-border-top: 1px dashed #b7b9cc;
+width: 100%;
+margin-top: 8px;
+border: 1px solid #d8dbe7;
+border-color: #e3e6f0;
 color: #5a5c69;
-padding: 0.8rem;
+padding: 0.9rem;
 border-radius: 10px;
 font-weight: 600;
 gap: 0.5rem;
+background-color: #f8f9fc;
+
 ${TransitionAll}
 &:hover{
-    background-color: #eaecf4;
-    color: #858796;
+    background-color: #f1f3fa;
+    color: #4e73df;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04);
 }
+
+
+
 `;
 
 
@@ -219,79 +264,6 @@ ${TransitionAll}
 // export const = styled.div``;
 
 
-export const fileinputwrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-
-  /* 🌟 파일이 선택되었을 때와 아닐 때 텍스트 스타일 다르게 주기 */
-  .filename {
-    font-size: 0.85rem;
-    color: #64748b;
-    background-color: #f1f3f9;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.375rem;
-    max-width: 250px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border: 1px dashed #cbd5e1; /* 점선 테두리로 파일 상자 느낌 주기 */
-  }
-`;
-
-export const fileinput = styled.input`
-  display: none;
-`;
-
-export const filelabel = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
-  padding: 0.55rem 1.1rem;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #334155;
-  cursor: pointer;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  ${TransitionAll}
-
-  /* 🌟 마우스 올렸을 때 살짝 떠오르는 느낌과 포인트 컬러 */
-  &:hover {
-    background-color: #f8fafc;
-    border-color: #94a3b8;
-    color: #0f172a;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  }
-
-  /* 🌟 클릭할 때 꾹 눌리는 손맛 */
-  &:active {
-    transform: scale(0.98);
-  }
-`;
 
 
 
-/*
-<S.FileInputWrapper>
-  <S.FileLabel htmlFor="file-upload">
-    {/* 업로드 아이콘을 같이 넣어주면 훨씬 예쁩니다 */}
-    파일 선택
-  </S.FileLabel>
-  
-  <S.FileInput 
-    id="file-upload" 
-    type="file" 
-    onChange={handleFileChange} 
-  />
-
-  {/* 파일이 선택되었을 때만 이름 표시, 안 되었으면 안내문구 */}
-  <span className="filename">
-    {fileName ? fileName : '선택된 파일 없음'}
-  </span>
-</S.FileInputWrapper>
-
- */

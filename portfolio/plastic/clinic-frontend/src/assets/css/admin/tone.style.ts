@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BlueButtonTheme, BoxShadow, ButtonBasic, FlexBetween, FlexCenter, TransitionAll, Transparent } from "../Common.style";
+import { BlueButtonTheme, BoxShadow, FlexBetween, FlexCenter, TransitionAll } from "../Common.style";
 
 export const ToneContainer= styled.div`
 width: 100%;
@@ -126,10 +126,6 @@ strong{
     color: #5a5c69;
 }
 `;
-// export const = styled.div``;
-// export const = styled.div``;
-// export const = styled.div``;
-// export const = styled.div``;
 
 export const ToggleWrapper = styled.div`
   display: flex;
@@ -207,8 +203,8 @@ export const ToggleSwitch = styled.div<{ $isActive: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
-  width: 140px;
-  height: 44px;
+  width: 164px;
+  height: 52px;
   background-color: ${props => props.$isActive ?  '#e2e8f0': '#1e293b'};
   border-radius: 9999px; /* 완벽한 알약(캡슐) 모양 */
   cursor: pointer;
@@ -221,25 +217,26 @@ export const ToggleSwitch = styled.div<{ $isActive: boolean }>`
 export const SwitchHandle = styled.div<{ $isActive: boolean }>`
   position: absolute;
   left: 4px;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background-color: #ffffff;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   
   /* 핵심: isDarkMode 상태($isActive)에 따라 오른쪽으로 스르륵 이동! */
-  transform: ${props => props.$isActive ? 'translateX(96px)' : 'translateX(0)'};
+  transform: ${props => props.$isActive ? 'translateX(116px)' : 'translateX(0)'};
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
 // 🌟 3. 스위치 안쪽에 글자 배치
 export const SwitchText = styled.span<{ $isActive: boolean }>`
+  ${FlexCenter}
+  gap: 5px;
   width: 100%;
-  text-align: center;
   font-size: 0.85rem;
   font-weight: 600;
   z-index: 1; /* 동그라미 위로 글자가 오도록 */
-  color: ${props => props.$isActive ? '#64748b' :'#ffffff' };
+  color: ${props => props.$isActive ? '#fff' :'#64748b' };
   transition: color 0.3s ease;
   
   /* 동그라미 위치에 따라 글자 위치 살짝 보정 */

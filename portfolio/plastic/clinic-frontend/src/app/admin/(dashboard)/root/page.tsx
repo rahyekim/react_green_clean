@@ -89,7 +89,11 @@ export default function Root(){
                 </S.DashSummaryCard>
             </S.DashCardGrid>
 
-            <S.DashBottom>우웅</S.DashBottom>
+            <S.DashBottom>
+            <div style={{ padding: '2rem', color: '#858796' }}>
+                추후 이곳에 상세 그래프(Chart.js 등)나 최근 접수된 상담 목록 테이블이 배치될 수 있습니다.
+            </div>
+            </S.DashBottom>
         </S.DashContainer>
         </>
     )
