@@ -1,31 +1,25 @@
-import React, { useState } from "react";
-import * as S from '@/assets/css/popup.styles';
+'use client'
+import styled from "styled-components";
+import EventPopup from "@/components/EventPopup";
+import Header from "@/components/layout/Header";
+import { usePathname } from "next/navigation"
+import React from "react"
 
-interface PopupProps {
-    isopen: boolean;
-    title: string;
-    onclose: ()=>void;
-    children:React.ReactNode;
-    onConfirm?: ()=>void;
-}
+const MainWrapper = styled.div`
 
-export default function Popup(props:PopupProps){
+`;
+export default function ConditionalLayout({children}:{children:React.ReactNode}){
 
-    const {isopen, title, onclose, onConfirm,children}=props;
+    const pathname = usePathname();
+    const isHide = pathname.startsWith('/admin') || pathname.startsWith('/find')
     
-    if(!isopen) return null;
-
     return(
         <>
-        <S.PopupOverlay onClick={onclose}>
-            <S.PopContainer onClick={e=>e.stopPropagation()}>
-                <S.PopHeader>
-                    <S.PopTitle>{title}</S.PopTitle>
-                    <S.CloseIcon>&times;</S.CloseIcon>
-                </S.PopHeader>
-            </S.PopContainer>
+        {!isHide && <EventPopup/>}
+        {!isHide && <Header/>}
+        <MainWrapper>
 
-        </S.PopupOverlay>
+        </MainWrapper>
         </>
     )
 }

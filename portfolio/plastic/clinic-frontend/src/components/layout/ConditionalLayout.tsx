@@ -1,7 +1,7 @@
 'use client';
 //브라우저의 현재주소(URL)를 읽어야 하므로 이 파일은 클라이언트 컴포넌트로 선언
-import { usePathname } from "next/navigation";
 import styled from "styled-components";
+import { usePathname } from "next/navigation";
 //nextjs에서 현재 접속중인 주소를 가져오는 전용 도구(훅) 불러옴
 import React from "react";
 
@@ -18,21 +18,12 @@ min-height: 100vh;
 @media (max-width: 1024px) {
   padding-top: ${({$isHide})=> $isHide ? '0': '60px'};;
 }
-
-/* //800px 제한 해제: 레이아웃을 숨기는 경우 화면을 100프로로 채움
-${({$isHide})=>
-$isHide && `
-    max-width: none !important;
-    width:100% !important;
-    padding: 0 !important;
-    margin:0 !important;
-`} */
 `;
 
+/*
+메인내용(children)을 받아서 화면에 그려주는 껍데기 layout함수 만듦
+ */
 export default function ConditionalLayout ({children}:{children:React.ReactNode}){
-    /*
-    메인내용(children)을 받아서 화면에 그려주는 껍데기 layout함수 만듦
-     */
     const pathname = usePathname();
 
     //현재주소가 /admin이라는 글자로 시작하는지 검사해서 true/false

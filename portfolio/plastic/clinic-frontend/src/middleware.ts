@@ -8,34 +8,34 @@ export default function middleware(request:NextRequest){
     const {pathname}= request.nextUrl;
     const token= request.cookies.get('admin_token')?.value;
 
-    // 로그인을 안 했는데 하위 관리자 페이지(/admin/...)에 들어가려고 할 때
-    if(request.nextUrl.pathname.startsWith('/admin') && pathname !== '/admin' ){
-        //브라우저 쿠키(Cookies)에 로그인토큰('admin_token')이 있는지 확인
-
-        //토큰이 없다면(로그인 안된 상태)
-        if(!token){
-            return NextResponse.redirect(new URL('/admin', request.url));
+    //1. 사용자가 접속하려는 주소가 '/admin' 으로 시작하는지 확인
+    if(pathname === '/admin' || pathname === '/admin/login'){
+    //토큰 있다면 (로그인 된 상태) 대시 보드로 튕김
+        if(token){
+            return NextResponse.redirect(new URL('/admin/root', request.url));     
         }
-        
+        return NextResponse.next();//통과(들어와)
     }
 
-    //로그인(토큰있음)했는데 로그인창('/admin')으로 들어가려할때
-    if(pathname === '/admin' && token){
-        return NextResponse.redirect(new URL('/admin/root', request.url));
+    //'/admin/' 뒤에 하위 주소가 붙은 진짜 관리자 페이지들만 깐깐하게 검사
+    if(pathname.startsWith('/admin/')) {
+        if(!token){
+         return NextResponse.redirect(new URL('/admin', request.url));        
+        }
     }
-
     //토큰이 있거나 관리자 페이지가 아니라면 그대로 통과
     return NextResponse.next();
-
 }
-
 //성능최적화: 🌟미들웨어가 /admin 경로에서만 작동🌟하도록 범위지정
 export const config = {
     matcher: ['/admin/:path*']
 }
 
 
-//💘nextUrl:URL과 관련된 여러 가지 정보(도메인, 경로, 쿼리 스트링 등)를 한가득 담고 있는 객체(Object)
+//💘nextUrl: 객체 (Object)
+// :URL과 관련된 여러 가지 정보(도메인, 경로, 쿼리 스트링 등)를 한가득 담고 있는 객체(Object)
+//💙request.url :문자열 (String)
 
-//💘new URL(새로운경로, 기준이되는전체주소) :두번쨰인자에서 domain만 쏙 빼옴
+//🌟 new URL(새로운경로, 기준이되는전체주소) :
+// 두번쨰인자에서 domain만 쏙 빼옴
 

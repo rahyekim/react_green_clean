@@ -45,15 +45,7 @@ display: flex;
 flex-wrap: wrap;
 `;
 
-export const BlueButtonTheme =css`
-background-color: #4e73df;
-color: white;
-border-radius: 10rem;
 
-&:hover{
-    background-color: #2e59d9;
-}
-`;
 
 export const LinearGradient = css`
 background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
@@ -91,6 +83,15 @@ export const ErrorText = css`
   display: block;
 `;
 
+export const BlueButtonTheme =css`
+background-color: #4e73df;
+color: white;
+border-radius: 10rem;
+
+&:hover{
+    background-color: #2e59d9;
+}
+`;
 
 export const CircleBtn = css`
 width: 2.5rem;
