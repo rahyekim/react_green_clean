@@ -17,6 +17,7 @@ font-weight: 700;
 `;
 export const SaveButton= styled.button`
 ${FlexCenter}
+${BlueButtonTheme}
 gap: 8px;
 border: none;
 padding: 0.6rem 1rem;
@@ -25,7 +26,6 @@ font-weight: 600;
 cursor: pointer;
 ${BoxShadow}
 ${TransitionAll}
-${BlueButtonTheme}
 border-radius: 10px;
 `;
 export const CardGrid= styled.div`

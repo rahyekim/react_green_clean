@@ -111,7 +111,7 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
 
                 <S.NavItem 
                     $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/new')}
+                    onClick={() => router.push('/admin/news')}
                 >
                    <FiRadio size={20} />
                     {!isCollapsed && <span className="text">뉴스티커관리</span>}

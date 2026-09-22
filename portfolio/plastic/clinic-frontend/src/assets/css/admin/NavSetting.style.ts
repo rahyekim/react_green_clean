@@ -169,10 +169,6 @@ color: #5a5c69;
 cursor: pointer;
 
 //텍스트 찌그러짐 방지
-white-space: nowrap;
-
-flex-shrink: 0;
-text-overflow: ellipsis;
 &:hover{
     background-color: #eaecf4;
 }
@@ -246,7 +242,7 @@ border-radius: 10px;
 font-weight: 600;
 gap: 0.5rem;
 background-color: #f8f9fc;
-
+cursor: pointer;
 ${TransitionAll}
 &:hover{
     background-color: #f1f3fa;

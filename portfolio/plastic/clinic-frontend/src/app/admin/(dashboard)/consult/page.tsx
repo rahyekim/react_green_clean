@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import usePopup from '@/hooks/usePopup';
 import Popup from '@/components/ui/Popup';
 import * as S from'@/assets/css/admin/consult.style';
@@ -19,6 +19,8 @@ interface ConsultData{
 }
 export default function Consult(){
 
+    const [selectedIds, setSelectedIds]=useState<number[]>([]);
+    
     const [consultList, setConsultList]=useState<ConsultData[]>([
         { id: 1, name: "홍길동", phone: "010-1234-5678", category: "눈성형", regDate: "2026-09-21 14:30", status: "대기중" },
         { id: 2, name: "김철수", phone: "010-9876-5432", category: "코성형", regDate: "2026-09-21 10:15", status: "상담완료" },
@@ -45,8 +47,35 @@ export default function Consult(){
             '정말 이내용을 삭제하시겠습니까?',
             ()=>{
                 setConsultList(prev=> prev.filter(consult=>consult.id !== id));
+                closePopup();
             }
           )
+    }
+
+    //전체선택/해제 
+    const handleSelectAll = (e:ChangeEvent<HTMLInputElement>)=>{
+        if(e.target.checked){
+            setSelectedIds(consultList.map(consult=> consult.id ))
+        }else{
+            setSelectedIds([]);
+        }
+    }
+
+    //개별 체크박스 선택/해제
+    const handleSelectOne = (id:number)=>{
+        if(selectedIds.includes(id)){
+            setSelectedIds(selectedIds.filter(i=> i !== id ))
+        }else{
+            setSelectedIds(prev=> [...prev, id])
+        }
+        const ids = consultList.map(consult => (
+            consult.id === id 
+        ))
+    }
+
+    //선택된 항목 일괄 삭제 핸들러
+    const handleDeleteSeleted = ()=>{
+        
     }
     
     
@@ -77,13 +106,13 @@ export default function Consult(){
                         <S.ConsultTable>
                             <thead>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>이름</th>
-                                    <th>연락처</th>
-                                    <th>상담분야</th>
-                                    <th>신청일시</th>
-                                    <th>상태</th>
-                                    <th>관리</th>
+                                    <th style={{width:'10%'}}>No.</th>
+                                    <th style={{width:'10%'}}>이름</th>
+                                    <th style={{width:'15%'}}>연락처</th>
+                                    <th style={{width:'22%'}}>상담분야</th>
+                                    <th style={{width:'13%'}}>신청일시</th>
+                                    <th style={{width:'18%'}}>상태</th>
+                                    <th style={{width:'12%'}}>관리</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -12,3 +12,10 @@ axios의 방식 (자동 포장 & 자동 에러 점프)
 
 
 const errorMessage = err.response?.data?.message || '서버와 통신 중에 오류가 발생했습니다.';
+
+
+💡 완벽한 최종 세트
+white-space: nowrap;      /* 1. 줄바꿈 방지 (한 줄로 팽팽하게) */
+flex-shrink: 0;           /* 2. 찌그러짐 방지 (flex 환경일 때) */
+overflow: hidden;         /* 3. 넘친 텍스트 숨기기 (⭐ 이거 필수!) */
+text-overflow: ellipsis;  /* 4. 잘린 단면에 말줄임표(...) 붙이기 */
