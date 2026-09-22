@@ -99,7 +99,7 @@ export const SelfCardBody = styled.div`
     flex-direction: column;
     gap: 30px;
 
-    min-height: 0; ///??
+    min-height: 0; ///내용물이 길어져도 부모 카드의 영역 내에 깔끔하게 갇힘
 `;
 
 export const SelfFormGroup = styled.div`
@@ -149,8 +149,8 @@ export const SelfFileInputWrapper = styled.div`
     flex-wrap: wrap;
 
     .file-name {
-        flex: 1; //???
-        min-width: 0;
+        flex: 1; //오른쪽 영역을 모두채우면서 예쁘게 ...
+        min-width: 0; //Flex 내 말줄임표 처리용
 
         font-size: 0.9rem;
         color: #858796;
@@ -185,11 +185,11 @@ export const SelfFileLabel = styled.label`
     cursor: pointer;
 
     ${TransitionAll}
-
     &:hover {
         background-color: rgba(78, 115, 223, 0.04);
         border-color: #b7b9cc;
         color: #212529;
+        ${BoxShadow2}
     }
 `;
 
@@ -222,34 +222,33 @@ export const SelfPreviewRect = styled.div`
 export const SelfAddButton = styled.button`
     ${FlexCenter}
     gap: 8px;
-
-    width: 100%;
-
-    margin-top: auto;
     padding: 12px 16px;
+    width: 100%;
+    margin-top: auto;
 
-    border: 0;
     border-radius: 8px;
-
-    background-color: #4e73df;
-    color: #fff;
+    border: 1px solid #e3e6f0;
+    background-color: #f8f9fc;
+    color: #5a5c69;
 
     font-size: 0.9rem;
     font-weight: 600;
 
+    white-space: nowrap;
+    flex-shrink: 0;
+
     cursor: pointer;
-
     ${TransitionAll}
-
     &:hover {
-        background-color: #2e59d9;
+        background-color: #f1f3fa;
+        color: #4e73df;   
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.07);
     }
 `;
 
 export const SelfTableWrapper = styled.div`
     width: 100%;
     max-height: 600px;
-
     overflow-y: auto;
 
     scrollbar-width: thin;
@@ -333,7 +332,7 @@ export const SelfThumbnail = styled.div`
 `;
 
 export const SelfStatusBadge = styled.button<{ $isActive: boolean }>`
-    padding: 6px 10px;
+    display: inline-flex;
 
     border: 0;
     border-radius: 20px;
@@ -346,6 +345,8 @@ export const SelfStatusBadge = styled.button<{ $isActive: boolean }>`
 
     font-size: 0.8rem;
     font-weight: 600;
+
+    padding: 4px 10px;
 
     cursor: pointer;
 
@@ -373,7 +374,6 @@ export const SelfDeleteBtn = styled.button`
     cursor: pointer;
 
     ${TransitionAll}
-
     &:hover {
         background-color: #e74a3b;
         color: #fff;

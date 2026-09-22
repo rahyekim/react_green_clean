@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BlueButtonTheme, BoxShadow, FlexBetween, FlexCenter, FlexColumn, FlexRow, FlexStart, TransitionAll } from "../Common.style";
+import { BlueButtonTheme, BoxShadow, BoxShadowBasic, FlexBetween, FlexCenter, FlexColumn, FlexRow, FlexStart, TransitionAll } from "../Common.style";
 
 export const NavContainer= styled.div`
 width: 100%;
@@ -141,9 +141,14 @@ ${TransitionAll}
 export const FileInputWrapper= styled.div`
 ${FlexCenter}
 gap: 1.2rem;
+
 .filename{
+    flex-shrink: 1;
+    min-width: 0;
+
     font-size: 0.9rem;
     color: #858796;
+
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -168,16 +173,18 @@ font-weight: 600;
 color: #5a5c69;
 cursor: pointer;
 
-//텍스트 찌그러짐 방지
+flex-shrink: 0;
+white-space: nowrap;
+min-width: 0;
+
 &:hover{
     background-color: #eaecf4;
 }
 
 `;
 export const MenuList= styled.div`
-/* 🌟 flex 대신 grid로 변경 */
-  display: grid;
-  /* 핵심: 화면 너비가 허락하는 한 알아서 2개씩 카드를 꽉 채워 배치 
+display: grid;
+  /* 핵심: 화면 너비가 허락하는 한 알아서 대략 2개씩 카드를 꽉 채워 배치 
   (최소 400px 유지) */
 grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 gap: 1rem;
@@ -186,8 +193,7 @@ overflow: hidden;
 background-color: #f8f9fc;
 border-radius: 10px;
 border: 1px solid #e3e6f0;
-/* ${BoxShadow} */
-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+${BoxShadowBasic}
 
 padding: 1rem;
 

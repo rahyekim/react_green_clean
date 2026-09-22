@@ -55,26 +55,10 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
 
                 <S.NavItem 
                     $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/dashboard')}
+                    onClick={() => router.push('/admin/root')}
                 >
                     <FiClipboard size={20} />
                     {!isCollapsed && <span className="text">대시보드</span>}
-                </S.NavItem>
-
-                <S.NavItem 
-                    $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/users')}
-                >
-                    <FiUsers size={20}/>
-                    {!isCollapsed && <span className="text">회원관리</span>}
-                </S.NavItem> 
-
-                <S.NavItem 
-                    $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/boards')}
-                >
-                    <FiCompass size={20}/>
-                    {!isCollapsed && <span className="text">게시판관리</span>}
                 </S.NavItem>
 
                 <S.NavItem 
@@ -124,6 +108,23 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
                     <FiCamera size={20} />
                     {!isCollapsed && <span className="text">셀피관리</span>}
                 </S.NavItem>
+                
+                <S.NavItem 
+                    $isCollapsed={isCollapsed}
+                    onClick={() => router.push('/admin/users')}
+                >
+                    <FiUsers size={20}/>
+                    {!isCollapsed && <span className="text">회원관리</span>}
+                </S.NavItem> 
+
+                <S.NavItem 
+                    $isCollapsed={isCollapsed}
+                    onClick={() => router.push('/admin/boards')}
+                >
+                    <FiCompass size={20}/>
+                    {!isCollapsed && <span className="text">게시판관리</span>}
+                </S.NavItem>
+
 
                 <S.NavItem 
                     $isCollapsed={isCollapsed}

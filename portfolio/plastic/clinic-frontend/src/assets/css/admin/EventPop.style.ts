@@ -76,7 +76,6 @@ ${BoxShadow2}
 border: 1px solid #e3e6f0;
 overflow: hidden;
 width: 100%;
-
 ${FlexColumn}
 `;
 export const PopCardHeader = styled.div`
@@ -133,6 +132,10 @@ gap: 15px;
 .file-name{
     font-size: 0.9rem;
     color: #858796;
+
+    flex: 1;
+    min-width: 0;
+    
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -169,6 +172,7 @@ gap: 5px;
 font-size: 0.85rem;
 font-weight: 600;
 cursor: pointer;
+user-select: none; //텍스트 트래그 방지
 `;
 
 export const PopAddButton = styled.button`
@@ -245,14 +249,20 @@ td:first-child{
 export const PopBadge = styled.span<{$color:string}>`
 display: inline-flex;
 align-items: center;
+border: 0;
+
 gap: 6px;
 background-color: ${props=>props.$color};
-border-radius: 15px;
-padding: 0.4rem 0.6rem;
+border-radius: 20px;
+padding: 4px 10px;
+
 color: #fff;
+
 white-space:nowrap;
 flex-shrink: 0;
-font-size: 0.85rem;
+
+font-size: 0.8rem;
+font-weight: 600;
 
 `;
 

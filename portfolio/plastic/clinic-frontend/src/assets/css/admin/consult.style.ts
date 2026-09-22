@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { 
     BlueButtonTheme, 
     BoxShadow2,
+    BoxShadowBasic,
     CircleBtn,
     TransitionAll,
  } from "../Common.style";
@@ -26,8 +27,7 @@ export const ConsultFilterCard = styled.div`
 display: flex;
 justify-content: flex-end;
 background-color: #fff;
-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-${BoxShadow2}
+box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.05);
 padding: 15px;
 border-radius: 12px;
 border: 1px solid #e3e6f0;
@@ -62,7 +62,7 @@ gap: 5px;
 export const ConsultTableCard = styled.div`
 background-color: #fff;
 border-radius: 12px;
-${BoxShadow2}
+${BoxShadowBasic}
 border: 1px solid #e3e6f0;
 overflow: hidden;
 `;
@@ -130,10 +130,23 @@ gap: 6px;
 white-space:nowrap;
 min-width: 0;
 
-background-color: ${props=> props.$status === '상담완료' ? '#1cc88a' : '#eaec44'};
-border-radius: 15px;
-padding: 0.4rem;
+background-color: ${props=> props.$status === '상담완료' ? '#10b981' : '#f59e0b'};
+border-radius: 20px;
+padding: 4px 10px;
+
 color: #fff;
+font-size: 0.8rem;
+font-weight: 600;
+line-height: 1;
+user-select: none;
+
+cursor: pointer;
+
+${TransitionAll}
+&:hover{
+    opacity: 0.8;
+}
+
 `;
 export const ConsultDeleteActionBtn = styled.button`
 ${CircleBtn}

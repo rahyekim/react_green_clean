@@ -117,7 +117,7 @@ export default function Pop() {
                                     style={{ width: '120px' }}
                                 />
                                 <small style={{ color: '#858796', marginTop: '0.5rem', display: 'block' }}>
-                                    * '노출중' 상태인 팝업이 이 설정값을 초과하면, 최신 등록순으로 보여집니다.
+                                    * &quot;노출중&quot; 상태인 팝업이 이 설정값을 초과하면, 최신 등록순으로 보여집니다.
                                 </small>
                             </S.PopFormGroup>
                         </S.PopCardBody>
@@ -184,8 +184,8 @@ export default function Pop() {
                                     type="checkbox" 
                                     checked={newPopup.useTodayClose}
                                     onChange={(e) => setNewPopup({...newPopup, useTodayClose: e.target.checked})}
-                                />
-                                "오늘 하루 보지 않음" 버튼 사용하기
+                                /> 
+                                <span>&quot;오늘 하루 보지 않음&quot; 버튼 사용하기</span>
                             </S.PopCheckboxLabel>
 
                             <S.PopAddButton onClick={handleAddPopup}>
@@ -204,11 +204,11 @@ export default function Pop() {
                             <S.PopTable>
                                 <thead>
                                     <tr>
-                                        <th style={{width:'35%'}}>제목 / 링크</th>
-                                        <th style={{width:'25%'}}>노출 기간</th>
-                                        <th style={{width:'15%'}}>옵션</th>
-                                        <th style={{width:'15%'}}>상태</th>
-                                        <th style={{width:'10%'}}>관리</th>
+                                        <th style={{ width: 'auto' }}>제목 / 링크</th>      {/* 남는 공간을 모두 차지 (가장 유연하게 줄어듦) */}
+                                        <th style={{ width: '220px' }}>노출 기간</th>        {/* 날짜가 깨지지 않도록 px 고정 */}
+                                        <th style={{ width: '130px' }}>옵션</th>             {/* 뱃지가 잘리지 않게 130px 고정! */}
+                                        <th style={{ width: '100px' }}>상태</th>             {/* px 고정 */}
+                                        <th style={{ width: '90px' }}>관리</th>
                                     </tr>
                                 </thead>
                                 <tbody>

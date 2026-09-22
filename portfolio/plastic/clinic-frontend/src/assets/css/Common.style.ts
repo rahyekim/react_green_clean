@@ -51,9 +51,7 @@ export const LinearGradient = css`
 background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
 `;
 
-export const BoxShadow = css`
-box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
-`;
+
 
 
 export const TransitionAll = css`
@@ -90,6 +88,7 @@ border-radius: 10rem;
 
 &:hover{
     background-color: #2e59d9;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 `;
 
@@ -112,8 +111,22 @@ font-size: 0.85rem;
 font-weight: 600;
 `;
 
+export const BoxShadow = css`
+box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
+`;
 
+//hover용(동적용)
 export const BoxShadow2 = css`
 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
+`;
+
+//은은한 부유감(기본정적)
+export const BoxShadowBasic= css`
+box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.05);
+`;
+
+//Active / Inset (클릭 시 꾹 눌림 또는 입력창 안쪽 음각)
+export const BoxShadowPressed = css`
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 `;

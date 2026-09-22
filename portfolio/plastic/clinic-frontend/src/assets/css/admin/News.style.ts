@@ -1,5 +1,12 @@
 import styled from "styled-components";
-import { BlueButtonTheme, CircleBtn, BoxShadow2, FlexBetween, FlexCenter, FlexColumn, FlexRow, TransitionAll, Transparent } from "../Common.style";
+import { 
+    BlueButtonTheme, CircleBtn, 
+    BoxShadow2, FlexBetween, 
+    FlexCenter, FlexColumn, 
+    BoxShadowBasic, TransitionAll,
+    Transparent,
+    BoxShadowPressed, 
+} from "../Common.style";
 
 export const NewsContainer = styled.div`
 width: 100%;
@@ -28,7 +35,7 @@ font-size: 0.9rem;
 font-weight: 600;
 cursor: pointer;
 white-space: nowrap;
-${BoxShadow2}
+${BoxShadowBasic}
 ${TransitionAll}
 @media (max-width:768px){
     span{
@@ -59,7 +66,7 @@ export const NewsCard = styled.div`
 border-radius: 10px;
 background-color: #fff;
 border: 1px solid #e3e6f0;
-${BoxShadow2}
+${BoxShadowBasic}
 
 overflow:hidden;
 
@@ -117,13 +124,17 @@ width: 100%;
 export const NewsFileInputWrapper = styled.div`
 display: flex;
 align-items: center;
-gap: 15px;
+gap: 10px;
 width: 100%;
 
 flex-wrap: wrap;
 .file-name{
+    flex: 1;
+    min-width: 0;
+
     font-size: 0.9rem;
     color: #858796;
+    
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -135,18 +146,24 @@ display: none;
 export const NewsFileLabel = styled.label`
 ${FlexCenter}
 gap: 10px;
+
 border: 1px solid #e3e6f0;
-padding: 12px 20px;
+padding: 12px 18px;
 border-radius: 10px;
-white-space: nowrap;
 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+font-size: 0.9rem;
+white-space: nowrap;
+
 cursor: pointer;
+
 ${TransitionAll}
 &:hover{
     background-color: rgba(78, 115, 223, 0.04); 
     border-color: #b7b9cc;
     color: #212529;   
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    ${BoxShadow2}
+    /* box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04); */
 
 }
 `;
@@ -163,7 +180,7 @@ overflow: hidden;
 
 border-radius: 50%;
 border: 2px solid #e3e6f0;
-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.05);
 
 img{
     width: 100%;
@@ -175,31 +192,31 @@ img{
 
 export const NewsAddButton = styled.button`
 ${FlexCenter}
-gap: 6px;
+gap: 8px;
 padding: 0.9rem;
 width: 100%;
+margin-top: auto; //💘
+
 border: 1px solid #e3e6f0;
 background-color: #f8f9fc;
+border-radius: 8px;
+
 color: #5a5c69;
 font-weight: 600;
 
-border-radius: 10px;
-background-color: transparent;
 white-space: nowrap;
-overflow: hidden;
 flex-shrink: 0;
 cursor: pointer;
 &:hover{
     background-color: #f1f3fa;
     color: #4e73df;   
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.07);
 }
-margin-top: auto; //💘
 `;
 
 export const NewsTableWrapper = styled.div`
 width: 100%;
-max-height: 570px;
+max-height: 600px;
 overflow-y: auto;
 
 &::-webkit-scrollbar{
@@ -231,7 +248,7 @@ color: #333333;
 
 th,td{
     padding: 1rem 0.8rem;
-    vertical-align: middle; /* 💡 세로 기준 중앙 정렬 필수! */
+    vertical-align: middle; //💡 세로 기준 중앙 정렬 필수! 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -243,10 +260,9 @@ th{
     top: 0;
     z-index: 1;
 
-    padding: 15px;
     background-color: #ebf3f9;
     border-bottom: 1px solid #e3e6f0;
-    /* padding: 1.1rem 0.8rem; */
+    padding: 1.1rem 0.8rem;
 }
 
 td{
@@ -259,9 +275,6 @@ tr:nth-child(even){
   background-color: #f8f9fc;
 }
 
-tr:hover{
-    /* background-color: #f1f5fd ; */
-}
 `;
 
 export const NewsActionBtn = styled.button`
@@ -269,11 +282,12 @@ ${Transparent}
 border: 1px solid #ddd;
 cursor: pointer;
 
+${TransitionAll}
 &:not(:disabled):hover{
     background-color: rgba(78, 115, 223, 0.04); 
     border: 1px solid #b7b9cc;
     color: #212529;   
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    ${BoxShadow2}
 }
 
 &:disabled {
@@ -289,14 +303,14 @@ height: 70px;
 margin: 0 auto; //💘 div(block)요소 가운데정렬
 overflow: hidden;
 border-radius: 50%;
-border: 2px solid #e3e6f0;
+border: 1px solid #e3e6f0;
 flex-shrink: 0;
 img{
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+${BoxShadowBasic}
 `;
 export const NewsDeleteBtn = styled.button`
 ${CircleBtn}
