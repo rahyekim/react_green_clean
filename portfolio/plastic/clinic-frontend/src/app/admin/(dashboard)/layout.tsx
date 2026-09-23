@@ -55,7 +55,7 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
 
                 <S.NavItem 
                     $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/root')}
+                    onClick={() => router.push('/admin/dashboard')}
                 >
                     <FiClipboard size={20} />
                     {!isCollapsed && <span className="text">대시보드</span>}
@@ -111,43 +111,10 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
                 
                 <S.NavItem 
                     $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/users')}
-                >
-                    <FiUsers size={20}/>
-                    {!isCollapsed && <span className="text">회원관리</span>}
-                </S.NavItem> 
-
-                <S.NavItem 
-                    $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/boards')}
-                >
-                    <FiCompass size={20}/>
-                    {!isCollapsed && <span className="text">게시판관리</span>}
-                </S.NavItem>
-
-
-                <S.NavItem 
-                    $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/ranking')}
+                    onClick={() => router.push('/admin/event')}
                 >
                      <FiAward size={20} /> 
                     {!isCollapsed && <span className="text">이벤트랭킹관리</span>}
-                </S.NavItem>
-
-                <S.NavItem 
-                    $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/vlog')}
-                >
-                    <FiVideo size={20} />
-                    {!isCollapsed && <span className="text">블로그관리</span>}
-                </S.NavItem>
-
-                <S.NavItem 
-                    $isCollapsed={isCollapsed}
-                    onClick={() => router.push('/admin/safety')}
-                >
-                    <FiShield size={20} />
-                    {!isCollapsed && <span className="text">안전마취관리</span>}
                 </S.NavItem>
 
                 <S.NavItem 
@@ -156,6 +123,37 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
                 >
                     <FiLayout size={20} /> 
                     {!isCollapsed && <span>푸터관리</span>}    
+                </S.NavItem>
+
+                <S.NavItem 
+                    $isCollapsed={isCollapsed}
+                    onClick={() => router.push('/admin/vlog')}
+                >
+                    <FiVideo size={20} />
+                    {!isCollapsed && <span className="text">브이로그관리</span>}
+                </S.NavItem>
+                
+                <S.NavItem 
+                    $isCollapsed={isCollapsed}
+                    onClick={() => router.push('/admin/boards')}
+                >
+                    <FiCompass size={20}/>
+                    {!isCollapsed && <span className="text">게시판관리</span>}
+                </S.NavItem>
+                <S.NavItem 
+                    $isCollapsed={isCollapsed}
+                    onClick={() => router.push('/admin/users')}
+                >
+                    <FiUsers size={20}/>
+                    {!isCollapsed && <span className="text">회원관리</span>}
+                </S.NavItem> 
+
+                <S.NavItem 
+                    $isCollapsed={isCollapsed}
+                    onClick={() => router.push('/admin/safety')}
+                >
+                    <FiShield size={20} />
+                    {!isCollapsed && <span className="text">안전마취관리</span>}
                 </S.NavItem>
 
                 <S.ToggleWrapper>

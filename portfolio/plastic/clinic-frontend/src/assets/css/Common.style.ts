@@ -117,7 +117,8 @@ box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
 
 //hover용(동적용)
 export const BoxShadow2 = css`
-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+ 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
 `;
 
@@ -129,4 +130,23 @@ box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.05);
 //Active / Inset (클릭 시 꾹 눌림 또는 입력창 안쪽 음각)
 export const BoxShadowPressed = css`
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+`;
+
+export const Noscrollbar = css`
+&::-webkit-scrollbar{
+    width: 5px;
+}
+&::-webkit-scrollbar-track {
+    background: transparent; 
+    border-radius: 50px;
+  }
+&::-webkit-scrollbar-thumb{
+   background-color: #f1f2f7; 
+    border-radius: 50px;
+    transition: background-color 0.2s ease;
+}
+&::-webkit-scrollbar-thumb:hover {
+    background-color: #dbddee; 
+}
+
 `;

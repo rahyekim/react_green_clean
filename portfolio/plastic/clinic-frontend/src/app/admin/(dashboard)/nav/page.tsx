@@ -8,7 +8,7 @@ import {
 }from 'react-icons/fi'
 
 interface MenuItem{
-    id:string;
+    id:number;
     name:string;
     url:string;
 }
@@ -20,12 +20,12 @@ export default function Nav(){
     const [logoFileName, setLogoFileName] = useState<string>('');
     
     const [menus, setMenus]=useState<MenuItem[]>([
-        {id:crypto.randomUUID(), name:'병원소개', url:'/'},
-        {id:crypto.randomUUID(), name:'눈성형', url:'/'},
-        {id:crypto.randomUUID(), name:'코성형', url:'/'},
-        {id:crypto.randomUUID(), name:'동안성형', url:'/'},
-        {id:crypto.randomUUID(), name:'쁘띠시술', url:'/'},
-        {id:crypto.randomUUID(), name:'커뮤니티', url:'/'},
+        {id:1, name:'병원소개', url:'/'},
+        {id:2, name:'눈성형', url:'/'},
+        {id:3, name:'코성형', url:'/'},
+        {id:4, name:'동안성형', url:'/'},
+        {id:5, name:'쁘띠시술', url:'/'},
+        {id:6, name:'커뮤니티', url:'/'},
     ])
 
     //로고 이미지 파일 선택핸들러
@@ -36,16 +36,18 @@ export default function Nav(){
     }
 
     const handleAddmenu = ()=>{
+        const nextId = 
+        menus.length > 0 ? Math.max(...menus.map(m => m.id)) + 1 : 1;
         setMenus(prev=> [
             ...prev,
             {
-                id:crypto.randomUUID(),
+                id:nextId,
                 name:'',
                 url:'',
             }
         ])
     }
-    const handleDelete = (id:string)=>{
+    const handleDelete = (id:number)=>{
         openPopup(
             '알림', 
             '삭제하시겠습니까?',
@@ -58,7 +60,7 @@ export default function Nav(){
         );
     };
 
-    const handleMenuChange = (id:string, field:keyof MenuItem, value:string)=>{
+    const handleMenuChange = (id:number, field:keyof MenuItem, value:string)=>{
         setMenus(prev=>(
             prev.map(menu=> (menu.id === id ? {
                 ...menu,

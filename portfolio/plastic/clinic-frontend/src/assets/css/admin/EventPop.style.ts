@@ -54,6 +54,10 @@ export const PopGrid = styled.div`
 display: grid;
 grid-template-columns: 2fr 3fr; //repeat(2, 1fr)
 gap: 10px;
+
+@media (max-width:1200px){
+    grid-template-columns: 1fr;
+}
 `;
 export const PopLeftColumn = styled.div`
 ${FlexColumn}

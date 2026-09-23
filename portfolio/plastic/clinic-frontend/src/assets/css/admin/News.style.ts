@@ -49,6 +49,10 @@ export const NewsGrid = styled.div`
 display: grid;
 grid-template-columns: 2fr 3fr;
 gap: 16px;
+
+@media (max-width:1200px){
+    grid-template-columns: 1fr;
+}
 `;
 
 export const NewsLeftColumn = styled.div`

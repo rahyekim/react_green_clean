@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react'
 import * as S from '@/assets/css/admin/Admin.common'
 import { FiUserPlus,FiPhoneCall,FiSearch, FiAlertOctagon } from 'react-icons/fi'
@@ -12,7 +11,6 @@ export default function Root(){
             <S.DashPageTitle>대시보드 종합통계</S.DashPageTitle>
 
             <S.DashCardGrid>
-
                  {/* 1. 회원가입 현황 */}
                 <S.DashSummaryCard $borderColor='#4e73df'>
                     <S.DashCardInfo>

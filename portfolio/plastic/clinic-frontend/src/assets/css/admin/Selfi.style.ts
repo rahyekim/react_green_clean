@@ -19,7 +19,7 @@ export const SelfPageTitle = styled.h1`
     margin: 0;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #333;
+    color: #5a5c69;
 `;
 
 export const SelfSaveButton = styled.button`
@@ -46,6 +46,10 @@ export const SelfGrid = styled.div`
     grid-template-columns: 2fr 3fr;
     gap: 16px;
     align-items: stretch;
+
+    @media (max-width:1200px){
+    grid-template-columns: 1fr;
+}
 `;
 
 export const SelfLeftColumn = styled.div`
@@ -69,7 +73,6 @@ export const SelfCard = styled.div`
     border: 1px solid #e3e6f0;
 
     ${BoxShadow2}
-
     overflow: hidden;
 
     display: flex;
@@ -99,7 +102,7 @@ export const SelfCardBody = styled.div`
     flex-direction: column;
     gap: 30px;
 
-    min-height: 0; ///내용물이 길어져도 부모 카드의 영역 내에 깔끔하게 갇힘
+    min-height: 0; //💘내용물이 길어져도 부모 카드의 영역 내에 깔끔하게 갇힘
 `;
 
 export const SelfFormGroup = styled.div`
@@ -248,6 +251,7 @@ export const SelfAddButton = styled.button`
 
 export const SelfTableWrapper = styled.div`
     width: 100%;
+    overflow: hidden;
     max-height: 600px;
     overflow-y: auto;
 
@@ -286,6 +290,8 @@ export const SelfTable = styled.table`
         z-index: 1;
 
         padding: 15px;
+        color: #5a5c69;
+        font-weight: 700;
 
         background-color: #ebf3f9;
         border-bottom: 1px solid #e3e6f0;

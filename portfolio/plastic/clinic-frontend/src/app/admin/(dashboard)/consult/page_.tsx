@@ -61,6 +61,20 @@ export default function ConsultManageTable({
         }
     };
 
+    const handleDeleteSeleted = ()=>{
+        if(selectedIds.length == 0){
+            alert() 
+            return;
+        }
+        if(window.confirm(`선택한 ${selectedIds.length}개의 `)){
+           setConsultList(prev=>(
+            prev.filter(list=> !selectedIds.includes(list.id))
+           ))
+           setSelectedIds([]);
+        }
+            
+    }
+
     return (
         <div>
             {/* 선택 삭제 버튼 */}
