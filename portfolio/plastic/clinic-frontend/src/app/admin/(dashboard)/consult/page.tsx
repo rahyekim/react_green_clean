@@ -1,61 +1,88 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import axios from 'axios';
 import usePopup from '@/hooks/usePopup';
 import Popup from '@/components/ui/Popup';
 import * as S from'@/assets/css/admin/consult.style';
 import {
     FiTrash2, FiSearch, FiCheck
 } from 'react-icons/fi'
+import { formatDate } from "@/lib/dateUtils";
+
 
 interface ConsultData{
-    id:number;
-    name:string;
-    phone:string;
-    category:string;
-    regDate:string;
-    status:'대기중'|'상담완료';
-
+    ID: number;
+    NAME: string;
+    PHONE: string;
+    DEPARTMENT: string;
+    CREATED_AT: string;
+    STATUS: '대기중' | '상담완료';
 }
 export default function Consult(){
+    const {openPopup, popupConfig, closePopup}=usePopup();
 
     const [selectedIds, setSelectedIds]=useState<number[]>([]);
     
-    const [consultList, setConsultList]=useState<ConsultData[]>([
-        { id: 1, name: "홍길동", phone: "010-1234-5678", category: "눈성형", regDate: "2026-09-21 14:30", status: "대기중" },
-        { id: 2, name: "김철수", phone: "010-9876-5432", category: "코성형", regDate: "2026-09-21 10:15", status: "상담완료" },
-        { id: 3, name: "이영희", phone: "010-5555-4444", category: "안티에이징", regDate: "2026-09-20 16:45", status: "대기중" },
-    ]);
+    const [consultList, setConsultList]=useState<ConsultData[]>([]);
+    const [deleteId, setDeleteId]=useState<number|null>(null);
 
-    const {openPopup, popupConfig, closePopup}=usePopup();
-
-    const toggleStatus = (id:number)=>{
-        setConsultList(prev=>(
-            prev.map(consult=>(
-                consult.id ===  id ? {
-                    ...consult,
-                    status: consult.status === '대기중' ? "상담완료" : "대기중"
-                } : consult
-            ))
-        )
-        )
-    }
-
-    const handleDelete = (id:number)=>{
-        openPopup(
-            '알림', 
-            '정말 이내용을 삭제하시겠습니까?',
-            ()=>{
-                setConsultList(prev=> prev.filter(consult=>consult.id !== id));
-                closePopup();
+    const fetchConsult = async()=>{
+        try{
+            const res = await axios.get('http://localhost:4000/api/admin/consult')
+            if(res.data.success){
+                setConsultList(res.data.data);
             }
-          )
+        }catch(err){
+            console.error('상담내역 로드실패:', err);
+            openPopup('실패', '불러오기 실패');
+        }
+    }
+    useEffect(()=>{
+        fetchConsult();
+    },[])
+
+    const toggleStatus = async(id:number)=>{
+        try{
+        const res = await axios.put(`http://localhost:4000/api/admin/consult/${id}/status`)
+        if(res.data.success){
+            fetchConsult(); // 상태 변경 후 목록 새로고침!
+        }
+        }catch(err){
+            openPopup('알림', '상태 변경에 실패했습니다')
+        }
     }
 
+    const handleDelete = async(id:number)=>{
+        try{
+            setDeleteId(id);
+            openPopup(
+                '삭제 알림',
+                '해당 상담을 삭제하시겠습니까?',
+                async()=>{
+                    if(!deleteId) return;
+                    try{
+                        const res = await axios.delete(`http://localhost:4000/api/admin/consult/${deleteId}`)
+                        if (res.data.success) {
+                        fetchConsult(); // 삭제 후 목록 새로고침!
+                        }
+                        closePopup();
+                    }catch(err){
+                        openPopup('알림', '상담삭제에 실패했습니다.')
+                    }
+                }
+            );
+        }catch(err){
+            openPopup('알림', '삭제도중 오류 발생');
+        }
+    }
+
+    // 💡 최신 Temporal API를 활용한 날짜 포맷 함수 => util
+   
     //전체선택/해제 
     const handleSelectAll = (e:ChangeEvent<HTMLInputElement>)=>{
         if(e.target.checked){
-            setSelectedIds(consultList.map(consult=> consult.id ))
+            setSelectedIds(consultList.map(consult=> consult.ID ))
         }else{
             setSelectedIds([]);
         }
@@ -69,7 +96,7 @@ export default function Consult(){
             setSelectedIds(prev=> [...prev, id])
         }
         const ids = consultList.map(consult => (
-            consult.id === id 
+            consult.ID === id 
         ))
     }
 
@@ -117,23 +144,24 @@ export default function Consult(){
                             </thead>
                             <tbody>
                                 {consultList.map((item, index) => (
-                                    <tr key={item.id}>
+                                    <tr key={item.ID}>
                                         <td>{consultList.length - index}</td>
-                                        <td><strong>{item.name}</strong></td>
-                                        <td>{item.phone}</td>
-                                        <td>{item.category}</td>
-                                        <td>{item.regDate}</td>
+                                        <td><strong>{item.NAME}</strong></td>
+                                        <td>{item.PHONE}</td>
+                                        <td>{item.DEPARTMENT}</td>
+                                        {/* 💡 Temporal이 적용된 포맷 함수로 렌더링 */}
+                                        <td>{formatDate(item.CREATED_AT)}</td>
                                         <td>
                                             <S.ConsultStatusBadge 
-                                                $status={item.status} 
-                                                onClick={() => toggleStatus(item.id)}
+                                                $status={item.STATUS} 
+                                                onClick={() => toggleStatus(item.ID)}
                                             >
-                                                {item.status === "상담완료" && <FiCheck size={12} />}
-                                                {item.status}
+                                                {item.STATUS === "상담완료" && <FiCheck size={12} />}
+                                                {item.STATUS}
                                             </S.ConsultStatusBadge>
                                         </td>
                                         <td>
-                                            <S.ConsultDeleteActionBtn onClick={() => handleDelete(item.id)}>
+                                            <S.ConsultDeleteActionBtn onClick={() => handleDelete(item.ID)}>
                                                 <FiTrash2 size={16} />
                                             </S.ConsultDeleteActionBtn>
                                         </td>
@@ -159,6 +187,7 @@ export default function Consult(){
             onClose={closePopup}
             onConfirm={popupConfig.onConfirm}
             >{popupConfig.message}</Popup>
+
         </>
     )
 }

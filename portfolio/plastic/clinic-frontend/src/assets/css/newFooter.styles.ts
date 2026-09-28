@@ -1,5 +1,16 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
+//🌀 스피너
+const spin = keyframes`
+    from { transform: rotate(0deg);}
+    to { transform: rotate(360deg); }
+`;
+
+export const SpinnerWrapper = styled.div`
+    animation: ${spin} 1s linear infinite ;
+    display: inline-block;
+`;
+//linear:균등한,직선의 =>  일정한 속도
 //footer
 export const SiteFooterWrapper = styled.footer`
 background-color: #181818;

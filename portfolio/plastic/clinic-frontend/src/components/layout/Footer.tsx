@@ -1,8 +1,71 @@
 'use client'
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { FaSpinner } from "react-icons/fa";
 import * as S from '@/assets/css/newFooter.styles'
+import axios from "axios";
+
+//백엔드에서 받아올 데이터 형태(타입)정읭
+interface ScheduleData {
+  id: number;
+  department:string;
+  weekday:string;
+  night: string;
+  weekend: string;
+}
+
+interface FamilySiteData {
+  id:number;
+  name:string;
+  url:string;
+}
 
 export default function Footer (){
+
+    const [companyInfo, setCompanyInfo]=useState({
+        name:'',
+        address:'',
+        clinicName:'',
+        phone:'',
+        email:'',
+        locationUrl:'',
+    })
+
+    const [schedules, setSchedules]=useState<ScheduleData[]>([]);
+    const [familySites, setFamilySites]=useState<FamilySiteData[]>([]);
+    const [isLoading, setIsLoading]=useState(false);
+
+    useEffect(()=>{
+      const fetchFooterdata = async()=>{
+        setIsLoading(true);
+        try{
+          const res= await axios.get('http://localhost:4000/api/admin/footer')
+          if(res.data.success && res.data.data){
+            const {companyInfo,schedules,familySites} = res.data.data;
+
+            if(companyInfo) setCompanyInfo(companyInfo);
+            if(schedules) setSchedules(schedules);
+            if(familySites) setFamilySites(familySites);
+          }
+        }catch(err){
+          console.error('푸터 데이터 로드 실패:', err);
+        }finally{
+          setIsLoading(false);
+        }
+      } 
+      fetchFooterdata();
+    },[]);
+
+    if(isLoading){
+      return (
+      <S.SiteFooterWrapper> 
+        <S.SiteFooterInner>
+          <S.SpinnerWrapper>
+            <FaSpinner size={30}/>
+          </S.SpinnerWrapper>
+        </S.SiteFooterInner>
+      </S.SiteFooterWrapper>)
+    }
 
     return(
         <>
@@ -11,43 +74,49 @@ export default function Footer (){
           {/* cs번호 진료시간 오시는길 */}
           <S.SiteFooterTop>
             <S.SiteFooterCs>
-              <S.SiteFooterPhone>02. 932. 2222</S.SiteFooterPhone>
+              <S.SiteFooterPhone>{companyInfo.phone || '02. 932. 2222'}</S.SiteFooterPhone>
               <S.SiteFooterCsTitle>CS CENTER</S.SiteFooterCsTitle>
             </S.SiteFooterCs>
 
-            <S.SiteFooterScheduleWrap>
+          {schedules.map(sch=> (
+            <>
+            <S.SiteFooterScheduleWrap key={sch.id}>
               <S.SiteFooterScheduleBlock>
-                <S.SiteFooterScheduleTitle>성형외과</S.SiteFooterScheduleTitle>
-                <S.SiteFooterScheduleText>평일 : AM 09:00 - PM 06:00</S.SiteFooterScheduleText>
-                <S.SiteFooterScheduleText>야간 : </S.SiteFooterScheduleText>
-                <S.SiteFooterScheduleText>토요일 : PM 09:00 - PM 03:00</S.SiteFooterScheduleText>
-              </S.SiteFooterScheduleBlock>
-
-              <S.SiteFooterScheduleBlock>
-                <S.SiteFooterScheduleTitle>스킨케어</S.SiteFooterScheduleTitle>
-                <S.SiteFooterScheduleText>평일 : AM 09:00 - PM 06:00</S.SiteFooterScheduleText>
-                <S.SiteFooterScheduleText>토요일 : PM 09:00 - PM 03:00</S.SiteFooterScheduleText>
+                <S.SiteFooterScheduleTitle>{sch.department}</S.SiteFooterScheduleTitle>
+                <S.SiteFooterScheduleText>평일 : {sch.weekday}</S.SiteFooterScheduleText>
+                {/* 야간 빈칸이면 깔끔하게 렌더링안함 */}
+                {sch.night &&
+                <S.SiteFooterScheduleText>야간 : {sch.night}</S.SiteFooterScheduleText>
+                }
+                <S.SiteFooterScheduleText>토요일 : {sch.weekend}</S.SiteFooterScheduleText>
               </S.SiteFooterScheduleBlock>
             </S.SiteFooterScheduleWrap>
-            
-            <S.SiteFooterLocationBtn>오시는길 바로가기</S.SiteFooterLocationBtn>
+          </>
+        ))}
+            <S.SiteFooterLocationBtn onClick={()=>{
+              if(companyInfo.locationUrl){
+                window.open(companyInfo.locationUrl, '_blank' ) //'_blank':새창으로
+              } else{
+                window.location.href='/';
+              }
+            }} >오시는길 바로가기</S.SiteFooterLocationBtn>
           </S.SiteFooterTop>
 
           <S.SiteFooterBottom>
             <S.SiteFooterCompany>
-              <S.SiteFooterCompanyName>안호범 안스성형외과</S.SiteFooterCompanyName>
+              <S.SiteFooterCompanyName>{companyInfo.name || '안호범 안스성형외과'}</S.SiteFooterCompanyName>
               <S.SiteFooterInfoText>
-                서울 노원구 노해로 460 (상계동) 2층 201호
-                <br />
-                (안호범안스성형외과 건물 주차장 이용)
+                {companyInfo.address || `서울 노원구 노해로 460 (상계동) 2층 201호
+                (안호범안스성형외과 건물 주차장 이용)`}
+               
               </S.SiteFooterInfoText>
 
               <S.SiteFooterInfoText>
-                의료기관 명칭 : 안호범안스성형외과
+                의료기관 명칭 : {companyInfo.clinicName||'안호범안스성형외과'}
                 <br />
-                대표번호 02. 932. 2222
+                대표번호 : {companyInfo.phone||'02. 932. 2222'}
                 <br />
-                E-mail : test@test.com
+                E-mail : {companyInfo.email||'test@test.com'}
               </S.SiteFooterInfoText>
             </S.SiteFooterCompany>
 
@@ -59,12 +128,16 @@ export default function Footer (){
 
               <div>
                 <S.SiteFooterFamilyTitle>Family</S.SiteFooterFamilyTitle>
-                <S.SiteFooterFamilyLogos>
-                  <div className="logo-placeholder">Breast Surgery Center</div>
-                  <div className="logo-placeholder">Derm</div>
-                  <div className="logo-placeholder">Lifting Center</div>
+                <S.SiteFooterFamilyLogos >
+                {familySites.map(site=>(
+                  <a key={site.id} href={site.url} target="_blank" rel="noopener noreferrer">
+                    <div className="logo-placeholder">{site.name||'Breast Surgery Center'}</div>
+                    {/* <div className="logo-placeholder">Derm</div>
+                    <div className="logo-placeholder">Lifting Center</div> */}
+                  </a>
+                ))}
                 </S.SiteFooterFamilyLogos>
-              </div>
+                </div>
             </S.SiteFooterBottomRight>
           </S.SiteFooterBottom>
         </S.SiteFooterInner>
@@ -90,3 +163,24 @@ export default function Footer (){
         </>
     )
 }
+
+
+/*
+🚀 HTML <a> 태그로 새 창을 열 때: 👉 rel="noopener noreferrer" 필수!
+✨(새 탭으로 열기)를 사용할 때 보안과 성능(속도)을 지키기 위해 무조건 함께 세트로 붙여주는 보안 장치
+
+보안 문제 방지 (noopener)
+해킹 위협(Reverse Tabnabbing) 차단: "새 창이 열리되, 우리 창에 절대 접근하지 못하게 차단해라!"
+noopener: 새 페이지가 기존 페이지를 조작할 수 없도록 막습니다. 
+악성 사이트가 window.opener 자바스크립트 속성을 이용해 원래 있던 내 사이트(부모 창)를 
+변조하거나 피싱 사이트로 유도하는 탭 내빙(Tabnabbing) 보안 공격을 방지합니다
+
+성능 최적화 (noreferrer)
+정보 유출 방지 및 성능 보호:
+noreferrer: 링크를 타고 넘어갈 때 브라우저가 HTTP Referrer 정보를 
+상대방 사이트에 보내지 않습니다. 즉, 
+방문자가 "어느 사이트에서 이 링크를 클릭해서 왔는지" 상대방이 알 수 없도록 프라이버시를 보호
+
+🚀✨
+window.open()으로 새 창을 열 때: 👉 그냥 window.open(url, '_blank')만 써도 안전하게 OK!
+*/

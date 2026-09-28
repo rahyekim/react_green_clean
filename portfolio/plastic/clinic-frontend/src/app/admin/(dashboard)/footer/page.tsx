@@ -1,5 +1,6 @@
 'use client';
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
+import axios from 'axios';
 import{
     FiSave, FiPlus,FiTrash2
 }from 'react-icons/fi'
@@ -43,7 +44,35 @@ export default function Footer(){
         { id: 3, name: "Lifting Center", url: "#" }
     ])
 
-    //
+    useEffect(()=>{
+        const fetchFooterdata = async()=>{
+            try{
+                //백앤드를 통해 데이터를 달라고 요청
+                const res = await axios.get('http://localhost:4000/api/admin/footer');
+
+                //서버가 통신성공을 알리고 빈껍데기가 아닌 실제 데이터가 있다면
+                //서버가 보내준 데이터 덩어리에서 필요한 3가지 속성만 쏙 빼냅니다(구조 분해 할당)
+                if(res.data.success && res.data.data){
+                    const {
+                        companyInfo,
+                        schedules,
+                        familySites
+                    } = res.data.data;
+                    setCompanyInfo(companyInfo);
+                    setSchedules(schedules);
+                    setFamilySites(familySites);
+                }
+
+            }catch(err){
+            console.error('푸터 데이터 로드실패: ', err);
+            openPopup('불러오기 실패', '저장 중 서버오류가 발생했습니다. 다시시도해주세요')
+            }
+        }
+        fetchFooterdata();
+    }, [])
+
+
+    //진료시간수정 핸들러 (입력창에 글자를 칠 때마다 실행)
     const handleScheduleChange =(id:number, field:keyof ScheduleData, value:string)=>{
         setSchedules(prev=>(
             prev.map(sch=> (
@@ -83,14 +112,23 @@ export default function Footer(){
         ))
     }
 
-    const handleSave = ()=>{
+    const handleSave = async()=>{
         const payload = {
             companyInfo,
             schedules,
             familySites
         }
-        console.log('DB에저장될 푸터데이터:', payload);
-        openPopup('저장 완료', '푸터설정 저장이 완료 되었습니다')
+        try{
+            const res = await axios.post('http://localhost:4000/api/admin/footer', payload);
+            if(res.data.success){
+                openPopup('저장 완료', '푸터설정 저장이 완료 되었습니다')
+                console.log('DB에저장될 푸터데이터:', payload);
+            }
+        }catch(err){
+             console.error('푸터 데이터 저장실패: ', err);
+             openPopup('저장 실패', '저장 중 서버오류가 발생했습니다. 다시시도해주세요')
+        }
+
     }
 
     return(
@@ -246,10 +284,10 @@ export default function Footer(){
         </S.FooterAdminContainer>
         
         <Popup 
-            isOpen={popupConfig.isOpen}
-            title={popupConfig.title}
-            onClose={closePopup}
-            onConfirm={popupConfig.onConfirm}
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        onClose={closePopup}
+        onConfirm={popupConfig.onConfirm}
         >{popupConfig.message}</Popup>
 
         </>

@@ -128,7 +128,6 @@ export default function Nav(){
                                 <S.NavInput
                                 type='text'
                                 value={logoText}
-                                accept='image/*'
                                 onChange={e=>setLogoText(e.target.value)}
                                 placeholder='예: 안효범성형외과'
                                 />

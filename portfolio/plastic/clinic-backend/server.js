@@ -2,14 +2,16 @@
 🧩ORM은 Object-Relational Mapping(객체-관계 매핑)
 서버를 아주 쉽게 만들 수 있도록 도와주는 Node.js 의 대표적인 프레임워크 'Express'
 */
-
 require('dotenv').config();  //환경변수를 읽어서 프로그램에 적용
 const express = require('express');
 const cors = require('cors');   //주소가 다르면 브라우저가 보안상 요청을 막는데, 이를 허용해줌 
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt')
+
 const AppDataSource =require('./db');
 const Member = require('./src/entity/Member');
+const FooterSettings = require('./src/entity/FooterSettings');
+const Consult =require('./src/entity/Consult');
 
 const app = express(); // Express 기능을 사용할수있도록 app이라는 서버 객체 만들어줌
 app.use(cors());
@@ -219,7 +221,156 @@ app.post('/api/reset-password', async(req,res)=>{
     }
 })
 
-//🧩ORM은 Object-Relational Mapping(객체-관계 매핑)
+//footer세팅 관리자
+app.get('/api/admin/footer', async(req,res)=>{
+    try{
+        //테이블 데이터를 다룰수 있는 권한(저장소) 가져옴
+        const footerRepo = AppDataSource.getRepository(FooterSettings);
+        //푸터 설정은 여러개 필요없이 무조건 고유번호가 1번인 데이터 딱 하나만 찾음
+        const footer = await footerRepo.findOne({where:{id:1}});
+        //만약 테이블을 방금 만들어서 아직 한번도 저장한적이 없다면
+        if(!footer){
+            //에러가아니기에 프론트엔드가 뻗지않게 빈껍데기를 성공상태로 보냄
+            return res.status(200).json({success:true,data:null});
+        }
+        //db에서 찾은 데이터를 프론트엔드의 3가지 상태(state)구조에 완벽히 맞춰서 조립
+        res.status(200).json({
+            success:true,
+            data:{
+                companyInfo:{
+                    name: footer.name || "",
+                    address: footer.address || '',
+                    clinicName: footer.clinicName || '',
+                    phone:footer.phone || '',
+                    email:footer.email || '',
+                    locationUrl: footer.locationUrl || '',
+                    
+                },
+                schedules: footer.schedules || [],
+                familySites:footer.familySites || [],
+            }
+        });
+        
+    }catch(err){
+        console.error('footer조회 에러: ',err);
+        res.status(500).json({
+            success:false,
+            message:'푸터 데이터를 불러오지 못했습니다'
+        })
+    }
+})
+
+//푸터 post
+app.post('/api/admin/footer', async(req,res)=>{
+    try{
+        //프론트에서 post로 보낸 데이터
+        const {
+            companyInfo,
+            schedules,
+            familySites
+        }= req.body;
+        //테이블 저장소를 가지고 옴
+        const footerRepo = AppDataSource.getRepository(FooterSettings);
+        //덮어쓰기를 하기 위해 기존에 설정된 설정(id가1번인데이터)이 있는지 먼저 찾음
+        let footer = await footerRepo.findOne({where:{id:1}})
+        //만약 최초 저장이라 기존 데이터가 없다면?
+        if(!footer){
+            //db에 새롭게 넣을 준비, 이때 고유번호 id는 무조건 강제 1로 고정
+            footer= footerRepo.create({id:1});
+        }
+        // 3. 공통으로 값 세팅 (최초 생성일 때도, 수정일 때도 공통 적용)
+        footer.name = companyInfo.name;
+        footer.clinicName = companyInfo.clinicName;
+        footer.phone = companyInfo.phone;
+        footer.address = companyInfo.address;
+        footer.email = companyInfo.email;
+        footer.locationUrl = companyInfo.locationUrl;
+        footer.schedules = schedules;
+        footer.familySites = familySites;
+
+        //footer객체를 최종적으로 저장
+        await footerRepo.save(footer);
+
+        res.status(200).json({success:true, message:'footer설정이 성공적으로 저장되었습니다'});
+        
+    }catch(err){
+        console.error('푸터저장에러: ', err);
+        res.status(500).json({success:false, message:'푸터 데이터를 저장하지 못했습니다'})
+    }
+});
+
+//퀵상담
+app.post('/api/consult/quick', async(req,res)=>{
+
+    const {name, phone, department, password}= req.body;
+    try{
+        //필수값검증
+        if(!name || !phone || !department || !password){
+            return res.status(400).json({success:false, message:
+                '필수정보를 모두 입력해주세요'
+            })
+        };
+        const consultRepo = AppDataSource.getRepository(Consult);
+        const newConsult = consultRepo.create({
+            NAME:name, 
+            PHONE:phone, 
+            DEPARTMENT:department,
+            USER_ID: '비회원',
+            PASSWORD: password,
+            TITLE: `[빠른상담] ${department} 문의입니다`,
+            CONTENT: `${name}님의 빠른 상담 신청입니다. 빠른 시일내에 연락바랍니다`,
+            STATUS: '대기중'
+        });
+        await consultRepo.save(newConsult);
+        res.status(200).json({success:true, message:'빠른상담신청완료'})
+    }catch(err){
+        console.error('빠른상담신청에러:', err);
+        res.status(500).json({success:false, message:'빠른상담신청중 오류발생'})
+
+    }
+})
+//상담내역 전체조회
+app.get('/api/admin/consult', async(req,res)=>{
+    try{
+        const consultRepo= AppDataSource.getRepository(Consult)
+        const list = await consultRepo.find({order:{CREATED_AT:'DESC'}})
+        res.status(200).json({success:true, data:list})
+    }catch(err){
+        console.error('상담신청조회에러:', err);
+        res.status(500).json({success:false, message:'상담신청조회중 오류발생'})
+    }
+})
+app.put('/api/admin/consult/:id/status', async(req,res)=>{
+    const { id }= req.params;
+    try{
+        const consultRepo= AppDataSource.getRepository(Consult)
+        const consult = await consultRepo.findOne({where:{ID:id}})
+        if(!consult){
+        return res.status(404).json({ success: false, message: '데이터가 없습니다' });
+        }
+        // ✨상태 토글 로직
+        consult.STATUS = consult.STATUS === '대기중' ? '상담완료' : '대기중';
+        await consultRepo.save(consult)
+        res.status(200).json({ success: true, message: '상담 상태가 변경되었습니다.' });
+    }catch(err){
+        console.error('상태 변경 에러:', err);
+        res.status(500).json({ success: false, message: '상태 변경 실패' });
+    }
+})
+
+app.delete('/api/admin/consult/:id', async(req,res)=>{
+    try{
+        const consultRepo= AppDataSource.getRepository(Consult)
+        await consultRepo.delete(req.params.id);
+      
+        res.status(200).json({ success: true, message: '상담신청 삭제성공' });
+    }catch(err){
+        console.error('상담신청 삭제 에러:', err);
+        res.status(500).json({ success: false, message: '상담신청 삭제 실패' });
+    }
+})
+
+//🧩 ORM은 Object-Relational Mapping(객체-관계 매핑)
 //서버시작시 TypeORM DB연결 
 // AppDataSource.initialize()
 // .then(()=> {console.log("오라클 DB 성공적으로 연결💙")})
