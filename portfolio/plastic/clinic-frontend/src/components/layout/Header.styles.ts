@@ -1,4 +1,5 @@
 'use client'
+import { BoxShadow2, BoxShadowPressed } from "@/assets/css/common/Common.style";
 import styled from "styled-components";
 
 export const HeaderWrapper= styled.header`
@@ -43,6 +44,13 @@ export const Logo = styled.h1`
  
 
 `; 
+
+export const LogoImg = styled.img`
+height:40px; //고정안해주면 svg 0으로..안나오게됨
+max-height:40px;
+width: auto; //비율유지
+object-fit: contain;
+`;
 //중앙네비게이션 그룹
 export const NavGroup= styled.nav`
 display: flex;
@@ -109,7 +117,7 @@ span{
 }
 
 &:hover{
-    box-shadow: 0 8px 12px rgba(0,0,0, .2);
+    ${BoxShadow2}
 }
 `;
 export const CtaButton= styled.button`

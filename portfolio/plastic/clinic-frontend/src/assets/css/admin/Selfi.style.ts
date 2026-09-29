@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {
     FlexCenter, TransitionAll,FlexColumn,BoxShadow2
-}from '@/assets/css/Common.style'
+}from '@/assets/css/common/Common.style'
 
 export const SelfContainer = styled.div`
     width: 100%;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BoxShadowPressed } from '../Common.style';
+import { BoxShadowPressed } from '../common/Common.style';
 
 // -----------------------------------------
 // 🎯 VLOG 관리 전용 스타일

@@ -6,7 +6,7 @@ import {
     BoxShadowBasic, TransitionAll,
     Transparent,
     BoxShadowPressed, 
-} from "../Common.style";
+} from "../common/Common.style";
 
 export const NewsContainer = styled.div`
 width: 100%;

@@ -1,4 +1,11 @@
-import {css} from 'styled-components'
+import styled, {css} from 'styled-components'
+
+export const InlineFlexCenter =css`
+display: inline-flex;
+justify-content: center;
+align-items: center;
+`;
+
 
 export const FlexCenter =css`
 display: flex;
@@ -115,6 +122,10 @@ export const BoxShadow = css`
 box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
 `;
 
+export const TextShadow = css`
+text-shadow: 2px 2px 8px rgba(0,0,0,.5); 
+`;
+
 //hover용(동적용)
 export const BoxShadow2 = css`
 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -150,3 +161,5 @@ export const Noscrollbar = css`
 }
 
 `;
+
+

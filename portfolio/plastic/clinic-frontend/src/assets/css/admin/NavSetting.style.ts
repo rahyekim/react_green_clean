@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BlueButtonTheme, BoxShadow, BoxShadowBasic, FlexBetween, FlexCenter, FlexColumn, FlexRow, FlexStart, TransitionAll } from "../Common.style";
+import { BlueButtonTheme, BoxShadow, BoxShadowBasic, FlexBetween, FlexCenter, FlexColumn, FlexRow, FlexStart, TransitionAll } from "../common/Common.style";
 
 export const NavContainer= styled.div`
 width: 100%;
@@ -141,10 +141,11 @@ ${TransitionAll}
 export const FileInputWrapper= styled.div`
 ${FlexCenter}
 gap: 1.2rem;
-
+width: 100%; 
 .filename{
-    flex-shrink: 1;
+    /* flex: 1; */
     min-width: 0;
+    max-width: 500px;
 
     font-size: 0.9rem;
     color: #858796;
@@ -443,4 +444,31 @@ ${TransitionAll}
 background-color:#eaecf4;
 border-color: #858796;
 }
+`;
+
+
+export const Preview = styled.div`
+    ${FlexCenter}
+
+    /* width: 180px;
+    height: 240px; */
+
+    margin: 4px auto 0;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+    border: 2px solid #e3e6f0;
+
+    background-color: #f8f9fc;
+
+    flex-shrink: 0;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 `;

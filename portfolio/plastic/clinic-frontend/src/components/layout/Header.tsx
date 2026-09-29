@@ -1,13 +1,52 @@
 'use client'
 import Link from "next/link"
-import { useState } from "react"
-
+import { useEffect, useState } from "react"
+import axios from "axios"
 import * as S from './Header.styles'
 import GlobeIcon from "../icons/GlobeIcon"
 import UserIcon from "../icons/UserIcon"
-
+interface MenuItem {
+    id:number;
+    name:string;
+    url:string;
+}
 export default function Header (){
 
+    const [logoType, setLogoType]=useState<'TEXT'|'IMAGE'>('TEXT');
+    const [logoText, setLogoText]=useState<string>("Ahn's");
+    const [logoFileName, setLogoFileName] = useState<string>('');
+    const [menus, setMenus]=useState<MenuItem[]>([]); 
+
+    useEffect(()=>{
+         const fetchNavSettings = async()=>{
+            try{
+            const res = await axios.get('http://localhost:4000/api/admin/nav')
+            if(res.data.success){
+                const dbData = res.data.data;
+                //로고 설정 적용
+                if(dbData.LOGO_TYPE) setLogoType(dbData.LOGO_TYPE);
+                if(dbData.LOGO_TEXT) setLogoText(dbData.LOGO_TEXT);
+                if(dbData.LOGO_FILE) setLogoFileName(dbData.LOGO_FILE);
+                if(dbData.MENUS && dbData.MENUS !== '[]'){
+                    setMenus(JSON.parse(dbData.MENUS))
+                }else{
+                    //db에 메뉴가 비어있으면 초기 기본값 세팅
+                    setMenus([
+                        { id: 1, name: "병원소개", url: "/" },
+                        { id: 2, name: "눈성형", url: "/" },
+                        { id: 3, name: "코성형", url: "/" },
+                        { id: 4, name: "동안성형", url: "/" },
+                        { id: 5, name: "쁘띠시술", url: "/" },
+                        { id: 6, name: "커뮤니티", url: "/" }
+                    ])
+                }
+            }
+            }catch(err){
+            console.error('헤더 네비설정 로드실패:', err);
+            }
+        }
+        fetchNavSettings();
+    },[])
     return(
         <>
         <S.HeaderWrapper>
@@ -15,17 +54,21 @@ export default function Header (){
                 {/* 로고영역 */}
                 <S.LogoGroup>
                     <Link href='/'>
-                        <S.Logo>Ahn's</S.Logo>
+                    {logoType === 'TEXT' ? (
+                        <S.Logo>{logoText}</S.Logo>
+                    ): (
+                        <S.LogoImg src={`http://localhost:4000/images/${logoFileName}`} alt="성형외과로고" />
+                    )}
                     </Link>
                 </S.LogoGroup>
 
                 {/* 메인 네비게이션 영역 */}
                 <S.NavGroup>
-                    <S.NavItem>병원소개</S.NavItem>
-                    <S.NavItem $active>눈 성형</S.NavItem>
-                    <S.NavItem>코 성형</S.NavItem>
-                    <S.NavItem>쁘띠 시술</S.NavItem>
-                    <S.NavItem>커뮤니티</S.NavItem>
+                {menus.map((menu,idx)=>(
+                    <Link href={menu.url || '/'} key={menu.id}>
+                        <S.NavItem $active={idx===1}>{menu.name}</S.NavItem>
+                    </Link>
+                ))}
                 </S.NavGroup>
 
                 {/* 유틸리티 영역 */}

@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
-import { FlexCenter,BoxShadow,TransitionAll, ButtonBasic, FlexBetween, FlexColumn, FlexEnd, BlueButtonTheme } from "./Common.style";
+import { FlexCenter,BoxShadow,TransitionAll, ButtonBasic, FlexBetween, FlexColumn, FlexEnd, BlueButtonTheme } from "./common/Common.style";
 
 //나타나는 애니메이션
 const fadeIn = keyframes`

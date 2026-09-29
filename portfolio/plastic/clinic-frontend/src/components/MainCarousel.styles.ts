@@ -1,3 +1,4 @@
+import { TextShadow } from "@/assets/css/common/Common.style";
 import styled from "styled-components";
 
 export const CarouselSection= styled.div`
@@ -27,27 +28,15 @@ export const SlideImg= styled.img`
 display: block; //🌟인라인 성질을 없애고 블록으로 만들어 여백 제거🌟
 width: 100%;
 object-fit: cover;
-height: 600px;
+height: 100%;
+position: relative;
+min-height: 615px;
 
 @media (max-width: 768px) {
-    height: 400px;
+    min-height: 400px;
 }
 `;
-export const FormOverlay= styled.div`
 
-`;
-export const FormTitle= styled.h3`
-`;
-export const InputGrop= styled.div`
-
-`;
-export const Input= styled.input`
-
-`;
-export const SubmitBtn= styled.button`
-`;
-export const PrivacyWrapper= styled.div`
-`;
 export const NavBtn= styled.button<{$direction:'left'|'right'}>`
 position: absolute;
 top: 50%;
@@ -84,7 +73,52 @@ transition: all 0.2s;
 }
 
 `;
-// export const = styled.div``;
+
+export const SlideCopy = styled.div`
+  position: absolute;
+  top: 88%;                    
+  left: 2%;                   
+  color: #fff;
+  font-size: 2rem;             
+  font-weight: 800;            
+  line-height: 1.2;             
+  letter-spacing: -0.02em;  /* 자간 살짝 좁혀서 세련되게 */
+  z-index: 10;
+  text-align: left;           
+  ${TextShadow}                
+
+  /* 부드럽게 스르륵 나타나는 애니메이션 */
+  animation: fadeInSlide 0.8s ease-out forwards;
+
+  @keyframes fadeInSlide {
+    from {
+      opacity: 0;
+      transform: translateY(10px); /* 살짝 아래에서 위로 스르륵 */
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);    /* 제자리로 안착 */
+    }
+  }
+
+  /* 모바일 화면 대응 (글자 크기 및 위치 조절) */
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+`;
+
+// export const SlideCopy= styled.div`
+// position: absolute;
+// top: 90%;
+// left: 5%;
+// transform: translate(-50%,-50% );
+// color: #fff;
+// font-weight: bold;
+// font-size: 1.5rem;
+// z-index:10;
+// text-align: center;
+// ${TextShadow}
+// `;
 // export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;

@@ -79,7 +79,6 @@ export default function Footer (){
             </S.SiteFooterCs>
 
           {schedules.map(sch=> (
-            <>
             <S.SiteFooterScheduleWrap key={sch.id}>
               <S.SiteFooterScheduleBlock>
                 <S.SiteFooterScheduleTitle>{sch.department}</S.SiteFooterScheduleTitle>
@@ -91,7 +90,6 @@ export default function Footer (){
                 <S.SiteFooterScheduleText>토요일 : {sch.weekend}</S.SiteFooterScheduleText>
               </S.SiteFooterScheduleBlock>
             </S.SiteFooterScheduleWrap>
-          </>
         ))}
             <S.SiteFooterLocationBtn onClick={()=>{
               if(companyInfo.locationUrl){

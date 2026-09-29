@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BlueButtonTheme, BoxShadow, FlexBetween, FlexCenter, TransitionAll } from "../Common.style";
+import { BlueButtonTheme, BoxShadow, FlexBetween, FlexCenter, TransitionAll } from "../common/Common.style";
 
 export const ToneContainer= styled.div`
 width: 100%;

@@ -16,4 +16,11 @@ export const VlogSection = styled.section`
   background-color: ${COLORS.MAIN};
   color: ${COLORS.TEXT};
 `;
+
+
+
+export const MAIN_COLOR = '#ffe6f0';
+export const POINT_COLOR = '#ff1493';
+export const TEXT_COLOR = '#111';
 */
+

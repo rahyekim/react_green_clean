@@ -20,7 +20,9 @@ import {
     FiUsers, 
     FiClipboard, 
     FiLogOut,
-    FiNavigation
+    FiNavigation,
+    FiSliders,
+    FiImage
 } from "react-icons/fi"
 
 export default function AdminLayout({children}:{children:React.ReactNode}){
@@ -59,6 +61,14 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
                 >
                     <FiClipboard size={20} />
                     {!isCollapsed && <span className="text">대시보드</span>}
+                </S.NavItem>
+
+                 <S.NavItem 
+                    $isCollapsed={isCollapsed}
+                    onClick={() => router.push('/admin/carousel')}
+                >
+                    <FiImage size={20} /> 
+                    {!isCollapsed && <span className="text">슬라이더</span>}
                 </S.NavItem>
 
                 <S.NavItem 

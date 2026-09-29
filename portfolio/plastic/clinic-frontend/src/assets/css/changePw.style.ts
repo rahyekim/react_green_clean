@@ -4,7 +4,7 @@ import { FlexCenter, BoxShadow,
     FlexColumn,
     TransitionAll,
     ButtonBasic,
-    TextCenter} from "./Common.style";
+    TextCenter} from "./common/Common.style";
 
 
 export const Wrapper= styled.div`

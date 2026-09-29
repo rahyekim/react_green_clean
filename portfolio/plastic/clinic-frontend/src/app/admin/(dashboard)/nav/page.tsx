@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
+import axios from 'axios';
 import * as S from '@/assets/css/admin/NavSetting.style'
 import usePopup from '@/hooks/usePopup';
 import Popup from '@/components/ui/Popup';
@@ -18,20 +19,47 @@ export default function Nav(){
     const [logoType, setLogoType]=useState<'TEXT'|'IMAGE'>('TEXT');
     const [logoText, setLogoText]=useState<string>('성형외과 로고');
     const [logoFileName, setLogoFileName] = useState<string>('');
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [menus, setMenus]=useState<MenuItem[]>([]);
     
-    const [menus, setMenus]=useState<MenuItem[]>([
-        {id:1, name:'병원소개', url:'/'},
-        {id:2, name:'눈성형', url:'/'},
-        {id:3, name:'코성형', url:'/'},
-        {id:4, name:'동안성형', url:'/'},
-        {id:5, name:'쁘띠시술', url:'/'},
-        {id:6, name:'커뮤니티', url:'/'},
-    ])
 
+    //생명주기
+    useEffect(()=>{
+        const fetchNavSettings = async()=>{
+            try{
+            const res = await axios.get('http://localhost:4000/api/admin/nav')
+            if(res.data.success){
+                const dbData = res.data.data;
+                setLogoType(dbData.LOGO_TYPE);
+                setLogoText(dbData.LOGO_TEXT);
+                setLogoFileName(dbData.LOGO_FILE);
+                if(dbData.MENUS && dbData.MENUS !== '[]'){
+                    setMenus(JSON.parse(dbData.MENUS))
+                }else{
+                    //db에 메뉴가 비어있으면 초기 기본값 세팅
+                    setMenus([
+                        { id: 1, name: "병원소개", url: "/" },
+                        { id: 2, name: "눈성형", url: "/" },
+                        { id: 3, name: "코성형", url: "/" },
+                        { id: 4, name: "동안성형", url: "/" },
+                        { id: 5, name: "쁘띠시술", url: "/" },
+                        { id: 6, name: "커뮤니티", url: "/" }
+                    ])
+                }
+            }
+            }catch(err){
+            console.error('네비설정 로드실패:', err);
+            }
+        }
+        fetchNavSettings();
+    }, [])
+    
+    
     //로고 이미지 파일 선택핸들러
     const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         if(e.target.files && e.target.files.length > 0){
             setLogoFileName(e.target.files[0].name);
+            setLogoFile(e.target.files[0]); //
         }
     }
 
@@ -40,11 +68,7 @@ export default function Nav(){
         menus.length > 0 ? Math.max(...menus.map(m => m.id)) + 1 : 1;
         setMenus(prev=> [
             ...prev,
-            {
-                id:nextId,
-                name:'',
-                url:'',
-            }
+            { id: nextId, name:'',url:'',}
         ])
     }
     const handleDelete = (id:number)=>{
@@ -59,7 +83,6 @@ export default function Nav(){
             }
         );
     };
-
     const handleMenuChange = (id:number, field:keyof MenuItem, value:string)=>{
         setMenus(prev=>(
             prev.map(menu=> (menu.id === id ? {
@@ -69,18 +92,42 @@ export default function Nav(){
         ))
         ));
     }
+    const handleSave = async()=>{
 
-    const handleSave = ()=>{
-        const payload ={
-            logo:{
-                type:logoType,
-                text: logoType === 'TEXT' ? logoText :null,
-                fileName: logoType==='IMAGE'? logoFileName : null,
-            },
-            menus: menus
-        };
-        console.log('저장될데이터:', payload);
-        openPopup('저장 완료', '네비게이션 설정이 성공적으로 저장되었습니다')
+        let finalFileName = logoFileName;
+        try{
+            if(logoType==='IMAGE' && logoFile){
+                const formData = new FormData();
+                formData.append('logoImage', logoFile);
+
+                //백엔드 업로드 전용 api전송
+                const uploadRes = await axios.post('http://localhost:4000/api/admin/upload',formData,{
+                    headers:{'Content-Type':'multipart/form-data'},
+                });
+
+                if(uploadRes.data.success){
+                    // 🌟 업로드된 새 파일명으로 갱신
+                    finalFileName = uploadRes.data.filename;
+                }
+            }
+
+            const payload ={
+                logoType, 
+                logoText: logoType === 'TEXT' ? logoText : '',
+                logoFileName: logoType==='IMAGE'? finalFileName : null, 
+                menus: menus
+            };
+            const res = await axios.put('http://localhost:4000/api/admin/nav', payload)
+            console.log('저장될데이터:', payload);
+
+            if(res.data.success){ 
+                openPopup('저장 완료', '네비게이션 설정이 성공적으로 저장되었습니다');
+            }
+
+        }catch(err){
+            console.error('네비설정 저장실패:', err);
+            openPopup('실패 알림', '네비게이션 설정 도중 오류가 발생했습니다')
+        }
     };
     
     return(

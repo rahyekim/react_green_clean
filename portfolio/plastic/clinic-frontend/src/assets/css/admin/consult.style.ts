@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { COLORS } from "../common/theme";
 import { 
     BlueButtonTheme, 
     BoxShadow2,
     BoxShadowBasic,
     CircleBtn,
     TransitionAll,
- } from "../Common.style";
+ } from "../common/Common.style";
 
 export const ConsultContainer = styled.div`
 width: 100%;
@@ -126,9 +127,11 @@ background-color: #f1f5fd ;
 export const ConsultStatusBadge = styled.span<{ $status:string}>`
 display: inline-flex;
 align-items: center;  
+justify-content: center;
 gap: 6px;
 white-space:nowrap;
 min-width: 0;
+width: 80px;
 
 background-color: ${props=> props.$status === '상담완료' ? '#10b981' : '#f59e0b'};
 border-radius: 20px;
@@ -146,7 +149,7 @@ ${TransitionAll}
 &:hover{
     opacity: 0.8;
 }
-
+//💘inlineFlex 추가
 `;
 export const ConsultDeleteActionBtn = styled.button`
 ${CircleBtn}
@@ -159,3 +162,63 @@ ${TransitionAll}
     background-color: #fdeaea;
 }
 `;
+
+// 커스텀 체크박스 레이블/컨테이너
+export const CheckboxLabel = styled.label`
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    width: 18px;
+    height: 18px;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* 커스텀 박스 디자인 */
+    .custom-checkbox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 18px;
+        width: 18px;
+        background-color: #fff;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    /* 체크되었을 때 배경색과 테두리 */
+    input:checked ~ .custom-checkbox {
+        background-color: ${COLORS.MAIN}; /* 포인트 색상 */
+        border-color: #fdeaea;
+    }
+
+    /* 체크 안에 들어갈 하얀색 체크(V) 아이콘 */
+    .custom-checkbox:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    input:checked ~ .custom-checkbox:after {
+        display: block;
+    }
+
+    /* 체크 모양(V) 크기와 위치 조정 */
+    .custom-checkbox:after {
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 10px;
+        border: solid #e06d6d;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+`;
+

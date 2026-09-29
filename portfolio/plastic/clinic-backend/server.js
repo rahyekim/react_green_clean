@@ -6,12 +6,17 @@ require('dotenv').config();  //환경변수를 읽어서 프로그램에 적용
 const express = require('express');
 const cors = require('cors');   //주소가 다르면 브라우저가 보안상 요청을 막는데, 이를 허용해줌 
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const AppDataSource =require('./db');
 const Member = require('./src/entity/Member');
 const FooterSettings = require('./src/entity/FooterSettings');
 const Consult =require('./src/entity/Consult');
+const NavSetting = require('./src/entity/NavSettings');
+const Carousel = require('./src/entity/Carousel');
 
 const app = express(); // Express 기능을 사용할수있도록 app이라는 서버 객체 만들어줌
 app.use(cors());
@@ -27,6 +32,34 @@ app.use(express.urlencoded({extended:true}));
 
 app.get('/api/health', (req,res)=> {
     res.json({status:'ok', message: "성형외과 백엔드 서버가 정상 작동중💙"})
+})
+
+// ❄️이미지
+app.use('/images', express.static(path.join(__dirname,'public/images')))
+
+//업로드 폴더 없을경우 자동으로 생성
+const uploadDir = path.join(__dirname, '/public/images')
+if(!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir, {recursive:true});
+}
+//파일저장규칙 설정
+const storage = multer.diskStorage({
+    destination: function(req, file,cb){
+        cb(null, uploadDir);
+    },
+    filename: function(req,file,cb){
+    //한글 이름 깨짐 방지 및 중복 방지를 위해 파일명 앞에 현재 시간(ms)을 붙임
+        const ext = path.extname(file.originalname);
+        cb(null, Date.now()+ext);
+    }
+});
+const upload = multer({storage:storage});
+
+app.post('/api/admin/upload', upload.single('logoImage'), (req,res)=>{
+    if(!req.file){
+        return res.status(400).json({success:false,message:'파일이 없습니다'})
+    }
+    res.status(200).json({success:true, filename: req.file.filename})
 })
 
 //회원가입 API
@@ -369,6 +402,97 @@ app.delete('/api/admin/consult/:id', async(req,res)=>{
         res.status(500).json({ success: false, message: '상담신청 삭제 실패' });
     }
 })
+
+//admin 내비게이션 설정 api
+app.get('/api/admin/nav', async(req,res)=>{
+    try{
+        const navRepo = AppDataSource.getRepository(NavSetting);
+        let setting = await navRepo.findOne({where:{ID:1}})
+
+        // 데이터가 아예 없을 때의 기본값 반환
+        if(!setting){
+            return res.status(200).json({
+                success: true, 
+                data: {
+                    LOGO_TYPE:'TEXT',
+                    LOGO_TEXT:'안효범안스성형외과',
+                    LOGO_FILE:'',
+                    MENUS:'[]'
+                }
+            })
+        }
+        return res.status(200).json({ success:true, data:setting});
+    }catch(err){
+        console.error('네비게이션 조회에러:', err);
+        res.status(500).json({ success: false, message: '네비게이션 조회 오류' });
+    }
+})
+
+//최초저장이거나 변경
+app.put('/api/admin/nav', async(req,res)=>{
+    try{
+        const {logoType, logoText, logoFileName, menus} = req.body;
+        const navRepo = AppDataSource.getRepository(NavSetting);
+        
+        //🌟기존에 ID:1 데이터가 있는지 먼저 조회
+        let setting = await navRepo.findOne({ where: { ID: 1 } });
+
+        //데이터가 없으면 새로 생성
+        if(!setting){
+            setting = navRepo.create({ID:1});
+        }
+
+        setting.LOGO_TYPE= logoType;
+        setting.LOGO_TEXT= logoText || '';
+        setting.LOGO_FILE= logoFileName || '';
+        //프론트에서 넘어온 배열을 오라클 clob에 넣기위해 문자열(JSON)로 변환
+        setting.MENUS = JSON.stringify(menus);
+
+        await navRepo.save(setting);
+        res.status(200).json({success:true});
+    }catch(err){
+        console.error('네비게이션 저장에러:', err);
+        res.status(500).json({success:false});
+        
+    }
+})
+
+//캐로셀 메인 비쥬얼 슬라이더
+app.get('/api/admin/carousel', async(req,res)=>{
+    try{
+        const visuRepo= AppDataSource.getRepository(Carousel);
+        let setting = await visuRepo.findOne({where:{ID:1}});
+        if(!setting){
+            return res.status(200).json({success:true, data:{SLIDES:'[]'}});
+        }
+        return res.status(200).json({success:true, data:setting})
+    }catch(err){
+        console.error('메인비쥬얼 캐로셀 조회에러:', err);
+        return res.status(500).json({success:false})
+
+    }
+})
+
+app.put('/api/admin/carousel', async(req,res)=>{
+    try{
+        const {slides}=req.body;
+        const visuRepo= AppDataSource.getRepository(Carousel);
+        let setting = await visuRepo.findOne({where:{ID:1}});
+        //ID 1이 존재하면 UPDATE(수정)를 하고, 없으면 INSERT(생성)
+        if(!setting){
+            setting = visuRepo.create({ID:1});
+        }
+        // 데이터가 있든 없든 슬라이드 값 세팅 (배열을 문자열로 변환)
+        setting.SLIDES = JSON.stringify(slides);
+        await visuRepo.save(setting);
+        return res.status(200).json({success:true});
+    }catch(err){
+        console.error('메인비쥬얼 캐로셀 수정에러:', err);
+        return res.status(500).json({success:false})
+
+    }
+})
+
 
 //🧩 ORM은 Object-Relational Mapping(객체-관계 매핑)
 //서버시작시 TypeORM DB연결 

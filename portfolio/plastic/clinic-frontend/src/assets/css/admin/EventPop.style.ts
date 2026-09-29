@@ -6,7 +6,7 @@ import {
     BoxShadow2,
     FlexRow,
     CircleBtn
-} from "../Common.style";
+} from "../common/Common.style";
 
 
 // export const = styled.div``;

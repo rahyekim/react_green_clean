@@ -4,7 +4,7 @@ import { useState } from "react"
 import * as S from '@/assets/css/CategoryNav.styles'
 
 const CATEGORY_LIST = [
-{ id: 'all', name: '전체', img: '/images/main/cate/cat_all.png' },
+{ id: 'all', name: '전체', img: '/images/main/cate/cat_all.jpg' },
 { id: 'eye', name: '눈', img: '/images/main/cate/cat_eye.png' },
 { id: 'nose', name: '코', img: '/images/main/cate/cat_nose.png' },
 { id: 'contour', name: '윤곽', img: '/images/main/cate/cat_contour.png' },

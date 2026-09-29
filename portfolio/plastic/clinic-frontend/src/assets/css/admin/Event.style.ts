@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BlueButtonTheme, BoxShadow, BoxShadow2, BoxShadowBasic, FlexBetween, FlexCenter, FlexColumn, TransitionAll } from "../Common.style";
+import { BlueButtonTheme, BoxShadow, BoxShadow2, BoxShadowBasic, FlexBetween, FlexCenter, FlexColumn, TransitionAll } from "../common/Common.style";
 
 
 export const Container= styled.div`

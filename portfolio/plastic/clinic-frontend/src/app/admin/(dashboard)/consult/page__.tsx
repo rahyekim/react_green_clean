@@ -1,16 +1,16 @@
 'use client';
 
-import { ChangeEvent, useEffect, useState, useRef } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-    FiTrash2, FiSearch, FiCheck, FiChevronDown
+    FiTrash2, FiSearch, FiCheck
 } from 'react-icons/fi'
 import usePopup from '@/hooks/usePopup';
 import Popup from '@/components/ui/Popup';
 import * as S from'@/assets/css/admin/consult.style';
 import * as P from '@/assets/css/common/Pagination.style';
 import { formatDate } from "@/lib/dateUtils";
-// 🌟 컬러 상수 임포트
+// 🌟 컬러 상수 임포트 (경로는 본인 프로젝트 환경에 맞게 확인해주세요)
 import { COLORS } from '@/assets/css/common/theme'; 
 
 interface ConsultData{
@@ -30,23 +30,9 @@ export default function Consult(){
 
     // 💘 검색, 페이징, 그리고 상담 분야 필터를 위한 State
     const [searchTerm, setSearchTerm]= useState('');
-    const [selectedDept, setSelectedDept] = useState<string>('전체'); 
-    const [isDeptOpen, setIsDeptOpen] = useState(false); // 👈 테이블 헤더 드롭다운 열림/닫힘 상태
-    const deptDropdownRef = useRef<HTMLDivElement>(null); // 👈 바깥 클릭 시 닫기용 Ref
-
+    const [selectedDept, setSelectedDept] = useState<string>('전체'); // 👈 상담 분야 필터 상태 추가
     const [currentPage, setCurrentPage]=useState(1);
     const ITEMS_PER_PAGE= 10; 
-
-    // 드롭다운 바깥 영역 클릭 시 닫히도록 처리
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (deptDropdownRef.current && !deptDropdownRef.current.contains(e.target as Node)) {
-                setIsDeptOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
 
     const fetchConsult = async()=>{
         try{
@@ -66,8 +52,12 @@ export default function Consult(){
 
     // 💘 검색어 + 상담 분야 조건에 맞게 데이터 필터링
     const filteredList = consultList.filter(item=>{
+        // 1. 검색어 필터 (이름 또는 연락처)
         const matchesSearch = !searchTerm || item.NAME.includes(searchTerm) || item.PHONE.includes(searchTerm);
+        
+        // 2. 상담 분야 필터 ('전체'면 모두 통과, 아니면 분야가 일치하는 것만)
         const matchesDept = selectedDept === '전체' || item.DEPARTMENT === selectedDept;
+
         return matchesSearch && matchesDept;
     });
 
@@ -84,11 +74,10 @@ export default function Consult(){
         setCurrentPage(1); 
     }
 
-    // 🎯 상담 분야 선택 핸들러
-    const handleDeptSelect = (dept: string) => {
+    // 🎯 상담 분야 탭 변경 핸들러
+    const handleDeptFilter = (dept: string) => {
         setSelectedDept(dept);
-        setIsDeptOpen(false); // 선택 후 드롭다운 닫기
-        setCurrentPage(1); 
+        setCurrentPage(1); // 탭이 바뀔 때 1페이지로 리셋
     };
 
     const toggleStatus = async(id:number)=>{
@@ -120,14 +109,17 @@ export default function Consult(){
         );
     }
    
+    // 전체 선택/해제 
     const handleSelectAll = (e: ChangeEvent<HTMLInputElement>)=>{
         if(e.target.checked){
+            // 현재 필터링된 목록 기준으로 전체선택할지, 전체 데이터 기준으로 할지에 따라 선택 가능 (여기서는 필터된 목록 기준)
             setSelectedIds(filteredList.map(consult => consult.ID))
         }else{
             setSelectedIds([]);
         }
     }
 
+    // 개별 체크박스 선택/해제
     const handleSelectOne = (id:number)=>{
         if(selectedIds.includes(id)){
             setSelectedIds(selectedIds.filter(i => i !== id))
@@ -136,6 +128,7 @@ export default function Consult(){
         }
     }
 
+    // 선택된 항목 일괄 삭제 핸들러
     const handleDeleteSeleted = ()=>{
         if(selectedIds.length === 0){
             openPopup('알림', "삭제할 항목을 선택해주세요.")
@@ -160,8 +153,8 @@ export default function Consult(){
  
     const startNo = filteredList.length - ((currentPage - 1) * ITEMS_PER_PAGE);
     
-    // 💡 카테고리 목록
-    const categories = ['전체', '동안 성형', '쁘띠 성형', '눈 성형', '코 성형', '가슴 성형'];
+    // 💡 화면에 보여줄 상담 분야 목록 카테고리 정의
+    const categories = ['전체', '동안 성형', '쁘띠 성형', '눈 성형', '코 성형', '가슴 성형']; // 필요에 따라 추가/수정 가능
 
     return(
         <>
@@ -169,6 +162,29 @@ export default function Consult(){
                 <S.ConsultPageHeader>
                     <S.ConsultPageTitle>상담신청 관리</S.ConsultPageTitle>
                 </S.ConsultPageHeader>
+
+                {/* 🎯 상담 분야별 필터 탭 영역 추가 */}
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                    {categories.map((dept) => (
+                        <button
+                            key={dept}
+                            onClick={() => handleDeptFilter(dept)}
+                            style={{
+                                padding: '8px 16px',
+                                borderRadius: '20px',
+                                border: `1px solid ${selectedDept === dept ? COLORS.POINT : '#ddd'}`,
+                                backgroundColor: selectedDept === dept ? COLORS.POINT : '#fff',
+                                color: selectedDept === dept ? '#fff' : COLORS.TEXT,
+                                cursor: 'pointer',
+                                fontWeight: selectedDept === dept ? 'bold' : 'normal',
+                                fontSize: '14px',
+                                transition: 'all 0.2s'
+                            }}
+                        >
+                            {dept}
+                        </button>
+                    ))}
+                </div>
 
                 {/* 🎯 검색 및 필터 영역 */}
                 <S.ConsultFilterCard>
@@ -211,70 +227,7 @@ export default function Consult(){
                                     <th style={{width:'10%'}}>No.</th>
                                     <th style={{width:'10%'}}>이름</th>
                                     <th style={{width:'15%'}}>연락처</th>
-                                    {/* 🎯 상담분야 헤더 (드롭다운 포함) */}
-                                    <th style={{width:'22%', overflow: 'visible', position: 'relative'}}>
-                                        <div 
-                                            onClick={(e) => {
-                                                e.stopPropagation(); // 이벤트 버블링 방지
-                                                setIsDeptOpen(!isDeptOpen);
-                                            }}
-                                            style={{
-                                                display: 'flex', 
-                                                alignItems: 'center', 
-                                                justifyContent: 'center', 
-                                                gap: '4px', 
-                                                cursor: 'pointer',
-                                                userSelect: 'none',
-                                                color: selectedDept !== '전체' ? COLORS.POINT : 'inherit',
-                                                padding: '4px'
-                                            }}
-                                        >
-                                            <span>상담분야 {selectedDept !== '전체' && `(${selectedDept})`}</span>
-                                            <FiChevronDown size={14} style={{ transform: isDeptOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
-                                        </div>
-
-                                        {/* 드롭다운 메뉴 박스 */}
-                                        {isDeptOpen && (
-                                            <div 
-                                                ref={deptDropdownRef}
-                                                style={{
-                                                    position: 'fixed', // 👈 absolute 대신 fixed를 쓰면 테이블 overflow나 부모 박스에 안 가리고 화면 최상단에 무조건 뜸!
-                                                    // 또는 absolute를 유지하고 싶다면 아래 주석 참고
-                                                    backgroundColor: '#fff',
-                                                    boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-                                                    borderRadius: '8px',
-                                                    zIndex: 9999, // 👈 우선순위를 엄청 높임
-                                                    minWidth: '140px',
-                                                    padding: '6px 0',
-                                                    border: '1px solid #ddd',
-                                                    marginTop: '5px'
-                                                }}
-                                            >
-                                                {categories.map((dept) => (
-                                                    <div
-                                                        key={dept}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleDeptSelect(dept);
-                                                        }}
-                                                        style={{
-                                                            padding: '10px 16px',
-                                                            fontSize: '13px',
-                                                            color: selectedDept === dept ? COLORS.POINT : '#333',
-                                                            backgroundColor: selectedDept === dept ? '#f0f4ff' : 'transparent',
-                                                            fontWeight: selectedDept === dept ? 'bold' : 'normal',
-                                                            cursor: 'pointer',
-                                                            textAlign: 'left',
-                                                        }}
-                                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = selectedDept === dept ? '#f0f4ff' : 'transparent'}
-                                                    >
-                                                        {dept}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </th>
+                                    <th style={{width:'22%'}}>상담분야</th>
                                     <th style={{width:'13%'}}>신청일시</th>
                                     <th style={{width:'18%'}}>상태</th>
                                     <th style={{width:'12%'}}>관리</th>

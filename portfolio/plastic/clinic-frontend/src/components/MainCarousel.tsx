@@ -1,16 +1,43 @@
 'use client'
 
 import { useCallback, useEffect, useState } from "react"
+import axios from "axios"
+import Link from "next/link"
 import useEmblaCarousel from "embla-carousel-react"
 import * as S from './MainCarousel.styles'
 
-const MAIN_SLIDES =[
-    {id:1, imageUrl:'/images/main/banner/banner1.jpg', title: '예쁘면다야!'},
-    {id:2, imageUrl:'/images/main/banner/banner2.jpg', title: '레이어핏 울쎄라'},
-    {id:3, imageUrl:'/images/main/banner/main-banner3.jpg', title: '여름시즌 한정이벤트!'},
-];
+interface SlideItem {
+    id:number;
+    fileName:string;
+    title:string;
+    link:string;
+}
+
 export default function MainCarousel (){
 
+    const [slides, setSlides]=useState<SlideItem[]>([]);
+
+    useEffect(()=>{
+        const fetchSlides = async()=>{
+            try{
+                const res = await axios.get('http://localhost:4000/api/admin/carousel')
+                if(res.data.success){
+                    const dbData = res.data.data;
+                    if(dbData.SLIDES && dbData.SLIDES !== '[]'){
+                        setSlides(JSON.parse(dbData.SLIDES));
+                    }
+                }else{
+                    // DB가 비어있을 때 깨지지 않도록 보여줄 기본 슬라이드 1장 세팅
+                    setSlides([
+                        { id: 1, fileName: "default-banner.jpg", title: "기본 배너", link: "/" }
+                    ]);
+                }
+            }catch(err){
+                console.error('메인슬라이더 조회중에러: ', err)
+            }
+        }
+        fetchSlides();
+    }, [])
     //loop:무한반복
     const [emblaRef, emblaApi]=useEmblaCarousel({loop:true});
     //좌우 화살표 핸들러
@@ -31,7 +58,7 @@ export default function MainCarousel (){
         if(!emblaApi) return;
         const interval = setInterval(() => {
             emblaApi.scrollNext();
-        }, 3000);
+        }, 4000);
 
         return ()=>clearInterval(interval);
     },[emblaApi]);
@@ -41,9 +68,18 @@ export default function MainCarousel (){
         <S.CarouselSection>
             <S.EmblaViewport ref={emblaRef}>
                 <S.EmblaContainer>
-                    {MAIN_SLIDES.map(slide=>(
+                    {slides.map(slide=>(
                         <S.EmblaSlide key={slide.id}>
-                            <S.SlideImg src={slide.imageUrl} alt={slide.title}/>
+                            <Link href={slide.link || '#'}>
+                                <S.SlideImg 
+                                src={`http://localhost:4000/images/${slide.fileName}`} 
+                                alt={slide.title}/>
+                                {slide.title && (
+                                    <S.SlideCopy>
+                                        {slide.title}
+                                    </S.SlideCopy>
+                                )}
+                            </Link>
                         </S.EmblaSlide>
                     ))}
                 </S.EmblaContainer>

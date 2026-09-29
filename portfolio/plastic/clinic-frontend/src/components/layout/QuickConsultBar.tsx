@@ -30,8 +30,18 @@ export default function QuickConsultBar (){
        openPopup('입력 확인', '연락처를 입력해주세요.');
         return;
     }
+    //💘 연락처길이가 짧은경우
+    if(phone.length < 9) {
+        openPopup('입력 환인', '연락처를 올바르게 입력해주세요');
+        return;
+    }
+    //가짜번호 검사 정규식
+    if(/(\d)\1{6}/.test(phone)){
+        openPopup('입력 확인', '장난성 번호는 접수할수없습니다')
+        return;
+    }
     if (!department.trim()) {
-       openPopup('입력 확인', '상담 과목을 선택해주세요.');
+       openPopup('입력 확인', '상담 분야를 선택해주세요.');
         return;
     }
     if (!isAgreed) {
@@ -81,11 +91,18 @@ export default function QuickConsultBar (){
                 placeholder="이름을 작성해주세요"
                 onChange={e=>setName(e.target.value)}
                 />
-                <S.Input
+                <S.Input 
                 type="tel"
-                placeholder="연락처를 작성해주세요"
+                inputMode="numeric"// 📱 모바일에서 숫자 전용 키패드가 뜨도록 지정
+                pattern="[0-9]*"             // 모바일 보조 속성
+                placeholder="연락처 ( 숫자만입력 )"
                 value={phone}
-                onChange={e=>setPhone(e.target.value)}
+                onChange={e=>{
+                    //숫자가아니라면 지워버림
+                    const onlyNums = e.target.value.replace(/[^0-9]/g,'');
+                    setPhone(onlyNums)
+                }}
+                maxLength={11}
                 />
 
                 <S.Select 
