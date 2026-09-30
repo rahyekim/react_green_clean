@@ -225,7 +225,7 @@ export default function Users() {
                         <S.Prev
                         $active={currentPage===1}
                         disabled={currentPage <=1}
-                        onClick={()=>setCurrentPage(prev=> Math.max(1,prev-1))}>
+                        onClick={()=>setCurrentPage(prev=> Math.max(prev-1,1))}>
                             이전
                         </S.Prev>
                         {Array.from({length:totalPages},(_,i)=>i+1).map(page=>(
