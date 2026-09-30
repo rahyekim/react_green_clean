@@ -83,6 +83,11 @@ module.exports = new EntitySchema({
             type:'number',
             default:0,
             nullable:false,
+        },
+        STATUS:{
+            type:'varchar2',
+            length:20,
+            default:"'정상'",
         }
     }
 

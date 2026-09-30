@@ -13,6 +13,7 @@ interface SlideItem {
     title: string;
     link: string;
     tempFile?: File | null; // DB에 저장하기 전 임시로 들고 있을 실제 파일 데이터
+    tempUrl?: string | null;    // 브라우저 미리보기용 임시 URL (추가됨!)
 }
 
 export default function Visual() {
@@ -24,7 +25,7 @@ export default function Visual() {
     useEffect(() => {
         const fetchVisualSettings = async () => {
             try {
-                const response = await axios.get("http://localhost:4000/api/admin/visual");
+                const response = await axios.get("http://localhost:4000/api/admin/carousel");
                 if (response.data.success) {
                     const dbData = response.data.data;
                     if (dbData.SLIDES && dbData.SLIDES !== "[]") {
@@ -56,20 +57,26 @@ export default function Visual() {
     const handleFileChange = (id: number, e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
+            const previewUrl = URL.createObjectURL(file); //임시미리보기url생성
             setSlides(slides.map(slide => 
-                slide.id === id ? { ...slide, tempFile: file, fileName: file.name } : slide
+                slide.id === id ? { 
+                    ...slide, 
+                    tempFile: file, 
+                    tempUrl: previewUrl,  
+                    fileName: file.name
+                } : slide
             ));
         }
     };
 
-    // 4. 저장 버튼 클릭 시 (각 파일 업로드 후 DB 저장)
+    // 4. 저장 버튼 클릭 (파일 업로드 -> DB 저장 순서로 진행)
     const handleSave = async () => {
         try {
-            // [STEP 1] 새로 추가된 이미지가 있다면 백엔드로 하나씩 전송해서 진짜 파일명을 받아옴
+            // 새로 추가된 이미지가 있다면 백엔드로 하나씩 전송해서 진짜 파일명을 받아옴
             const updatedSlides = await Promise.all(slides.map(async (slide) => {
                 if (slide.tempFile) {
                     const formData = new FormData();
-                    // 💡 기존에 만들어둔 로고 업로드 API 필드명을 그대로 씁니다.
+                    // 💡 기존에 만들어둔 로고 업로드 API 필드명을 그대로
                     formData.append('logoImage', slide.tempFile); 
                     
                     const uploadRes = await axios.post("http://localhost:4000/api/admin/upload", formData, {
@@ -77,23 +84,23 @@ export default function Visual() {
                     });
                     
                     if (uploadRes.data.success) {
-                        // 업로드 성공 시 새 파일명을 적용하고, tempFile은 제거
-                        return { ...slide, fileName: uploadRes.data.filename, tempFile: null };
+                        // 업로드 성공 시 새 파일명을 적용하고, 임시 파일/URL은 초기화
+                        return { ...slide, fileName: uploadRes.data.filename, tempFile: null, tempUrl: null };
                     }
                 }
                 return slide;
             }));
 
-            // [STEP 2] DB로 보낼 때는 tempFile 속성을 제외하고 깔끔하게 텍스트만 보냅니다.
-            const payloadSlides = updatedSlides.map(({ tempFile, ...rest }) => rest);
+            //DB에는 파일 객체나 임시 URL을 제외하고 순수한 텍스트 데이터(JSON)만 전송
+            const payloadSlides = updatedSlides.map(({ tempFile, tempUrl, ...rest }) => rest);
 
             await axios.put("http://localhost:4000/api/admin/carousel", { slides: payloadSlides });
             
-            setSlides(updatedSlides); // 화면 상태도 최신으로 업데이트
+            setSlides(updatedSlides); // 화면 상태도 업데이트
             
         } catch (error) {
             console.error("캐러셀 저장 에러:", error);
-            alert("저장에 실패했습니다.");
+            openPopup('알림',"저장에 실패했습니다.")
         }
     };
 
@@ -140,8 +147,7 @@ export default function Visual() {
                                         <span className="filename">{slide.fileName || "선택된 이미지가 없습니다"}</span>
                                     </S.FileInputWrapper>
                                     
-                                    {/* 미리보기 (파일이 등록되어 있으면 표시) */}
-                                    {/* 미리보기 영역 (신규 선택 파일 혹은 기존 DB 파일) */}
+                                    {/* 미리보기 영역 (신규 선택 파일 or 기존 DB 파일) */}
                                     {slide.tempFile ? (
                                         <S.Preview>
                                         <img 

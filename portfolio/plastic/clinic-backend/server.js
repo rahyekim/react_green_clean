@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const {Like}=require('typeorm'); //
 
 const AppDataSource =require('./db');
 const Member = require('./src/entity/Member');
@@ -17,6 +18,9 @@ const FooterSettings = require('./src/entity/FooterSettings');
 const Consult =require('./src/entity/Consult');
 const NavSetting = require('./src/entity/NavSettings');
 const Carousel = require('./src/entity/Carousel');
+const Tone = require('./src/entity/Tone');
+const Popup = require('./src/entity/Popup');
+const PopupSetting = require('./src/entity/PopupSetting');
 
 const app = express(); // Express 기능을 사용할수있도록 app이라는 서버 객체 만들어줌
 app.use(cors());
@@ -54,6 +58,8 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({storage:storage});
+
+//
 
 app.post('/api/admin/upload', upload.single('logoImage'), (req,res)=>{
     if(!req.file){
@@ -493,18 +499,220 @@ app.put('/api/admin/carousel', async(req,res)=>{
     }
 })
 
+//회원목록 전체조회(최신가입순)
+// 예시: GET /api/admin/users?page=1&limit=10
+app.get('/api/admin/users', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Member);
+        //프론트에서 보낸 파라미터받기(기본값설정)
+        const page= parseInt(req.query.page) || 1;
+        const limit= parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
+        //데이터베이스에게 건너뛸 개수 계산(offset)
+        const skip = (page-1)*limit;
+        //검색어가 있으면 이름(user_name)으로 필터링
+        const whereClause = search? {USER_NAME: Like(`%${search}%`)} : {};
 
-//🧩 ORM은 Object-Relational Mapping(객체-관계 매핑)
-//서버시작시 TypeORM DB연결 
-// AppDataSource.initialize()
-// .then(()=> {console.log("오라클 DB 성공적으로 연결💙")})
-// .catch(err=> console.log("DB연결실패!", err))
+        //데이터 검색 및 전체 개수(totalCount)같이 가져오기
+        const [users, totalCount]=await repo.findAndCount({
+            where: whereClause,
+            order: {USER_IDX:'DESC'},
+            skip:skip,
+            take:limit
+        });
+        //총페이지수 계산
+        const totalPages = Math.ceil(totalCount/limit);
 
-// app.listen(PORT, ()=>{
-//     console.log(`server is running on port ${PORT}💙`)
+        return res.status(200).json({
+            success:true, 
+            data:users,
+            pagination:{
+                totalPages,
+                totalCount,
+                currentPage:page,
+                limit
+            }
+        });
+
+    }catch(err){
+        console.error('회원목록 조회에러:', err);
+        return res.status(500).json({success:false, message:'서버에러'})
+    }
+})
+
+
+
+app.put('/api/admin/users/:idx/status', async(req,res)=>{
+    try{
+        const userIdx = Number(req.params.idx);
+    const repo = AppDataSource.getRepository(Member);
+    const user = await repo.findOneBy({USER_IDX:userIdx})
+    if(!user) return res.status(404).json({success:false, message:'등록된 회원이 없습니다'})
+    //상태변경
+    user.STATUS = user.STATUS === '정지' ? '정상' : '정지';
+    await repo.save(user); //저장
+    return res.status(200).json({success:true, message:'상태가 변경되었습니다'});
+
+    }catch(err){
+    console.error('회원목록 수정에러:', err);
+    return res.status(500).json({success:false, message:'상태변경 에러'})
+    }
+})
+
+app.delete('/api/admin/users/:idx', async(req,res)=>{
+    try{
+    const userIdx = Number(req.params.idx);
+    const repo = AppDataSource.getRepository(Member);
+
+    // 회원이 실제로 존재하는지 먼저 확인하는 것이 안전
+    const user = await repo.findOneBy({ USER_IDX: userIdx });
+    if (!user) {
+        return res.status(404).json({ success: false, message: '회원이 없습니다' });
+    }
+    await repo.delete(userIdx)
+    return res.status(200).json({success:true, message:'삭제되었습니다'});
+
+    }catch(err){
+    console.error('회원삭제에러:', err);
+    return res.status(500).json({success:false, message:'회원삭제 에러'})
+    }
+})
+
+//톤앤매너
+app.get('/api/admin/tone', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Tone);
+        let setting = await repo.findOne({where:{ID:1}});
+        if(!setting){
+            return res.status(200).json({success:true, data:{PRIMARY_TONE:'BLUE', IS_DARK_MODE:'N'}})
+        }
+        return res.status(200).json({success:true, data:setting});
+
+    }catch(err){
+    console.error('톤앤매너 조회에러:', err);
+    return res.status(500).json({success:false, message: '서버 에러가 발생했습니다.'})  
+    }
+})
+
+app.put('/api/admin/tone', async(req,res)=>{
+    try{
+        const {primaryTone, isDarkMode} = req.body;
+        const repo = AppDataSource.getRepository(Tone);
+        let setting = await repo.findOne({where:{ID:1}});
+
+        if(!setting){
+            setting = repo.create({
+                ID:1,
+                PRIMARY_TONE: primaryTone || 'BLUE',
+                IS_DARK_MODE: isDarkMode || 'N'
+            });
+        }else{
+            setting.PRIMARY_TONE = primaryTone;
+            setting.IS_DARK_MODE = isDarkMode;
+        }
+        
+        await repo.save(setting);
+        return res.status(200).json({success:true, message:'톤앤매너 저장성공'});
+
+    }catch(err){
+    console.error('톤앤매너 저장에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+//팝업목록 및 설정 전체 조회
+app.get('/api/admin/popup', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Popup);
+        const setRepo = AppDataSource.getRepository(PopupSetting);
+        let setting = await setRepo.findOne({where:{ID:1}});
+        const popups = await repo.find({order:{POPUP_IDX:'DESC'}});
+
+        return res.status(200).json({
+            success:true,
+            maxPopups: setting ? setting.MAX_POPUPS : 1,
+            popups
+        });
+    }catch(err){
+        console.error('팝업 조회에러:', err);
+        return res.status(500).json({success:false})  
+    }
+})
+
+//최대노출갯수설정 저장
+app.put('/api/admin/popup/setting', async(req,res)=>{
+    try{
+        const {maxPopups} = req.body;
+        const repo = AppDataSource.getRepository(PopupSetting);
+        let setting = await repo.findOne({where:{ID:1}});
+        if(!setting) {
+            setting = repo.create({
+            ID:1,
+            MAX_POPUPS: maxPopups || 1
+        });
+        }else{
+            setting.MAX_POPUPS = maxPopups;
+        }
+        await repo.save(setting);
+        return res.status(200).json({success:true, message:'팝업 노출 개수 저장 완료'});
+
+    }catch(err){
+        console.error('팝업 노출 개수 설정 에러:', err);
+        return res.status(500).json({success:false})  
+    }
+})
+
+//새 팝업등록(이미지 업로드 포함)
+app.post('/api/admin/popup',upload.single('popupImg'), async(req,res)=>{
+    try{
+        if(!req.file) return res.status(400).json({success:false, message:'이미지가 없습니다'})
+
+        const { title,link,startDate, endDate, useTodayClose }= req.body;
+        const repo = AppDataSource.getRepository(Popup);
+
+        const newPopup = repo.create({
+            TITLE: title,
+            LINK: link || '',
+            FILE_NAME: req.file.filename,
+            START_DATE: startDate,
+            END_DATE: endDate,
+            USE_TODAY_CLOSE: useTodayClose === 'true' ? 'Y' : 'N'
+        })
+        await repo.save(newPopup);
+
+        return res.status(200).json({success:true, message:'새 팝업등록 성공'});
+
+    }catch(err){
+        console.error('팝업 등록에러:', err);
+        return res.status(500).json({success:false})  
+    }
+})
+
+app.delete('/api/admin/popup/:idx', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Popup);
+        await repo.delete(req.params.idx)
+        return res.status(200).json({success:true, message:'팝업 삭제성공'});
+
+    }catch(err){
+        console.error('팝업 삭제에러:', err);
+        return res.status(500).json({success:false})  
+    }
+})
+
+// app.post('/api/admin/users', async(req,res)=>{
+//     try{
+//         const repo = AppDataSource.getRepository();
+//         return res.status(200).json({success:true, message:''});
+
+//     }catch(err){
+//     console.error('회원목록 등록에러:', err);
+//     return res.status(500).json({success:false})  
+//     }
 // })
 
-//서버시작과정을 순서대로 처리하기 위한 비동기 함수를 ..?
+
+//서버시작과정을 순서대로 처리하기 위한 비동기 함수를
 async function startup(){
     console.log('서버시작중💙')
 
@@ -523,13 +731,3 @@ async function startup(){
 }
 startup();
 
-// process.on('SIGINT', async()=>{
-//     console.log('서버를 종료합니다..⚠️')
-
-//     await db.close();
-    
-//     process.exit(0);
-// })
-
-//db.js의 close() 함수를 불러와 열려있는 DB연결을 안전하게 먼저 끊어줌
-//DB연결 끊기완료=> Node.js 프로세스를 정상적으로 완전히 종료(0)

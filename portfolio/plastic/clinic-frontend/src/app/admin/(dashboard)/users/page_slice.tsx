@@ -19,34 +19,17 @@ interface UserData {
 export default function Users() {
     const {popupConfig,closePopup,openPopup}=usePopup();
     
-    //상태 관리: 회원 목록
+    // 🎯 상태 관리: 회원 목록
     const [userList, setUserList] = useState<UserData[]>([]);
-    //💙 페이지네이션 상태 관리 (한 페이지당 10명)
-    const [currentPage, setCurrentPage]=useState<number>(1);
-    const [totalPages, setTotalPages]=useState<number>(1); //서버가줌
-    const [totalCount, setTotalCount]=useState<number>(0); //전체회원수
-    // 🔍 검색어 
-    const [searchKeyword, setSearchKeyword]=useState<string>(''); //실제로 검색에쓰이는값
-    const [searchInput, setSearchInput]=useState<string>(''); //입력창에 적히는값
-    
-    //한 페이지당 개수
-    const limit = 10;
 
     //화면로드시 데이터조회
     useEffect(()=>{
-        fetchusers(currentPage, searchKeyword);
-    },[currentPage, searchKeyword])
+        fetchusers();
+    },[])
 
-    const fetchusers = async(page:number, search:string )=>{
+    const fetchusers = async()=>{
         try{
-            // 백엔드가 만든 쿼리스트링 파라미터(page, limit, search) 전송
-            const res= await axios.get('http://localhost:4000/api/admin/users',{
-                params:{
-                    page,  //page:currentPage
-                    limit,   //limit:10
-                    search  //search:searchKeyword
-                }
-            })
+            const res= await axios.get('http://localhost:4000/api/admin/users')
             if(res.data.success){
                 const formattedUsers = res.data.data.map((user:any)=>({
                     idx:user.USER_IDX,
@@ -59,33 +42,39 @@ export default function Users() {
                     : '2026-09-01',
                 }));
                 setUserList(formattedUsers);
-                // 서버가 계산해 준 총 페이지 수/전체 회원 수
-                setTotalCount(res.data.pagination.totalCount);
-                setTotalPages(res.data.pagination.totalPages);
             }
         }catch(err){
             console.error('회원목록불러오기실패:', err)
         }
     }
 
-    // 🔍 검색 버튼 클릭 시
-    const handleSearch = ()=>{
-        setSearchKeyword(searchInput);
-        setCurrentPage(1); // 검색 시 무조건 1페이지로 초기화
-    }
+    //💙 페이지네이션 상태 관리 (한 페이지당 10명)
+    const [currentPage, setCurrentPage]=useState<number>(1);
+    const itemsPerPage = 10;
 
-    // 엔터키로 검색할 때
-    const handleKeyDown = (e:React.KeyboardEvent<HTMLInputElement>)=>{
-        if(e.key === 'Enter'){
-            handleSearch();
+    //1️⃣ 전체 데이터 개수 기반으로 총 페이지 수 동적 계산 (데이터가 없으면 최소 1페이지)
+    const totalPages = Math.ceil(userList.length / itemsPerPage) || 1;
+
+    // 2️⃣ 현재 페이지에 보여줄 데이터 자르기 (slice) (0,10)(10,20)
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFistItem = indexOfLastItem - itemsPerPage;
+    const currentItems= userList.slice(indexOfFistItem, indexOfLastItem);
+
+    // 3️⃣ 페이지 번호 그룹핑 (최대 5개씩 노출)
+    const maxPageBtns =5;  
+    const currentGroup = Math.ceil(currentPage/maxPageBtns);
+    //현재 그룹의 시작페이지와 끝 페이지 계산 (1~5, 6~10)
+    let startPage = (currentGroup -1) * maxPageBtns +1 ;
+    let endPage = Math.min(startPage+ maxPageBtns -1, totalPages);
+    
+    // 데이터가 줄어들어 현재 페이지가 총 페이지 수보다 커질 경우 방어 코드
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
         }
-    }
+    }, [totalPages, currentPage]);
 
-    // 💙페이지 번호 그룹핑 계산 (최대 5개씩)
-    const maxPageBtns = 5;
-    const currentGroup = Math.ceil(currentPage / maxPageBtns);
-    let startPage = (currentGroup - 1) * maxPageBtns + 1;
-    let endPage = Math.min(startPage + maxPageBtns - 1, totalPages);
+    // if(totalPages === 0) endPage =1; //데이터가없을시 방어코드
     // ----------------------------------------------------
     // 1. 회원 상태 변경 토글 (정상 <-> 정지)
     // ----------------------------------------------------
@@ -147,19 +136,11 @@ export default function Users() {
                 <S.UserPageTitle>회원 관리</S.UserPageTitle>
             </S.UserPageHeader>
 
-            {/* 🔍 검색 영역 */}
+            {/* 🎯 검색 및 필터 영역 */}
             <S.UserFilterCard>
                 <S.UserInputGroup>
-                    <S.UserInput
-                    type="text" 
-                    placeholder="이름, 아이디 또는 연락처 검색" 
-                    value={searchInput}
-                    onChange={e=>setSearchInput(e.target.value)}
-                    onKeyDown={handleKeyDown} //e=>e.key ==='Enter' && handleSearch()
-                    />
-                    <S.UserSearchButton
-                    onClick={handleSearch}
-                    >
+                    <S.UserInput type="text" placeholder="이름, 아이디 또는 연락처 검색" />
+                    <S.UserSearchButton>
                         <FiSearch size={16} /> 검색
                     </S.UserSearchButton>
                 </S.UserInputGroup>
@@ -187,7 +168,7 @@ export default function Users() {
                         <tbody>
                             {userList.map((item, index) => (
                                 <tr key={item.idx}>
-                                    <td>{totalCount-((currentPage-1)* limit + index) }</td>
+                                    <td>{userList.length - index}</td>
                                     <td><strong>{item.name}</strong></td>
                                     <td>{item.userId}</td>
                                     <td>{item.phone}</td>
@@ -220,32 +201,50 @@ export default function Users() {
                 </S.UserTableWrapper>
 
                 {/*🌟페이지네이션 */}
-                {totalPages > 0 && (
-                    <S.Pagination>
-                        <S.Prev
-                        $active={currentPage===1}
-                        disabled={currentPage <=1}
-                        onClick={()=>setCurrentPage(prev=> Math.max(1,prev-1))}>
-                            이전
-                        </S.Prev>
-                        {Array.from({length:totalPages},(_,i)=>i+1).map(page=>(
-                            <S.PaginationBtn 
-                            $active={currentPage===page}
+                <S.PaginationContainer>
+                    {/* 맨처음으로 */}
+                    <S.PageButton 
+                    onClick={()=>setCurrentPage(1)}
+                    disabled={currentPage===1}
+                    >
+                        <FiChevronsLeft size={16}/>
+                    </S.PageButton>
+
+                    {/* 이전페이지 */}
+                    <S.PageButton
+                    onClick={()=>setCurrentPage(prev=> Math.max(prev-1,1))}
+                    disabled={currentPage===1}
+                    >
+                        <FiChevronLeft size={16}/>
+                    </S.PageButton>
+
+                    {/* 페이지번호목록 5개씩만 노출*/}
+                    <S.PageNumberGroup>
+                        {Array.from({length:(endPage-startPage+1)},(_,i)=>i+startPage).map(page=>(
+                            <S.PageNumberBtn 
                             key={page}
+                            $active={currentPage===page}
                             onClick={()=>setCurrentPage(page)}
                             >
                                 {page}
-                            </S.PaginationBtn>
+                            </S.PageNumberBtn>
                         ))}
-                        <S.Next
-                        $active={currentPage===totalPages}
-                        disabled={currentPage >= totalPages}
-                        onClick={()=>setCurrentPage(prev=> Math.min(prev+1,totalPages))}
-                        >
-                            다음
-                        </S.Next>
-                    </S.Pagination>
-                )}
+                    </S.PageNumberGroup>
+
+                    {/* 다음페이지 */}
+                    <S.PageButton
+                    onClick={()=>setCurrentPage(prev=> Math.min(prev+1,totalPages))}
+                    disabled={currentPage===totalPages}
+                    >
+                        <FiChevronRight size={16}/>
+                    </S.PageButton>
+                    <S.PageButton
+                    onClick={()=>setCurrentPage(totalPages)}
+                    disabled={currentPage===totalPages}
+                    >
+                        <FiChevronsRight size={16}/>
+                    </S.PageButton>
+                </S.PaginationContainer>
             </S.UserTableCard>
         </S.UserContainer>
 

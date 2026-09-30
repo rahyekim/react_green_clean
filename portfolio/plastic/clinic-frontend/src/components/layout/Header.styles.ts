@@ -69,16 +69,27 @@ white-space: nowrap;
 /* text-align: center; */
 
 `;
-export const NavItem = styled.span<{$active?:boolean}>`
+export const NavItem = styled.span<{
+    $active?:boolean, 
+    $themeColor?: string; 
+    $isDark?: boolean;}>`
+
 font-size: 16px;
 font-weight: bold;
 cursor: pointer;
-color: ${props=> props.$active ? '#0056b3': '#111111'};
-border-bottom: ${props=> props.$active ? '2px solid #0056b3': '2px solid transparent'};
+/* 활성화되었을 때 테마 컬러를 쓰거나, 
+아니면 다크모드에 맞는 기본 텍스트 색상 사용 */
+color: ${props => props.$active ? props.$themeColor : (props.$isDark ? '#f1f1f1' : '#111111')};
+
+/* 활성화되었을 때 밑줄도 테마 컬러로 동적 적용 */
+border-bottom: ${props => props.$active ? `2px solid ${props.$themeColor}` : '2px solid transparent'};
 padding-bottom: 5px;
 transition: all 0.2s ease-in-out;
-&&:hover{
-    color: #0056b3;
+
+&:hover {
+    /* 호버했을 때도 고정된 파란색 대신 테마 컬러나 포인트 컬러로 반응하도록 설정 */
+    color: ${props => props.$themeColor};
+    opacity: 0.5;
 }
 `;
 

@@ -70,6 +70,15 @@ export default function Consult(){
     }
 
     const toggleStatus = async(id:number)=>{
+        // setConsultList(prev=>(
+        //     prev.map(list=> (
+        //         list.ID === id ? {
+        //             ...list,
+        //             STATUS:  list.STATUS === '대기중' ? '상담완료' : '대기중' 
+        //         } : list
+        //     ))
+        // ));
+
         try{
         const res = await axios.put(`http://localhost:4000/api/admin/consult/${id}/status`)
         if(res.data.success){

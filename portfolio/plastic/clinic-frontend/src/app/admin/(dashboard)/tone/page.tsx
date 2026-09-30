@@ -1,6 +1,7 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
 import {
     FiMoon,FiSun,FiCheck,FiSave
 }from 'react-icons/fi';
@@ -15,13 +16,37 @@ export default function Tone(){
     
     const {popupConfig, closePopup, openPopup}=usePopup();
 
+    useEffect(()=>{
+        const fetchTone = async()=>{
+            try{
+                const res= await axios.get('http://localhost:4000/api/admin/tone')
+                if(res.data.success){
+                    const dbData= res.data.data;
+                    if(dbData.PRIMARY_TONE) setSelectedTone(dbData.PRIMARY_TONE);
+                    if(dbData.IS_DARK_MODE) setIsDarkMode(dbData.IS_DARK_MODE === 'Y');
+                } //문자열 'Y'가 맞으면 true 아니면 false로 변환
+            }catch(err){
+                console.error('톤앤매너 로드실패:', err);
+                openPopup('알림', '톤앤매너 조회에 실패했습니다')
+            }
+        }
+        fetchTone();
+    },[])
     const handleSave = async()=>{
         const payload= {
             primaryTone: selectedTone,
             isDarkMode: isDarkMode ? 'Y' : 'N',
         };
-        console.log('DB에 저장될 데이터:', payload);
-        openPopup('알림', '톤앤매너 성공하였습니다');
+        try{
+            const res= await axios.put('http://localhost:4000/api/admin/tone', payload)
+            if(res.data.success){
+                console.log('DB에 저장될 데이터:', payload);
+                openPopup('알림', '톤앤매너 성공하였습니다');
+            }
+        }catch(err){
+            console.error('톤앤매너 저장실패:', err);
+            openPopup('알림', '톤앤매너 등록에 실패했습니다');
+        }
     }
 
     return(

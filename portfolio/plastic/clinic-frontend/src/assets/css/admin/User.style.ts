@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexCenter } from '../common/Common.style';
 
 // -----------------------------------------
 // 🎯 회원 관리 (Users) 전용 스타일
@@ -95,6 +96,13 @@ export const UserTableWrapper = styled.div`
   width: 100%;
   overflow-x: auto; //💘 예비방어용
   min-width: 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
 `;
 
 export const UserTable = styled.table`
@@ -227,5 +235,109 @@ export const PageNumberBtn = styled.button<{ $active?: boolean }>`
     background-color: ${props => props.$active ? '#224abe' : '#eaecf4'};
     border-color: ${props => props.$active ? '#224abe' : '#b7b9cc'};
     color: ${props => props.$active ? '#fff' : '#3a3b45'};
+  }
+`;
+
+
+// export const Pagination= styled.div`
+// display: flex;
+// justify-content: center;
+// align-items: center;
+// margin-top: 20px;
+
+// gap: 8px;
+// padding-bottom: 20px;
+// `;
+
+// export const PaginationBtn = styled.button<{$active:boolean}>`
+// ${FlexCenter}
+// width: 32px;
+// height: 32px;
+// border: 1px solid #ddd;
+// border-radius: 4px;
+// font-weight: ${props=> props.$active ? 'bold' : 'normal' }; 
+// background-color: ${props=> props.$active ? '#333' : '#fff' }; 
+// color: ${props=> props.$active ? '#fff' : '#333' };
+// cursor: pointer;
+// `;
+
+// export const Prev = styled.button<{$active?:boolean}>`
+// ${FlexCenter}
+// padding: 6px 12px;
+// border: 1px solid #ddd;
+// border-radius: 4px ;
+// background-color: #fff;
+// cursor: currentPage === 1 ? 'not-allowed':'point';
+// `;
+// export const Next = styled.button<{$active?:boolean}>`
+// ${FlexCenter}
+// padding: 6px 12px;
+// border: 1px solid #ddd;
+// border-radius: 4px ;
+// background-color: #fff;
+// cursor: ${props=> props.$active ? 'not-allowed' :'point'};
+// `;
+
+// 프롭스 타입 정의
+interface ActiveProps {
+  $active?: boolean;
+}
+
+// 1. 전체 페이지네이션 컨테이너
+export const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 32px 0;
+`;
+
+export const BaseButton = styled.button<ActiveProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #64748b; 
+  transition: all 0.2s ease-in-out;
+
+  /* 호버 시 검은색 대신 세련된 포인트 블루와 부드러운 배경색 적용 */
+  &:hover:not(:disabled) {
+    background-color: #eff6ff;
+    border-color: #bfdbfe;
+    color: #2563eb;
+  }
+
+  &:disabled {
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    color: #cbd5e1;
+    cursor: not-allowed;
+  }
+`;
+
+export const Prev = styled(BaseButton)<ActiveProps>`
+  cursor: ${(props) => (props.$active ? 'not-allowed' : 'pointer')};
+`;
+
+export const Next = styled(BaseButton)<ActiveProps>`
+  cursor: ${(props) => (props.$active ? 'not-allowed' : 'pointer')};
+`;
+
+export const PaginationBtn = styled(BaseButton)<ActiveProps>`
+  background-color: ${(props) => (props.$active ? '#2563eb' : '#ffffff')};
+  color: ${(props) => (props.$active ? '#ffffff' : '#64748b')};
+  border-color: ${(props) => (props.$active ? '#2563eb' : '#e2e8f0')};
+  font-weight: ${(props) => (props.$active ? '600' : '500')};
+
+  &:hover:not(:disabled) {
+    background-color: ${(props) => (props.$active ? '#1d4ed8' : '#eff6ff')};
+    color: ${(props) => (props.$active ? '#ffffff' : '#2563eb')};
   }
 `;

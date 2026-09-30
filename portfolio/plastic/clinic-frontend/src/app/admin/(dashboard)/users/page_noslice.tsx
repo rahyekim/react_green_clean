@@ -220,32 +220,50 @@ export default function Users() {
                 </S.UserTableWrapper>
 
                 {/*🌟페이지네이션 */}
-                {totalPages > 0 && (
-                    <S.Pagination>
-                        <S.Prev
-                        $active={currentPage===1}
-                        disabled={currentPage <=1}
-                        onClick={()=>setCurrentPage(prev=> Math.max(1,prev-1))}>
-                            이전
-                        </S.Prev>
-                        {Array.from({length:totalPages},(_,i)=>i+1).map(page=>(
-                            <S.PaginationBtn 
-                            $active={currentPage===page}
+                <S.PaginationContainer>
+                    {/* 맨처음으로 */}
+                    <S.PageButton 
+                    onClick={()=>setCurrentPage(1)}
+                    disabled={currentPage===1}
+                    >
+                        <FiChevronsLeft size={16}/>
+                    </S.PageButton>
+
+                    {/* 이전페이지 */}
+                    <S.PageButton
+                    onClick={()=>setCurrentPage(prev=> Math.max(prev-1,1))}
+                    disabled={currentPage===1}
+                    >
+                        <FiChevronLeft size={16}/>
+                    </S.PageButton>
+
+                    {/* 페이지번호목록 5개씩만 노출*/}
+                    <S.PageNumberGroup>
+                        {Array.from({length:Math.max(endPage - startPage + 1, 0)},(_,i)=>i+startPage).map(page=>(
+                            <S.PageNumberBtn 
                             key={page}
+                            $active={currentPage===page}
                             onClick={()=>setCurrentPage(page)}
                             >
                                 {page}
-                            </S.PaginationBtn>
+                            </S.PageNumberBtn>
                         ))}
-                        <S.Next
-                        $active={currentPage===totalPages}
-                        disabled={currentPage >= totalPages}
-                        onClick={()=>setCurrentPage(prev=> Math.min(prev+1,totalPages))}
-                        >
-                            다음
-                        </S.Next>
-                    </S.Pagination>
-                )}
+                    </S.PageNumberGroup>
+
+                    {/* 다음페이지 */}
+                    <S.PageButton
+                    onClick={()=>setCurrentPage(prev=> Math.min(prev+1,totalPages))}
+                    disabled={currentPage===totalPages}
+                    >
+                        <FiChevronRight size={16}/>
+                    </S.PageButton>
+                    <S.PageButton
+                    onClick={()=>setCurrentPage(totalPages)}
+                    disabled={currentPage===totalPages}
+                    >
+                        <FiChevronsRight size={16}/>
+                    </S.PageButton>
+                </S.PaginationContainer>
             </S.UserTableCard>
         </S.UserContainer>
 

@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import * as S from "@/assets/css/admin/EventPop.style";
 import { FiSave, FiPlus, FiTrash2, FiImage, FiClock } from "react-icons/fi";
+import usePopup from "@/hooks/usePopup";
 import Popup from "@/components/ui/Popup";
 
 interface PopupData {
@@ -11,46 +13,58 @@ interface PopupData {
     startDate: string;
     endDate: string;
     useTodayClose: boolean;
+    fileName?:string | null;
+    tempUrl?:string | null;
 }
 
 export default function Pop() {
+    const {popupConfig,closePopup,openPopup}=usePopup();
+    
     // 🎯 상태 관리: 팝업 글로벌 설정
     const [maxPopups, setMaxPopups] = useState<number>(1);
     
     // 🎯 상태 관리: 팝업 목록 데이터
-    const [popups, setPopups] = useState<PopupData[]>([
-        {
-            id: 1,
-            title: "가을맞이 첫방문 할인 이벤트",
-            link: "/event/autumn",
-            startDate: "2026-09-01T00:00",
-            endDate: "2026-10-31T23:59",
-            useTodayClose: true
-        },
-        {
-            id: 2,
-            title: "추석맞이 10월 할인 이벤트",
-            link: "/event/autumn-event",
-            startDate: "2026-09-01T00:00",
-            endDate: "2026-09-20T23:59",
-            useTodayClose: false
-        }
-    ]);
+    const [popups, setPopups] = useState<PopupData[]>([]);
 
     // 🎯 상태 관리: 새 팝업 등록 폼
     const [newPopup, setNewPopup] = useState<Partial<PopupData>>({
         title: "", link: "", startDate: "", endDate: "", useTodayClose: true
     });
+    //이미지 파일 객체를 저장할 상태추가
+    const [selectedFile, setSelectedFile] = useState<File|null>(null);
     const [fileName, setFileName] = useState("");
 
-    const [isSavePopupOpen, setIsSavePopupOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date().getTime());
 
     // 실시간 상태 업데이트를 위한 타이머(1분마다 시간 갱신)
     useEffect(() => {
+        fecthPopups();
         const timer = setInterval(() => setCurrentTime(new Date().getTime()), 60000);
         return () => clearInterval(timer);
     }, []);
+
+    //db에서 불러오기
+    const fecthPopups = async()=>{
+        try{
+            const res= await axios.get('http://localhost:4000/api/admin/popup')
+            if(res.data.success){
+                setMaxPopups(res.data.maxPopups);
+                const formattedPopup = res.data.popups.map((p:any)=>({
+                    id: p.POPUP_IDX,
+                    title: p.TITLE,
+                    link: p.LINK, 
+                    fileName: p.FILE_NAME,
+                    startDate: p.START_DATE, 
+                    endDate: p.END_DATE, 
+                    useTodayClose: p.USE_TODAY_CLOSE === 'Y'
+                }));
+                setPopups(formattedPopup);
+            }
+        }catch(err){
+            console.error('팝업 목록 로드 실패:', err);
+            openPopup('알림', '팝업 목록 조회에 실패했습니다');
+        }
+    }
 
     // 🕒 날짜 비교 로직
     const getPopupStatus = (start: string, end: string) => {
@@ -67,26 +81,67 @@ export default function Pop() {
         return { label: "노출중", color: "#1cc88a" };
     };
 
-    const handleAddPopup = () => {
-        if (!newPopup.title || !newPopup.startDate || !newPopup.endDate) {
-            alert("제목과 시작/종료 일시를 모두 입력해주세요.");
+    const handleAddPopup = async() => {
+       console.log("버튼 클릭됨! 현재 입력된 값들:", {
+        title: newPopup.title,
+        start: newPopup.startDate,
+        end: newPopup.endDate,
+        file: selectedFile
+    }); // 👈 이 로그가 콘솔에 찍히는지 확인해보세요!
+        if (!newPopup.title || !newPopup.startDate || !newPopup.endDate || !selectedFile) {
+            openPopup('입력 알림', "제목과 시작/종료 일시를 모두 입력해주세요.");
             return;
         }
-        setPopups([...popups, { id: Date.now(), ...newPopup } as PopupData]);
-        setNewPopup({ title: "", link: "", startDate: "", endDate: "", useTodayClose: true });
-        setFileName("");
-    };
+        const formData = new FormData();
+        formData.append('popupImg', selectedFile);
+        formData.append('title', newPopup.title);
+        formData.append('link', newPopup.link || '');
+        formData.append('startDate', newPopup.startDate);
+        formData.append('endDate', newPopup.endDate);
+        formData.append('useTodayClose', String(newPopup.useTodayClose));
 
-    const handleDelete = (id: number) => {
-        if (confirm("정말 이 팝업을 삭제하시겠습니까?")) {
-            setPopups(popups.filter(p => p.id !== id));
+        try{
+            const res = await axios.post('http://localhost:4000/api/admin/popup', formData, {
+                headers: {'Content-Type': 'multipart/form-data'}
+            });
+            if(res.data.success){
+                openPopup('알림', '팝업 등록에 성공했습니다');
+                setNewPopup({ title: "", link: "", startDate: "", endDate: "", useTodayClose: true });
+                setFileName("");
+                setSelectedFile(null);
+                fecthPopups();
+            }
+        }catch(err){
+            console.error('팝업 등록 실패:', err);
+            openPopup('알림', '팝업 등록에 실패했습니다');
         }
     };
 
-    const handleSave = () => {
-        const payload = { maxPopups, popups };
-        console.log("DB에 저장될 데이터:", payload);
-        setIsSavePopupOpen(true);
+    const handleDelete = async(id: number) => {
+        if (confirm("정말 이 팝업을 삭제하시겠습니까?")) {
+            try{
+                const res = await axios.delete(`http://localhost:4000/api/admin/popup/${id}`);
+                if(res.data.success){
+                    openPopup('알림', '팝업 삭제에 성공했습니다');
+                    setPopups(popups.filter(p => p.id !== id)); //fecthPopups();
+                }
+            }catch(err){
+            console.error('팝업 삭제 실패:', err);
+            openPopup('알림', '팝업 삭제에 실패했습니다');
+            }
+        }
+    };
+
+    const handleSave = async() => {
+        try{
+            const res= await axios.put('http://localhost:4000/api/admin/popup/setting', {maxPopups})
+              if(res.data.success){
+                    openPopup('알림', '팝업 개수 설정에 성공했습니다');
+                }
+        }catch(err){
+            console.error('팝업 개수 저장 실패:', err);
+            openPopup('알림', '팝업 개수 저장에 실패했습니다');
+        }
     };
 
     return (
@@ -145,7 +200,18 @@ export default function Pop() {
                                         type="file" 
                                         id="popup-img" 
                                         accept="image/*"
-                                        onChange={(e) => setFileName(e.target.files?.[0]?.name || "")}
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if(file){
+                                                setSelectedFile(file);
+                                                setFileName(file.name)
+                                            }else{
+                                                // 파일을 선택하다가 취소했을 때의 예외 처리
+                                                setSelectedFile(null);
+                                                setFileName("");
+                                            }
+                                        }
+                                        }
                                     />
                                     <S.PopFileLabel htmlFor="popup-img"><FiImage /> 이미지 선택</S.PopFileLabel>
                                     <span className="file-name">{fileName || "선택된 파일 없음"}</span>
@@ -204,11 +270,12 @@ export default function Pop() {
                             <S.PopTable>
                                 <thead>
                                     <tr>
-                                        <th style={{ width: 'auto' }}>제목 / 링크</th>      {/* 남는 공간을 모두 차지 (가장 유연하게 줄어듦) */}
-                                        <th style={{ width: '220px' }}>노출 기간</th>        {/* 날짜가 깨지지 않도록 px 고정 */}
-                                        <th style={{ width: '130px' }}>옵션</th>             {/* 뱃지가 잘리지 않게 130px 고정! */}
-                                        <th style={{ width: '100px' }}>상태</th>             {/* px 고정 */}
-                                        <th style={{ width: '90px' }}>관리</th>
+                                    <th style={{ width: 'auto' }}>미리보기</th>     
+                                    <th style={{ width: 'auto' }}>제목 / 링크</th>     
+                                    <th style={{ width: '220px' }}>노출 기간</th>       
+                                    <th style={{ width: '130px' }}>옵션</th>            
+                                    <th style={{ width: '100px' }}>상태</th>            
+                                    <th style={{ width: '90px' }}>관리</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -216,6 +283,11 @@ export default function Pop() {
                                         const status = getPopupStatus(popup.startDate, popup.endDate);
                                         return (
                                             <tr key={popup.id}>
+                                                <td>
+                                                    {popup.fileName && (
+                                                        <img src={`http://localhost:4000/images/${popup.fileName}`} alt="popup" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                                                    )}
+                                                </td>
                                                 <td style={{ textAlign: 'left' }}>
                                                     <strong>{popup.title}</strong>
                                                     <div style={{ fontSize: '0.8rem', color: '#858796' }}>{popup.link || '링크 없음'}</div>
@@ -249,14 +321,14 @@ export default function Pop() {
             </S.PopGrid>
         </S.PopContainer>
 
-    <Popup 
-        isOpen={isSavePopupOpen} 
-        title="저장 완료" 
-        onClose={() => setIsSavePopupOpen(false)}
-        // onConfirm={() => setIsSavePopupOpen(false)}
-    >
-        팝업 설정이 성공적으로 저장되었습니다.
-    </Popup>
+
+        <Popup 
+        isOpen={popupConfig.isOpen} 
+        title={popupConfig.title}
+        onClose={closePopup}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}
+        </Popup>
         </>
     );
 }
