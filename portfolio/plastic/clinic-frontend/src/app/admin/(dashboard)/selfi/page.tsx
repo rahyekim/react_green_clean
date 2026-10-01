@@ -1,8 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import * as S from "@/assets/css/admin/Selfi.style";
 import { FiSave, FiPlus, FiTrash2, FiImage, FiHeart, FiEye } from "react-icons/fi";
 import Popup  from "@/components/ui/Popup";
+import usePopup from "@/hooks/usePopup";
 
 interface SelfieData {
     id: number;
@@ -13,50 +15,91 @@ interface SelfieData {
 }
 
 export default function Self() {
-    // 🎯 상태 관리: 등록된 셀피 목록
-    const [selfies, setSelfies] = useState<SelfieData[]>([
-        { id: 1, imageUrl: "", likes: 892, views: 7921, isActive: true },
-        { id: 2, imageUrl: "", likes: 530, views: 4200, isActive: true }
-    ]);
+   
+    const {openPopup, popupConfig, closePopup}=usePopup();
+    
+    const [selfies, setSelfies] = useState<SelfieData[]>([]);
 
-    // 🎯 상태 관리: 새 셀피 등록 폼
     const [newSelfie, setNewSelfie] = useState({ likes: 0, views: 0 });
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState("");
     const [previewUrl, setPreviewUrl] = useState<string>("");
 
-    const [isSavePopupOpen, setIsSavePopupOpen] = useState(false);
+    useEffect(() => {
+        fetchSelfies();
+    }, []);
+
+    // 🔄 [데이터 조회 함수] 백엔드 GET API 호출
+    const fetchSelfies = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/api/admin/selfies");
+            if (response.data.success) {
+                // DB 컬럼명을 프론트엔드 타입에 맞게 매핑 (DB의 'Y'/'N'을 true/false로 변환)
+                const formatted = response.data.data.map((s: any) => ({
+                    id: s.SELFIE_IDX,
+                    imageUrl: `http://localhost:4000/images/${s.FILE_NAME}`,
+                    likes: s.LIKES,
+                    views: s.VIEWS,
+                    isActive: s.IS_ACTIVE === 'Y'
+                }));
+                setSelfies(formatted);
+            }
+        } catch (error) {
+            console.error("셀피 목록 로드 실패:", error);
+            openPopup('알림','셀피목록 로드중 문제가 발생했습니다');
+        }
+    };
 
     // 이미지 첨부 및 썸네일 미리보기 처리
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setSelectedFile(file);
             setFileName(file.name);
             setPreviewUrl(URL.createObjectURL(file)); 
         }
     };
 
     // 셀피 추가
-    const handleAddSelfie = () => {
-        if (!previewUrl) {
-            alert("셀피 이미지를 등록해주세요.");
+    const handleAddSelfie = async() => {
+        if (!selectedFile) {
+            openPopup('입력 확인', '셀피 이미지를 등록해주세요');
             return;
         }
-        setSelfies([...selfies, { 
-            id: Date.now(), 
-            imageUrl: previewUrl, 
-            likes: newSelfie.likes,
-            views: newSelfie.views,
-            isActive: true 
-        }]);
-        setNewSelfie({ likes: 0, views: 0 });
-        setFileName("");
-        setPreviewUrl("");
+        const formData = new FormData();
+        formData.append("selfieImg", selectedFile);
+        formData.append("likes", String(newSelfie.likes));
+        formData.append("views", String(newSelfie.views));
+
+       try {
+            const res = await axios.post("http://localhost:4000/api/admin/selfies", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+
+            if (res.data.success) {
+                // 등록 성공 시 입력값 초기화 및 목록 새로고침 🔄
+                setNewSelfie({ likes: 0, views: 0 });
+                setSelectedFile(null);
+                setFileName("");
+                setPreviewUrl("");
+                fetchSelfies(); 
+            }
+        } catch (error) {
+            openPopup('알림','셀피 등록에 실패했습니다');
+        }
     };
 
     // 셀피 삭제
-    const handleDelete = (id: number) => {
+    const handleDelete = async(id: number) => {
         if (confirm("해당 셀피 게시물을 삭제하시겠습니까?")) {
-            setSelfies(selfies.filter(s => s.id !== id));
+            try {
+                const response = await axios.delete(`http://localhost:4000/api/admin/selfies/${id}`);
+                if (response.data.success) {
+                    fetchSelfies(); // 목록 갱신
+                }
+            } catch (error) {
+                openPopup('알림','셀피 삭제에 실패했습니다');
+            }
         }
     };
 
@@ -67,10 +110,22 @@ export default function Self() {
         ));
     };
 
-    // 최종 저장
-    const handleSave = () => {
-        console.log("DB에 저장될 데이터:", selfies);
-        setIsSavePopupOpen(true);
+    // 변경된 노출 상태(isActive) 목록을 백엔드로 최종 전송 (PUT)
+    const handleSave = async() => {
+        const statuses = selfies.map(s => ({ id: s.id, isActive: s.isActive }));
+        
+        //statues이름표달려보내야하니까 중괄호안에🎁넣어보냄{ statuses: [ ... ] }
+        try {
+            const response = await axios.put("http://localhost:4000/api/admin/selfies/status", {statuses});
+            if (response.data.success) {
+                console.log("DB에 저장될 데이터:", selfies);
+                openPopup('성공 알림', '셀피 설정이 성공적으로 완료되었습니다')
+            }
+        } catch (error) {
+            openPopup('알림','상태 저장에 실패했습니다');
+
+        }
+
     };
 
     return (
@@ -199,14 +254,12 @@ export default function Self() {
             </S.SelfGrid>
         </S.SelfContainer>
           
-        <Popup 
-            isOpen={isSavePopupOpen} 
-            title="저장 완료" 
-            onClose={() => setIsSavePopupOpen(false)}
-            onConfirm={() => setIsSavePopupOpen(false)}
-        >
-            셀피 설정이 성공적으로 저장되었습니다.
-        </Popup>
+        <Popup
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        onClose={closePopup}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}</Popup>
         </>
     );
 }

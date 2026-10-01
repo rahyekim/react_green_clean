@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import * as S from "@/assets/css/admin/Safety.style";
 import { FiSave, FiPlus, FiTrash2, FiImage, FiArrowUp, FiArrowDown } from "react-icons/fi";
 import usePopup from "@/hooks/usePopup";
 import Popup from "@/components/ui/Popup";
 
-// 안전마취 데이터 인터페이스
+// 📋 [타입 정의] 백엔드에서 받아올 데이터의 구조 정의
 interface SafetyData {
     id: number;
     title: string;
@@ -15,82 +16,99 @@ interface SafetyData {
 
 export default function Safety() {
     const {popupConfig,closePopup,openPopup}=usePopup();
-    
-    // 🎯 상태 관리: 등록된 안전마취 장비/시스템 목록
-    const [safetyList, setSafetyList] = useState<SafetyData[]>([
-        { 
-            id: 1, 
-            title: "EtCO2 모니터링", 
-            description: "마취통증의학과 전문의가 수술 전부터 수술 후 의식을 회복할 때까지 환자의 호흡과 맥박 등 상태 체크", 
-            imageUrl: "" 
-        },
-        { 
-            id: 2, 
-            title: "악성 고열증 대비 특수치료제", 
-            description: "단트롤렌 보유로 마취통증의학과 전문의의 신속한 치료가 가능하게 합니다.", 
-            imageUrl: "" 
-        }
-    ]);
 
-    // 🎯 상태 관리: 새 아이템 등록 폼
+    // 🗂️ [상태 관리] 데이터 목록 및 입력 폼 상태
+    const [safetyList, setSafetyList] = useState<SafetyData[]>([]);
+
     const [newSafety, setNewSafety] = useState({ title: "", description: "" });
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState("");
     const [previewUrl, setPreviewUrl] = useState<string>("");
+    
+    useEffect(() => {
+        fetchSafetyItems();
+    }, []);
 
+    // 🔄백엔드 GET API 호출
+    const fetchSafetyItems = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/api/admin/safety");
+            if (response.data.success) {
+                // DB 컬럼명을 프론트엔드 타입에 맞게 매핑
+                const formatted = response.data.data.map((item: any) => ({
+                    id: item.SAFETY_IDX,
+                    title: item.TITLE,
+                    description: item.DESCRIPTION,
+                    imageUrl: `http://localhost:4000/images/${item.FILE_NAME}`
+                }));
+                setSafetyList(formatted);
+            }
+        } catch (error) {
+            console.error("안전 시스템 데이터 로드 실패 ❌", error);
+        }
+    };
+
+    //업로드할 이미지 파일을 선택하고 미리보기 생성
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setSelectedFile(file);
             setFileName(file.name);
             setPreviewUrl(URL.createObjectURL(file)); 
         }
     };
 
-    // ----------------------------------------------------
-    // 1. 안전마취 항목 추가 기능
-    // ----------------------------------------------------
-    const handleAddSafety = () => {
-        // [검증] 빈칸이 하나라도 있으면 경고 팝업 띄우기
-        if (!newSafety.title || !newSafety.description || !previewUrl) {
+    const handleAddSafety = async() => {
+        // [검증]
+        if (!newSafety.title || !newSafety.description || !selectedFile) {
             openPopup('입력 오류', '이미지, 타이틀, 상세 설명을 모두 입력해주세요.')
             return;
         }
 
-        // [추가] 기존 목록 끝에 새로운 데이터 추가하기
-        setSafetyList([
-            ...safetyList, 
-            { 
-                id: Date.now(), 
-                title: newSafety.title, 
-                description: newSafety.description, 
-                imageUrl: previewUrl 
-            } 
-        ]);
+        //// 이미지 파일과 텍스트 데이터를 담기 위해 FormData 사용
+        const formData = new FormData();
+        formData.append("safetyImg", selectedFile);
+        formData.append("title", newSafety.title);
+        formData.append("description", newSafety.description);
 
-        // [초기화] 입력 폼 비우기
-        setNewSafety({ title: "", description: "" }); 
-        setFileName(""); 
-        setPreviewUrl(""); 
+        try {
+            const response = await axios.post("http://localhost:4000/api/admin/safety", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+
+            if (response.data.success) {
+                //초기화 및 목록 새로고침 🔄
+                setNewSafety({ title: "", description: "" }); 
+                setSelectedFile(null);
+                setFileName(""); 
+                setPreviewUrl(""); 
+                fetchSafetyItems();
+            }
+        } catch (error) {
+            openPopup('입력 오류', '등록에 실패했습니다.')
+        }
+   
     };
-
-    // ----------------------------------------------------
-    // 2. 항목 삭제 기능 (팝업 띄우기 및 실제 삭제)
-    // ----------------------------------------------------
+   
     const handleDeleteClick = (id: number) => { 
         openPopup(
         '삭제 확인', 
         '해당 시스템을 리스트에서 삭제하시겠습니까?',
-        ()=>{
-            setSafetyList(prev=>(
-                prev.filter(s => s.id !== id))
-            );
-            closePopup();
+        async()=>{
+            try {
+                const response = await axios.delete(`http://localhost:4000/api/admin/safety/${id}`);
+                if (response.data.success) {
+                    fetchSafetyItems(); // 목록 갱신
+                    closePopup();
+                }
+            } catch (error) {
+                alert("삭제 중 문제가 발생했습니다. 😢");
+            }
         }
         )
     };
 
-    // ----------------------------------------------------
-    // 3. 노출 순서 변경 기능 (화살표 클릭)
-    // ----------------------------------------------------
+    // ↕️ [순서 변경 함수] 화면상에서 위/아래 버튼을 눌렀을 때 배열 순서 변경
     const moveSafety = (index: number, direction: 'UP' | 'DOWN') => {
         const newList = [...safetyList]; 
         
@@ -103,12 +121,19 @@ export default function Safety() {
         setSafetyList(newList); 
     };
 
-    // ----------------------------------------------------
-    // 4. 최종 저장 기능
-    // ----------------------------------------------------
-    const handleSave = () => {
-        console.log("DB에 저장될 안전마취 데이터:", safetyList);
-        openPopup('저장 완료', '안전 시스템 설정이 성공적으로 저장되었습니다.');
+    // 💾 [순서 저장 함수] 변경된 순서(ID 배열)를 백엔드로 전송 (PUT)
+    const handleSave = async() => {
+        const orderedIds = safetyList.map(item => item.id);
+        
+        try {
+            const response = await axios.put("http://localhost:4000/api/admin/safety/order", { orderedIds });
+            if (response.data.success) {
+                openPopup('저장 완료', '안전 시스템 순서가 성공적으로 저장되었습니다.');
+            }
+        } catch (error) {
+            alert("순서 저장 중 문제가 발생했습니다.");
+        }
+        openPopup('저장 실패', '순서 저장 중 문제가 발생했습니다.');
 
     };
 

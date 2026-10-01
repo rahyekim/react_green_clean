@@ -12,6 +12,12 @@ const Carousel = require("./src/entity/Carousel");
 const Tone = require("./src/entity/Tone");
 const Popup = require("./src/entity/Popup");
 const PopupSetting = require("./src/entity/PopupSetting");
+const Category = require("./src/entity/Category");
+const Safety = require("./src/entity/Safety");
+const Selfie = require("./src/entity/Selfie");
+const EventRanking = require("./src/entity/EventRanking");
+const Vlog = require("./src/entity/Vlog");
+const Board = require("./src/entity/Board");
 
 const AppDataSource = new DataSource({
     type: "oracle",
@@ -30,7 +36,13 @@ const AppDataSource = new DataSource({
         FooterSettings,
         Consult, NavSettings, 
         Carousel, Tone,
-        Popup, PopupSetting
+        Popup, PopupSetting,
+        Category, 
+        Safety,
+        Selfie,
+        EventRanking,
+        Vlog,
+        Board
         ],
     extra:{
         poolMin:2, poolMax:10, poolIncrement:1,

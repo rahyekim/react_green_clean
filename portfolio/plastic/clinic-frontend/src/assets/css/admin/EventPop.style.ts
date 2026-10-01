@@ -5,7 +5,8 @@ import {
     FlexColumn,
     BoxShadow2,
     FlexRow,
-    CircleBtn
+    CircleBtn,
+    PreviewImg
 } from "../common/Common.style";
 
 
@@ -279,4 +280,10 @@ ${TransitionAll}
 &:hover{
     background-color: #fdeaea;
 }
+`;
+
+export const Preview = styled.div`
+${PreviewImg}
+width: 180px;
+ height: 240px; 
 `;

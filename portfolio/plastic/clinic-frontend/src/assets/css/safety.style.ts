@@ -5,7 +5,7 @@ import { COLORS } from "@/assets/css/theme";
 
 export const SafetySection= styled.section`
 background-color: black;
-padding: 5.7rem 1.42rem;
+padding: 4rem 1.42rem;
 width: 100%;
 `;
 export const SafetyInner= styled.div`

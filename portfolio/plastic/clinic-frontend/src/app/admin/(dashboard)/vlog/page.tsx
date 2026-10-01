@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import * as S from "@/assets/css/admin/Vlog.style";
 import { FiSave, FiPlus, FiTrash2, FiImage, FiArrowUp, FiArrowDown, FiVideo } from "react-icons/fi";
 import Popup from "@/components/ui/Popup";
 import usePopup from "@/hooks/usePopup";
 
-// VLOG 데이터 인터페이스 (데이터의 생김새 정의)
+// 관리자 화면에서 다룰 VLOG 데이터의 구조 정의
 interface VlogData {
     id: number;
     title: string;
@@ -16,73 +17,97 @@ interface VlogData {
 export default function Vlog() {
     const {popupConfig,closePopup,openPopup}=usePopup();
     
-    // 🎯 상태 관리: 등록된 VLOG 목록
-    const [vlogList, setVlogList] = useState<VlogData[]>([
-        { id: 1, title: "답답했던 눈매·복코·얼굴살 완벽...", videoUrl: "https://youtube.com/...", thumbnailUrl: "" },
-        { id: 2, title: "광대·사각턱·이중턱 싹 지우고...", videoUrl: "https://youtube.com/...", thumbnailUrl: "" }
-    ]);
+    // 🎯 DB에서 불러온 VLOG 리스트 배열
+    const [vlogList, setVlogList] = useState<VlogData[]>([]);
 
     // 🎯 상태 관리: 새 VLOG 등록 폼
     const [newVlog, setNewVlog] = useState({ title: "", videoUrl: "" });
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState("");
     const [previewUrl, setPreviewUrl] = useState<string>("");
 
-    // ----------------------------------------------------
-    // 0. 이미지 첨부 및 썸네일(16:9) 미리보기 기능
-    // ----------------------------------------------------
+    useEffect(() => {
+        fetchVlogs();
+    }, []);
+
+    // 🔍 백엔드 API로부터 VLOG 목록 조회 함수
+    const fetchVlogs = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/api/admin/vlogs");
+            if (response.data.success) {
+                // 📦 백엔드 데이터 필드명을 프론트엔드 인터페이스 구조에 맞게 매핑
+                const formatted = response.data.data.map((item: any) => ({
+                    id: item.VLOG_IDX,
+                    title: item.TITLE,
+                    videoUrl: item.VIDEO_URL,
+                    thumbnailUrl: `http://localhost:4000/images/${item.FILE_NAME}`
+                }));
+                setVlogList(formatted);
+            }
+        } catch (error) {
+            console.error("VLOG 데이터 로드 실패:", error);
+            openPopup('알림','VLOG 로드에 실패했습니다')
+        }
+    };
+    // 📸 이미지 파일 첨부 및 썸네일 미리보기 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setSelectedFile(file);
             setFileName(file.name);
             setPreviewUrl(URL.createObjectURL(file)); 
         }
     };
 
-    // ----------------------------------------------------
-    // 1. VLOG 추가 기능
-    // ----------------------------------------------------
-    const handleAddVlog = () => {
-        // [검증] 빈칸이 하나라도 있으면 경고 팝업 띄우기
-        if (!newVlog.title || !newVlog.videoUrl || !previewUrl) {
+    //새 VLOG 등록 기능 (FormData를 이용해 이미지와 텍스트를 백엔드로 전송)
+    const handleAddVlog = async() => {
+        if (!newVlog.title || !newVlog.videoUrl || !selectedFile) {
             openPopup('입력 오류', '썸네일 이미지, 제목, 영상 링크를 모두 입력해주세요.')
             return;
         }
-        // [추가] 기존 목록 끝에 새로운 VLOG 데이터 추가하기
-        setVlogList([
-            ...vlogList, 
-            { 
-                id: Date.now(), 
-                title: newVlog.title, 
-                videoUrl: newVlog.videoUrl, 
-                thumbnailUrl: previewUrl 
-            } 
-        ]);
-        // [초기화] 입력 폼 비우기
-        setNewVlog({ title: "", videoUrl: "" }); 
-        setFileName(""); 
-        setPreviewUrl(""); 
+        // multipart/form-data 전송을 위한 폼데이터 객체 생성 📦
+        const formData = new FormData();
+        formData.append("vlogImg", selectedFile);
+        formData.append("title", newVlog.title);
+        formData.append("videoUrl", newVlog.videoUrl);
+
+        try {
+            const response = await axios.post("http://localhost:4000/api/admin/vlogs", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+            if (response.data.success) {
+                setNewVlog({ title: "", videoUrl: "" }); 
+                setSelectedFile(null);
+                setFileName(""); 
+                setPreviewUrl(""); 
+                fetchVlogs(); // 🔄
+            }
+        } catch (error) {
+            console.error("VLOG 데이터 등록 실패:", error);
+            openPopup('알림','VLOG 등록에 실패했습니다')
+        }
     };
 
-    // ----------------------------------------------------
-    // 2. VLOG 삭제 기능 (팝업 띄우기 및 실제 삭제)
-    // ----------------------------------------------------
     // 삭제 
     const handleDeleteVlog = (id: number) => { 
        openPopup(
         '삭제 확인', 
         '해당 영상을 노출 리스트에서 삭제하시겠습니까?',
-        ()=>{
-            setVlogList(prev=>(
-                prev.filter(v => v.id !== id))
-            );
-            closePopup();
+        async()=>{
+            try {
+                const response = await axios.delete(`http://localhost:4000/api/admin/vlogs/${id}`);
+                if (response.data.success) {
+                    fetchVlogs(); // 삭제 후 목록 새로고침 🔄
+                    closePopup();
+                }
+            } catch (error) {
+                openPopup('알림','삭제 중 문제가 발생했습니다.')
+            }
         }
     )
     };
    
-    // ----------------------------------------------------
-    // 3. VLOG 노출 순서 변경 기능 (화살표 클릭)
-    // ----------------------------------------------------
+    // VLOG 노출 순서 변경 기능 (화살표 클릭)
     const moveVlog = (index: number, direction: 'UP' | 'DOWN') => {
         const newVlogList = [...vlogList]; // 원본 복사
         
@@ -97,9 +122,19 @@ export default function Vlog() {
         setVlogList(newVlogList); // 순서가 바뀐 새 배열로 갱신
     };
 
-    const handleSave = () => {
-        console.log("DB에 저장될 VLOG 데이터:", vlogList);
-        openPopup('저장 완료', 'VLOG 설정이 성공적으로 저장되었습니다.');
+    //💾 현재 정렬된 순서(ID 배열)를 백엔드로 일괄 저장 요청
+    const handleSave = async() => {
+
+        const orderedIds = vlogList.map(v => v.id); // 현재 순서대로 아이디만 추출
+        try {
+            const response = await axios.put("http://localhost:4000/api/admin/vlogs/order", { orderedIds });
+            if (response.data.success) {
+                openPopup('저장 완료', 'VLOG 설정이 성공적으로 저장되었습니다.');
+            }
+        } catch (error) {
+            openPopup('알림','순서 저장 중 문제가 발생했습니다.')
+        }
+       
     };
 
     return (
@@ -179,10 +214,10 @@ export default function Vlog() {
                             <S.VlogTable>
                                 <thead>
                                     <tr>
-                                        <th>순위/이동</th>
-                                        <th>썸네일</th>
-                                        <th>제목 및 링크</th>
-                                        <th>관리</th>
+                                        <th style={{ width: '15%' }}>순위/이동</th>
+                                        <th style={{ width: '25%' }}>썸네일</th>
+                                        <th style={{ width: '45%' }}>제목 및 링크</th>
+                                        <th style={{ width: '15%' }}>관리</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -202,6 +237,7 @@ export default function Vlog() {
                                                 </div>
                                             </td>
                                             <td>
+                                                {/* 썸네일 이미지 표시 영역 */}
                                                 <S.VlogThumbnail>
                                                     {vlog.thumbnailUrl ? <img src={vlog.thumbnailUrl} alt={vlog.title} /> : <span>No Img</span>}
                                                 </S.VlogThumbnail>
@@ -209,7 +245,13 @@ export default function Vlog() {
                                             <td style={{ textAlign: 'left' }}>
                                                 <strong>{vlog.title}</strong>
                                                 <div style={{ fontSize: '0.8rem', color: '#4e73df', marginTop: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                                    <FiVideo /> {vlog.videoUrl || "링크 없음"}
+                                                    <FiVideo /> 
+                                                    <a 
+                                                    href={vlog.videoUrl} 
+                                                    target="_blank" 
+                                                    rel="noreferrer" 
+                                                    style={{ color: 'inherit', textDecoration: 'none' }}
+                                                    >{vlog.videoUrl || "링크 없음"}</a>
                                                 </div>
                                             </td>
                                             <td>

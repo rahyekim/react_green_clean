@@ -1,8 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import axios from "axios";
 import * as S from "@/assets/css/admin/News.style";
 import { FiSave, FiPlus, FiTrash2, FiImage, FiArrowUp, FiArrowDown } from "react-icons/fi";
-import Popup  from "@/components/ui/Popup";
+import usePopup from '@/hooks/usePopup';
+import Popup from "@/components/ui/Popup";
 
 interface CategoryData {
     id: number;
@@ -12,50 +14,92 @@ interface CategoryData {
 }
 
 export default function News() {
+    const {openPopup, popupConfig, closePopup}=usePopup();
     // 🎯 상태 관리: 등록된 카테고리 아이콘 목록
-    const [categories, setCategories] = useState<CategoryData[]>([
-        { id: 1, title: "전체", imageUrl: "", link: "/all" },
-        { id: 2, title: "눈", imageUrl: "", link: "/eye" },
-        { id: 3, title: "코", imageUrl: "", link: "/nose" }
-    ]);
+    const [categories, setCategories] = useState<CategoryData[]>([]);
 
     // 🎯 상태 관리: 새 카테고리 등록 폼
     const [newCategory, setNewCategory] = useState({ title: "", link: "" });
+    const [selectedFile, setSelectedFile] = useState<File |null>(null);
     const [fileName, setFileName] = useState("");
     const [previewUrl, setPreviewUrl] = useState<string>("");
 
-    const [isSavePopupOpen, setIsSavePopupOpen] = useState(false);
+    //생명주기
+    useEffect(()=>{
+        fetchCate();
+    } ,[])
+
+    const fetchCate = async()=>{
+        try{
+            const res= await axios.get('http://localhost:4000/api/admin/category')
+            if(res.data.success){
+                const formatted = res.data.data.map((c:any)=>({
+                    id: c.CATEGORY_IDX,
+                    title:c.TITLE,
+                    imageUrl: `http://localhost:4000/images/${c.FILE_NAME}`,
+                    link: c.LINK
+                }))
+                setCategories(formatted);
+            }
+        }catch(err){
+            console.error("카테고리 설정 로드 실패:", err);
+            openPopup('알림','로드중 문제가 발생했습니다');
+        }
+    }
 
     // 이미지 첨부 및 썸네일 미리보기 처리
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setFileName(file.name);
+            setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(file)); // 로컬 썸네일 미리보기 생성
         }
     };
 
     // 카테고리 추가
-    const handleAddCategory = () => {
-        if (!newCategory.title) {
-            alert("카테고리 이름을 입력해주세요.");
+    const handleAddCategory = async() => {
+        if (!newCategory.title || !selectedFile) {
+            openPopup('입력 확인', '이름과 이미지를 모두 등록해주세요.');
             return;
         }
-        setCategories([...categories, { 
-            id: Date.now(), 
-            title: newCategory.title, 
-            imageUrl: previewUrl, 
-            link: newCategory.link 
-        }]);
-        setNewCategory({ title: "", link: "" });
-        setFileName("");
-        setPreviewUrl("");
+
+        const formData = new FormData();
+        formData.append('categoryImg', selectedFile);
+        formData.append('title', newCategory.title);
+        formData.append('link', newCategory.link);
+
+        try{
+            const res = await axios.post('http://localhost:4000/api/admin/category',formData,{
+                headers:{'Content-Type': 'multipart/form-data'}
+            })
+            if(res.data.success){
+                //초기화
+                setNewCategory({ title: "", link: "" });
+                setFileName("");
+                setSelectedFile(null);
+                setPreviewUrl("");
+                //최신업데이트
+                fetchCate(); 
+            }
+        }catch(err){
+            console.error("카테고리 등록 실패:", err);
+            openPopup('알림','카테고리 등록에 문제가 발생했습니다');
+        }
     };
 
     // 카테고리 삭제
-    const handleDelete = (id: number) => {
+    const handleDelete = async(id: number) => {
         if (confirm("해당 카테고리 아이콘을 삭제하시겠습니까?")) {
-            setCategories(categories.filter(c => c.id !== id));
+            try{
+                const res = await axios.delete(`http://localhost:4000/api/admin/category/${id}`)
+                if(res.data.success){
+                    fetchCate();
+                }
+            }catch(err){
+                console.error("카테고리 삭제 실패:", err);
+                openPopup('알림','카테고리 삭제에 문제가 발생했습니다');  
+            }
         }
     };
 
@@ -71,9 +115,18 @@ export default function News() {
     };
 
     // 최종 저장
-    const handleSave = () => {
+    const handleSave = async() => {
+        const orderedIds = categories.map(cat=> cat.id);
+         try{
+                const res = await axios.put(`http://localhost:4000/api/admin/category/order` ,{orderedIds})
+                if(res.data.success){
+                    openPopup('알림', '순서변경 성공')
+                }
+            }catch(err){
+                console.error("카테고리 순서저장 실패:", err);
+                openPopup('알림','카테고리 순서저장에 문제가 발생했습니다');  
+            }
         console.log("DB에 저장될 데이터:", categories);
-        setIsSavePopupOpen(true);
     };
 
     return (
@@ -198,13 +251,12 @@ export default function News() {
             </S.NewsGrid>
         </S.NewsContainer>
 
-        <Popup 
-            isOpen={isSavePopupOpen} 
-            title="저장 완료" 
-            onClose={() => setIsSavePopupOpen(false)}
-        >
-            카테고리 설정이 성공적으로 저장되었습니다.
-        </Popup>
+         <Popup
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        onClose={closePopup}
+        onConfirm={popupConfig.onConfirm}
+        >{popupConfig.message}</Popup>
         </>
     );
 }

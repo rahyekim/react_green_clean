@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import * as S from "@/assets/css/admin/Board.style";
 
 import { FiSave, FiPlus, FiTrash2, FiSettings, FiList } from "react-icons/fi";
@@ -15,51 +16,76 @@ interface BoardData {
     writeAuth: string;
     regDate: string;
 }
+interface NewBoardForm {
+    name: string;
+    type: string;
+    readAuth: string;
+    writeAuth: string;
+}
+// 초기 폼 상태 상수 분리
+const INITIAL_BOARD_STATE: NewBoardForm = {
+    name: "",
+    type: "일반게시판",
+    readAuth: "전체",
+    writeAuth: "관리자",
+};
 
 export default function Board() {
     const {popupConfig,closePopup,openPopup}=usePopup();
     
-    // 🎯 상태 관리: 등록된 게시판 목록
-    const [boardList, setBoardList] = useState<BoardData[]>([
-        { id: 1, name: "공지사항", type: "일반게시판", readAuth: "전체", writeAuth: "관리자", regDate: "2026-09-01" },
-        { id: 2, name: "전후사진 갤러리", type: "갤러리형", readAuth: "전체", writeAuth: "관리자", regDate: "2026-09-05" },
-        { id: 3, name: "고객 리얼후기", type: "일반게시판", readAuth: "회원", writeAuth: "회원", regDate: "2026-09-10" },
-        { id: 4, name: "자주 묻는 질문", type: "FAQ형", readAuth: "전체", writeAuth: "관리자", regDate: "2026-09-15" }
-    ]);
+    //등록된 게시판 목록
+    const [boardList, setBoardList] = useState<BoardData[]>([]);
 
-    // 🎯 상태 관리: 새 게시판 생성 폼
-    const [newBoard, setNewBoard] = useState({
-        name: "",
-        type: "일반게시판",
-        readAuth: "전체",
-        writeAuth: "관리자"
-    });
+    // 새 게시판 생성 폼
+    const [newBoard, setNewBoard] = useState<NewBoardForm>(INITIAL_BOARD_STATE);
     
-    // ----------------------------------------------------
-    // 1. 새 게시판 추가 기능
-    // ----------------------------------------------------
-    const handleAddBoard = () => {
-        if (!newBoard.name) {
+    useEffect(() => {
+        fetchBoards();
+    }, []);
+
+    const fetchBoards = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/api/admin/boards");
+            if (response.data.success) {
+                const formatted = response.data.data.map((b: any) => {
+                    // 날짜 데이터를 YYYY-MM-DD 형식으로 안전하게 변환
+                    const dateObj = new Date(b.REG_DATE);
+                    const formattedDate = !isNaN(dateObj.getTime()) 
+                        ? dateObj.toLocaleDateString(
+                            "ko-KR", 
+                            { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '-').replace(/\./g, '')
+                        : "";
+                    return {
+                        id: b.BOARD_IDX,
+                        name: b.NAME,
+                        type: b.BOARD_TYPE,
+                        readAuth: b.READ_AUTH,
+                        writeAuth: b.WRITE_AUTH,
+                        regDate: formattedDate
+                    };
+                });
+                setBoardList(formatted);
+            }
+        } catch (error) {
+            console.error("게시판 목록 로드 실패:", error);
+        }
+    };
+    
+    //새 게시판 추가 기능 (서버 전송)
+    const handleAddBoard = async() => {
+        if (!newBoard.name.trim()) {
             openPopup('입력 오류', '게시판 이름을 입력해주세요.')
             return;
         }
-
-        const today = new Date().toISOString().split('T')[0]; // 오늘 날짜 구하기 (YYYY-MM-DD)
-
-        setBoardList([
-            ...boardList,
-            {
-                id: Date.now(),
-                name: newBoard.name,
-                type: newBoard.type,
-                readAuth: newBoard.readAuth,
-                writeAuth: newBoard.writeAuth,
-                regDate: today
+        try {
+            const response = await axios.post("http://localhost:4000/api/admin/boards", newBoard);
+            if (response.data.success) {
+                setNewBoard(INITIAL_BOARD_STATE); // 폼 초기화
+                fetchBoards(); // 목록 새로고침
             }
-        ]);
-
-        // 입력 폼 초기화
-        setNewBoard({ name: "", type: "일반게시판", readAuth: "전체", writeAuth: "관리자" });
+        } catch (error) {
+            openPopup('입력 오류', '게시판 생성에 실패했습니다.')
+        }
     };
 
     // ----------------------------------------------------
@@ -69,11 +95,16 @@ export default function Board() {
        openPopup(
         '삭제 확인', 
         '이 게시판을 정말 삭제하시겠습니까?',
-        ()=>{
-            setBoardList(prev=>(
-                prev.filter(b => b.id !== id))
-            );
-            closePopup();
+        async()=>{
+           try {
+            const response = await axios.delete(`http://localhost:4000/api/admin/boards/${id}`);
+            if (response.data.success) {
+                fetchBoards(); // 삭제 후 목록 새로고침
+                closePopup();
+                }
+            } catch (error) {
+                openPopup('알림', '삭제 중 문제가 발생했습니다.')
+            }
         }
     )
     };
@@ -182,7 +213,13 @@ export default function Board() {
                                             <td style={{ textAlign: 'left' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                                     <FiList color="#b7b9cc" />
-                                                    <strong>{board.name}</strong>
+                                                    <a 
+                                                    href={`/board/${board.id}`}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    >
+                                                        <strong>{board.name}</strong>
+                                                    </a>
                                                 </div>
                                             </td>
                                             <td>
@@ -234,3 +271,9 @@ export default function Board() {
         </>
     );
 }
+/*
+{ id: 1, name: "공지사항", type: "일반게시판", readAuth: "전체", writeAuth: "관리자", regDate: "2026-09-01" },
+{ id: 2, name: "전후사진 갤러리", type: "갤러리형", readAuth: "전체", writeAuth: "관리자", regDate: "2026-09-05" },
+{ id: 3, name: "고객 리얼후기", type: "일반게시판", readAuth: "회원", writeAuth: "회원", regDate: "2026-09-10" },
+{ id: 4, name: "자주 묻는 질문", type: "FAQ형", readAuth: "전체", writeAuth: "관리자", regDate: "2026-09-15" }
+*/

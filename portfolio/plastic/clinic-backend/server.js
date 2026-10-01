@@ -21,6 +21,13 @@ const Carousel = require('./src/entity/Carousel');
 const Tone = require('./src/entity/Tone');
 const Popup = require('./src/entity/Popup');
 const PopupSetting = require('./src/entity/PopupSetting');
+const Category = require('./src/entity/Category');
+const Safety = require("./src/entity/Safety");
+const Selfie = require("./src/entity/Selfie");
+const EventRanking = require("./src/entity/EventRanking");
+const Vlog = require("./src/entity/Vlog");
+const Board = require("./src/entity/Board");
+
 
 const app = express(); // Express 기능을 사용할수있도록 app이라는 서버 객체 만들어줌
 app.use(cors());
@@ -344,9 +351,10 @@ app.post('/api/consult/quick', async(req,res)=>{
     const {name, phone, department, password}= req.body;
     try{
         //필수값검증
-        if(!name || !phone || !department || !password){
-            return res.status(400).json({success:false, message:
-                '필수정보를 모두 입력해주세요'
+        if(!name || !phone || !department ){
+            return res.status(400).json({
+                success:false, 
+                message:'필수정보를 모두 입력해주세요'
             })
         };
         const consultRepo = AppDataSource.getRepository(Consult);
@@ -355,7 +363,7 @@ app.post('/api/consult/quick', async(req,res)=>{
             PHONE:phone, 
             DEPARTMENT:department,
             USER_ID: '비회원',
-            PASSWORD: password,
+            PASSWORD: password ? password : null ,
             TITLE: `[빠른상담] ${department} 문의입니다`,
             CONTENT: `${name}님의 빠른 상담 신청입니다. 빠른 시일내에 연락바랍니다`,
             STATUS: '대기중'
@@ -700,7 +708,434 @@ app.delete('/api/admin/popup/:idx', async(req,res)=>{
     }
 })
 
-// app.post('/api/admin/users', async(req,res)=>{
+//카테고리
+app.get('/api/admin/category', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Category);
+        const categories = await repo.find({order:{SORT_ORDER:'ASC', CATEGORY_IDX:'ASC'}})
+        return res.status(200).json({success:true, data:categories});
+
+
+    }catch(err){
+    console.error('카테고리 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+//새카테고리등록
+app.post('/api/admin/category', upload.single('categoryImg'), async(req,res)=>{
+    try{
+        if(!req.file) return res.status(400).json({success:false, message:'이미지가없습니다'});
+        const {title, link} = req.body;
+        const repo = AppDataSource.getRepository(Category);
+        
+        //DB에 저장된 카테고리들 중 순서(sort_order) 값이 가장 큰 숫자를 찾아냄
+        const maxSort = await repo.createQueryBuilder('category')
+        .select('MAX(category.SORT_ORDER)', 'max')
+        .getRawOne();
+
+        //새로등록된 카테고리가 맨뒤에 오도록, 방금 찾은 숫자에 1을 더함 아무것도 없으면1
+        const nextOrder = (maxSort.max || 0) +1;
+
+        const newCategory = repo.create({
+            TITLE:title,
+            LINK: link || '',
+            FILE_NAME: req.file.filename,
+            SORT_ORDER: nextOrder
+        })
+        await repo.save(newCategory);
+        return res.status(200).json({success:true, message:'새카테고리등록 성공'});
+
+    }catch(err){
+    console.error('카테고리 등록에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+//삭제
+app.delete('/api/admin/category/:idx', async(req,res)=>{
+    try{
+        
+        const repo = AppDataSource.getRepository(Category);
+        await repo.delete(req.params.idx);
+        return res.status(200).json({success:true, message:'카테고리삭제성공'});
+
+    }catch(err){
+    console.error('카테고리 삭제에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+//카테고리 순서변경 일괄저장
+app.put('/api/admin/category/order', async(req,res)=>{
+    try{
+        //프론트엔드가 보내준 정렬된 ID 배열 받기
+        const {orderedIds} =req.body;
+        const repo = AppDataSource.getRepository(Category);
+        for(let i=0 ; i<orderedIds.length ; i++){
+        await repo.update(orderedIds[i], {SORT_ORDER: i+1})
+        }
+        return res.status(200).json({success:true, message:''});
+
+    }catch(err){
+    console.error('카테고리 순서 저장 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+//safety
+app.get('/api/admin/safety', async (req, res) => {
+    try {
+        const repo = AppDataSource.getRepository(Safety);
+        // 💡 SORT_ORDER 기준 오름차순 정렬 
+        const safety = await repo.find({ 
+            order: { SORT_ORDER: 'ASC', SAFETY_IDX: 'ASC' } 
+        });
+        return res.status(200).json({ success: true, data: safety });
+        
+    } catch(err) {
+        console.error('safety 안전 설정 조회 에러:', err);
+        return res.status(500).json({ success: false });  
+    }
+});
+
+app.post('/api/admin/safety', upload.single('safetyImg'), async (req, res) => {
+    try {
+        const { title, description } = req.body;
+        if (!req.file) return res.status(400).json({ success: false, message: '이미지가 없습니다' }); 
+        
+        const repo = AppDataSource.getRepository(Safety);
+
+        // 💡 가장 큰 SORT_ORDER 번호 찾기 쿼리 완성
+        const maxSortResult = await repo.createQueryBuilder('safety')
+            .select("MAX(safety.SORT_ORDER)", "max")
+            .getRawOne();
+        
+        const nextSort = (maxSortResult?.max ?? 0) + 1;
+
+        // 💡 데이터 객체 생성 및 저장 로직 추가
+        const newSafety = repo.create({
+            TITLE: title,
+            DESCRIPTION: description,
+            FILE_NAME: req.file.filename,
+            SORT_ORDER: nextSort
+        });
+
+        await repo.save(newSafety);
+
+        return res.status(200).json({ success: true, message: '안전 설정 등록 성공' });
+
+    } catch(err) {
+        console.error('safety 안전 설정 등록 에러:', err);
+        return res.status(500).json({ success: false });  
+    }
+});
+
+app.delete('/api/admin/safety/:idx', async (req, res) => {
+    try {
+        const repo = AppDataSource.getRepository(Safety);
+        await repo.delete(req.params.idx);
+        
+        return res.status(200).json({ success: true, message: '안전 설정 삭제 성공' });
+
+    } catch(err) {
+        console.error('safety 안전 설정 삭제 에러:', err); // 에러 로그 문구도 수정
+        return res.status(500).json({ success: false });  
+    }
+});
+
+app.put('/api/admin/safety/order', async (req, res) => {
+    try {
+        const { orderedIds } = req.body;
+        const repo = AppDataSource.getRepository(Safety);
+        
+        for(let i = 0; i < orderedIds.length; i++) {
+            await repo.update(orderedIds[i], { SORT_ORDER: i + 1 });
+        }
+        
+        return res.status(200).json({ success: true, message: '안전 설정 순서 변경 성공' });
+        
+    } catch(err) {
+        console.error('safety 안전 설정 순서 변경 에러:', err); // 에러 로그 문구도 수정
+        return res.status(500).json({ success: false });  
+    }
+});
+
+//셀피
+app.get('/api/admin/selfies', async (req, res) => {
+    try {
+        const repo = AppDataSource.getRepository(Selfie);
+        
+        // 💡 DB에서 셀피 목록 전체 조회 (최신순 또는 기본 정렬)
+        const selfies = await repo.find({
+            order: { SELFIE_IDX: 'DESC' } 
+        });
+
+        return res.status(200).json({ success: true, data: selfies });
+
+    } catch (err) {
+        console.error('셀피 조회 에러 :', err);
+        return res.status(500).json({ success: false });  
+    }
+});
+
+app.post('/api/admin/selfies',upload.single('selfieImg'), async(req,res)=>{
+    try{
+        if (!req.file) return res.status(400).json({ success: false, message: '이미지가 없습니다' }); 
+        const {likes, views} = req.body;
+        const repo = AppDataSource.getRepository(Selfie);
+
+        const newItem = repo.create({
+            FILE_NAME: req.file.filename,
+            LIKES: parseInt(likes) || 0,
+            VIEWS: parseInt(views) || 0,
+            IS_ACTIVE: 'Y' //처음등록이니까 활성화
+        })
+        await repo.save(newItem);
+        return res.status(200).json({success:true});
+
+    }catch(err){
+    console.error('셀피 등록 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+app.delete('/api/admin/selfies/:idx', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Selfie);
+        await repo.delete(req.params.idx);
+
+        return res.status(200).json({success:true});
+
+    }catch(err){
+    console.error('셀피 삭제 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+// 🔄 [상태 변경] 셀피들의 노출 상태(IS_ACTIVE 등)를 일괄 변경하는 API
+app.put('/api/admin/selfies/status', async(req,res)=>{
+    try{
+        const {statuses} = req.body;
+        const repo = AppDataSource.getRepository(Selfie);
+       
+        for(let item of statuses) {
+            await repo.update(item.id, {IS_ACTIVE: item.isActive ? 'Y' : 'N'});
+        }
+        return res.status(200).json({success:true, message:''});
+
+    }catch(err){
+    console.error('셀피 상태 변경 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+// 📅 [이벤트랭킹 관리]
+app.get('/api/admin/events', async (req, res) => {
+    try {
+        const repo = AppDataSource.getRepository(EventRanking);
+        
+        // 💡 SORT_ORDER 기준 오름차순 정렬 (동일할 경우 EVENT_IDX 기준 정렬)
+        const events = await repo.find({ 
+            order: { SORT_ORDER: 'ASC', EVENT_IDX: 'ASC' } 
+        });
+        return res.status(200).json({ success: true, data: events });
+    } catch(err) {
+        console.error('events 이벤트 조회 에러:', err);
+        return res.status(500).json({ success: false });  
+    }
+});
+
+// ➕ [등록] 
+app.post('/api/admin/events', upload.single('eventImg'), async (req, res) => { // 💡 업로드 필드명 safetyImg -> eventImg로 변경
+    try {
+        const { title, price } = req.body;
+        if (!req.file) return res.status(400).json({ success: false, message: '이미지가 없습니다 ⚠️' }); 
+        
+        const repo = AppDataSource.getRepository(EventRanking);
+
+        // 💡 가장 큰 SORT_ORDER 번호 찾기 쿼리 (다음 순서 번호 자동 지정용)
+        const maxSortResult = await repo.createQueryBuilder('event')
+            .select("MAX(event.SORT_ORDER)", "max")
+            .getRawOne();
+        
+        const nextSort = (maxSortResult?.max ?? 0) + 1;
+
+        // 💡 새로운 이벤트 데이터 객체 생성
+        const newEvent = repo.create({
+            TITLE: title,
+            PRICE: price,
+            FILE_NAME: req.file.filename,
+            SORT_ORDER: nextSort
+        });
+        await repo.save(newEvent);
+        return res.status(200).json({ success: true, message: '이벤트 등록 성공' });
+
+    } catch(err) {
+        console.error('events 이벤트 등록 에러:', err);
+        return res.status(500).json({ success: false });  
+    }
+});
+
+// 🗑️삭제
+app.delete('/api/admin/events/:idx', async (req, res) => {
+    try {
+        const repo = AppDataSource.getRepository(EventRanking);
+        await repo.delete(req.params.idx);
+        return res.status(200).json({ success: true, message: '이벤트 삭제 성공' });
+
+    } catch(err) {
+        console.error('events 이벤트 삭제 에러:', err);
+        return res.status(500).json({ success: false });  
+    }
+});
+
+// 🔄 [순서 변경]이벤트들의 정렬 순서(SORT_ORDER)를 일괄 업데이트하는 API
+app.put('/api/admin/events/order', async (req, res) => {
+    try {
+        const { orderedIds } = req.body; // 정렬된 ID 배열 (예: [3, 1, 2])
+        const repo = AppDataSource.getRepository(EventRanking);
+        
+        // 반복문을 돌며 순서 번호(1부터 시작) 업데이트
+        for(let i = 0; i < orderedIds.length; i++) {
+            await repo.update(orderedIds[i], { SORT_ORDER: i + 1 });
+        }
+        return res.status(200).json({ success: true, message: '이벤트 순서 변경 성공 ✨' });
+        
+    } catch(err) {
+        console.error('events 이벤트 순서 변경 에러:', err);
+        return res.status(500).json({ success: false });  
+    }
+});
+
+// 1. 영상 목록 조회 (SORT_ORDER 순 정렬)
+app.get('/api/admin/vlogs', async (req, res) => {
+    try {
+        const repo = AppDataSource.getRepository(Vlog);
+        const items = await repo.find({ order: { SORT_ORDER: "ASC", VLOG_IDX: "ASC" } });
+        res.status(200).json({ success: true, data: items });
+    } catch (error) {
+        console.error('VLOG 조회 에러:', error);
+        res.status(500).json({ success: false });
+    }
+});
+
+// 2. 새 영상 등록 (이미지 업로드 포함)
+app.post('/api/admin/vlogs', upload.single('vlogImg'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ success: false, message: "이미지가 없습니다." });
+        
+        const { title, videoUrl } = req.body;
+        const repo = AppDataSource.getRepository(Vlog);
+        
+        // 현재 가장 큰 순서 번호 찾기 (맨 뒤에 배치)
+        const maxSort = await repo.createQueryBuilder("vlog")
+                                  .select("MAX(vlog.SORT_ORDER)", "max")
+                                  .getRawOne();
+        const nextOrder = (maxSort.max || 0) + 1;
+
+        const newItem = repo.create({
+            TITLE: title,
+            VIDEO_URL: videoUrl,
+            FILE_NAME: req.file.filename,
+            SORT_ORDER: nextOrder
+        });
+        
+        await repo.save(newItem);
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('VLOG 등록 에러:', error);
+        res.status(500).json({ success: false });
+    }
+});
+
+// 3. 영상 삭제
+app.delete('/api/admin/vlogs/:idx', async (req, res) => {
+    try {
+        const repo = AppDataSource.getRepository(Vlog);
+        await repo.delete(req.params.idx);
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('VLOG 삭제 에러:', error);
+        res.status(500).json({ success: false });
+    }
+});
+
+// 4. 영상 순서 일괄 저장
+app.put('/api/admin/vlogs/order', async (req, res) => {
+    try {
+        const { orderedIds } = req.body; 
+        const repo = AppDataSource.getRepository(Vlog);
+        
+        for (let i = 0; i < orderedIds.length; i++) {
+            await repo.update(orderedIds[i], { SORT_ORDER: i + 1 });
+        }
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('VLOG 순서 저장 에러:', error);
+        res.status(500).json({ success: false });
+    }
+});
+
+//게시판 Board
+app.get('/api/admin/boards', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Board);
+        
+        const boards = await repo.find({order:{BOARD_IDX:'ASC'}})
+        return res.status(200).json({success:true, data: boards});
+        
+    }catch(err){
+    console.error('게시판 조회 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+app.post('/api/admin/boards', async(req,res)=>{
+    const {name ,type, readAuth, writeAuth} = req.body;
+    try{
+        const repo = AppDataSource.getRepository(Board);
+        const newBoard = repo.create({
+            NAME: name,
+            BOARD_TYPE:type,
+            READ_AUTH:readAuth,
+            WRITE_AUTH: writeAuth
+        });
+        await repo.save(newBoard);
+        return res.status(200).json({success:true});
+
+    }catch(err){
+    console.error('게시판 등록 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+app.delete('/api/admin/boards/:idx', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Board);
+        await repo.delete(req.params.idx);
+        return res.status(200).json({success:true});
+    }catch(err){
+    console.error('게시판 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+//특정게시판 단건조회
+app.get('/api/boards/:idx', async(req,res)=>{
+    try{
+        const repo = AppDataSource.getRepository(Board);
+        const board = await repo.findOne({
+            where:{BOARD_IDX:req.params.idx}
+            })
+        if(!board) return res.status(404).json({success:false, message:'게시판이 존재하지않습니다'})  
+        return res.status(200).json({success:true, data: board});
+        
+    }catch(err){
+    console.error('게시판 조회 에러:', err);
+    return res.status(500).json({success:false})  
+    }
+})
+
+// app.post('/api/admin/??', async(req,res)=>{
 //     try{
 //         const repo = AppDataSource.getRepository();
 //         return res.status(200).json({success:true, message:''});

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Link from "next/link";
 
 export const PopupContainer = styled.div<{$top:number; $left:number}>`
 position: fixed;
@@ -33,9 +34,9 @@ animation: popupIn 0.25s ease-out;
 
 export const  ImageWrapper= styled.div`
 width: 100%;
-position: relative;
-
+/* position: relative; */
 img{
+    object-fit: cover;
     width: 100%;
     height: auto;
     display: block; //🌟
@@ -185,7 +186,15 @@ align-items: center;
 justify-content: center;
 padding: 0;
 `;
-// export const  = styled.div``;
-// export const  = styled.div``;
+export const PopupLink = styled(Link)<{$hasLink:boolean}>`
+display: block;
+cursor: ${props=> props.$hasLink ? 'pointer': 'default'};
+text-decoration: none; // 밑줄 제거
+color: inherit;
+// 링크가 없으면 마우스 클릭 및 상호작용 자체를 막음
+pointer-events: ${props=> props.$hasLink ? 'auto': 'none'};
+
+`;
+
 // export const  = styled.div``;
 // export const  = styled.div``;

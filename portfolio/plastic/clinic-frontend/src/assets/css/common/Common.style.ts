@@ -162,4 +162,28 @@ export const Noscrollbar = css`
 
 `;
 
+export const PreviewImg = css`
+    ${FlexCenter}
 
+    /* width: 180px;
+    height: 240px; */
+
+    margin: 4px auto 0;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+    border: 2px solid #e3e6f0;
+
+    background-color: #f8f9fc;
+
+    flex-shrink: 0;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+`;

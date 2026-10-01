@@ -1,5 +1,6 @@
 'use client'
-import React, {useRef} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
+import axios from 'axios';
 import * as S from '@/components/EventRank.style';
 
 const EVENT_DATA= [
@@ -67,10 +68,48 @@ const CircularOverlay = () => (
   </S.HoverSvg>
 );
 
+// 💡 DB에서 받아올 이벤트 데이터 타입 정의
+interface EventData {
+    id: number;
+    rank: number;
+    name: string;
+    price: string;
+    img: string;
+    color: string;
+    radius: string;
+}
+
 export default function EventRanking(){
 
     const sliderRef = useRef<HTMLDivElement>(null);
 
+    const [events, setEvents] = useState<EventData[]>([]);
+
+    useEffect(() => {
+      const fetchEvents = async () => {
+          try {
+              const res = await axios.get("http://localhost:4000/api/admin/events");
+              if (res.data.success) {
+                  const formatted = res.data.data.map((item: any, index: number) => ({
+                      id: item.EVENT_IDX,
+                      rank: index + 1, // 배열 순서대로 1, 2, 3... 랭크 부여
+                      name: item.TITLE,
+                      // 관리자가 '149만원'이라고 써도 화면 하단의 <span>만원</span>과 겹치지 않게 '만원' 글자 제거
+                      price: item.PRICE.replace('만원', '').trim(), 
+                      img: `http://localhost:4000/images/${item.FILE_NAME}`, // 실제 이미지 경로
+                      // 짝수 번째(0, 2, 4..)는 핑크, 홀수 번째(1, 3..)는 옐로우 배경 교차 적용
+                      color: index % 2 === 0 ? '#ffcced' : '#ffffcc', 
+                      radius: '50%'
+                  }));
+                  setEvents(formatted);
+              }
+          } catch (error) {
+              console.error("이벤트 데이터 로드 실패:", error);
+          }
+      };
+      fetchEvents();
+    }, []);
+    
     const scroll = (direction:'left'|'right')=>{
         if(sliderRef.current){
             const scrollAmount = direction === 'left' ? -310 : 310;
@@ -93,7 +132,7 @@ export default function EventRanking(){
                 </S.EventHeader>
 
                 <S.EventSliderWrapper ref={sliderRef}>
-                    {EVENT_DATA.map(item=>(
+                    {events.map(item=>(
                         <S.EventCard key={item.id}>
                             {/* 왼쪽 위로 튀어나온 랭크 뱃지 */}
                             <S.RankBadge $bgColor={item.color} $radius={item.radius}>
@@ -110,6 +149,11 @@ export default function EventRanking(){
                             </S.EventInfo>
                         </S.EventCard>
                     ))};
+
+                    {/* 데이터가 없을 때 표시할 안내 문구 */}
+                    {events.length === 0 && (
+                        <div style={{ padding: '3rem', color: '#999' }}>등록된 이벤트가 없습니다.</div>
+                    )}
                 </S.EventSliderWrapper>
 
             </S.EventInner>

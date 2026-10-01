@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef,useState, useEffect} from 'react'
+import axios from 'axios';
 import * as S from '@/assets/css/safety.style'
 
 // 💡 안전마취 임시 데이터
@@ -30,10 +31,42 @@ const SAFETY_DATA = [
     img: '/images/main/safety/s04.png' 
   },
 ];
+
+// 📋 [타입 정의] 백엔드에서 받아올 안전마취 데이터의 구조 정의
+interface SafetyData {
+    id: number;
+    title: string;
+    desc: string;
+    img: string;
+}
 export default function Safety(){
 
     const sliderRef = useRef<HTMLDivElement>(null);
 
+    // 🗂️ [상태 관리] 백엔드에서 불러온 안전마취 데이터 목록 저장
+    const [safetyList, setSafetyList] = useState<SafetyData[]>([]);
+
+    useEffect(() => {
+        const fetchSafetyData = async () => {
+            try {
+                const response = await axios.get("http://localhost:4000/api/admin/safety");
+                if (response.data.success) {
+                    // DB 컬럼명을 프론트엔드에서 쓰기 편하게 매핑 및 이미지 경로 완성 🔄
+                    const formatted = response.data.data.map((item: any) => ({
+                        id: item.SAFETY_IDX,
+                        title: item.TITLE,
+                        desc: item.DESCRIPTION,
+                        img: `http://localhost:4000/images/${item.FILE_NAME}` // 실제 서버 이미지 파일 경로
+                    }));
+                    setSafetyList(formatted);
+                }
+            } catch (error) {
+                console.error("안전마취 데이터 로드 실패 ❌", error);
+            }
+        };
+
+        fetchSafetyData();
+    }, []);
     const scroll = (direction:'left'|'right')=>{
         const amount= direction === 'left' ? -320 : +320;
         sliderRef.current?.scrollBy({left:amount, behavior:'smooth'})
@@ -54,13 +87,19 @@ export default function Safety(){
                 </S.SafetyHeader>
 
                 <S.SliderWrapper ref={sliderRef}>
-                    {SAFETY_DATA.map(item=>(
+                    {safetyList.map(item=>(
                         <S.SafetyCard key={item.id}>
-                            <S.SafetyImg src={item.img} alt={item.title.replace('\n','')}/>
+                            {/* 카드 배경 이미지 */}
+                            <S.SafetyImg 
+                            src={item.img} 
+                            alt={item.title.replace('\n','')}/>
                             <S.TextOverlay>
                                 <S.CardTitle>
+{/* 타이틀에 줄바꿈 문자(\n)가 포함되어 있을 경우 자동 개행(\n -> <br />) 처리 */}
                                     {item.title.split('\n').map((line,idx)=>(
-                                    <React.Fragment key={idx}>{line}<br/></React.Fragment>
+                                    <React.Fragment key={idx}>
+                                        {line}<br/>
+                                    </React.Fragment>
                                 ))}
                                 </S.CardTitle>
                                 <S.CardDesc>{item.desc}</S.CardDesc>

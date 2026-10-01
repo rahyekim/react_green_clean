@@ -20,28 +20,38 @@ interface PopupData {
 export default function Pop() {
     const {popupConfig,closePopup,openPopup}=usePopup();
     
-    // 🎯 상태 관리: 팝업 글로벌 설정
+    // 팝업 개수 설정
     const [maxPopups, setMaxPopups] = useState<number>(1);
     
-    // 🎯 상태 관리: 팝업 목록 데이터
+    //팝업 목록 데이터
     const [popups, setPopups] = useState<PopupData[]>([]);
 
-    // 🎯 상태 관리: 새 팝업 등록 폼
+    //새 팝업 등록 폼
     const [newPopup, setNewPopup] = useState<Partial<PopupData>>({
         title: "", link: "", startDate: "", endDate: "", useTodayClose: true
     });
     //이미지 파일 객체를 저장할 상태추가
     const [selectedFile, setSelectedFile] = useState<File|null>(null);
     const [fileName, setFileName] = useState("");
+    const [previewUrl, setPreviewUrl]= useState<string|null>(null);
 
     const [currentTime, setCurrentTime] = useState(new Date().getTime());
 
-    // 실시간 상태 업데이트를 위한 타이머(1분마다 시간 갱신)
+    // 실시간 상태 업데이트를 위한 타이머(1분마다 시간 갱신)//10분으로,,
     useEffect(() => {
         fecthPopups();
-        const timer = setInterval(() => setCurrentTime(new Date().getTime()), 60000);
+        const timer = setInterval(() => setCurrentTime(new Date().getTime()), 600000);
         return () => clearInterval(timer);
     }, []);
+
+    //🤫메모리 누수방지 컴포넌트가 사라지거나 이미지가 바뀔 때 브라우저 메모리(URL)를 깨끗하게 해제
+    useEffect(()=>{
+        return ()=>{
+            if(previewUrl){
+                URL.revokeObjectURL(previewUrl);
+            }
+        }
+    }, [previewUrl]);
 
     //db에서 불러오기
     const fecthPopups = async()=>{
@@ -82,12 +92,7 @@ export default function Pop() {
     };
 
     const handleAddPopup = async() => {
-       console.log("버튼 클릭됨! 현재 입력된 값들:", {
-        title: newPopup.title,
-        start: newPopup.startDate,
-        end: newPopup.endDate,
-        file: selectedFile
-    }); // 👈 이 로그가 콘솔에 찍히는지 확인해보세요!
+      
         if (!newPopup.title || !newPopup.startDate || !newPopup.endDate || !selectedFile) {
             openPopup('입력 알림', "제목과 시작/종료 일시를 모두 입력해주세요.");
             return;
@@ -109,6 +114,12 @@ export default function Pop() {
                 setNewPopup({ title: "", link: "", startDate: "", endDate: "", useTodayClose: true });
                 setFileName("");
                 setSelectedFile(null);
+
+                // 🤫 등록 완료 후 저장되어 있던 미리보기 URL을 초기화(메모리 해제)
+                if(previewUrl){
+                    URL.revokeObjectURL(previewUrl);
+                    setPreviewUrl(null);
+                }
                 fecthPopups();
             }
         }catch(err){
@@ -205,6 +216,10 @@ export default function Pop() {
                                             if(file){
                                                 setSelectedFile(file);
                                                 setFileName(file.name)
+
+                                                //🤫파일을 선택하는 순간 기존에있던건지우고 브라우저내부메모리에 임시url저장
+                                                if(previewUrl) URL.revokeObjectURL(previewUrl);
+                                                setPreviewUrl(URL.createObjectURL(file));
                                             }else{
                                                 // 파일을 선택하다가 취소했을 때의 예외 처리
                                                 setSelectedFile(null);
@@ -216,8 +231,14 @@ export default function Pop() {
                                     <S.PopFileLabel htmlFor="popup-img"><FiImage /> 이미지 선택</S.PopFileLabel>
                                     <span className="file-name">{fileName || "선택된 파일 없음"}</span>
                                 </S.PopFileInputWrapper>
-                            </S.PopFormGroup>
 
+                                    {previewUrl && (
+                                        <S.Preview>
+                                            <img src={previewUrl} alt='미리보기' />
+                                        </S.Preview>
+                                    )}
+                            </S.PopFormGroup>
+                            
                             <S.PopFormGroup>
                                 <S.PopLabel><FiClock /> 노출 기간 설정</S.PopLabel>
                                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -320,7 +341,6 @@ export default function Pop() {
                 </S.PopRightColumn>
             </S.PopGrid>
         </S.PopContainer>
-
 
         <Popup 
         isOpen={popupConfig.isOpen} 

@@ -1,6 +1,7 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
+import { useState,useEffect } from 'react';
+import axios from "axios";
 import * as S from '@/assets/css/admin/Event.style'
 import {
 FiSave, FiPlus, FiTrash2, FiImage,FiArrowUp,FiArrowDown
@@ -18,69 +19,119 @@ interface EventRankingData{
 export default function  EventRanking() {
     
     const {popupConfig,closePopup,openPopup}=usePopup();
-    const[events, setEvents]=useState<EventRankingData[]>([
-    { id: 1, title: "도도도성형", price: "149만원", imageUrl: "" },
-    { id: 2, title: "레레레성형", price: "149만원", imageUrl: "" },
-    { id: 3, title: "미미미성형", price: "149만원", imageUrl: "" },
-    { id: 4, title: "파파파성형", price: "149만원", imageUrl: "" }
-    ]);
+
+    //백엔드에서 불러온 이벤트 랭킹 목록
+    const[events, setEvents]=useState<EventRankingData[]>([]);
 
     const [newEvent, setNewEvent]=useState({title:'', price:''})
-    const [fileName, setFileName]=useState('');
+    //서버 전송용 파일 상태
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    //화면에 보여줄 파일 이름
+    const [fileName, setFileName]=useState(''); 
+    //선택한 이미지 미리보기 가상 URL
     const [previewUrl, setPreviewUrl]= useState<string>('');
 
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    const fetchEvents = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/api/admin/events");
+            if (response.data.success) {
+                const formatted = response.data.data.map((item: any) => ({
+                    id: item.EVENT_IDX,
+                    title: item.TITLE,
+                    price: item.PRICE,
+                    imageUrl: `http://localhost:4000/images/${item.FILE_NAME}`
+                }));
+                setEvents(formatted);
+            }
+        } catch (error) {
+            console.error("이벤트 목록 로드 실패:", error);
+        }
+    };
     const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         const file = e.target.files?.[0];
-
         if(file){
-            setFileName(file.name);
+            setSelectedFile(file);
+            setFileName(file.name); 
             setPreviewUrl(URL.createObjectURL(file));
         }
     }
 
-    const handleAddEvent =()=>{
-        if(!newEvent.title || !newEvent.price || !previewUrl){
+    //이벤트작성후 서버로 전송 (FormData 활용)
+    const handleAddEvent = async()=>{
+        if(!newEvent.title || !newEvent.price || !selectedFile){
             openPopup('입력 오류', '이미지, 타이틀, 가격을 모두 입력해주세요');
             return;
         }
-        setEvents(prev=>(
-            [...prev, 
-                {
-                id: Date.now(),
-                title: newEvent.title,
-                price: newEvent.price,
-                imageUrl: previewUrl,
-            }]
-        ))
-        //<초기화>입력창을 비워줌
-        setFileName('');
-        setNewEvent({title:'', price:''});
-        setPreviewUrl('');
+        const formData = new FormData();
+        formData.append("eventImg", selectedFile);
+        formData.append("title", newEvent.title);
+        formData.append("price", newEvent.price);
+
+        try {
+            const response = await axios.post("http://localhost:4000/api/admin/events", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+            if (response.data.success) {
+                // [초기화] 등록 성공 시 입력 폼 초기화 및 목록 새로고침 🔄
+                setNewEvent({title:"", price:""});
+                setSelectedFile(null);
+                setFileName("");
+                setPreviewUrl("");
+                fetchEvents(); 
+            }
+        } catch (error) {
+            alert("이벤트 등록에 실패했습니다 ❌");
+        }
     }
+    //서버에 삭제 요청 🌐
     const handleDelete = (id:number)=>{
         openPopup(
             '삭제 알림', 
             '해당이벤트를 삭제하시겠습니까?',
-            ()=>{
-                setEvents(prev=> prev.filter(e=> e.id !==id))
-                closePopup();
+            async()=>{
+                   try {
+                    const response = await axios.delete(`http://localhost:4000/api/admin/events/${id}`);
+                    if (response.data.success) {
+                        fetchEvents(); 
+                        closePopup();  
+                    }
+                    } catch (error) {
+                        console.error("이벤트 삭제 실패:", error);
+                        openPopup('알림',"삭제 중 오류가 발생했습니다.");
+                }
             }
         )
     }
     //랭킹 순서변경(위/아래)
     const moveEvent = (idx:number, direction:'UP'|'DOWN')=>{
         const newEvents = [...events];
+
+        // 위로 올리기: 내 윗칸(index - 1)과 내 위치(index) 교환 🔄
         if(direction === 'UP' && idx > 0){
             [newEvents[idx-1], newEvents[idx]]=[newEvents[idx], newEvents[idx-1]]
         }else if(direction === 'DOWN' && idx < newEvents.length-1){
             [newEvents[idx], newEvents[idx+1]] = [newEvents[idx+1], newEvents[idx]]
         }
+        // 아래로 내리기: 내 아랫칸(index + 1)과 내 위치(index) 교환 🔄
         setEvents(newEvents)
     }
-    //최종저장
-    const handleSave = ()=>{
-        console.log('DB에저장될데이터',events)
-        openPopup('저장 알림','이벤트 설정이 저장되었습니다')
+
+    //변경된 랭킹 순서(ID 배열)를 서버로 전송
+    const handleSave = async()=>{
+        const orderedIds = events.map(e => e.id);
+        try {
+            const response = await axios.put("http://localhost:4000/api/admin/events/order", { orderedIds });
+            if (response.data.success) {
+                console.log('DB에저장될데이터',events)
+                openPopup('저장 알림','이벤트 설정이 저장되었습니다')
+            }
+        } catch (error) {
+            openPopup('알림',"순서 저장 중 오류가 발생했습니다.");
+        }
     }
 
     return(
