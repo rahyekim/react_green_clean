@@ -80,8 +80,6 @@ color: #333;
 outline: none;
 flex-shrink: 0;
 cursor: pointer;
-
-
 `;
 export const AlertBanner=styled.div`
 background-color: #f8f9fa;
@@ -128,6 +126,7 @@ gap: 12px;
 }
 
 `;
+//🏆토글
 export const ToggleBtn=styled.button<{$isOn:boolean}>`
 width: 48px;
 height: 26px;
@@ -137,13 +136,13 @@ background-color: ${({$isOn})=> $isOn ? '#ff8c00' : '#ddd'};
 
 position: relative;
 cursor: pointer;
-transition: background-color 0.3s;
+transition: background-color 0.3s ease;
 
 &:focus{
     outline: none;
 }
 
-/* 토글스위치 */
+/* 토글스위치 손잡이*/
 .handle{
     width: 22px;
     height: 22px;
@@ -153,7 +152,7 @@ transition: background-color 0.3s;
     top: 2px;
     left: ${({$isOn})=>$isOn ? '24px': '2px'};
     box-shadow: 0px 2px 4px rgba(0,0,0,.2);
-    
+    transition: left 0.3s ease;
 }
 `;
 export const Divider=styled.div`

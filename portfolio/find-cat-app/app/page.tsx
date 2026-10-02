@@ -139,13 +139,6 @@ export default function HomePage (){
 
   return(
     <>
-    <S.AppWrapper>
-    <S.Container>
-      <S.Header>
-        <S.Logo>어서 찾아주개냥</S.Logo>
-        <NotificationsNoneIcon fontSize="large"/>
-      </S.Header>
-      <S.MT70></S.MT70>
       <S.Banner>
         <S.BannerTitle>
           유기동물 입양자라면 <br/> 
@@ -351,10 +344,6 @@ export default function HomePage (){
         </S.StatBox>
         
       </S.Section>
-      <Footer/>
-
-    </S.Container>
-    </S.AppWrapper>
     </>
   )
 }

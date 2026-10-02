@@ -1,4 +1,3 @@
-import { CustomButton } from './../../../../../BBS/board-frontend/src/assets/css/Board.styles';
 
 import styled from "styled-components";
 

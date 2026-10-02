@@ -31,8 +31,8 @@ export default function BoardDetail() {
         }
     }, [boardId]);
 
-    if (isLoading) return <Layout><div style={{ padding: '10rem', textAlign: 'center' }}>로딩중...</div></Layout>;
-    if (!boardInfo) return <Layout><div style={{ padding: '10rem', textAlign: 'center' }}>존재하지 않는 게시판입니다.</div></Layout>;
+    if (isLoading) return <div style={{ padding: '10rem', textAlign: 'center' }}>로딩중...</div>;
+    if (!boardInfo) return <div style={{ padding: '10rem', textAlign: 'center' }}>존재하지 않는 게시판입니다.</div>;
 
     return (
             <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '5rem 1rem', minHeight: '60vh' }}>

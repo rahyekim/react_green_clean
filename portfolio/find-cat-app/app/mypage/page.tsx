@@ -55,107 +55,102 @@ export default function Mypage(){
 
     return(
         <>
-        <S.AppWrapper>
-            <Header title='마이메뉴'/>
-            <S.Container>
-                <S.MT70/>
-                <S.LoginLayout>
-                    <S.H2Size20>
-                        {user ? (
-                        <S.LayoutSpaceBetween>
-                            <span> 환영 합니다 ✨<span>{user.nickname} 님</span></span>
-                            <S.LogoutBtn
-                            onClick={handleLogout}
-                            >로그아웃
-                            </S.LogoutBtn>
-                        </S.LayoutSpaceBetween>
-                        ):(
-                            //➡️유저 정보가 없을때(비로그인시)
-                                <S.MenuIconWrapper 
-                                onClick={()=>router.push('/login')}
-                                >
-                                <PetsIcon style={{ fontSize: '32px', color:'pink' }}/>
-                                로그인을 해주세요
-                                </S.MenuIconWrapper>
-                        )}
-                    </S.H2Size20>
+        <S.MT30></S.MT30>
+        <S.LoginLayout>
+            <S.H2Size20>
+                {user ? (
+                <S.LayoutSpaceBetween>
+                    <span> 환영 합니다 ✨<span>{user.nickname} 님</span></span>
+                    <S.LogoutBtn
+                    onClick={handleLogout}
+                    >로그아웃
+                    </S.LogoutBtn>
+                </S.LayoutSpaceBetween>
+                ):(
+                    //➡️유저 정보가 없을때(비로그인시)
+                        <S.MenuIconWrapper 
+                        onClick={()=>router.push('/login')}
+                        >
+                        <PetsIcon style={{ fontSize: '32px', color:'pink' }}/>
+                        로그인을 해주세요
+                        </S.MenuIconWrapper>
+                )}
+            </S.H2Size20>
+            <S.MT30></S.MT30>
 
-                    <S.LayoutSpaceBetween>
-                        <TopMenuCard 
-                        icon={<PremiumIcon sx={{color: '#ff8c00', fontSize:'32px'}}/>}
-                        text="멤버십"
-                        />
-                        <TopMenuCard 
-                        icon={<EditNoteIcon sx={{color: '#ff8c00', fontSize:'32px'}}/>}
-                        text="입양신청"
-                        />
-                         <TopMenuCard 
-                        icon={<MailIcon sx={{color: '#ff8c00', fontSize:'32px'}}/>}
-                        text="쪽지함"
-                        />
-                    </S.LayoutSpaceBetween>
-                </S.LoginLayout>
+            <S.LayoutSpaceBetween>
+                <TopMenuCard 
+                icon={<PremiumIcon sx={{color: '#ff8c00', fontSize:'32px'}}/>}
+                text="멤버십"
+                />
+                <TopMenuCard 
+                icon={<EditNoteIcon sx={{color: '#ff8c00', fontSize:'32px'}}/>}
+                text="입양신청"
+                />
+                    <TopMenuCard 
+                icon={<MailIcon sx={{color: '#ff8c00', fontSize:'32px'}}/>}
+                text="쪽지함"
+                />
+            </S.LayoutSpaceBetween>
+        </S.LoginLayout>
 
-                    <S.Line/>
+        <S.Line/>
 
-                    <S.LoginLayout>
-                        <S.List>
-                            <S.H3Size16> 마이 메뉴 </S.H3Size16>
-                            <ListItem 
-                            icon={<PersonIcon sx={{color:'pink'}}/>}
-                            text='로그인'
-                            link='/login'
-                            />
-                            <ListItem 
-                            icon={<PetsIcon sx={{color:'pink'}}/>}
-                            text='관심 유기 동물'
-                            />
-                        </S.List>
-                    </S.LoginLayout>
-                    
-                    <S.Line/>
+        <S.LoginLayout>
+            <S.List>
+                <S.H3Size16> 마이 메뉴 </S.H3Size16>
+                <ListItem 
+                icon={<PersonIcon sx={{color:'pink'}}/>}
+                text='로그인'
+                link='/login'
+                />
+                <ListItem 
+                icon={<PetsIcon sx={{color:'pink'}}/>}
+                text='관심 유기 동물'
+                />
+            </S.List>
+        </S.LoginLayout>
+        
+        <S.Line/>
 
-                    <S.LoginLayout>
-                        <S.List>
-                            <S.H3Size16> 정보 </S.H3Size16>
-                            <ListItem 
-                            icon={<InfoIcon sx={{color:'pink'}}/>}
-                            text='공지사항'
-                            />
-                            <ListItem 
-                            icon={<HelpIcon sx={{color:'pink'}}/>}
-                            text='자주하는 질문'
-                            />
-                            <ListItem 
-                            icon={<ChatIcon sx={{color:'pink'}}/>}
-                            text='문의하기'
-                            />
-                        </S.List>
-                    </S.LoginLayout>
+        <S.LoginLayout>
+            <S.List>
+                <S.H3Size16> 정보 </S.H3Size16>
+                <ListItem 
+                icon={<InfoIcon sx={{color:'pink'}}/>}
+                text='공지사항'
+                />
+                <ListItem 
+                icon={<HelpIcon sx={{color:'pink'}}/>}
+                text='자주하는 질문'
+                />
+                <ListItem 
+                icon={<ChatIcon sx={{color:'pink'}}/>}
+                text='문의하기'
+                />
+            </S.List>
+        </S.LoginLayout>
 
-                    <S.Line/>
+        <S.Line/>
 
-                    <S.LoginLayout>
-                        <S.List>
-                            <S.H3Size16> SNS </S.H3Size16>
-                            <ListItem 
-                            icon={<CameraIcon sx={{color:'pink'}}/>}
-                            text='어서찾아주개냥 인스타그램'
-                            />
-                            <ListItem 
-                            icon={<PenIcon sx={{color:'pink'}}/>}
-                            text='어서찾아주개냥 블로그'
-                            />
-                            <ListItem 
-                            icon={<PlayIcon sx={{color:'pink'}}/>}
-                            text='어서찾아주개냥 유튜브'
-                            />
-                        </S.List>
-                    </S.LoginLayout>
-
-            </S.Container>
-            <Footer/>
-        </S.AppWrapper>
+        <S.LoginLayout>
+            <S.List>
+                <S.H3Size16> SNS </S.H3Size16>
+                <ListItem 
+                icon={<CameraIcon sx={{color:'pink'}}/>}
+                text='어서찾아주개냥 인스타그램'
+                />
+                <ListItem 
+                icon={<PenIcon sx={{color:'pink'}}/>}
+                text='어서찾아주개냥 블로그'
+                />
+                <ListItem 
+                icon={<PlayIcon sx={{color:'pink'}}/>}
+                text='어서찾아주개냥 유튜브'
+                />
+            </S.List>
+        </S.LoginLayout>
+     
         </>
     )
 }

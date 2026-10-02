@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Link from "next/link";
 import * as S from "@/assets/css/admin/Board.style";
 
 import { FiSave, FiPlus, FiTrash2, FiSettings, FiList } from "react-icons/fi";
@@ -88,9 +89,7 @@ export default function Board() {
         }
     };
 
-    // ----------------------------------------------------
-    // 2. 게시판 삭제 기능 (팝업 열기 & 확인 후 삭제)
-    // ----------------------------------------------------
+    // 게시판 삭제  
      const handleDeleteClick = (id: number) => { 
        openPopup(
         '삭제 확인', 
@@ -109,9 +108,7 @@ export default function Board() {
     )
     };
 
-    // ----------------------------------------------------
-    // 3. 최종 저장 기능
-    // ----------------------------------------------------
+    //저장 기능(추가/삭제는 이미 실시간으로 DB에 반영되므로, UI 확인용도로 유지)
     const handleSave = () => {
         console.log("DB에 저장될 게시판 목록:", boardList);
         openPopup('저장 완료', '게시판 설정이 성공적으로 저장되었습니다.');
@@ -213,13 +210,13 @@ export default function Board() {
                                             <td style={{ textAlign: 'left' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                                     <FiList color="#b7b9cc" />
-                                                    <a 
+                                                    <Link
                                                     href={`/board/${board.id}`}
                                                     target="_blank"
                                                     rel="noreferrer"
                                                     >
                                                         <strong>{board.name}</strong>
-                                                    </a>
+                                                    </Link>
                                                 </div>
                                             </td>
                                             <td>

@@ -69,45 +69,38 @@ headers: {"Authorization": `Bearer ${token}`}
     }
     return(
         <>
-        <S.AppWrapper>
-            <S.ContainerColumn>
-                <Header 
-                title="로그인"
-                onBackClick={()=> window.history.back()}
+        <S.ContainerColumn>
+            <S.Column>
+                <S.FormControl
+                type='email'
+                placeholder='이메일'
+                value={email}
+                onChange={e=>setEmail(e.target.value)}
                 />
-                <S.MT70></S.MT70>
-                <S.Column>
-                    <S.FormControl
-                    type='email'
-                    placeholder='이메일'
-                    value={email}
-                    onChange={e=>setEmail(e.target.value)}
-                    />
-                    <S.FormControl
-                    type='password'
-                    placeholder='패스워드'
-                    value={password}
-                    onChange={e=>setPassword(e.target.value)}
-                    />
-                    <S.BtnBottomWrap>
-                        <S.BaseBtn
-                        $variant='primary'
-                        $mainColor='pink'
-                        onClick={handleLogin}
-                        >로그인</S.BaseBtn>
-                        <br/>
-                        <S.BaseBtn
-                        $variant='kakao'
-                        onClick={handleKaKaoLogin}
-                        >카카오로 간편하게 시작하기</S.BaseBtn>
-                        <br/>
-                        <S.BaseBtn
-                        $variant='local'
-                        >Apple로 로그인</S.BaseBtn>
-                    </S.BtnBottomWrap>
-                </S.Column>
-            </S.ContainerColumn>
-        </S.AppWrapper>
+                <S.FormControl
+                type='password'
+                placeholder='패스워드'
+                value={password}
+                onChange={e=>setPassword(e.target.value)}
+                />
+                <S.BtnBottomWrap>
+                    <S.BaseBtn
+                    $variant='primary'
+                    $mainColor='pink'
+                    onClick={handleLogin}
+                    >로그인</S.BaseBtn>
+                    <br/>
+                    <S.BaseBtn
+                    $variant='kakao'
+                    onClick={handleKaKaoLogin}
+                    >카카오로 간편하게 시작하기</S.BaseBtn>
+                    <br/>
+                    <S.BaseBtn
+                    $variant='local'
+                    >Apple로 로그인</S.BaseBtn>
+                </S.BtnBottomWrap>
+            </S.Column>
+        </S.ContainerColumn> 
         </>
     )
 

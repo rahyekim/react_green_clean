@@ -187,3 +187,21 @@ export const PreviewImg = css`
         object-fit: cover;
     }
 `;
+
+export const  Ellipsis=css`
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+min-width: 0; //필수⭐️
+`;
+
+
+//텍스트 드래그 방지 세트 (User Select)
+export const Unselectable = css`
+    -webkit-user-select: none; /* 사파리 / 크롬 */
+    -moz-user-select: none;    /* 파이어폭스 */
+    -ms-user-select: none;     /* 익스플로러 / 구형 엣지 */
+    user-select: none;         /* 표준 */
+`;
+
+// export const = styled.css``;

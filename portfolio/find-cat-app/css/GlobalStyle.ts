@@ -27,4 +27,17 @@ ul, ol , li {
     padding: 0;
 }
 
+button{
+    background: none;
+    border: none;
+
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    
+    &:focus{
+        outline: none;
+    }
+}
 `;

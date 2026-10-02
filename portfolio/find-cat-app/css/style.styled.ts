@@ -2,8 +2,21 @@
 import { PlayArrow } from '@mui/icons-material';
 import styled, {css} from 'styled-components';
 
+// export * from '@/app/missing/Missing.style'
+
 // export const  = styled.div``;
 
+import { Bottom0, Boxshadow, Ellipsis, FlexAlignCenter, FlexBetween, FlexCenter, FlexColumn, TransitionAll, WebkitBox } from './common/Common.styles';
+
+//✨가로 중앙 left: 50%; && transform: translateX(-50%);
+//✨세로 중앙 top: 50%; && transform: translateY(-50%);
+
+export const  CardGrid=styled.div`
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap:12px;
+padding:0 16px;
+`;
 export const AppWrapper = styled.div`
 display: flex;
 justify-content: center;
@@ -11,7 +24,6 @@ background-color: #333;
 min-height: 100vh;
 width: 100%;
 `;
-
 
 export const Container = styled.div`
 width: 100%;
@@ -22,6 +34,7 @@ position: relative;
 background-color: #fff;
 padding-bottom:70px;
 box-shadow: 0 0 10px rgba(0,0,0,0.15);
+margin: 0 auto; /* 💡 화면 정중앙에 고정되도록 설정 */
 
 @media (max-width:480px){
     width: 100%;
@@ -56,8 +69,39 @@ export const Logo = styled.h4`
 margin: 0;
 font-weight: 700;
 color: #f28c28;
-
 `;
+
+// export const Container = styled.div`
+//   width: 100%;
+//   max-width: 480px;
+//   min-height: 100vh;
+//   background-color: #fff;
+//   position: relative;
+//   padding-bottom: 70px;
+//   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+//   margin: 0 auto; /* 💡 화면 정중앙에 고정되도록 설정 */
+
+//   @media (max-width: 480px) {
+//     width: 100%;
+//     box-shadow: none;
+//   }
+// `;
+
+
+// export const Header = styled.header`
+// position: sticky;
+//   top: 0;
+//   z-index: 99999;
+//   width: 100%;
+//   box-sizing: border-box;
+//   padding: 16px 20px;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   background-color: #fff;
+//   max-width: 480px;
+//   margin: 0 auto;
+// `;
 
 export const Banner = styled.section`
 background-color: #f5efc1;  //e9f7f4
@@ -407,7 +451,7 @@ margin-top: 30px;
 
 export const BtnBottomWrap = styled.div`
 position:fixed;
-bottom:3%;
+bottom: 10%;
 left:50%;
 transform:translateX(-50%);
 z-index: 999;
@@ -546,8 +590,11 @@ margin-bottom: 10px;
 color: #555;
 cursor: pointer;
 `;
+export const MT30 = styled.div`
+margin-top: 30px;
+`;
 export const MT70 = styled.div`
-margin-top: 68px;
+margin-top: 30px;
 `;
 export const ModalBg= styled.div`
 display: flex;
@@ -634,7 +681,7 @@ color: #333;
 margin-top: 8px;
 `;
 export const List = styled.div`
-padding: 0 20px 20px 20px;
+padding: 0 20px 0px 20px;
 `;
 export const  H3Size16= styled.h3`
 font-size: 16px;
@@ -795,9 +842,304 @@ text-overflow: ellipsis;
 overflow: hidden;
 
 `;
-// export const  = styled.div``;
-// export const  = styled.div``;
 
+//toggle토글 스위치
+interface ToggleProps{$active:boolean;}
+export const ToggleSwitch  =styled.div<ToggleProps>`
+width: 2.75rem;
+height: 1.5rem;  //16:9 이상적
+background-color:${props => (props.$active ? '#ff6b00':'#e4e5e7')};
+border-radius: 0.75rem;
+position: relative;
+cursor: pointer;
+${TransitionAll}
+`;
+export const  ToggleThumb=styled.div<ToggleProps>`
+width: 1.25rem;
+height: 1.25rem;
+border-radius: 50%;
+background-color: #fff;
+position: absolute;
+top: 0.125rem;
+left: ${props=> props.$active ? '1.375rem' : '0.125rem'};
+${TransitionAll}
+${Boxshadow}
+`;
+export const GuideBox =styled.div`
+${FlexBetween}
+background-color: #fff;
+cursor: pointer;
+padding: 0.75rem 1rem;
+border-radius: 10px;
+margin: 0 1rem 1rem 1rem;
+`;
+export const  GuideText=styled.span`
+flex:1;   //??
+font-size:0.875rem;
+color:#444;
+margin-left:0.5rem;
+font-weight: 500;
+`;
 
-//✨가로 중앙 left: 50%; && transform: translateX(-50%);
-//✨세로 중앙 top: 50%; && transform: translateY(-50%);
+export const  InfoRow=styled.div`
+${FlexCenter}
+gap: 0.375rem;
+margin-bottom: 0.25rem;
+`;
+
+//// missing???? 
+interface StatusProps {$status:string;}
+
+export const  StatusBadge= styled.span<StatusProps>`
+color: white;
+font-weight: 700;
+background-color: ${ 
+props=> props.$status === '실종' ? '#ff4d4f': '#52c41a'};
+padding: 0.12rem 0.37rem;
+border-radius: 0.25rem;
+`;
+export const  MetaInfo= styled.div`
+font-size: 0.69rem;
+color: #666;
+margin-bottom: 0.5rem;
+white-space: nowrap;
+${Ellipsis}
+`;
+export const  LocationRow= styled.div`
+${FlexAlignCenter}
+justify-content: flex-start;
+gap: 0.25rem;
+margin-bottom:0.25rem;
+`;
+export const  LocationText= styled.div`
+font-size:0.6875rem;
+line-height: 1.2;
+color: #666;
+${WebkitBox}
+overflow: hidden;
+`;
+export const DateRow= styled.div`
+${FlexCenter}
+gap: 0.25rem;
+margin-top:0.375rem;
+`;
+export const DateText= styled.span`
+font-size: 0.625rem;
+color: #999;
+
+`;
+export const LoadingText= styled.div`
+text-align: center;
+grid-column: span 2; ///🔥열 2칸 합쳐서 혼자써라
+padding: 2.5rem;
+color: #888;
+font-size: 0.8rem;
+`;
+
+export const FloatingWriteBtn= styled.button`
+position: fixed;
+bottom: 5rem;
+right: 1.25rem;
+background-color: #52c41a;
+color: white;
+border: none;
+border-radius: 1.875rem;
+padding: 0.6rem 1.2rem;
+${FlexCenter}
+gap: 0.375rem;
+font-size: 0.875rem;
+font-weight: 600;
+${Boxshadow}
+cursor: pointer;
+z-index: 10;
+`;
+export const NavBottom= styled.div`
+position: fixed;
+max-width: 480px;
+${Bottom0}
+margin: 0 auto; //중앙정렬
+height: 3.75rem;
+background-color: white;
+border-top:1px solid #eee;
+${FlexAlignCenter}
+justify-content: space-around;
+z-index: 100;
+`;
+interface NavItemProps {$active?:boolean;}
+export const ItemNav= styled.div<NavItemProps>`
+${FlexColumn}
+gap:0.125rem;
+cursor: pointer;
+span{
+  font-size: 0.75rem;
+  color: ${props=>props.$active ? '#ff7a00': '#888'};
+  font-weight:  ${props=>props.$active ? '700': '400'};;
+}
+`;
+
+export const ImageContainer = styled.div`
+  width: 100%;
+  height: 160px;
+  background-color: #eee;
+  overflow: hidden;
+  ${FlexCenter}
+`;
+
+export const BreedName= styled.div`
+font-size: 0.8rem;
+font-weight: 700;
+color: #222;
+`;
+export const Card= styled.div`
+background-color: white;
+border-radius: 0.75rem;
+${Boxshadow}
+overflow: hidden;
+`;
+
+export const TabContainer=styled.div`
+display: flex;
+padding: 0 20px;
+border-bottom: 1px solid #eee;
+background-color: #fff;
+`;
+export const TabBtn=styled.button<{$active?:boolean}>`
+background:none;
+border: none;
+padding: 15px 5px;
+margin-right: 20px;
+
+font-size: 1rem;
+font-weight: ${props=> props.$active ? '700' : '400'};
+color: ${props=> props.$active ? '#111' : '#888'};
+border-bottom: ${props=> props.$active ? '2px solid #000' : '2px solid transparent'};
+cursor: pointer;
+transition: all 0.2s ease;
+
+&:focus{
+    outline: none;
+}
+`;
+export const FilterContainer=styled.div`
+padding: 15px 20px;
+display: flex;
+gap: 10px;
+align-items: center;
+overflow-x: auto;
+background-color: #fff;
+
+&::-webkit-scrollbar{
+    display: none;
+}
+scrollbar-width: none;
+scroll-behavior: smooth;
+
+`;
+export const FilterIconBtn=styled.button`
+background-color: #fff;
+border: 1px solid #ddd;
+border-radius: 50%;
+width: 38px;
+height: 38px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+cursor: pointer;
+`;
+export const FilterSelect =styled.select`
+padding: 0 15px;
+height: 38px;
+border: 1px solid #ddd;
+border-radius: 20px;
+background-color: #fff;
+font-size: 0.9rem;
+color: #333;
+outline: none;
+flex-shrink: 0;
+cursor: pointer;
+`;
+export const AlertBanner=styled.div`
+background-color: #f8f9fa;
+margin: 0 20px 20px;
+padding: 15px;
+border-radius: 12px;
+border: 1px solid #eee;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+`;
+export const AlertInfo =styled.div`
+display: flex;
+align-items: center;
+gap: 12px;
+
+.icon-circle{
+    background-color: #e9ecef;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.3s ease-in-out;
+    &:hover{
+        color: #ff8c00;
+        background-color: #eee;
+    }
+}
+
+.text-group{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    strong{
+        font-size: 0.95rem; color: #111;
+    }
+    span{
+        font-size: 0.8rem; color: #888;
+    }
+}
+
+`;
+
+export const ToggleBtn=styled.button<{$isOn:boolean}>`
+width: 48px;
+height: 26px;
+border-radius: 13px;
+border: none;
+background-color: ${({$isOn})=> $isOn ? '#ff8c00' : '#ddd'};
+
+position: relative;
+cursor: pointer;
+transition: background-color 0.3s;
+
+&:focus{
+    outline: none;
+}
+
+/* 토글스위치 */
+.handle{
+    width: 22px;
+    height: 22px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: ${({$isOn})=>$isOn ? '24px': '2px'};
+    box-shadow: 0px 2px 4px rgba(0,0,0,.2);
+    
+}
+`;
+
+export const Divider=styled.div`
+height: 8px;
+background-color: #f4f5f7;
+width: 100%;
+`;
+// export const = styled.div``;
+// export const = styled.div``;
+// export const = styled.div``;
+

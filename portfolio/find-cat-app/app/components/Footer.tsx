@@ -31,7 +31,7 @@ export default function Footer (){
                 </S.NavItem>
             </Link>
             <Link href="/missing">
-                <S.NavItem>
+                <S.NavItem $active={pathname==='/missing'}>
                 <CampaignIcon/>
                 <span>실종/제보</span>
                 </S.NavItem>
