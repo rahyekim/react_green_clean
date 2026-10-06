@@ -6,16 +6,16 @@ import styled, {css} from 'styled-components';
 
 // export const  = styled.div``;
 
-import { Bottom0, Boxshadow, Ellipsis, FlexAlignCenter, FlexBetween, FlexCenter, FlexColumn, TransitionAll, WebkitBox } from './common/Common.styles';
+import { Bottom0, Boxshadow, BoxShadowBasic, BoxShadowHover, Ellipsis, FlexAlignCenter, FlexBetween, FlexCenter, FlexColumn, TransitionAll, WebkitBox } from './common/Common.styles';
 
 //✨가로 중앙 left: 50%; && transform: translateX(-50%);
 //✨세로 중앙 top: 50%; && transform: translateY(-50%);
 
 export const  CardGrid=styled.div`
 display: grid;
-grid-template-columns: 1fr 1fr;
+grid-template-columns: repeat(auto-fit, minmax(180px,1fr)) ;
 gap:12px;
-padding:0 16px;
+padding:0 15px;
 `;
 export const AppWrapper = styled.div`
 display: flex;
@@ -208,13 +208,14 @@ span{
 }
 `;
 export const AnimalCard  = styled.div`
-width: 160px;
+width: 200px;
 border-radius: 15px;
 box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 flex-shrink: 0;
 display: flex;
 flex-direction: column;
 background-color: #fff;
+overflow: hidden;
 `;
 
 export const CardImg  = styled.img`
@@ -812,12 +813,15 @@ position: relative;
 border-radius: 8px;
 overflow: hidden;
 aspect-ratio: 16/9;  //fullHD
-
+max-width: 300px;
+width: 100%;
+/* height: 100%; */
 `;
 export const VideoThumb = styled.img`
 width: 100%;
 height: 100%;
 object-fit: cover;
+display: block;
 `;
 
 //icon
@@ -883,23 +887,24 @@ font-weight: 500;
 
 export const  InfoRow=styled.div`
 ${FlexCenter}
-gap: 0.375rem;
+gap: 0.45rem;
 margin-bottom: 0.25rem;
 `;
 
-//// missing???? 
+//// missing 실종/제보
 interface StatusProps {$status:string;}
 
 export const  StatusBadge= styled.span<StatusProps>`
 color: white;
-font-weight: 700;
+font-weight: 600;
 background-color: ${ 
 props=> props.$status === '실종' ? '#ff4d4f': '#52c41a'};
-padding: 0.12rem 0.37rem;
+padding: 0.1rem 0.32rem;
 border-radius: 0.25rem;
 `;
 export const  MetaInfo= styled.div`
-font-size: 0.69rem;
+text-align: center;
+font-size: 0.8rem;
 color: #666;
 margin-bottom: 0.5rem;
 white-space: nowrap;
@@ -912,8 +917,8 @@ gap: 0.25rem;
 margin-bottom:0.25rem;
 `;
 export const  LocationText= styled.div`
-font-size:0.6875rem;
-line-height: 1.2;
+font-size:0.73rem;
+line-height: 1.3;
 color: #666;
 ${WebkitBox}
 overflow: hidden;
@@ -924,9 +929,8 @@ gap: 0.25rem;
 margin-top:0.375rem;
 `;
 export const DateText= styled.span`
-font-size: 0.625rem;
+font-size: 0.7rem;
 color: #999;
-
 `;
 export const LoadingText= styled.div`
 text-align: center;
@@ -939,7 +943,10 @@ font-size: 0.8rem;
 export const FloatingWriteBtn= styled.button`
 position: fixed;
 bottom: 5rem;
-right: 1.25rem;
+
+left: 50%; //브라우저 정중앙 기준점
+transform: translateX(120px); //정중앙에서 이동!
+
 background-color: #52c41a;
 color: white;
 border: none;
@@ -990,11 +997,16 @@ font-size: 0.8rem;
 font-weight: 700;
 color: #222;
 `;
+
 export const Card= styled.div`
 background-color: white;
 border-radius: 0.75rem;
-${Boxshadow}
+${BoxShadowBasic}
 overflow: hidden;
+
+&:hover{
+  ${BoxShadowHover}
+}
 `;
 
 export const TabContainer=styled.div`
@@ -1022,8 +1034,9 @@ transition: all 0.2s ease;
 `;
 export const FilterContainer=styled.div`
 padding: 15px 20px;
+width: 100%;
 display: flex;
-gap: 10px;
+gap: 8px;
 align-items: center;
 overflow-x: auto;
 background-color: #fff;
@@ -1039,8 +1052,8 @@ export const FilterIconBtn=styled.button`
 background-color: #fff;
 border: 1px solid #ddd;
 border-radius: 50%;
-width: 38px;
-height: 38px;
+width: 35px;
+height: 35px;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -1048,8 +1061,8 @@ flex-shrink: 0;
 cursor: pointer;
 `;
 export const FilterSelect =styled.select`
-padding: 0 15px;
-height: 38px;
+flex-shrink: 0; //overflow x스크롤
+padding: 8px 10px;
 border: 1px solid #ddd;
 border-radius: 20px;
 background-color: #fff;

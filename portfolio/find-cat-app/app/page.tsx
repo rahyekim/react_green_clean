@@ -295,7 +295,7 @@ export default function HomePage (){
         <MDBRow className="g-2">
           {fellowNews.map(news=>(
             <MDBCol size='4' key={news.id} className="mb-2">
-              <S.Thumb>
+              <S.Thumb style={{height:'120px'}}>
                 <S.VideoThumb src={news.imageUrl} alt={news.title}/>
               </S.Thumb>
               <S.NewsTitle>
@@ -305,6 +305,7 @@ export default function HomePage (){
           ))}
         </MDBRow>
       </S.Section>
+    
       {/* 도움이 필요해 */}
       <S.Section>
         <S.SectionHeader>
@@ -314,9 +315,14 @@ export default function HomePage (){
         <MDBRow className="g-1">
           {needHelp.map(help=>(
             <MDBCol size='3' key={help.id} className="mb-2">
-              <S.Thumb>
-                <S.VideoThumb src={help.imageUrl} alt="도움필요"/>
+              <S.Thumb style={{width:'120px',height:'120px'}}>
+                <S.VideoThumb 
+                src={help.imageUrl} alt="도움필요"/>
               </S.Thumb>
+
+               <S.NewsTitle>
+                {help.title}
+              </S.NewsTitle>
             </MDBCol>
           ))}
         </MDBRow>

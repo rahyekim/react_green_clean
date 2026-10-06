@@ -1,24 +1,6 @@
-
+import { FlexCenter } from "@/css/common/Common.styles";
 import styled from "styled-components";
 
-export const ShelterHeader =styled.header`
-background-color: #fff;
-padding: 15px 20px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-
-position: sticky; //
-top: 0;
-z-index: 10;
-`;
-export const LogoText=styled.h1`
-color: #ff8c00;
-font-size: 1.3rem;
-font-weight: 900;
-margin: 0;
-letter-spacing: -0.5px;
-`;
 export const TabContainer=styled.div`
 display: flex;
 padding: 0 20px;
@@ -194,12 +176,12 @@ export const RecommendCard=styled.div`
 width: 140px;
 flex-shrink: 0; //🌟
 `;
+
 export const RecommendImgBox=styled.div`
 width: 140px;
 height: 140px;
 border-radius: 12px;
 background-color: #eee;
-
 position: relative;
 overflow: hidden; //🌟
 
@@ -207,6 +189,7 @@ img{
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
 .play-icon{
@@ -227,24 +210,37 @@ align-items: center;
 gap: 2px;
 
 `;
-export const ListSection=styled.section`
-padding: 20px;
-display: flex;
-flex-direction: column;
-gap: 15px;
-background-color: #f4f5f7;
-
+// 💡 1. 목록 전체 영역: 세로 방향으로 1개씩 쌓이도록 변경
+export const ListSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #f4f5f7;
+  gap: 8px;
+  padding: 12px;
+  box-sizing: border-box;
 `;
-export const AnimalCard=styled.div`
-padding: 20px;
-display: flex;
-flex-direction: column;
-gap: 15px;
+
+// 💡 2. 개별 카드: 좌우(row) 배치로 설정하여 사진과 텍스트를 나란히 둠
+export const AnimalCard = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex-shrink: 1;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 `;
 export const AnimalImgBox=styled.div`
-width: 110px;
-height:110px ;
-border-radius: 8px;
+width: 100px;
+height: 100px;
+border-radius: 10px;
 background-color: #eee;
 
 overflow: hidden;
@@ -260,7 +256,8 @@ img{
 export const AnimalInfo=styled.div`
 display: flex;
 flex-direction: column;
-width: 100%;
+flex: 1;
+min-width: 0;
 
 `;
 export const BadgeGroup=styled.div`
@@ -270,25 +267,25 @@ margin-bottom: 10px;
 
 `;
 export const Badge=styled.span<{$type?:'status'|'female'|'male'|'unknown'}>`
-font-size: 0.75rem;
+font-size: 0.7rem;
 padding: 3px 8px;
 border-radius: 6px;
 border: 1px solid ;
-${({$type})=> {
-    switch($type){
-        case "status" : return 'color: #555; border-color: #ccc'
-        case "female" : return 'color: #ff6b6b; border-color: #ff6b6b'
-        case "male" : return 'color: #4a90e2; border-color: #4a90e2'
-        case "unknown" : return 'color: #555; border-color: #ccc'
-        default:
-            'color: #555; border-color: #ccc'
-    }
-}}
+font-weight: 600;
+  ${({ $type}) => {
+      switch($type){
+          case 'status': return 'color: #555; border-color: #ccc; background-color: #fff;';
+          case 'female': return 'color: #ff6b6b; border-color: #ff6b6b; background-color: #fff;';  
+          case 'male': return 'color: #4a90e2; border-color: #4a90e2; background-color: #fff;';  
+          case 'unknown': return 'color: #555; border-color: #ccc; background-color: #fff;';  
+          default: return 'color: #555; border-color: #ccc; background-color: #fff;';        
+      }
+  }}
 `;
 export const InfoGrid=styled.div`
 display: grid;
 grid-template-columns: 60px 1fr;
-row-gap: 20px;
+gap: 3px 6px;
 font-size: 0.85rem;
 
 .label{

@@ -38,7 +38,7 @@ export default function Footer (){
             </Link>
 
             <Link href="/story">
-                <S.NavItem>
+                <S.NavItem $active={pathname==='/story'}>
                 <MenuBookIcon/>
                 <span>스토리</span>
                 </S.NavItem>

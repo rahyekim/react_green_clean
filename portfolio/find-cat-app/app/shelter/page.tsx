@@ -126,8 +126,9 @@ export default function Shelter(){
             <S.RecommendScroll>
                 <S.RecommendCard>
                     <S.RecommendImgBox>
-                        <img src="https://via.placeholder.com/140" alt="추천동물" />
-                        <PlayIcon className="play-icon" sx={{fontSize:'18px'}}/>
+                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=140&h=140&fit=crop" alt="추천동물" />
+                        {/* <img src="https://loremflickr.com/140/140" alt="추천동물" /> */}
+                        <PlayIcon className="play-icon" sx={{fontSize:'35px'}}/>
                     </S.RecommendImgBox>
 
                     <S.LocationText>
@@ -176,7 +177,7 @@ export default function Shelter(){
                 </S.AnimalInfo>
             </S.AnimalCard>
                 ))
-            )};
+            )}
         </S.ListSection>
         </>
     )

@@ -16,9 +16,16 @@ const MainWrapper = styled.main<{ $isHide?: boolean }>`
 
 export default function ConditionalLayout({ children }: { children: ReactNode }) {
   // 예시: 특정 조건에 따라 헤더나 푸터를 숨기고 싶을 때 $isHide 등을 활용할 수 있습니다.
-  const isHide = false; 
+  
+  // const isHide = false; 
 
   const pathname = usePathname();
+
+  const isAdmin = pathname.startsWith('/admin');
+
+  if(isAdmin){
+    return <>{children}</>
+  }
 
   const renderHeader = ()=>{
     //마이페이지

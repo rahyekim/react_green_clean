@@ -84,19 +84,8 @@ export default function Story(){
     },[]);
 
     return(
-<S.AppWrapper>
-      <S.Container>
-        
-        {/* 상단 헤더 */}
-        <S.Header>
-          <S.Logo>어서찾아주개</S.Logo>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            {/* 상단 우측 말풍선/알림 아이콘 등 필요시 배치 */}
-            <NotificationsNoneIcon fontSize="large" style={{ cursor: 'pointer' }} />
-          </div>
-        </S.Header>
-
-        {/* 1차 탭 메뉴 (입양이야기, 입양/임보, 봉사, 포인핸드 정보) */}
+        // {/* 1차 탭 메뉴 (입양이야기, 입양/임보, 봉사, 포인핸드 정보) */}
+        <>
         <S.TabContainer>
           {['입양이야기', '입양 / 임보', '봉사', '어서찾아주개 정보'].map((tab) => (
             <S.TabBtn
@@ -271,9 +260,8 @@ export default function Story(){
           <Plus size={20} color="#fff" />
           <span>글쓰기</span>
         </S.FloatingWriteBtn>
-
-      </S.Container>
-    </S.AppWrapper>        
+      </>
+        
     )
 }
     

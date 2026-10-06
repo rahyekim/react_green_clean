@@ -18,6 +18,7 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     //2.실제 로그인 처리를 위한 조회용 메서드
     //[일반로그인] 사용자가 입력한 이메일로 DB에서 회원정보 찾아옴
     Optional<Member> findByEmail(String email);
+    Optional<Member> findByName(String name);
 
     //[카카오] 가입경로('kakao')와 카카오에서 넘겨준 "고유Id 번호" 를 조합해서
     //기존에 가입한 적이 있는 카카오 회원인지 찾아옴

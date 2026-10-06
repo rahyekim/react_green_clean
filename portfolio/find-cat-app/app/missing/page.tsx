@@ -1,6 +1,8 @@
 'use client'
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, FormEvent} from 'react';
 import axios from 'axios';
+
+import { Modal, FormData } from '@/app/components/ui/Modal';
 import * as S from '@/css/style.styled';
 import * as C from '@/css/style.styled'
 import { 
@@ -36,14 +38,14 @@ const DUMMY = [
         {
         id: 1,
         status: '실종',
-        breed: '포메라니안',
+        breed: '코숏',
         gender: '암컷',
         age: '나이 모름',
         weight: '몸무게 모름',
         color: '흰색',
         rescueLocation: '충남 태안군 근흥면 정죽리 지령산...',
         regDate: '2026-10-02',
-        imageUrl: 'https://placehold.co/300x300',
+        imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=300&fit=crop',
         content: '겁이 많고 낯을 가립니다.'
         },
         {
@@ -56,7 +58,7 @@ const DUMMY = [
         color: '흰색',
         rescueLocation: '정왕역 인근 S-oil주유소 마지막 목격',
         regDate: '2026-09-23',
-        imageUrl: 'https://placehold.co/300x300',
+        imageUrl: 'https://picsum.photos/id/237/300/300',
         content: '결정적 제보 시 사례하겠습니다.'
         }
     ];
@@ -65,22 +67,48 @@ export default function Missing(){
     const [animalList , setAnimalList]=useState<MissingAnimal[]>(DUMMY);
     const [loading, setLoading]=useState<boolean>(false);
     const [isAlertOn, setIsAlertOn]=useState<boolean>(false);
-    
+    const [isModalOpen, setIsModalOpen]=useState<boolean>(false);
+    const [formData, setFormData]=useState<FormData>({
+        title: '',
+        content: '',
+        breed: '',
+        gender: '왕자',
+        age: '',
+        weight: '',
+        color: '',
+        rescueLocation: '',
+        mediaUrls: ['https://placehold.co/300x300'],
+    })
     useEffect(()=>{
-        const fetchMissing = async()=>{
-            try{
-                setLoading(true);
-                const res= await axios.get('http://localhost:8080/api/missing-animals')
-                setAnimalList(res.data);
-            }catch(err){
-                console.error('실종/제보 데이터를 불러오는데 실패했습니다.', err);
-            }finally{
-                setLoading(false);
-            }
-        }
         fetchMissing();
     }, [])
 
+    const fetchMissing = async()=>{
+           try{
+               setLoading(true);
+               const res= await axios.get('http://localhost:8080/api/missing-posts')
+               setAnimalList(res.data);
+           }catch(err){
+               console.error('실종/제보 데이터를 불러오는데 실패했습니다.', err);
+           }finally{
+               setLoading(false);
+           }
+       }
+
+
+    const handleSubmit = async(e:FormEvent)=>{
+        e.preventDefault();
+        try{
+            const res= await axios.post('http://localhost:8080/api/missing-posts', formData,{
+                withCredentials:true
+            })
+            alert('실종신고가 등록되었습니다');
+            fetchMissing();
+            setIsModalOpen(false);
+        }catch(err){
+            console.error('',err)
+        }
+    }
     return(
         <>
         {/* 필터 바 영역 */}
@@ -89,19 +117,30 @@ export default function Missing(){
                 <FilterIcon sx={{fontSize:'20px', color:'#666'}}/>
             </S.FilterIconBtn>
 
-            <S.FilterSelect defaultValue="3months">
-                <option value="3months">최근 1년</option>
+            <S.FilterSelect defaultValue="1year">
+                <option value="3months">최근 3개월</option>
+                <option value="1year">최근 1년</option>
+                <option value="all">전체 기간</option>
+            </S.FilterSelect>
+
+            <S.FilterSelect defaultValue="latest">
+                <option value="latest">등록일 기준</option>
+                <option value="oldest">오래된 순</option>
             </S.FilterSelect>
 
             <S.FilterSelect defaultValue="allArea">
-                <option value="allArea">등록일 기준</option>
+                <option value="allArea">모든 지역</option>
+                <option value="seoul">서울</option>
+                <option value="busan">부산</option>
+                <option value="daejun">대전</option>
+                {/* 필요한 지역 추가 */}
             </S.FilterSelect>
 
             <S.FilterSelect defaultValue="allAnimal">
-                <option value="allAnimal">모든 지역</option>
-            </S.FilterSelect>
-                <S.FilterSelect defaultValue="allAnimal">
-                <option value="allAnimal">모든 동물 </option>
+                <option value="allAnimal">모든 동물</option>
+                <option value="dog">강아지</option>
+                <option value="cat">고양이</option>
+                <option value="other">기타 동물</option>
             </S.FilterSelect>
         </S.FilterContainer>
 
@@ -136,38 +175,48 @@ export default function Missing(){
             <S.LoadingText>데이터를 불러오는 중입니다...</S.LoadingText>
             ) : (
             animalList.map((item) => (
-                <C.AnimalCard key={item.id}>
-                <S.ImageContainer>
-                    <C.CardImg src={item.imageUrl} alt={item.breed} />
-                </S.ImageContainer>
-                <C.CardBody>
-                    <S.InfoRow>
-                    <S.StatusBadge $status={item.status}>{item.status}</S.StatusBadge>
-                    <S.BreedName>{item.breed}</S.BreedName>
-                    </S.InfoRow>
-                    <S.MetaInfo>
-                    {item.gender} | {item.age} | {item.weight} | {item.color}
-                    </S.MetaInfo>
-                    <S.LocationRow>
-                    <MapPin size={14} color="#666" />
-                    <S.LocationText>{item.rescueLocation}</S.LocationText>
-                    </S.LocationRow>
-                    <S.DateRow>
-                    <Calendar size={14} color="#666" />
-                    <S.DateText>{item.regDate}</S.DateText>
-                    </S.DateRow>
-                </C.CardBody>
-                </C.AnimalCard>
+                <C.Card key={item.id}>
+                    <S.ImageContainer>
+                        <C.CardImg src={item.imageUrl} alt={item.breed} />
+                    </S.ImageContainer>
+                    <C.CardBody>
+                        <S.InfoRow>
+                            <S.StatusBadge $status={item.status}>{item.status}</S.StatusBadge>
+                            <S.BreedName>{item.breed}</S.BreedName>
+                        </S.InfoRow>
+
+                        <S.MetaInfo>
+                         {item.gender} | {item.age} | {item.weight} | {item.color}
+                        </S.MetaInfo>
+                        <S.LocationRow>
+                        <MapPin size={14} color="#666" />
+                        <S.LocationText>{item.rescueLocation}</S.LocationText>
+                        </S.LocationRow>
+                        <S.DateRow>
+                        <Calendar size={14} color="#666" />
+                        <S.DateText>{item.regDate}</S.DateText>
+                        </S.DateRow>
+                    </C.CardBody>
+                </C.Card>
             ))
             )}
         </C.CardGrid>
 
         {/* 글쓰기 플로팅 버튼 */}
-        <S.FloatingWriteBtn>
+        <S.FloatingWriteBtn
+        onClick={()=>setIsModalOpen(true)}
+        >
             <Plus size={20} color="#fff" />
             <span>글쓰기</span>
         </S.FloatingWriteBtn>
-
+        
+        <Modal 
+        isOpen={isModalOpen}
+        onClose={()=>setIsModalOpen(false)}
+        onSuccess={()=>fetchMissing()}
+        titleText='실종/제보 글쓰기'
+        submitText='등록하기'
+        ></Modal>
         </>
     )
 }

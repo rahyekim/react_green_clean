@@ -121,8 +121,8 @@ export const ImageCover = css`
 
 export const  WebkitBox=css`
 display: -webkit-box; //플렉스박스 초기버젼..
--webkit-line-clamp: 2; //보여줄라인수
--webkit-box-orient: vertical;
+-webkit-line-clamp: 2; //보여줄라인수 넘어가는 text는 강제로 자른 뒤 뒤에 말줄임표
+-webkit-box-orient: vertical; //세로방향으로 쌓음
 `;
 export const  Maxwidth=css`
 max-width: 480px;
@@ -139,7 +139,11 @@ export const M0auto = css`
 margin:0 auto;
 `;
 
-// export const  =css``;
+export const Divider =css`
+height: 8px;
+background-color: #f4f5f7;
+width: 100%;
+`;
 // export const  =css``;
 // export const  =css``;
 // export const  =css``;
