@@ -17,9 +17,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /*스프링에서 콩이란?
@@ -35,10 +39,13 @@ public class MissingPostService {
     private final MissingPostRepository missingPostRepository;
     private final MemberRepository memberRepository;
 
+    // 파일을 저장할 로컬 경로 (프로젝트 환경에 맞게 수정 필요)
+    private final String uploadDir = System.getProperty("user.dir") + "/uploads/missing/";
+
     //주방장(service)이 DB에서 데이터를 꺼낼때 사용할 냉장고 ... final이라 중간에 냉장고 바꿀수없음
-    //실종 신고글 작성(로그인 유저 정보반영)
+    //실종 신고글 작성(로그인 유저 정보반영, 파일 포함)
     @Transactional
-    public MissingPostResponse createPost(MissingPostRequest requestDto, String name) {
+    public MissingPostResponse createPost(MissingPostRequest requestDto, MultipartFile file, String name) {
         //현재 로그인한 유저의 아이디 기반으로 DB에서 유저 정보를 조회
         Member member = memberRepository.findByName(name)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
@@ -53,10 +60,14 @@ public class MissingPostService {
         post.setAge(requestDto.getAge());
         post.setGender(requestDto.getGender());
         post.setRescueLocation(requestDto.getRescueLocation());
-        post.setMediaUrls(requestDto.getMediaUrls());
         post.setStatus(PostStatus.MISSING);
         post.setCreatedAt(LocalDateTime.now());
         post.setAuthor(member); // 👈 작성자 연결은 Member 객체 통째로!
+
+        String fileUrl = saveFile(file);
+        if (fileUrl != null) {
+            post.setMediaUrls(List.of(fileUrl));
+        }
 
         MissingPost savedPost = missingPostRepository.save(post);
         return new MissingPostResponse(savedPost); //DB에 저장
@@ -64,7 +75,7 @@ public class MissingPostService {
 
     // 실종 신고글 수정
     @Transactional
-    public MissingPostResponse updatePost(Long id, MissingPostRequest requestDto, String username) {
+    public MissingPostResponse updatePost(Long id, MissingPostRequest requestDto,MultipartFile file, String username) {
         MissingPost post = missingPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다.id= " + id));
         if(!post.getAuthor().getName().equals(username)) {
@@ -78,7 +89,13 @@ public class MissingPostService {
         post.setAge(requestDto.getAge());
         post.setGender(requestDto.getGender());
         post.setRescueLocation(requestDto.getRescueLocation());
-        post.setMediaUrls(requestDto.getMediaUrls());
+
+        // 새로운 파일이 들어온 경우에만 이미지 업데이트
+        if (file != null && !file.isEmpty()) {
+            String fileUrl = saveFile(file);
+            post.setMediaUrls(List.of(fileUrl));
+        }
+
         post.setUpdatedAt(LocalDateTime.now());
         // 수정된 결과를 Response DTO로 리턴
         return new MissingPostResponse(post);
@@ -120,10 +137,36 @@ public class MissingPostService {
 
     }
 
+    private String saveFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
 
+        try {
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs(); // 폴더가 없으면 생성
+            }
 
+            // 파일 이름 중복 방지를 위한 UUID 조합
+            String originalFileName = file.getOriginalFilename();
+            String savedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+            String filePath = uploadDir + savedFileName;
 
+            // 실제 파일 저장
+            file.transferTo(new File(filePath));
+
+            // 프론트엔드가 접근할 수 있는 경로 반환
+            return "/uploads/missing/" + savedFileName;
+        } catch (IOException e) {
+            throw new RuntimeException("파일 저장에 실패했습니다.", e);
+        }
+    }
 }
+
+
+
+
 
 /*
 삭제 (void): 글 삭제는 데이터를 지우는 것이 끝입니다.

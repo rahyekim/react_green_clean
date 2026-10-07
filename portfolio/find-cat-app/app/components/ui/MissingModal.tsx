@@ -1,9 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import {X} from 'lucide-react'
 
 import * as S from '@/css/common/Modal.style'
+import { useRouter } from 'next/navigation';
 
 export interface FormData{
     title: string;
@@ -14,7 +15,6 @@ export interface FormData{
     weight: string;
     color: string;
     rescueLocation: string;
-    mediaUrls: string[];
 }
 interface ModalProps{
     isOpen: boolean;
@@ -22,30 +22,35 @@ interface ModalProps{
     onSuccess: ()=>void;
     titleText: string;
     submitText:string;
-    // onChange:(e:React.ChangeEvent<HTMLInputElement|
-    //     HTMLTextAreaElement|HTMLSelectElement>) => void;
-    // onSubmit:(e:React.FormEvent)=> void;
 }
-export const Modal = (props:ModalProps)=>{
 
-    const { isOpen, onClose, titleText, submitText, 
-         onSuccess } = props;
+const initialFormState: FormData = {
+    title: '',
+    content: '',
+    breed: '',
+    gender: '왕자',
+    age: '',
+    weight: '',
+    color: '',
+    rescueLocation: '',
+};
+export const MissingModal = (props:ModalProps)=>{
 
-    if(!isOpen) return null;
+    const { isOpen, onClose, titleText, submitText, onSuccess } = props;
     
-    const [formData, setFormData]=useState<FormData>({
-        title: '',
-        content: '',
-        breed: '',
-        gender: '왕자',
-        age: '',
-        weight: '',
-        color: '',
-        rescueLocation: '',
-        mediaUrls: ['https://placehold.co/300x300'],
-    })
+    if(!isOpen) return null;
+    const router = useRouter();
 
+    const [formData, setFormData]=useState<FormData>(initialFormState)
     const [selectedFile, setSelectedFile] =useState<File|null>(null);
+
+    // 모달이 열릴 때마다 폼과 파일 상태를 깨끗하게 초기화
+    useEffect(() => {
+        if (isOpen) {
+            setFormData(initialFormState);
+            setSelectedFile(null);
+        }
+    }, [isOpen]);
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement | HTMLSelectElement>)=>{
         const {name, value}= e.target;
@@ -63,6 +68,15 @@ export const Modal = (props:ModalProps)=>{
 
     const handleSubmit = async(e:React.FormEvent)=>{
             e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            if(!token){
+                alert('로그인이 필요한 서비스입니다. 로그인 후 이용해주세요.');
+                onClose();  //모달닫고
+                router.push('/login'); //로그인페이지이동
+                return;
+            }
+
             try{
                 const data = new FormData();
                 data.append('dto', new Blob([JSON.stringify(formData)], {
@@ -73,7 +87,10 @@ export const Modal = (props:ModalProps)=>{
                     data.append('file', selectedFile)
                 }
                 const res= await axios.post('http://localhost:8080/api/missing-posts', data,{
-                    headers:{'Content-Type': 'multipart/form-data'},
+                    headers:{
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    },
                     withCredentials:true
                 })
                 alert('실종신고가 등록되었습니다');
@@ -92,7 +109,7 @@ export const Modal = (props:ModalProps)=>{
 
     return(
         <>
-        <S.ModalOverlay onClick={onClose}>
+        <S.ModalOverlay> 
             <S.ModalContent onClick={e=>e.stopPropagation()}>
                 <S.Header>
                     <h2>{titleText}</h2>
@@ -164,7 +181,7 @@ export const Modal = (props:ModalProps)=>{
                     <S.Input 
                         type='text'
                         name='rescueLocation'
-                        placeholder='구조 장소 (예: 서울시 강남구)'
+                        placeholder='실종/목격 장소(예: 서울시 강남구)'
                         value={formData.rescueLocation}
                         onChange={handleChange}
                         required

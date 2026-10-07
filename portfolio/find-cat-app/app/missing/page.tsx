@@ -1,8 +1,8 @@
 'use client'
-import React, {useState, useEffect, FormEvent} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
-import { Modal, FormData } from '@/app/components/ui/Modal';
+import { MissingModal } from '@/app/components/ui/MissingModal';
 import * as S from '@/css/style.styled';
 import * as C from '@/css/style.styled'
 import { 
@@ -28,57 +28,19 @@ interface MissingAnimal {
   weight: string;
   color: string;
   rescueLocation: string;
-  regDate: string;
-  imageUrl: string;
+  createdAt: string;
+  mediaUrls: string[];
   content: string;
 }
 
-// 테스트용 더미 데이터
-const DUMMY = [
-        {
-        id: 1,
-        status: '실종',
-        breed: '코숏',
-        gender: '암컷',
-        age: '나이 모름',
-        weight: '몸무게 모름',
-        color: '흰색',
-        rescueLocation: '충남 태안군 근흥면 정죽리 지령산...',
-        regDate: '2026-10-02',
-        imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=300&fit=crop',
-        content: '겁이 많고 낯을 가립니다.'
-        },
-        {
-        id: 2,
-        status: '실종',
-        breed: '포메라니안',
-        gender: '수컷',
-        age: '3살',
-        weight: '6kg',
-        color: '흰색',
-        rescueLocation: '정왕역 인근 S-oil주유소 마지막 목격',
-        regDate: '2026-09-23',
-        imageUrl: 'https://picsum.photos/id/237/300/300',
-        content: '결정적 제보 시 사례하겠습니다.'
-        }
-    ];
+
 export default function Missing(){
 
-    const [animalList , setAnimalList]=useState<MissingAnimal[]>(DUMMY);
+    const [animalList , setAnimalList]=useState<MissingAnimal[]>([]);
     const [loading, setLoading]=useState<boolean>(false);
     const [isAlertOn, setIsAlertOn]=useState<boolean>(false);
     const [isModalOpen, setIsModalOpen]=useState<boolean>(false);
-    const [formData, setFormData]=useState<FormData>({
-        title: '',
-        content: '',
-        breed: '',
-        gender: '왕자',
-        age: '',
-        weight: '',
-        color: '',
-        rescueLocation: '',
-        mediaUrls: ['https://placehold.co/300x300'],
-    })
+   
     useEffect(()=>{
         fetchMissing();
     }, [])
@@ -86,7 +48,9 @@ export default function Missing(){
     const fetchMissing = async()=>{
            try{
                setLoading(true);
-               const res= await axios.get('http://localhost:8080/api/missing-posts')
+               const res= await axios.get('http://localhost:8080/api/missing-posts', {
+                    withCredentials:true
+               })
                setAnimalList(res.data);
            }catch(err){
                console.error('실종/제보 데이터를 불러오는데 실패했습니다.', err);
@@ -94,21 +58,7 @@ export default function Missing(){
                setLoading(false);
            }
        }
-
-
-    const handleSubmit = async(e:FormEvent)=>{
-        e.preventDefault();
-        try{
-            const res= await axios.post('http://localhost:8080/api/missing-posts', formData,{
-                withCredentials:true
-            })
-            alert('실종신고가 등록되었습니다');
-            fetchMissing();
-            setIsModalOpen(false);
-        }catch(err){
-            console.error('',err)
-        }
-    }
+  
     return(
         <>
         {/* 필터 바 영역 */}
@@ -177,7 +127,12 @@ export default function Missing(){
             animalList.map((item) => (
                 <C.Card key={item.id}>
                     <S.ImageContainer>
-                        <C.CardImg src={item.imageUrl} alt={item.breed} />
+                        <C.CardImg 
+                        src={
+                            item.mediaUrls && item.mediaUrls.length > 0 
+                            ? `http://localhost:8080${item.mediaUrls[0]}`
+                            : 'https://placehold.co/300x300'} 
+                        alt={item.breed} />
                     </S.ImageContainer>
                     <C.CardBody>
                         <S.InfoRow>
@@ -186,7 +141,7 @@ export default function Missing(){
                         </S.InfoRow>
 
                         <S.MetaInfo>
-                         {item.gender} | {item.age} | {item.weight} | {item.color}
+                         {item.gender} {item.age ? `| ${item.age}` : ''} {item.weight?`| ${item.weight}`:''} {item.color? `| ${item.color}`:''}
                         </S.MetaInfo>
                         <S.LocationRow>
                         <MapPin size={14} color="#666" />
@@ -194,7 +149,7 @@ export default function Missing(){
                         </S.LocationRow>
                         <S.DateRow>
                         <Calendar size={14} color="#666" />
-                        <S.DateText>{item.regDate}</S.DateText>
+                        <S.DateText>{item.createdAt ? item.createdAt.substring(0, 10) : ''}</S.DateText>
                         </S.DateRow>
                     </C.CardBody>
                 </C.Card>
@@ -210,13 +165,47 @@ export default function Missing(){
             <span>글쓰기</span>
         </S.FloatingWriteBtn>
         
-        <Modal 
-        isOpen={isModalOpen}
-        onClose={()=>setIsModalOpen(false)}
-        onSuccess={()=>fetchMissing()}
-        titleText='실종/제보 글쓰기'
-        submitText='등록하기'
-        ></Modal>
+        {isModalOpen && (
+            <MissingModal
+            isOpen={isModalOpen}
+            onClose={()=>setIsModalOpen(false)}
+            onSuccess={fetchMissing}
+            titleText='실종/제보 글쓰기'
+            submitText='등록하기'
+            />
+        )}
+      
         </>
     )
 }
+
+
+// 테스트용 더미 데이터
+const DUMMY = [
+        {
+        id: 1,
+        status: '실종',
+        breed: '코숏',
+        gender: '암컷',
+        age: '나이 모름',
+        weight: '몸무게 모름',
+        color: '흰색',
+        rescueLocation: '충남 태안군 근흥면 정죽리 지령산...',
+        regDate: '2026-10-02',
+        imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=300&fit=crop',
+        content: '겁이 많고 낯을 가립니다.'
+        },
+        {
+        id: 2,
+        status: '실종',
+        breed: '포메라니안',
+        gender: '수컷',
+        age: '3살',
+        weight: '6kg',
+        color: '흰색',
+        rescueLocation: '정왕역 인근 S-oil주유소 마지막 목격',
+        regDate: '2026-09-23',
+        imageUrl: 'https://picsum.photos/id/237/300/300',
+        content: '결정적 제보 시 사례하겠습니다.'
+        }
+    ];

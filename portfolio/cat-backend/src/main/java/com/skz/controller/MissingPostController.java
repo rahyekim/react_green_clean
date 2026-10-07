@@ -12,8 +12,10 @@ import com.skz.service.MissingPostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,11 +33,17 @@ public class MissingPostController {
     // 4. 글 삭제 API (DELETE /api/missing-posts/{id})
     // 5. 완료 처리 API (PATCH /api/missing-posts/{id}/complete)
 
-    @PostMapping  //Principal principal (로그인한 사람의 신분증)
-    public ResponseEntity<MissingPostResponse> createMissingPost(@RequestBody MissingPostRequest requestDto, Principal principal) {
-        MissingPostResponse response = service.createPost(requestDto, principal.getName());
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MissingPostResponse> createMissingPost(
+            @RequestPart("dto") MissingPostRequest requestDto,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            Principal principal) {
+
+        // 서비스 계층으로 dto와 file을 함께 전달합니다. (서비스 메서드 시그니처도 수정 필요)
+        MissingPostResponse response = service.createPost(requestDto, file, principal.getName());
         return ResponseEntity.ok(response);
     }
+
     // 2. 무한 스크롤 조회 API (GET /api/missing-posts?cursorId=10&size=10)
     @GetMapping
     public ResponseEntity<List<MissingPostResponse>> getPostsByScroll(
@@ -45,13 +53,14 @@ public class MissingPostController {
             return ResponseEntity.ok(posts);
     }
     // 3. 글 수정 API (PUT /api/missing-posts/{id})
-    @PutMapping("/{id}")
+    @PutMapping(value= "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MissingPostResponse> updatePost(
             @PathVariable Long id,
-            @RequestBody MissingPostRequest requestDto,
+            @RequestPart("dto") MissingPostRequest requestDto,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             Principal principal){
 
-        MissingPostResponse response = service.updatePost(id, requestDto, principal.getName());
+        MissingPostResponse response = service.updatePost(id, requestDto, file, principal.getName());
         return ResponseEntity.ok(response);
     }
 

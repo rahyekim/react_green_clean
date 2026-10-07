@@ -903,7 +903,7 @@ padding: 0.1rem 0.32rem;
 border-radius: 0.25rem;
 `;
 export const  MetaInfo= styled.div`
-text-align: center;
+/* text-align: center; */
 font-size: 0.8rem;
 color: #666;
 margin-bottom: 0.5rem;
@@ -924,7 +924,7 @@ ${WebkitBox}
 overflow: hidden;
 `;
 export const DateRow= styled.div`
-${FlexCenter}
+display: flex;
 gap: 0.25rem;
 margin-top:0.375rem;
 `;

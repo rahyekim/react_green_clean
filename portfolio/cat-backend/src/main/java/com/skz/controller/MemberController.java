@@ -2,6 +2,7 @@ package com.skz.controller;
 
 import com.skz.entity.Member;
 import com.skz.repository.MemberRepository;
+import com.skz.security.JwtTokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController //@Controller와 @ResposeBody가 합쳐진 형태 //API전용창구
@@ -21,10 +24,12 @@ public class MemberController { //외부에서 접근 가능한 컨트롤러 클
 
     private final MemberRepository memberRepository; //불변성 설정
     //DB와 소통하는 레파지토리를 담을 불변(final)객체
+    private final JwtTokenProvider jwtTokenProvider; // 🌟 3. 토큰 필드 선언 (불변 객체)
 
     //스프링부트가 실행될때 자동으로 레파지토리를 연결(의존성주입)해주는 생성자
-    public MemberController(MemberRepository memberRepository) {
+    public MemberController(MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider) {
         this.memberRepository = memberRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
         //객체를 메모리에 생성해 두었다가 이 컨트롤러가 생성될때 쏙 집어넣음(의존성주입)
     }
 
@@ -69,8 +74,19 @@ public class MemberController { //외부에서 접근 가능한 컨트롤러 클
         if(memberOptional.isPresent()) { //상자(Optional)안에 회원데이터 존재하니?
             Member member = memberOptional.get(); //데이터가있으면 상자에서 Member객체 꺼냄
 
-            if(member.getPassword().equals(loginData.getPassword())) {
-                return  ResponseEntity.ok(member);
+            if (member.getPassword().equals(loginData.getPassword())) {
+
+                // 🌟 로그인 성공 시 JWT 토큰 생성! (이름 담아서 발급)
+                String token = jwtTokenProvider.createToken(member.getName());
+
+                // 🌟 6. 프론트엔드에 토큰과 필요한 정보만 쏙쏙 골라서 응답 객체로 구성
+                Map<String, Object> response = new HashMap<>();
+                response.put("token", token);
+                response.put("username", member.getName());
+                response.put("email", member.getEmail());
+                response.put("nickname", member.getNickname());
+
+                return ResponseEntity.ok(response);
                 //비밀번호가 맞다면 로그인성공 회원정보를 프론트에 넘겨줌
             }
         }

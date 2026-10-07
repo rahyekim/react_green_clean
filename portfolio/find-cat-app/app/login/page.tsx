@@ -31,27 +31,18 @@ export default function Login(){
             });
             //로그인성공 
             const data = await res.json();
-
+           
             if(!res.ok) {
                 alert(data.message || "이메일 또는 비밀번호가 일치하지 않습니다")
                 return;
             }
-           
-
             //✅localStorage는 오직 문자열(String) 데이터만 저장
-            localStorage.setItem('user', JSON.stringify(data))
-/*
-🔹예: data = { token: "eyJhbGciOiJIUzI1...", nickname: "김코딩" }
-🌟 받은 토큰을 브라우저의 저장소(LocalStorage)에 저장
-localStorage.setItem('accessToken', data.token);
-🌟 헤더에 토큰을 실어 보냄! (이게 바로 신분증 제시)
-const token = localStorage.getItem('accessToken');
-headers: {"Authorization": `Bearer ${token}`}
+            localStorage.setItem('username', JSON.stringify(data.username))
+             //🌟 토큰(문자열(String)형태의 JWT)
+            localStorage.setItem('token', data.token);
 
-세션/쿠키는 빽단에서 알아서 브라우저에 저장해줌..
-*/
             //백엔드에서 받아온 회원의 닉네임(data.nickname)으로 인사함
-            alert(`환영합니다 ${data.nickname}님`)
+            alert(`환영합니다 ${data.nickname}님🌟`)
             //로그인성공-> 웹사이트 홈페이지로 이동
             router.push('/')
             // window.location.href='/';
@@ -105,3 +96,18 @@ headers: {"Authorization": `Bearer ${token}`}
     )
 
 }
+
+
+/*
+🔹 data = { 
+token: "eyJhbGciOiJIUzI1...", 
+nickname: "김코딩" 
+}
+
+localStorage: 브라우저 저장소 
+🌟 헤더에 토큰을 실어 보냄! (이게 바로 신분증 제시)
+const token = localStorage.getItem('accessToken');
+headers: {"Authorization": `Bearer ${token}`}
+
+세션/쿠키는 빽단에서 알아서 브라우저에 저장해줌..
+*/

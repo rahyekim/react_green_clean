@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 
 import * as S from '../../css/style.styled'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+
 // mui 아이콘
 import {
   NotificationsNone as NotificationsNoneIcon,
@@ -30,22 +29,24 @@ export default function Mypage(){
     const router = useRouter();
 
     //로그인한 유저정보를 담을 공간 (초기값은 비어있음)
-    const [user,setUser]=useState<{nickname:string}|null>(null);
+    const [username,setUsername]=useState<string|null>(null);
 
-    //
+    //Next.js에서는 로컬스토리지 바로읽어오려면 에러날수도
+    // useEffect 안에서 안전하게 꺼내오는 것이 정석
     useEffect(()=>{
-        const storedUser= localStorage.getItem('user');
-        if(storedUser){
+        const savedUser= localStorage.getItem('username');
+        if(savedUser){
             //JSON.parse(문자열) : 문자열 ➡️ 다시 객체로 해체
             //저장된 정보가 있다면, 글자(JSON)를 객체로 바꿔서 상태에 넣음
-            setUser(JSON.parse(storedUser) as {nickname:string})    
+            setUsername(JSON.parse(savedUser))    
         }
     },[]);
 
     //로그아웃 기능 추가
     const handleLogout = ()=>{
-        localStorage.removeItem('user');
-        setUser(null);
+        localStorage.removeItem('username');
+        localStorage.removeItem('token');
+        setUsername(null);
         alert('로그아웃이 되었습니다')
         //⭐
        // ⭐ window.location.href 대신 router.push 사용하기
@@ -58,9 +59,9 @@ export default function Mypage(){
         <S.MT30></S.MT30>
         <S.LoginLayout>
             <S.H2Size20>
-                {user ? (
+                {username ? (
                 <S.LayoutSpaceBetween>
-                    <span> 환영 합니다 ✨<span>{user.nickname} 님</span></span>
+                    <span> 환영 합니다 ✨<span>{username} 님</span></span>
                     <S.LogoutBtn
                     onClick={handleLogout}
                     >로그아웃
@@ -99,11 +100,19 @@ export default function Mypage(){
         <S.LoginLayout>
             <S.List>
                 <S.H3Size16> 마이 메뉴 </S.H3Size16>
-                <ListItem 
-                icon={<PersonIcon sx={{color:'pink'}}/>}
-                text='로그인'
-                link='/login'
-                />
+                {!username ? (
+                    <ListItem 
+                    icon={<PersonIcon sx={{color:'pink'}}/>}
+                    text='로그인'
+                    link='/login'
+                    />
+                ) : (
+                    <ListItem 
+                    icon={<PersonIcon sx={{color:'pink'}}/>}
+                    text='내 정보수정'
+                    link='/'
+                    /> 
+                )}
                 <ListItem 
                 icon={<PetsIcon sx={{color:'pink'}}/>}
                 text='관심 유기 동물'
@@ -180,7 +189,7 @@ function ListItem({icon,text,link}:
         //링크가 있을때만 <Link>로 감싸주기
         if(link){
             return(
-                <Link href={link}>
+                <Link href={link} style={{textDecoration:'none'}}>
                     {content}
                 </Link>
             )

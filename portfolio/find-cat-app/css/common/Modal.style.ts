@@ -17,12 +17,11 @@ background-color: #ffffff;
 padding: 24px;            
 border-radius: 1rem;
 
-width: 90%;              /* 화면 너비의 90%를 차지하게 설정 */
-max-width: 400px;        /* 450px 모바일 화면 안에서 여백을 두고 예쁘게 들어가도록 제한 */
+width: 90%;         /* 화면 너비의 90%를 차지하게 설정 */
+max-width: 400px;   /* 450px 모바일 화면 안에서 여백을 두고 예쁘게 들어가도록 제한 */
 max-height: 85vh;
 overflow-y: auto;
 ${BoxShadowHover}
-
 ${NoScroll}
 `;
 export const Header = styled.div`
@@ -43,6 +42,9 @@ cursor: pointer;
 color: #666;
 padding: 0.25rem;
 ${FlexCenter}
+&:hover{
+    color: #fa5252;
+}
 `;
 export const  Form= styled.form`
 width: 100%;
@@ -61,6 +63,7 @@ cursor: pointer;
 export const  TextArea= styled.textarea`
 padding: 0.8rem;
 width: 100%;
+font-size: 0.8rem;
 border: 1px solid #e1e1e1;
 border-radius: 10px;
 outline: none;
@@ -78,7 +81,7 @@ color: #fff;
 padding: 0.8rem;
 border: none;
 border-radius: 10px;
-font-size: 1rem;
+font-size: 0.9rem;
 font-weight: bold;
 cursor: pointer;
 margin-top: 10px;
@@ -93,7 +96,7 @@ width: 100%;
 padding: 0.75rem;
 border: 1px solid #e1e1e1;
 border-radius: 10px;
-font-size: .8rem;
+font-size: 0.8rem;
 outline: none;
 ${TransitionAll}
 &:focus{
@@ -104,15 +107,13 @@ ${TransitionAll}
 
 export const RowGroup = styled.div`
 display: flex;
-gap: 10px; /* 입력창 사이의 간격 */
+gap: 10px; 
 width: 100%;
-
 
 //첫 번째 자식은 4, 두 번째 자식은 6 비율(4:6)
   > *:first-child{
     flex: 6
   }
-
   > *:nth-child(2){
     flex:4
   }
@@ -125,14 +126,11 @@ width: 100%;
    */
 `;
 export const  FileInputWrapper= styled.div`
-${FlexColumn}
-gap: 8px;
 width: 100%;
 
 label{
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+   ${FlexCenter}
+    gap: 5px;
     width: 100%;
 
     padding: 0.6rem;
