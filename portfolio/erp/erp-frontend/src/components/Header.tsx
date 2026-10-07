@@ -1,5 +1,7 @@
 'use client'
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 import * as S from '@/assets/css/HeaderFooter.style';
 
@@ -10,6 +12,19 @@ export default function Header() {
   const toggleMenu = () => {
     setIsMobileMenuOpen( prev => !prev);
   };
+  const router = useRouter();
+  const handleLogout = ()=>{
+    localStorage.removeItem('token');
+    localStorage.removeItem("name");
+
+
+    //axios요청시 헤더에 토큰이 들어가지 않도록 기본헤더제거
+    delete axios.defaults.headers.common['Authorization'];
+
+    alert('로그아웃되었습니다');
+
+    router.push('/');
+  }
 
   return (
     <S.HeaderContainer>
@@ -26,7 +41,7 @@ export default function Header() {
       {/* 데스크탑 유저 섹션 */}
       <S.UserSection>
         <span>관리자님 환영합니다</span>
-        <S.LogoutBtn>로그아웃</S.LogoutBtn>
+        <S.LogoutBtn onClick={handleLogout}>로그아웃</S.LogoutBtn>
       </S.UserSection>
 
       {/* 모바일 햄버거 버튼 */}

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.green.erp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

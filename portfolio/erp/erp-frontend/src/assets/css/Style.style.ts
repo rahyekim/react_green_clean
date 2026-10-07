@@ -185,12 +185,12 @@ cursor: pointer;
 `;
 
 
-export const SocialButton= styled(Button)<{$provider:'google'|'insta'}>`
+export const SocialButton= styled.button<{$provider:'kakao'|'insta'}>`
 width: 100%;
 padding: 0.8rem;
 /* margin-bottom: 0.5rem; */
-background-color: ${({$provider})=>$provider === 'google' ? '#e1306c': '#FEE500'};
-color: ${({$provider})=>$provider === 'google' ? '#eee': '#111'};
+background-color: ${({$provider})=>$provider === 'insta' ? '#e1306c': '#FEE500'};
+color: ${({$provider})=>$provider === 'insta' ? '#eee': '#111'};
 border-radius: 10rem;
 border: none;
 font-size: 0.9rem;
@@ -198,7 +198,7 @@ cursor: pointer;
 text-align: center;
 
 &:hover {
-    color: #eee;
+    font-weight: bold;
   }
 `;
 
