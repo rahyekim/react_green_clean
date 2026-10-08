@@ -5,6 +5,9 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import * as S from "@/assets/css/Style.style";
+import { PageTitle, Divider , DividerText} from '@/assets/css/Common.style'
+import Button from '@/ui/Button'
+import Input from '@/ui/Input'
 
 const handleInstargramLogin = () => {
     // 인스타그램 로그인 로직
@@ -60,8 +63,8 @@ export default function Member() {
     };
 
     // 2. 다음 우편번호 검색 API 핸들러 완성
-    const handleAddressSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    const handleAddressSearch = (e?: React.MouseEvent<HTMLButtonElement>) => {
+        e?.preventDefault();
         if (window.daum && window.daum.Postcode) {
             new window.daum.Postcode({
                 oncomplete: function (data: any) {
@@ -123,32 +126,28 @@ export default function Member() {
             <S.Card>
                 <S.ImgColumn />
                 <S.FormColumn>
-                    <S.Title>Create an Account!</S.Title>
+                    <PageTitle>회원가입</PageTitle>
                     <S.Form onSubmit={handleSubmit}>
-                        <S.Row>
-                            <S.Col>
-                                <S.Input
-                                    type="text"
-                                    placeholder="이름"
-                                    name="firstName"
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </S.Col>
-                            <S.Col>
-                                <S.Input
-                                    type="text"
-                                    placeholder="성"
-                                    name="lastName"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </S.Col>
-                        </S.Row>
+                        <S.RowGroup>
+                            <Input
+                                type="text"
+                                placeholder="이름"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                required
+                            />
+                            <Input
+                                type="text"
+                                placeholder="성"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </S.RowGroup>
 
-                        <S.Input
+                        <Input
                             type="email"
                             placeholder="이메일"
                             name="email"
@@ -157,28 +156,24 @@ export default function Member() {
                             required
                         />
 
-                        <S.Row>
-                            <S.Col>
-                                <S.Input
-                                    type="password"
-                                    placeholder="비밀번호"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </S.Col>
-                            <S.Col>
-                                <S.Input
-                                    type="password"
-                                    placeholder="비밀번호 확인"
-                                    name="repeatPassword"
-                                    value={formData.repeatPassword}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </S.Col>
-                        </S.Row>
+                        <S.RowGroup>
+                            <Input
+                                type="password"
+                                placeholder="비밀번호"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                            />
+                            <Input
+                                type="password"
+                                placeholder="비밀번호 확인"
+                                name="repeatPassword"
+                                value={formData.repeatPassword}
+                                onChange={handleChange}
+                                required
+                            />
+                        </S.RowGroup>
 
                         <S.RadioGroup>
                             <span>성별 :</span>
@@ -214,73 +209,83 @@ export default function Member() {
                             </S.RadioLabel>
                         </S.RadioGroup>
 
-                        <S.Row>
-                            <S.Col>
-                                <S.Input
-                                    type="text"
-                                    placeholder="회사명"
-                                    name="companyName"
-                                    value={formData.companyName}
-                                    onChange={handleChange}
-                                />
-                            </S.Col>
-                            <S.Col>
-                                <S.Input
-                                    type="text"
-                                    placeholder="직급"
-                                    name="position"
-                                    value={formData.position}
-                                    onChange={handleChange}
-                                />
-                            </S.Col>
-                            <S.Col>
-                                <S.Input
-                                    type="text"
-                                    placeholder="전화번호"
-                                    name="tel"
-                                    value={formData.tel}
-                                    onChange={handleChange}
-                                />
-                            </S.Col>
-                        </S.Row>
+                        <S.RowGroup>
+                            <Input
+                                type="text"
+                                placeholder="회사명"
+                                name="companyName"
+                                value={formData.companyName}
+                                onChange={handleChange}
+                            />
+                            <Input
+                                type="text"
+                                placeholder="직급"
+                                name="position"
+                                value={formData.position}
+                                onChange={handleChange}
+                            />
+                        </S.RowGroup>
+
+                        <Input
+                            type="text"
+                            placeholder="전화번호"
+                            name="tel"
+                            value={formData.tel}
+                            onChange={handleChange}
+                        />
 
                         <S.AddressWrapper>
-                            <S.Input
+                            <Input
                                 type="text"
                                 placeholder="주소"
                                 name="address"
                                 value={formData.address}
                                 readOnly
-                            />
-                            <S.SearchButton type="button" onClick={handleAddressSearch}>
+                                tabIndex={-1} // 👈 탭 키나 마우스 포커스 진입 방지
+                                onClick={e=> handleAddressSearch(e as any)}
+                                style={{cursor:'pointer'}}
+                            /> 
+                            <Button 
+                            variant="secondary"
+                            type="button" onClick={handleAddressSearch}>
                                 주소검색
-                            </S.SearchButton>
+                            </Button>
                         </S.AddressWrapper>
 
-                        <S.Input
+                        <Input
                             type="text"
                             placeholder="상세주소"
                             name="detailAddress"
                             value={formData.detailAddress}
                             onChange={handleChange}
                         />
-                        <S.Button type="submit">Register Account</S.Button>
+                        <Button 
+                        variant="primary"
+                        type="submit">가입하기</Button>
 
-                        <S.Divider />
+                        <DividerText>또는</DividerText>
 
-                        <S.SocialButton $provider="insta" onClick={handleInstargramLogin}>
-                            Register with Instagram
-                        </S.SocialButton>
+                        <Button 
+                        variant="insta" 
+                        onClick={handleInstargramLogin}>
+                            인스타그램으로 가입하기
+                        </Button>
 
-                        <S.SocialButton $provider="kakao" onClick={handleKakaoLogin}>
-                            Register with Kakao
-                        </S.SocialButton>
+                        <Button 
+                        variant="kakao" 
+                        onClick={handleKakaoLogin}>
+                           카카오로 가입하기
+                        </Button>
+
+                        <Divider/>
                     </S.Form>
 
-                    <S.Divider />
-
-                    <S.StyledLink href="/forgot">Forgot password?</S.StyledLink>
-                    <S.StyledLink href="/">Already have an account? Login!</S.StyledLink>
+                    <S.LinkWrapper>
+                        <S.StyledLink href='/forgot'>비밀번호찾기</S.StyledLink>
+                        <span>|</span>
+                        <S.StyledLink href='/'>로그인</S.StyledLink>
+                    </S.LinkWrapper>
+                    
                 </S.FormColumn>
             </S.Card>
         </S.Container>

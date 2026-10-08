@@ -4,6 +4,10 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 import * as S from '@/assets/css/Style.style'
+import {PageTitle} from '@/assets/css/Common.style'
+import Button from '@/ui/Button';
+import Input from '@/ui/Input';
+
 import { Metadata } from 'next';
 
 // export const metadata : Metadata = { title: '로그인'} //'use client'랑쓸수없음
@@ -46,20 +50,20 @@ export default function Home() {
       <S.Card>
         <S.ImgColumn/>
         <S.FormColumn>
-          <S.Title>Welcome Back</S.Title>
+          <PageTitle>로그인</PageTitle>
           <S.Form onSubmit={handleLogin}>
-              <S.Input 
+              <Input
               type="email" 
               id="exampleInputEmail" 
-              placeholder="Enter Email Address..." 
+              placeholder="이메일" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-              <S.Input 
+              <Input 
               type="password" 
               id="exampleInputPassword" 
-              placeholder="Password"
+              placeholder="비밀번호"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -72,20 +76,22 @@ export default function Home() {
               </S.CheckboxLabel>
             </S.CheckboxWrapper>
 
-            <S.Button type="submit">
+            <Button type="submit">
               로그인
-            </S.Button>
+            </Button>
 
             <S.Divider $margin="0.5rem"/>
 
-            <S.SocialButton type="button" $provider="kakao">
-              <i className="fab fa-google fa-fw"/>
+            <Button 
+            type="button" 
+            variant='kakao'>
               카카오로 로그인
-            </S.SocialButton>
-             <S.SocialButton type="button" $provider="insta">
-              <i className="fab fa-facebook fa-fw"/>
+            </Button>
+             <Button 
+             variant='insta'
+             type="button">
               인스타그램으로 로그인
-            </S.SocialButton>
+            </Button>
 
           </S.Form>
 

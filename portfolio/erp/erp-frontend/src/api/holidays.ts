@@ -1,5 +1,5 @@
 
-import { Holiday } from "@/app/types/holiday";
+import { Holiday } from "@/types/holiday";
 
 // 임시 공휴일 데이터 (현재 2026년 9월 기준으로 작성)
 const mockHolidays: Record<string, Holiday[]> = {

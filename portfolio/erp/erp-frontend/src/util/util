@@ -1,0 +1,19 @@
+format.js (데이터 및 포맷팅 유틸)
+
+백엔드에서 받아온 날짜나 숫자는 그대로 쓰기 흉할 때가 많습니다.
+
+예시 함수:
+
+날짜 변환: YYYY-MM-DD HH:mm:ss 형태로 예쁘게 바꿔주는 함수 (formatDate)
+
+숫자 콤마 넣기: 1000000을 1,000,000 원으로 바꿔주는 통화/숫자 포맷터 (formatNumber)
+
+storage.js (로컬스토리지 래퍼 유틸)
+
+localStorage.getItem을 그냥 쓰면 값이 없을 때 에러가 나거나 객체를 저장할 때 JSON.stringify를 매번 해줘야 해서 번거롭습니다.
+
+예시 함수: 안전하게 객체를 저장하고 불러오는 헬퍼 함수 (getLocalStorage, setLocalStorage)
+
+validators.js (입력값 검증 유틸)
+
+사원번호 양식 체크, 비밀번호 유효성 검사, 필수 입력값(notEmpty) 체크 등 중복되는 조건식들을 모아둡니다.

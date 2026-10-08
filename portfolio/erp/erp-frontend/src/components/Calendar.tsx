@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react"
 import { Temporal } from "@js-temporal/polyfill"
 import * as S from '@/assets/css/Style.style'
-import { Holiday } from "@/app/types/holiday"
-import { fetchHolidays } from "@/app/api/holidays"
+import { Holiday } from "@/types/holiday"
+import { fetchHolidays } from "@/api/holidays"
 import ScheduleModal from "./modal/ScheduleModal"
 
 //1.일정 타입 정의 추가

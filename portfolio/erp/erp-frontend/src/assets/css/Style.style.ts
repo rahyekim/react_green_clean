@@ -10,34 +10,36 @@ min-height: 100vh;
 padding: 1rem;
 background-color: ${props=> props.theme?.colors?.background || '#536692'};
 
-
 `;
 export const Card= styled.div`
 display: flex;
-width: 100%;
+width: 80%;
 max-width: 1200px;
 background-color: #fff;
 border-radius: 0.35rem;
 box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,.15);
 overflow: hidden;
+
+transform: translateZ(0); //모서리 렌더링 잔상(하얀 틈) 없애주기
 `;
 export const ImgColumn= styled.div`
-flex: 4; /* width: 41.6667%; */
-background: url("/image/selfie1.jpg");
+flex: 4; 
+background-image: url("https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000&auto=format&fit=crop");
 background-position: center;
 background-size: cover;
+
 @media (max-width:992px){ //모바일에서숨김
     display: none;
 }
 `;
 export const FormColumn= styled.div`
-flex:6; /* width: 58.3333%; */
+flex:6; 
 padding: 3rem;
 
 display: flex;
 flex-direction: column;
 justify-content: center;
-align-items: center;
+align-items: center; 
 
 @media (max-width:992px){ 
     width:100%;
@@ -65,6 +67,17 @@ gap: 1rem;
 
 @media (max-width: 768px){
     flex-direction: column;
+}
+`;
+export const RowGroup = styled.div`
+display: flex;
+align-items: flex-start; //인풋 크기가 달라도 상단 정렬이 깨지지 않게 
+width: 100%;
+gap:12px;
+
+& > * {
+    flex: 1;
+    min-width: 0; // flex 자식 요소가 부모를 뚫고 튀어나오는 버그 방지 
 }
 `;
 export const Col= styled.div`
@@ -103,7 +116,18 @@ cursor: pointer;
 `;
 export const AddressWrapper= styled.div`
 display: flex;
-gap: 0.5rem;
+gap:12px;
+
+
+& > :first-child{
+    flex: 7;
+    min-width: 0; /* 찌그러짐 방지 */
+}
+
+& > :nth-child(2){
+    flex: 3;
+    min-width: 0; /* 찌그러짐 방지 */
+}
 `;
 export const Button= styled.button`
 width: 100%;
@@ -122,8 +146,9 @@ transition: background-color 0.15s ease-in-out;
 `;
 export const SearchButton= styled(Button)`
 width: auto;
-min-width: 100px;
+/* min-width: 100px; */
 background-color: #858796;
+border-radius: 10px;
 
 &:hover{
     background-color: #717384;
@@ -390,7 +415,7 @@ position: fixed;
 width: 100%; 
 height: 100%;
 inset: 0; // top, right, bottom, left 모두 0 (꽉 채우기)
-z-index: 999;
+z-index: 9999;
 background-color: rgba(0,0,0,.7);
 
 display: flex;
@@ -615,5 +640,21 @@ font-weight:  ${({$isSelected})=>$isSelected ? 'bold': 'normal'};;
 }
 `;
 
-// export const = styled.div``;
+//버튼 랩핑
+export const BtnCenterWrap= styled.div`
+width: 100%;
+margin-top: 2rem;
+//???
+`;
+
+export const Label= styled.label`
+letter-spacing: -0.03px;
+font-weight: 400;
+font-size: 0.8rem;
+color: ${props=> props.theme.colors.text};
+word-spacing: 0.1rem;
+line-height: 2.5rem;
+`;
+
+
 // export const = styled.div``;

@@ -5,6 +5,8 @@ import Link from "next/link"
 
 // 헤더
 export const HeaderContainer= styled.header`
+position: relative;
+
 display: flex;
 justify-content: space-between; //로고-------햄버거
 align-items: center;
@@ -14,7 +16,6 @@ height: 4rem; //60px;
 background-color: #1e293b;
 color: #eee;
 box-shadow: 0 4px 4px rgba(0,0,0,.1);
-position: relative;
 
 `;
 export const Logo= styled.div`
@@ -92,15 +93,11 @@ export const MobileNav= styled.nav<{$isOpen:boolean}>`
 display: flex;
 flex-direction: column;
 position: absolute;
-top: 55px; //64px
+top: 100%; //부모맨아래딱붙음!
 left: 0;
 width: 100%;
-
-/* top: 100%;
-right:0;
-max-width: 100px;
-border-bottom-left-radius: 10px;
-border-bottom-right-radius: 10px; */
+border-bottom-left-radius: 12px;
+border-bottom-right-radius: 12px; 
 
 background-color: #334155;
 //양옆 패딩은 유지해야 사라질때 이상없음
@@ -112,15 +109,16 @@ box-shadow: 0 4px 6px rgba(0,0,0,.1);
 transition: all 0.3s ease-in-out;
 z-index: 9999;
 //나자신(&) 아래 직계자식 a 까지만 
-& > a{
+& > a, & > span{
     padding: 11px 0; 
     border-bottom: 1px solid #475569;
     color: #eee;
     text-decoration: none;
     font-weight: 500;
+    cursor: pointer;
 }
 
-& > a:last-child{
+& > span:last-child{
     border-bottom: none;
 }
 

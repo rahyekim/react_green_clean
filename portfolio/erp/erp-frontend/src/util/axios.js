@@ -1,4 +1,10 @@
 import axios from 'axios';
+/*import { api } from '@/utils/axios';
+
+ axios.get 대신 api.get을 사용!
+   -> 요청 보낼 때 자동으로 localStorage 토큰이 헤더에 쏙 들어감
+   -> 1시간 지나서 401 에러 나면 알아서 로그아웃 처리됨
+*/
 
 export const api = axios.create({
     baseURL: 'http://localhost:8080',
