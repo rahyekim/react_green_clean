@@ -3,25 +3,50 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
+import { useAlertStore } from '@/store/useAlertStore'
 import { PageTitle, Form, MyPageWrapper } from './My.style'
 import Button from '@/ui/Button'
 import Input from '@/ui/Input'
 
 export default function ForgotPassword(){
-
+    
+    const {showAlert} =useAlertStore();
     const router = useRouter();
 
     const [oldPassword, setOldPassword]=useState('');
     const [newPassword, setNewPassword]=useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
     const [isLoading, setIsLoading]= useState(false);
+    const [passwordError, setPasswordError] = useState('');
+
 
     const handleChangePw = async(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         const token = localStorage.getItem('token');
 
+         if (oldPassword === newPassword) {
+            setPasswordError('새 비밀번호는 기존 비밀번호와 달라야 합니다.');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError('새 비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
         if(!token){
-            alert('로그인이 필요합니다')
-            router.push('/');
+            showAlert('로그인이 필요합니다', ()=>{
+                router.push('/');
+            })
+            return;
+        }
+
+
+        if(!token){
+            showAlert('로그인이 필요합니다', ()=>{
+                router.push('/');
+            })
             return;
         }
         try{
@@ -32,14 +57,18 @@ export default function ForgotPassword(){
                 headers: {'Authorization': `Bearer ${token}`}
             });
 
-            alert('비밀번호가 성공적으로 변경되었습니다 .다시로그인해주세요');
-            localStorage.removeItem('token');
-            localStorage.removeItem('name');
-            delete axios.defaults.headers.common['Authorization'];
-            router.push('/')
+            showAlert('비밀번호가 성공적으로 변경되었습니다 .다시로그인해주세요',()=>{
+                localStorage.removeItem('token');
+                localStorage.removeItem('name');
+                delete axios.defaults.headers.common['Authorization'];
+                router.push('/')
+            })
 
         }catch(error:any){
-            alert(error.response?.data || '비밀번호변경에 실패했습니다')
+            setIsLoading(false)
+            const errMsg = error.response?.data?.message || '비밀번호변경에 실패했습니다';
+            showAlert(errMsg);
+
         }
 
     
@@ -63,6 +92,16 @@ export default function ForgotPassword(){
                      placeholder="새 비밀번호를 입력하세요"
                     value={newPassword} 
                     onChange={(e) => setNewPassword(e.target.value)} 
+                    required 
+                    fullWidth
+                />
+                <Input 
+                    type="password" 
+                    label='새 비밀번호 확인'
+                    placeholder="새 비밀번호를 다시 입력하세요"
+                    value={confirmPassword} 
+                    onChange={(e) => setConfirmPassword(e.target.value)} 
+                    error={passwordError} // 👈 
                     required 
                     fullWidth
                 />

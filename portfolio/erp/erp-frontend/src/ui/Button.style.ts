@@ -2,7 +2,7 @@ import styled, { css, keyframes } from 'styled-components';
 
 //스타일 컴포넌트에 전달되는 props 타입 정의
 interface StyledButtonProps {
-  $variant?: 'primary' | 'secondary' | 'danger' | 'kakao' | 'insta' |'ghost';
+  $variant?: 'primary' | 'secondary' | 'danger' | 'kakao' | 'insta' |'ghost'|'white';
   $size?: 'sm' | 'md' | 'lg';
   $fullWidth?: boolean;
   $width?:string;
@@ -92,7 +92,12 @@ secondary: css`
       box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.3);
     }
   `,
-
+  white: css`
+  background-color:transparent;
+  color: #eee;
+  border:1px solid #d1d3e2;
+  &:hover{background-color: #f8f9fa; color: #333; }
+  `,
 };
 
 export const StyledButton = styled.button<StyledButtonProps>`
@@ -108,6 +113,10 @@ box-sizing: border-box;
   border: none;
   outline: none;
 
+  white-space: nowrap; ////글자가 두 줄로 깨지는 현상 방지
+  flex-shrink: 0; ////혹시나 인풋창에 밀려 찌그러지는 현상 방지
+  min-width: max-content; //최소 너비 확보
+
   & > i {
     display: inline-flex;
     align-items: center;
@@ -118,7 +127,7 @@ box-sizing: border-box;
   ${({ $size }) => {
     switch ($size) {
       case 'sm': return css`
-          padding: 4px 12px;
+          padding: 6px 12px;
           font-size: 13px;
         `;
       case 'lg': return css`

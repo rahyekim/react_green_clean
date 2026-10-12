@@ -3,7 +3,7 @@ import { StyledButton, Spinner } from './Button.style';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'danger' | 'kakao' | 'insta' |'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'kakao' | 'insta' |'ghost' |'white';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   fullWidth?: boolean;

@@ -1,4 +1,4 @@
-import { Holiday } from "@/app/types/holiday"
+import { Holiday } from "@/types/holiday"
 
 
 

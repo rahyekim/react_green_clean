@@ -1,6 +1,6 @@
 'use client'
 
-import * as S from '@/assets/css/Common.style'
+import * as S from '@/assets/css/HeaderFooter.style'
 
 export const Footer = ()=>{
     return(

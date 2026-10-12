@@ -1,7 +1,10 @@
+
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/app/lib/registry";
 import ThemeProviderWrapper from "@/components/ThemeProviderWrapper";
 import ConditionalLayout from "@/components/ConditionalLayout";
+
+import GlobalAlert from "@/components/modal/GlobalAlert";
 
 export const metadata: Metadata = {
   title: { 
@@ -14,17 +17,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{children: React.ReactNode}>) {
   return (
     <html lang="ko">
-      <head>
+      {/* <head>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
-      </head>
+      </head> */}
       <body>
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
             <ConditionalLayout>
                 {children}
+                <GlobalAlert />
             </ConditionalLayout>
           </ThemeProviderWrapper>
         </StyledComponentsRegistry>
@@ -32,3 +36,4 @@ export default function RootLayout({ children }: Readonly<{children: React.React
     </html>
   );
 }
+

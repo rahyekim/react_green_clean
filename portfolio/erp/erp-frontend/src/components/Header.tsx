@@ -7,6 +7,7 @@ import axios from 'axios';
 import * as S from '@/assets/css/HeaderFooter.style';
 // import { Button } from '@/assets/css/Common.style';
 import Button from '@/ui/Button';
+import { useAlertStore } from '@/store/useAlertStore';
 
 const NAV_MENUS = [
   { href: '/production', label: '생산관리' },
@@ -16,6 +17,8 @@ const NAV_MENUS = [
 ]
 
 export default function Header() {
+
+  const { showAlert }= useAlertStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [username, setUsername] = useState('');
@@ -39,8 +42,9 @@ export default function Header() {
     //axios요청시 헤더에 토큰이 들어가지 않도록 기본헤더제거
     delete axios.defaults.headers.common['Authorization'];
 
-    alert('로그아웃되었습니다');
-    router.push('/');
+    showAlert('로그아웃되었습니다', ()=>{
+      router.push('/');
+    })
   }
 
   return (

@@ -1,0 +1,45 @@
+npm install express oracledb bcryptjs jsonwebtoken cors dotenv
+
+-- (타입 정의 포함)
+
+npm install bcryptjs
+npm install --save-dev @types/bcryptjs
+
+npm install jsonwebtoken
+npm install --save-dev @types/jsonwebtoken
+
+npm install oracledb
+npm install --save-dev @types/oracledb
+
+
+-- 오라클 지원안함
+-- 스키마 파일 하나(schema.prisma)로 테이블 구조를 직관적으로 관리
+npm install prisma —save-dev
+npm install @prisma/client  //자동완성
+npx prisma init
+
+datasource db {
+  provider = "oracle"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            Int      @id @default(autoincrement()) @map("ID")
+  firstName     String?  @map("FIRST_NAME")
+  lastName      String?  @map("LAST_NAME")
+  email         String   @unique @map("EMAIL")
+  password      String   @map("PASSWORD")
+  companyName   String?  @map("COMPANY_NAME")
+  position      String?  @map("POSITION")
+  tel           String?  @map("TEL")
+  address       String?  @map("ADDRESS")
+  detailAddress String?  @map("DETAIL_ADDRESS")
+  gender        String?  @map("GENDER")
+  createdAt     DateTime @default(now()) @map("CREATED_AT")
+
+  @@map("USERS")
+}

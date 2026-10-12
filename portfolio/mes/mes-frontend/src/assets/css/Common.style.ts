@@ -1,184 +1,99 @@
-'use client'
+import styled from "styled-components";
 
-import styled from "styled-components"
-import Link from "next/link"
-
-// 헤더
-export const HeaderContainer = styled.header`
-display: flex;
-justify-content: space-between;
-align-items: center;
-
-position: relative;
-padding: 0 1.5rem;
-height: 4rem;
-
-background-color: #1e293b;
-box-shadow: 0 4px 4px rgba(0,0,0,.1);
-color: #eee;
-
-
-`;
-
-export const Logo = styled.div`
+//큰제목
+export const PageTitle= styled.h2`
+text-align: center;
 font-size: 1.5rem;
 font-weight: 700;
-letter-spacing: -0.5px;
-cursor: pointer;
-white-space: nowrap;
+color: ${props=> props.theme.colors.title};
+margin-bottom: 1.5rem;
 `;
 
-export const DesktopNav = styled.nav`
+export const Divider= styled.div`
+width: 92%;
+height: 1px;
+margin: 13px auto;
+background-color: #e2e8f0;
+`;
 
+export const DividerText = styled.div`
   display: flex;
-  gap:  2.285rem; //31px;
-  white-space: nowrap;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin: 10px 0;
+  color: #94a3b8; 
+  font-size: 0.88rem;
 
-  @media (max-width: 768px){
-    display: none;
+  /* 양옆으로 뻗어나가는 가로선 만들기 */
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
   }
 
-  `;
-
-export const NavLink = styled.a`
-color: #cbd5e1;
-text-decoration: none;
-font-size: 1rem;
-font-weight: 500;
-
-  transition: color 0.2s ease-in-out;
-  &:hover{
-    color: #fff
+  /* 텍스트가 들어갈 때 양옆 선과의 간격 벌려주기 */
+  &:not(:empty)::before {
+    margin-right: 12px;
   }
-
-`;
-
-export const UserSection = styled.div`
-
-display: flex;
-align-items: center;
-gap: 10px;
-white-space: nowrap;
-
-   @media (max-width: 768px){
-    display: none;
+  &:not(:empty)::after {
+    margin-left: 12px;
   }
 `;
 
-export const LogoutBtn = styled.button`
-background-color: #ef4444;
-color: #fff;
-padding: 6px 12px;
-border: none;
-border-radius: 8px;
-font-weight: bold;
-font-size: 0.875rem;
-cursor: pointer;
+// 🌟커스텀 사각 체크박스 디자인🌟
+export const CheckboxLabel = styled.label`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 2px;
+  
+  /* 라벨 전체에 마우스 올렸을 때 텍스트 색상 부드럽게 변경 */
+  &:hover span {
+    color: #111;
+  }
+`;
+export const CheckboxInput = styled.input`
+  appearance: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: #f8fafc;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-transition: background-color 0.2s ;
-  &:hover{
-    background-color: #dc2626;
+  &:hover {
+    border-color: #cbd5e1;
+    background-color: #f1f5f9;
   }
 
-
-`;
-
-export const MobileMenuToggle = styled.button`
-display: none;
-background-color: transparent;
-border: none;
-font-size: 1.75rem;
-color: #fff;
-cursor: pointer;
-
-
-@media (max-width: 768px) {
-    display: block;
-}
-`;
-
-export const MobileNav = styled.nav<{ $isOpen: boolean }>`
-display: flex;
-flex-direction: column;
-position: absolute;
-top:100%;
-left:0;
-width: 100%;
-
-background-color: #334155;
-color: #111;
-
-overflow: hidden; // 🌟 토글메뉴 닫힐때 글씨 튀어나오는거 막기
-
-box-shadow: 0 4px 6px rgba(0,0,0,.1);
-z-index: 9999;
-
-transition: all 0.3s ease-in-out;
-max-height: ${({$isOpen})=>$isOpen ? '300px' : '0'};
-padding: ${({$isOpen})=>$isOpen ? '20px 24px' : '0 24px'};
-
-//직계자식a
-& > a{
-    padding: 11px 0;
-    border-bottom: 1px solid #475569;
-    color: #eee;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-& > a:last-child{
-    border-bottom: none;
-}
-
-@media (min-width: 768px) {
-    display: none;
-}
-`;
-
-// 푸터
-export const FooterContainer = styled.footer`
-background-color: #eee;
-border-top: 1px solid #ddd;
-color: #64748b;
-padding: 1.5rem 2.285rem;
-
-display: flex;
-justify-content: space-between;
-align-items: center;
-
-@media (max-width: 768px){
-    flex-direction: column;
-    gap: 1.14rem;
-
-}
-
-`;
-
-export const FooterInfo = styled.div`
-font-size: 0.875rem;
-line-height: 1.5;
-text-align: left;
-
-@media (max-width: 768px){
-    text-align: center;
-}
-
-`;
-
-export const FooterLinks = styled.div`
-display: flex;
-gap: 12px;
-font-size: 0.875rem;
-
-  a{
-    color: #475569;
-    text-decoration: none;
-    transition: color 0.2s ease-in-out;
-
-      &:hover{
-        color: #0f172a;
-        text-decoration: underline;
-      }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   }
 
+  &:checked {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    transform: scale(1.05);
+  }
+
+  /* 세련된 V자 체크 아이콘 */
+  &:checked::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
 `;

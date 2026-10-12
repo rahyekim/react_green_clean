@@ -9,6 +9,7 @@ export const theme = {
         label:'#475569',
         alert: '#ef4444',
         alertHover: '#dc2626',
+        btnPrimary: '#3b5998',
     }
 }
 

@@ -24,7 +24,7 @@ overflow: hidden;
 `;
 export const ImgColumn= styled.div`
 flex: 4; /* width: 41.6667%; */
-background: url("/image/selfie1.jpg");
+background: url("https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000&auto=format&fit=crop");
 background-position: center;
 background-size: cover;
 @media (max-width:992px){ //모바일에서숨김
@@ -52,6 +52,15 @@ color: #3a3b45;
 margin-bottom: 1.5rem;
 
 `;
+
+export const Description= styled.div`
+text-align: center;
+font-size: 0.875rem;
+color: #6e707e;
+margin-bottom: 1.5rem;
+line-height: 1.5;
+`;
+
 export const Form= styled.form`
 display: flex;
 flex-direction: column;
@@ -60,6 +69,18 @@ width: 100%;
 
 max-width: 500px;
 `;
+export const RowGroup = styled.div`
+display: flex;
+align-items: flex-start; //인풋 크기가 달라도 상단 정렬이 깨지지 않게 
+width: 100%;
+gap:12px;
+
+& > * {
+    flex: 1;
+    min-width: 0; // flex 자식 요소가 부모를 뚫고 튀어나오는 버그 방지 
+}
+`;
+
 export const Row= styled.div`
 display: flex;
 gap: 1rem;
@@ -105,6 +126,14 @@ cursor: pointer;
 export const AddressWrapper= styled.div`
 display: flex;
 gap: 0.5rem;
+
+& > :first-child{
+  flex: 7;
+}
+
+& > :nth-child(2){
+  flex: 3;
+}
 `;
 export const Button= styled.button`
 width: 100%;
@@ -176,20 +205,125 @@ margin-top: 0.5rem;
 // export const = styled.div``;
 // export const = styled.div``;
 
-
-export const CheckboxWrapper = styled.div`
-display: flex;
-align-items: center;
-gap: 0.5rem;
-padding-left: 0.5rem;
-margin-bottom: 0.5rem;
+export const CheckboxLabel = styled.label`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 2px;
+  
+  /* 라벨 전체에 마우스 올렸을 때 텍스트 색상 부드럽게 변경 */
+  &:hover span {
+    color: #111;
+  }
 `;
 
-export const CheckboxLabel= styled.label`
-font-size: 0.8rem;
-color: #6e707e;
-cursor: pointer;
+export const CheckboxInput = styled.input`
+  appearance: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: #f8fafc;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    border-color: #cbd5e1;
+    background-color: #f1f5f9;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  &:checked {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    transform: scale(1.05);
+  }
+
+  /* 세련된 V자 체크 아이콘 */
+  &:checked::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
 `;
+
+export const CheckboxText = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+`;
+
+// export const CheckboxLabel= styled.label`
+// display: flex;
+// align-items: center;
+// gap: 5px;
+// cursor: pointer;
+// user-select: none;
+//   padding: 4px 2px;
+//   &:hover span {
+//     color: #111;
+//   }
+// `;
+// export const CheckboxInput= styled.input`
+// appearance: none; //기존꺼 숨김
+// flex-shrink: 0;
+
+// width: 18px;
+// height: 18px;
+// border: 1px solid #d1d5db;
+// border-radius: 3px;
+// background-color: #fff;
+// cursor: pointer;
+// position: relative;
+// &:checked{
+//     border-color: #111;
+// }
+// /* 체크시 나타나는 v마크 */
+// &:checked::after{
+//     content: '✔';
+//     position: absolute;
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%); // 🏖️ 가운데정렬공식
+//     color: #181818;
+//     font-size:14px;
+// }
+// `;
+// export const CheckboxText= styled.span`
+// font-size: 13px;
+// font-weight: 400;
+// color: #333;
+// `;
+
+// export const CheckboxWrapper = styled.div`
+// display: flex;
+// align-items: center;
+// gap: 0.5rem;
+// padding-left: 0.5rem;
+// margin-bottom: 0.5rem;
+// `;
+
+// export const CheckboxLabel= styled.label`
+// font-size: 0.8rem;
+// color: #6e707e;
+// cursor: pointer;
+// `;
 
 
 export const SocialButton= styled.button<{$provider:'google'|'insta'}>`

@@ -1,15 +1,12 @@
 'use client'
 
-import Layout from "@/components/Layout"
 import { SmallCalendar } from "@/components/SmallCalendar"
 import Calendar from "@/components/Calendar"
 import * as S from '@/assets/css/Style.style'
 
-export default function CalendarPage(){
-
+export default function Dashboard(){
 
     return(
-    <Layout>
         <S.CalendarLayout>
             <S.LeftPanel>
                 <SmallCalendar/>
@@ -19,6 +16,5 @@ export default function CalendarPage(){
                 <Calendar/>
             </S.RightPanel>
         </S.CalendarLayout>
-    </Layout>
     )
 }

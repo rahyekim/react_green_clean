@@ -7,12 +7,15 @@ import * as S from '@/assets/css/Style.style'
 import {PageTitle} from '@/assets/css/Common.style'
 import Button from '@/ui/Button';
 import Input from '@/ui/Input';
+import { useAlertStore } from '@/store/useAlertStore';
 
 import { Metadata } from 'next';
 
 // export const metadata : Metadata = { title: '로그인'} //'use client'랑쓸수없음
 
 export default function Home() {
+
+  const {showAlert} =useAlertStore();
 
   const router =useRouter();
     // 입력값 상태 관리
@@ -23,7 +26,7 @@ export default function Home() {
     e.preventDefault(); 
     try{
       // 백엔드 로그인 API 호출
-      const res = await await axios.post("http://localhost:8080/api/members/login", {
+      const res = await axios.post("http://localhost:8080/api/members/login", {
         email,
         password,
       });
@@ -36,12 +39,15 @@ export default function Home() {
 
         //모든 axios 요청 헤더에 JWT 토큰을 자동 포함하도록 설정
         axios.defaults.headers.common["Authorization"]= `Bearer ${token}`;
-        alert(`${firstName}님 환영합니다!`)
-        router.push('/dashboard');
+
+        showAlert(`${firstName}님 환영합니다!`, ()=>{
+          router.push('/dashboard');
+        });
       }
     }catch(err){
         console.error("로그인 에러:", err);
-        alert("이메일 또는 비밀번호를 확인해주세요.");
+        showAlert("이메일 또는 비밀번호를 확인해주세요.")
+        //alert("이메일 또는 비밀번호를 확인해주세요.");
       }
   }
 
