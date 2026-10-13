@@ -9,7 +9,7 @@ width: ${({$fullWidth})=> $fullWidth ? '100%': 'auto'};
 
 export const Label = styled.div`
 font-size: 13px;
-font-weight: 600;
+font-weight: 400;
 color: ${p=> p.theme.colors.label};
 `;
 

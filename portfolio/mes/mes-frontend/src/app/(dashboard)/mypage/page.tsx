@@ -4,7 +4,8 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 import { useAlertStore } from '@/store/useAlertStore'
-import { PageTitle, Form, MyPageWrapper } from './My.style'
+import { Form, MyPageWrapper } from './My.style'
+import { PageTitle } from '@/assets/css/Common.style'
 import Button from '@/ui/Button'
 import Input from '@/ui/Input'
 

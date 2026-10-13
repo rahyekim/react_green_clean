@@ -29,7 +29,7 @@ export default function ForgotPassword(){
         }
 
         try{
-            const res = await axios.post('http://localhost:8080/api/members/change-password',{
+            const res = await axios.post('http://localhost:4000/api/members/change-password',{
                 oldPassword, newPassword
             }, {
                 headers: {'Authorization': `Bearer ${token}`}

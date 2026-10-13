@@ -29,10 +29,10 @@ white-space: nowrap;
 export const DesktopNav = styled.nav`
 
   display: flex;
-  gap:  2.285rem; //31px;
+  gap:  2rem; 
   white-space: nowrap;
 
-  @media (max-width: 768px){
+  @media (max-width: 900px){
     display: none;
   }
 
@@ -58,7 +58,7 @@ align-items: center;
 gap: 10px;
 white-space: nowrap;
 
-   @media (max-width: 768px){
+  @media (max-width: 1100px){
     display: none;
   }
 `;
@@ -90,7 +90,7 @@ color: #fff;
 cursor: pointer;
 
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     display: block;
 }
 `;
@@ -108,11 +108,14 @@ color: #111;
 
 overflow: hidden; // 🌟 토글메뉴 닫힐때 글씨 튀어나오는거 막기
 
+border-bottom-right-radius: 8px;
+border-bottom-left-radius: 8px;
+
 box-shadow: 0 4px 6px rgba(0,0,0,.1);
 z-index: 9999;
 
 transition: all 0.3s ease-in-out;
-max-height: ${({$isOpen})=>$isOpen ? '300px' : '0'};
+max-height: ${({$isOpen})=>$isOpen ? '500px' : '0'};
 padding: ${({$isOpen})=>$isOpen ? '20px 24px' : '0 24px'};
 
 //직계자식a
@@ -129,7 +132,7 @@ padding: ${({$isOpen})=>$isOpen ? '20px 24px' : '0 24px'};
     border-bottom: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 901px) {
     display: none;
 }
 `;

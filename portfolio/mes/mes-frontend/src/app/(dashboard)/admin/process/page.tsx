@@ -1,0 +1,174 @@
+'use client';
+
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+import Button from "@/ui/Button";
+import Input from "@/ui/Input";
+import { useAlertStore } from "@/store/useAlertStore";
+import {
+    AdminLayout,
+    LeftPanel,RightPanel, Form, Title,
+    FormWrapper
+} from '@/assets/css/Style.style'
+
+import { LineGrid,LineCard,StatusBadge, CardHeader, CardBody, ButtonGroup } from '@/assets/css/admin/admin.style'
+import { createProcessLine, fetchProcessLines, updateLineStatus } from "@/api/http";
+
+
+interface ProcessLine{
+    id:number;
+    lineName: string;
+    processType: string;
+    status: 'STOPPED' | 'MAINTENANCE' | 'RUNNING';
+    currentProduct:string;
+    operator:string;
+}
+const INITIAL_STATE={
+    lineName: "",
+    processType: "",
+    status:"RUNNING",
+    currentProduct:"",
+    operator:"",
+}
+export default function Process(){
+
+    const {showAlert} =useAlertStore();
+
+    const [lines, setLines]=useState<ProcessLine[]>([]);
+
+    const [form, setForm]= useState(INITIAL_STATE);
+    
+    const loadLines = async ()=>{
+        try{
+            const data = await fetchProcessLines();
+            if(data.success){
+                setLines(data.lines)
+            }
+        }catch(error: any){
+            console.error('공정 라인 조회 실패:', error);
+            const errMsg = error.response?.data?.message || error.message || '잠시후 다시시도해주세요'
+            showAlert(errMsg);
+        }
+    }
+    useEffect(()=>{
+        loadLines();
+    }, []);
+
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
+        const { name ,value } = e.target;
+        setForm(prev=> ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
+        e.preventDefault();
+
+        try{
+            await createProcessLine(form);
+            showAlert('공정라인이 등록되었습니다');
+            setForm(INITIAL_STATE); //초기화
+            loadLines();
+
+        }catch(err){
+            showAlert('잠시후 다시시도해주세요')
+        }
+    }
+
+    return(
+        <AdminLayout>
+            {/*신규 공정 라인을 입력하고 등록하는 폼 영역 */}
+            <LeftPanel>
+                <FormWrapper>
+                <Title>라인 공정 등록</Title>
+                <Form onSubmit={handleSubmit}>
+                    <Input
+                    type="text"
+                    name="lineName"
+                    placeholder="라인명 (예: AP SMT Line 1)"
+                    value={form.lineName}
+                    onChange={handleChange}
+                    />
+                    <Input
+                    type="text"
+                    name="processType"
+                    placeholder="공정 타입 (예: SMT, CNC)"
+                    value={form.processType}
+                    onChange={handleChange}
+                    />
+                    <Input
+                    type="text"
+                    name="currentProduct"
+                    placeholder="생산 모델 (예: iPhone Duo)"
+                    value={form.currentProduct}
+                    onChange={handleChange}
+                    />
+                    <Input
+                    type="text"
+                    name="operator"
+                    placeholder="담당 오퍼레이터"
+                    value={form.operator}
+                    onChange={handleChange}
+                    />
+
+                    <Button type="submit">등록하기</Button>
+                </Form>
+                </FormWrapper>
+            </LeftPanel>
+
+        {/* 우측 패널: 등록된 공정 라인들의 실시간 가동 상태를 보여주는 모니터링 영역 */}
+            <RightPanel>
+                <Title> iphone Duo 라인 가동 현황</Title>
+                <LineGrid>
+                    {lines.map(line=>(
+                        <LineCard key={line.id}>
+                            <CardHeader>
+                                <strong>{line.lineName}</strong>
+                                <StatusBadge $status={line.status}>
+                                    {line.status}
+                                </StatusBadge>
+                            </CardHeader>
+                            <CardBody>
+                                <div>공정: {line.processType || '미지정'}</div>
+                                <div>모델: {line.currentProduct || '생산 모델 없음'}</div>
+                                <div>담당자: {line.operator || '미배정'}</div>
+                            </CardBody>
+
+                            <ButtonGroup>
+                            {line.status !== 'RUNNING' && (
+                                <Button size="sm" 
+                                onClick={async()=>{
+                                    await updateLineStatus(line.id, 'RUNNING');
+                                    loadLines();
+                                }}
+                                > 가동
+                                </Button>
+                            )}
+
+                            {line.status !== 'STOPPED' && (
+                                <Button size="sm" variant="kakao"
+                                onClick={async()=>{
+                                    await updateLineStatus(line.id, 'STOPPED');
+                                    loadLines();
+                                }}
+                                > 정지
+                                </Button>
+                            )}
+                             {line.status !== 'MAINTENANCE' && (
+                                <Button size="sm"  variant="insta"
+                                onClick={async()=>{
+                                    await updateLineStatus(line.id, 'MAINTENANCE');
+                                    loadLines();
+                                }}
+                                > 점검
+                                </Button>
+                            )}
+                            </ButtonGroup>
+                        </LineCard>
+                    ))}
+                </LineGrid>
+            </RightPanel>
+        </AdminLayout>
+    )
+}

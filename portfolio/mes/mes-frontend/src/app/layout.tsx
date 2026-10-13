@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import StyledProvider from "./StyledProvider";
-import ConditionalLayout from "@/components/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: {
@@ -15,9 +14,7 @@ export default function RootLayout({ children }: Readonly<{children: React.React
     <html lang="ko">
       <body>
         <StyledProvider>
-          {/* <ConditionalLayout> */}
               {children}
-          {/* </ConditionalLayout> */}
         </StyledProvider>
       </body>
     </html>

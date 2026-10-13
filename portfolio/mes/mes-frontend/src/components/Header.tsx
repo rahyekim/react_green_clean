@@ -7,13 +7,7 @@ import axios from 'axios';
 import * as S from '@/assets/css/HeaderFooter.style';
 import Button from '@/ui/Button';
 import { useAlertStore } from '@/store/useAlertStore';
-
-const NAV_MENUS = [
-  { href: '/production', label: '생산관리' },
-  { href: '/material', label: '자재관리' },
-  { href: '/quality', label: '품질관리' },
-  { href: '/equipment', label: '설비관리' },
-]
+import { NAV_MENUS } from '@/constants/menu';
 
 export const Header=()=> {
 
@@ -35,6 +29,7 @@ export const Header=()=> {
   };
   
   const handleLogout = ()=>{
+    
     localStorage.removeItem('token');
     localStorage.removeItem("name");
 
@@ -48,8 +43,9 @@ export const Header=()=> {
 
   return (
     <S.HeaderContainer>
-      <S.Logo>Smart MES</S.Logo>
-
+      <Link href='/dashboard'>
+        <S.Logo>Smart MES</S.Logo>
+      </Link>
       {/* 데스크탑 네비게이션 */}
       <S.DesktopNav>
         {NAV_MENUS.map(menu=>(
@@ -83,6 +79,7 @@ export const Header=()=> {
           onClick={()=>setIsMobileMenuOpen(false)}
           >{menu.label}</Link>
         ))}
+
         <Link 
         href="/mypage" 
         onClick={()=>setIsMobileMenuOpen(false)}

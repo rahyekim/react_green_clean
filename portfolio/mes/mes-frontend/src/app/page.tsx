@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 import * as S from '@/assets/css/Style.style'
-import {PageTitle} from '@/assets/css/Common.style'
 import Button from '@/ui/Button';
 import Input from '@/ui/Input';
 import { useAlertStore } from '@/store/useAlertStore';
@@ -36,8 +35,7 @@ export default function Home() {
 
 
   const handleLogin = async(e:React.FormEvent<HTMLFormElement>)=>{
-    // e.preventDefault(); 
-    console.log("handleLogin 함수가 실행되었습니다! 🚀"); // 👈 가장 처음에 추가
+    e.preventDefault(); 
 
     if(!email || !password){
       showAlert("이메일과 비밀번호를 모두 입력해주세요.");
@@ -55,9 +53,6 @@ export default function Home() {
 
         localStorage.setItem("token", token);
         localStorage.setItem("name", user.lastName + user.firstName);
-
-        console.log("현재 rememberMe 상태👈:", rememberMe); // 👈 이 로그를 찍어보세요!
-        console.log("서버에서 받은 user.email👈:", user.email); // 👈 이 값도 확인!
 
         if(rememberMe){
           localStorage.setItem('email', user.email);
@@ -91,7 +86,7 @@ export default function Home() {
       <S.Card>
         <S.ImgColumn/>
         <S.FormColumn>
-          <PageTitle>로그인</PageTitle>
+          <S.Title>로그인</S.Title>
           <S.Form onSubmit={handleLogin} >
               <Input
               type="email" 

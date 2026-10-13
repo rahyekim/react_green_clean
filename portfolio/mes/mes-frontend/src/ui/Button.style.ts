@@ -70,7 +70,7 @@ const variantStyles ={
     `,
     white: css`
         background-color:transparent;
-        color: #eee;
+        color: #475569;
         border:1px solid #d1d3e2;
         &:hover{background-color: #f8f9fa; color: #333; }
     `,
@@ -146,7 +146,7 @@ ${({$variant})=> variantStyles[$variant || 'primary'] || variantStyles.primary}
 
 //fullwidth적용
 ${({$fullWidth})=> 
-    $fullWidth && css` width: 100%; `
+    $fullWidth ? css` width: 100%;` : css` width: auto;`
 }
 
 //너비 

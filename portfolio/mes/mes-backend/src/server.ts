@@ -7,6 +7,11 @@ require('dotenv').config();
 
 const sequelize = require('./db');
 const User = require('./model/User');
+const ProcessLine = require('./model/ProcessLine');
+const ComponentSCM = require('./model/ComponentSCM');
+const QualityInspection = require('./model/QualityInspection');
+const Equipment = require('./model/Equipment');
+const ProductionRecord = require('./model/ProductionRecord');
 
 const app = express();
 app.use(express.json());
@@ -179,6 +184,189 @@ app.post('/api/auth/login', async(req:any,res:any)=>{
     });
   }
 });
+
+//라인공정제어
+app.get('/api/process/lines', verifyToken, async (req: any, res: any) => {
+  try {
+    const lines = await ProcessLine.findAll();
+    return res.status(200).json({
+      success: true, lines
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '공정 라인 조회 실패'
+    });
+  }
+});
+
+app.post('/api/process/lines', verifyToken, async (req: any, res: any) => {
+  try {
+    const { lineName, processType, currentProduct, operator } = req.body;
+    const newLine = await ProcessLine.create({
+      lineName, processType, currentProduct, operator
+    });
+    return res.status(201).json({
+      success: true, line: newLine
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '공정 라인 등록 실패'
+    });
+  }
+});
+console.log('🔥 공정 라우트 파일 로드됨');
+
+app.patch('/api/process/lines/:id/status', async (req:any, res:any) => {
+ console.log('🔥 PATCH 요청 도착:', req.originalUrl);
+  
+    try {
+        const { id } = req.params;
+        const { status } = req.body; // 'RUNNING', 'STOPPED', 'MAINTENANCE'
+
+        const line = await ProcessLine.findByPk(id);
+        if (!line) return res.status(404).json({ success: false, message: '라인을 찾을 수 없습니다.' });
+
+        line.status = status;
+        await line.save();
+
+        return res.status(200).json({ success: true, line });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: '상태 변경 실패' });
+    }
+});
+
+// 3. 핵심 부품 SCM API (/components)
+app.get('/api/scm/components', verifyToken, async (req: any, res: any) => {
+  try {
+    const components = await ComponentSCM.findAll();
+    return res.status(200).json({
+      success: true, components
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: 'SCM 자재 조회 실패'
+    });
+  }
+});
+
+app.post('/api/scm/components', verifyToken, async (req: any, res: any) => {
+  try {
+    const { componentName, category, stockQuantity, minThreshold, supplier } = req.body;
+
+    // 현재 재고(stockQuantity)가 최소 기준치(minThreshold) 이하로 떨어지면 'WARNING'(경고)
+    const status = stockQuantity <= minThreshold ? 'WARNING' : 'NORMAL';
+    const component = await ComponentSCM.create({
+      componentName, category, stockQuantity, minThreshold, supplier, status
+    });
+    return res.status(201).json({
+      success: true, component
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: 'SCM 자재 등록 실패'
+    });
+  }
+});
+
+// 4. 비전 품질 검사 API (/quality)
+app.get('/api/quality/inspections', verifyToken, async (req: any, res: any) => {
+  try {
+    const inspections = await QualityInspection.findAll({
+      limit:50, order: [['INSPECTED_AT', 'DESC']],
+    });
+    return res.status(200).json({
+      success: true, inspections
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '품질 검사 이력 조회 실패'
+    });
+  }
+});
+
+app.post('/api/quality/inspections', verifyToken, async (req: any, res: any) => {
+  try {
+    const { serialNumber, inspectionType, result, defectReason, inspector } = req.body;
+    const inspection = await QualityInspection.create({
+     serialNumber, inspectionType, result, defectReason, inspector
+    });
+    return res.status(201).json({
+      success: true, inspection
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '품질 검사 결과 등록 실패'
+    });
+  }
+});
+
+// 5. 클린룸 및 설비 제어 API (/cleanroom)
+app.get('/api/equipment/status', verifyToken, async (req: any, res: any) => {
+  try {
+    const equipments  = await Equipment.findAll();
+    return res.status(200).json({
+      success: true, equipments 
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '설비 상태 조회 실패'
+    });
+  }
+});
+
+
+app.post('/api/equipment/status', verifyToken, async (req: any, res: any) => {
+  try {
+    const { equipmentName, cleanroomZone, temperature, humidity, status } = req.body;
+    const equipment = await Equipment.create({
+     equipmentName, cleanroomZone, temperature, humidity, status
+    });
+    return res.status(201).json({
+      success: true, equipment
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '설비 상태 등록 실패'
+    });
+  }
+});
+
+// 실시간 통합 관제(생산 실적 및 수율) API (/analytics)
+app.get('/api/analytics/records', verifyToken, async (req: any, res: any) => {
+  try {
+    const records = await ProductionRecord.findAll();
+    return res.status(200).json({
+      success: true, records
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '통합 생산 관제 기록 조회 실패'
+    });
+  }
+});
+
+app.post('/api/analytics/records', verifyToken, async (req: any, res: any) => {
+  try {
+    const { lineName, targetCount, actualCount, defectCount } = req.body;
+    
+    const total= actualCount + defectCount;
+    //전체생산수 = 실제 양품 수 + 불량 대수 계산  [해당공정에서 생산된 총수량]
+
+    const yieldRate = total > 0 ? Number(((actualCount/total)*100).toFixed(2)) : 100.0;
+
+    const record = await ProductionRecord.create({
+      lineName, targetCount, actualCount, defectCount, yieldRate
+    });
+    return res.status(201).json({
+      success: true, record
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false, message: '통합 생산 관제 기록 등록 실패'
+    });
+  }
+});
+
 
 const PORT = process.env.PORT || 4000;
 

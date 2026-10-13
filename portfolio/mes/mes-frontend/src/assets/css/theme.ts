@@ -7,6 +7,7 @@ export const theme ={
         text: '#333',
         header: '#1e293b',
         title: '#1e293b',
+        pageTitle: '#3a3b45',
         label:'#475569',
 
         alertModal: '#1e293b',

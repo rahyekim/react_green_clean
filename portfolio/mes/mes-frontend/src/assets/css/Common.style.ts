@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
 //큰제목
-export const PageTitle= styled.h2`
+export const PageTitle= styled.h1`
 text-align: center;
 font-size: 1.5rem;
-font-weight: 700;
-color: ${props=> props.theme.colors.title};
+font-weight: 400;
+color: ${props=> props.theme.colors.pageTitle};
 margin-bottom: 1.5rem;
+
 `;
 
 export const Divider= styled.div`

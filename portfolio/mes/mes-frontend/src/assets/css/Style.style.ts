@@ -50,7 +50,6 @@ font-size: 1.5rem;
 font-weight: 400;
 color: #3a3b45;
 margin-bottom: 1.5rem;
-
 `;
 
 export const Description= styled.div`
@@ -340,9 +339,19 @@ text-align: center;
 
 `;
 
+export const FormWrapper = styled.div`
+background-color: #fff;
+display: flex;
+flex-direction: column;
+align-items: center;
+border: 1px solid rgba(0, 0, 0, 0.06);
+border-radius: 14px;
+padding: 28px;
+box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+`;
 
 // mypage 레이아웃
-export const CalendarLayout = styled.div`
+export const AdminLayout = styled.div`
   // 좌우 패널을 가로로 배치하고 간격을 주는 
   display: flex;
   gap: 24px;
@@ -354,18 +363,24 @@ export const CalendarLayout = styled.div`
 
 export const LeftPanel = styled.div`
   // 왼쪽 고정형 사이드바 영역  (모바일에서는 100%)
-width: 320px;
-flex-shrink: 0;
+  flex: 0 0 35%;
+  min-width: 0;
 
   @media (max-width:768px) {
-   width : 100% ; //반응형레이아웃 pc화면전까지(세로정렬일때)
+    flex: 1 1 100%;
+    width : 100% ; //반응형레이아웃 pc화면전까지(세로정렬일때)
   }
 `;
 
 export const RightPanel = styled.div`
   // 오른쪽 본문 영역  (남은 공간 유연하게 차지)
-  flex: 1;
+  flex: 0 0 65%;
   min-width: 0;
+
+  @media (max-width: 768px) {
+    flex: 1 1 100%;
+    width: 100%;
+  }
 `;
 
 // sidebar 내부 컴포넌트
@@ -462,6 +477,9 @@ export const Grid = styled.div`
   //minmax(최소값0:min-width:0 👍✨, 최대값1fr:균등하게쫙쫙늘어남) =
   
 `;
+
+
+
 
 export const Dayname = styled.div`
   // 요일 이름(일~토) 표시 영역 껍데기 (첫째 주 일요일, 토요일 색상 분기)
@@ -715,6 +733,8 @@ color: white;
 font-size: 0.7rem;
 font-weight: bold;
 `;
+
+
 export const SmallButton = styled.button`
 border-radius: 20px;
 outline: none;

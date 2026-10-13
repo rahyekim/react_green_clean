@@ -1,19 +1,9 @@
 'use client'
 
 import * as S from '@/assets/css/Style.style'
+import { NAV_MENUS } from '@/constants/menu'
+import { SYSTEM_MENUS } from '@/constants/menu'
 
-const NAV_MENUS = [
-  { href: '/production', label: '생산관리' },
-  { href: '/material', label: '자재관리' },
-  { href: '/quality', label: '품질관리' },
-  { href: '/equipment', label: '설비관리' },
-]
-
-const SYSTEM_MENUS = [
-    { href: '/master-data', label: '기준 정보 관리' },
-    { href: '/users', label: '사용자 권한 관리' },
-    { href: '/settings', label: '시스템 환경 설정' },
-]
 
 export const Sidebar = ()=>{
 
