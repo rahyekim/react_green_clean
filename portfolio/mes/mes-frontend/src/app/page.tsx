@@ -113,7 +113,7 @@ export default function Home() {
               <S.CheckboxText>아이디 저장</S.CheckboxText>
             </S.CheckboxLabel>
 
-            <Button type="submit">
+            <Button type="submit" >
               로그인
             </Button>
 
@@ -127,7 +127,7 @@ export default function Home() {
               카카오로 로그인
             </Button>
              <Button 
-             variant='insta'
+             variant='sub'
              type="button"
              onClick={handleInstaLogin}
              >

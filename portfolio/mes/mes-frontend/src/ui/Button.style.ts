@@ -1,7 +1,7 @@
 import styled, {css, keyframes} from "styled-components";
 
 interface StyledButtonProps{
-    $variant?: 'primary' | 'secondary' | 'danger' | 'kakao' | 'insta' |'ghost' |'white'| 'outline';
+    $variant?: 'primary' | 'secondary' |'sub'| 'danger' | 'kakao' | 'insta' |'ghost' |'white'| 'outline';
     $size?: 'sm' | 'md' | 'lg';
     $fullWidth?: boolean;
     $width?: string;
@@ -41,6 +41,21 @@ const variantStyles ={
         box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.12);
         }
     `,
+    sub: css`
+        background-color: ${p => p.theme.colors.background};
+        color: #ffffff;
+        border-radius: 0.5rem; /* 기존보다 살짝 둥근 8px 느낌 */
+        border: none;
+        box-shadow: none;
+
+        &:hover:not(:disabled) {
+            background-color: ${p => p.theme.colors.mobilenav};
+        }
+
+        &:active:not(:disabled) {
+            background-color: #1e293b; /* 클릭 시 살짝 더 어두운 톤 */
+        }
+    `,
     danger: css`
         background-color: ${p=>p.theme.colors.alert};
         color: #ffffff;
@@ -72,7 +87,7 @@ const variantStyles ={
             background-color: #e2e8f0;
         }
     `,
-    //alert모달창용 
+    //alert모달창용 (다크배경에쓸거)
     white: css`
         background-color: rgba(255, 255, 255, 0.08);
         color: #eee; 
@@ -166,7 +181,7 @@ ${({$size})=> {
         default: return css`
           height: 42px; //input 높이랑 맞춤
           padding: 0 16px;
-          font-size: 15px;
+          font-size: 0.88rem;
         `;
     }
 }}

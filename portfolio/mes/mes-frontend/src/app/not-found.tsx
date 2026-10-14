@@ -1,5 +1,6 @@
 'use client';
 
+import Button from "@/ui/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Container } from "react-bootstrap";
@@ -19,60 +20,26 @@ export default function NotFound(){
             </Description>
 
             <ButtonGroup>
-                <BackButton onClick={()=>router.back()}>
-                    이전 페이지로
-                </BackButton>
-                <HomeLink href='/'>
-                    메인화면으로 이동
-                </HomeLink>
+                <Button 
+                variant="outline"
+                onClick={()=>router.back()}
+                >이전 페이지로</Button>
+                <Button variant="sub" 
+                as={Link} href='/'
+                >메인화면으로 이동</Button>
+               
             </ButtonGroup>
         </Wrapper>
     )
 }
 
 
-//
-// const Container = styled.div`
-// display: flex;
-// flex-direction: column;
-// align-items: center;
-
-// `;
-
-// const ErrorCode = styled.span`
-//   /* 여기에 원하는 스타일 입력 */
-// `;
-
-// const Title = styled.h1`
-//   /* 여기에 원하는 스타일 입력 */
-// `;
-
-// const Description = styled.p`
-//   /* 여기에 원하는 스타일 입력 */
-// `;
-
-// const ButtonGroup = styled.div`
-//   /* 여기에 원하는 스타일 입력 */
-// `;
-
-// const ButtonBase = styled.button`
-//   /* 여기에 원하는 스타일 입력 */
-// `;
-
-// const BackButton = styled(ButtonBase)`
-//   /* 여기에 원하는 스타일 입력 */
-// `;
-
-// const HomeLink = styled(Link)`
-//   /* 여기에 원하는 스타일 입력 */
-// `;
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
   background-color: #f9fafb;
   padding: 0 16px;
   text-align: center;
@@ -81,7 +48,7 @@ const Wrapper = styled.div`
 const ErrorCode = styled.span`
   font-size: 4rem;
   font-weight: 800;
-  color: #2563eb;
+  color: ${p=>p.theme.colors.header};
   letter-spacing: 0.05em;
   margin-bottom: 1rem;
 `;
@@ -106,39 +73,5 @@ const ButtonGroup = styled.div`
   gap: 1rem;
 `;
 
-const ButtonBase = styled.button`
-  padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-`;
 
-const BackButton = styled(ButtonBase)`
-  color: #374151;
-  background-color: #ffffff;
-  border: 1px solid #d1d5db;
 
-  &:hover {
-    background-color: #f3f4f6;
-  }
-`;
-
-const HomeLink = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #ffffff;
-  background-color: #2563eb;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #1d4ed8;
-  }
-`;
