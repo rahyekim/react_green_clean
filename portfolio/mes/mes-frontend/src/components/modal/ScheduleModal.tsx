@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { Temporal } from '@js-temporal/polyfill'
 import Modal from './Modal'
 import * as S from '@/assets/css/Style.style'
+import { CustomSelect } from '@/ui/CustomSelect'
+import { useAlertStore } from '@/store/useAlertStore'
 
 // 1. 일정(Schedule) 인터페이스 정의
 export interface Schedule{
@@ -25,10 +27,18 @@ interface ScheduleModalProps{
     schedules: Schedule[];
     setSchedules:React.Dispatch<React.SetStateAction<Schedule[]>>;
 }
+const SELECT_OPTIONS=[
+    {label: '대기', value: '대기'},
+    {label: '진행', value: '진행'},
+    {label: '완료', value: '완료'},
+]
+    
+
 
 export default function ScheduleModal({
     isOpen, onClose, year, month, selectedDate, schedules, setSchedules}: ScheduleModalProps){
 
+        const {showAlert, hideAlert} = useAlertStore();
         // 3. 입력메모, 상태, 수정 중인 아이디를 관리할 state 선언하기
         const [formContent, setFormContent]=useState('');
         const [formStatus, setFormStatus]=useState<'대기' | '진행' |'완료'>('대기');
@@ -91,17 +101,21 @@ export default function ScheduleModal({
             setFormStatus(sch.status);
         }
 
-        // 7. 삭제 처리 함수 (handleDelete)
+        // 삭제 처리 함수 (handleDelete)
         const handleDelete = (id:string)=>{
-            // confirm 창 띄우고 schedules에서 필터링 후 삭제하기
-            if(!confirm('삭제하시겠습니까?')) return;
-            setSchedules(prev=> prev.filter(sch=> sch.id !== id))
 
-            if(editingId === id){
-                setFormContent('');
-                setEditingId(null); 
-                setFormStatus('대기');
-            }
+            showAlert(
+                '삭제하시겠습니까?',
+                ()=>{
+                    setSchedules(prev => prev.filter(sch => sch.id !== id));   
+                    if(editingId === id){
+                        setFormContent('');
+                        setEditingId(null); 
+                        setFormStatus('대기');
+                    }
+                },
+                hideAlert,
+            )
         }
 
         return(
@@ -110,32 +124,13 @@ export default function ScheduleModal({
                 onClose={onClose}
                 title={`${month}월 ${selectedDate}일 업무 일정`}
             > 
-                {/* 8. 입력 폼 영역 (Select, TextArea) */}
+                {/* 입력 폼 영역 (Select, TextArea) */}
                 <S.FormGroup>
-                    <S.CustomSelectContainer>
-                        <S.SelectTrigger onClick={()=>setIsSelectOpen(prev=>!prev)}>
-                            {formStatus}
-                            <span style={{fontSize:'0.7rem', color:'#94a3b8'}}>
-                                {isSelectOpen ? '▲' : '▼'}
-                            </span>
-                        </S.SelectTrigger>
-
-                        {isSelectOpen && (
-                            <S.SelectList>
-                                {['대기','진행','완료'].map(status=>(
-                                    <S.SelectItem key={status}
-                                    $isSelected={formStatus===status}
-                                    onClick={()=>{
-                                        setFormStatus(status as '대기'|'진행'|'완료');
-                                        setIsSelectOpen(false);
-                                    }}>
-                                        {status}
-                                    </S.SelectItem>
-                                ))}
-                            </S.SelectList>
-                        )}
-                    </S.CustomSelectContainer>
-
+                    <CustomSelect
+                    options={SELECT_OPTIONS}
+                    value={formStatus}
+                    onChange={newValue=> setFormStatus(newValue as '대기' | '진행' | '완료')}
+                    />
                     <S.TextArea
                     placeholder='일정 내용을 입력하세요'
                     value={formContent}
@@ -143,9 +138,9 @@ export default function ScheduleModal({
                     />
                 </S.FormGroup>
                 
-                {/* 9. 버튼 그룹 영역 (등록/수정, 닫기) */}
+                {/* 버튼 그룹 영역 (등록/수정, 닫기) */}
                 <S.ButtonGroup>
-                    <S.CustomButton onClick={onClose}>닫기</S.CustomButton>
+                    {/* <S.CustomButton onClick={onClose}>닫기</S.CustomButton> */}
                     <S.CustomButton $primary onClick={handleSave}>
                         {editingId ? '수정' : '등록'}</S.CustomButton>
                 </S.ButtonGroup>

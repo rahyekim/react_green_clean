@@ -1,7 +1,7 @@
 'use client'
 
 import React from "react"
-import * as S from '@/assets/css/Style.style'
+import * as S from '@/assets/css/Modal.style'
 
 interface  ModalProps{
     isOpen: boolean;

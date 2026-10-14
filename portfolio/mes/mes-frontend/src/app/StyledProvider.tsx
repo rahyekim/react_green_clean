@@ -22,7 +22,7 @@ export default function StyledProvider ({children}:{children:React.ReactNode}){
 
 
 const GlobalAlert = ()=>{
-    const {isOpen, onConfirm, message, hideAlert} = useAlertStore()
+    const {isOpen, onConfirm, message, hideAlert,onClose} = useAlertStore()
     return(
         <AlertModal
         isOpen={isOpen}
@@ -33,6 +33,7 @@ const GlobalAlert = ()=>{
             }
             hideAlert();
         }}
+        onClose={onClose}
         />
     )
 }

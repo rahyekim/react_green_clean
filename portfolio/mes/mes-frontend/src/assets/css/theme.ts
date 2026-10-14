@@ -1,4 +1,5 @@
 import { error } from "console";
+import { CardBody } from "react-bootstrap";
 
 export const theme ={
     colors:{
@@ -9,6 +10,9 @@ export const theme ={
         title: '#1e293b',
         pageTitle: '#3a3b45',
         label:'#475569',
+
+        unknownLabel: '#64748b',
+        CardBodyTxt: '#4b5563',
 
         alertModal: '#1e293b',
         alertModaltxt: '#fff',

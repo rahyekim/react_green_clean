@@ -4,13 +4,15 @@ import {useState, useEffect} from 'react';
 
 import * as S from './Alert.style';
 import Button from '@/ui/Button';
+import { ButtonGroup } from '@/assets/css/Style.style';
 
 interface AlertProps{
     isOpen: boolean;
     message: string;
     onConfirm: ()=>void;
+    onClose?: ()=> void;
 }
-export default function AlertModal({ isOpen, message, onConfirm}:AlertProps){
+export default function AlertModal({ isOpen, message, onConfirm, onClose}:AlertProps){
 
     const [isClosing, setIsClosing] = useState(false);
 
@@ -29,18 +31,45 @@ export default function AlertModal({ isOpen, message, onConfirm}:AlertProps){
         }, 300);
     }
 
+    const handleClose = ()=>{
+        if(!onClose) return;
+        setIsClosing(true);
+        setTimeout(() => {
+            onClose();
+        }, 300);
+    }
+
     if(!isOpen) return null;
 
     return(
         <S.ModalOverlay $isClosing={isClosing}>
             <S.ModalBox $isClosing={isClosing}>
                 <S.ModalText>{message}</S.ModalText>
-                <Button
-                variant='secondary'
-                size='sm'
-                onClick={handleConfirm}
-                fullWidth
-                >확인</Button>
+
+                {onClose && (
+                    <ButtonGroup>
+                        <Button
+                        size='sm'
+                        variant='white'
+                        onClick={handleClose}
+                        >취소</Button>
+
+                        <Button
+                        variant='secondary'
+                        size='sm'
+                        onClick={handleConfirm}
+                        >확인</Button>
+                    </ButtonGroup>
+                )}
+
+                {!onClose && (
+                    <Button
+                    variant='secondary'
+                    size='sm'
+                    onClick={handleConfirm}
+                    fullWidth
+                    >확인</Button>
+                )}
             </S.ModalBox>
         </S.ModalOverlay>
     )

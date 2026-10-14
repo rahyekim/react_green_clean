@@ -1,10 +1,36 @@
 import styled,{css} from "styled-components";
 
+
+const getStatusTheme = (status?: string) => {
+    switch (status?.toUpperCase()) {
+        case 'PASS':
+        case 'RUNNING':
+            return {
+                border: '#22c55e', 
+            };
+        case 'FAIL':
+        case 'DANGER':
+        case 'STOPPED':
+            return {
+                border: '#ef4444', 
+            };
+        case 'WARNING':
+        case 'MAINTENANCE':
+            return {
+                border: '#fbbf24',
+            };
+        default:
+            return {
+               border: '#cbd5e1',
+            };
+    }
+};
+
 //process
-export const LineCard = styled.div<{$isWarning?:boolean}>`
+export const LineCard = styled.div<{$status?:string;}>`
 padding: 1.2rem;
-border: 1px solid #e5e7eb;
-border-radius: 8px;
+border: 1px solid #e2e8f0;
+border-radius: 0.75rem; //12px;
 background: #fff;
 box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 
@@ -12,11 +38,8 @@ display: flex;
 flex-direction: column;
 gap: 0.8rem; 
 
-${({ $isWarning }) => $isWarning && css`
-    background-color: #fefce8;
-    border: 1px solid #fefce8;
-    border-left: 5px solid #fde047;
-  `}
+border-left: 5px solid ${({ $status }) => getStatusTheme($status).border}; 
+
 `;
 
 export const CardHeader = styled.div`
@@ -31,18 +54,23 @@ export const CardBody = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
 `;
 
 export const LineGrid = styled.div`
-  // 7열 그리드 레이아웃 껍데기
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
-  gap: 8px;
+  gap: 15px;
 `;
+
 const getStatusColor = (status?: string) => {
-    switch (status) {
+    switch (status?.toUpperCase()) {
+        case 'PASS':
         case 'RUNNING': 
             return { bg: '#d1fae5', text: '#065f46' }; 
+        case 'FAIL':
+        case 'DANGER':
         case 'STOPPED': 
             return { bg: '#fee2e2', text: '#991b1b' }; 
         case 'MAINTENANCE': 
@@ -68,10 +96,33 @@ align-items: center;
 justify-content: flex-end;
 gap: 10px;
 `;
+
 export const ErrorText= styled.span`
 color: ${p=>p.theme.colors.error};
 font-weight: bold;
 `;
+
+
+export const QualiCard = styled.div<{$status?: string;}>`
+width:230px;
+max-width:230px;
+padding:.9rem;
+border:1px solid #ddd;
+border-radius: .5rem;
+padding: 1.2rem;
+border-radius: 0.75rem; 
+box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+display: flex;
+flex-direction: column;
+gap: 0.8rem; 
+
+border-left: 5px solid ${({ $status }) => getStatusTheme($status).border}; /* 왼쪽 포인트 라인도 통일감 있게! */
+
+
+   
+`;
+
+
 // export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;

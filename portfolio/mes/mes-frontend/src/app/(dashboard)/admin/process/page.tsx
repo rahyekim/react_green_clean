@@ -1,15 +1,15 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import Button from "@/ui/Button";
 import Input from "@/ui/Input";
 import { useAlertStore } from "@/store/useAlertStore";
 import {
-    AdminLayout,
+    LtRtLayout,
     LeftPanel,RightPanel, Form, Title,
-    FormWrapper
+    FormWrapper,
+    SubmitBtnWrapper
 } from '@/assets/css/Style.style'
 
 import { LineGrid,LineCard,StatusBadge, CardHeader, CardBody, ButtonGroup } from '@/assets/css/admin/admin.style'
@@ -77,7 +77,7 @@ export default function Process(){
     }
 
     return(
-        <AdminLayout>
+        <LtRtLayout>
             {/*신규 공정 라인을 입력하고 등록하는 폼 영역 */}
             <LeftPanel>
                 <FormWrapper>
@@ -112,7 +112,10 @@ export default function Process(){
                     onChange={handleChange}
                     />
 
-                    <Button type="submit">등록하기</Button>
+                    <SubmitBtnWrapper>
+                        <Button fullWidth
+                        type="submit">등록하기</Button>
+                    </SubmitBtnWrapper>
                 </Form>
                 </FormWrapper>
             </LeftPanel>
@@ -122,7 +125,7 @@ export default function Process(){
                 <Title> iphone Duo 라인 가동 현황</Title>
                 <LineGrid>
                     {lines.map(line=>(
-                        <LineCard key={line.id}>
+                        <LineCard key={line.id} $status={line.status}>
                             <CardHeader>
                                 <strong>{line.lineName}</strong>
                                 <StatusBadge $status={line.status}>
@@ -136,18 +139,8 @@ export default function Process(){
                             </CardBody>
 
                             <ButtonGroup>
-                            {line.status !== 'RUNNING' && (
-                                <Button size="sm" 
-                                onClick={async()=>{
-                                    await updateLineStatus(line.id, 'RUNNING');
-                                    loadLines();
-                                }}
-                                > 가동
-                                </Button>
-                            )}
-
                             {line.status !== 'STOPPED' && (
-                                <Button size="sm" variant="kakao"
+                                <Button size="sm" variant="ghost"
                                 onClick={async()=>{
                                     await updateLineStatus(line.id, 'STOPPED');
                                     loadLines();
@@ -155,8 +148,17 @@ export default function Process(){
                                 > 정지
                                 </Button>
                             )}
+                            {line.status !== 'RUNNING' && (
+                                <Button size="sm"  variant="secondary"
+                                onClick={async()=>{
+                                    await updateLineStatus(line.id, 'RUNNING');
+                                    loadLines();
+                                }}
+                                > 가동
+                                </Button>
+                            )}
                              {line.status !== 'MAINTENANCE' && (
-                                <Button size="sm"  variant="insta"
+                                <Button size="sm"  variant="outline"
                                 onClick={async()=>{
                                     await updateLineStatus(line.id, 'MAINTENANCE');
                                     loadLines();
@@ -169,6 +171,6 @@ export default function Process(){
                     ))}
                 </LineGrid>
             </RightPanel>
-        </AdminLayout>
+        </LtRtLayout>
     )
 }

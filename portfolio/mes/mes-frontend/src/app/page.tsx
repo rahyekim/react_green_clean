@@ -9,6 +9,7 @@ import Input from '@/ui/Input';
 import { useAlertStore } from '@/store/useAlertStore';
 
 import { Metadata } from 'next';
+import { loginMember } from '@/api/http';
 
 // export const metadata : Metadata = { title: '로그인'} //'use client'랑쓸수없음
 
@@ -43,13 +44,10 @@ export default function Home() {
     }
     try{
       // 백엔드 로그인 API 호출
-      const response = await axios.post("http://localhost:4000/api/auth/login", {
-        email,
-        password,
-      });
-      if (response.data.success) {
+      const data = await loginMember({email,password});
+      if (data.success) {
         // 백엔드에서 발급한 JWT 토큰을 localStorage에 저장
-        const { token, user } = response.data;
+        const { token, user } = data;
 
         localStorage.setItem("token", token);
         localStorage.setItem("name", user.lastName + user.firstName);

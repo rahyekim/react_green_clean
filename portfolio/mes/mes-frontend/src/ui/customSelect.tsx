@@ -4,18 +4,30 @@ import { useState } from 'react';
 
 import {
     CustomSelectContainer,SelectTrigger,SelectList,SelectItem
-} from '@/assets/css/Style.style'
+} from './CustomSelect.style'
 
-export const CustomSelect = ()=>{
+interface Option{
+    label: string;
+    value: string;
+}
+interface CustomSelectProps{
+    options: Option[];
+    value: string;
+    onChange: (value:string)=> void;
+    placeholder?:string;
+}
+export const CustomSelect = ({
+    options, value, onChange, placeholder='선택해주세요'
+}: CustomSelectProps)=>{
 
     const [isSelectOpen, setIsSelectOpen]=useState(false);
-    const [formStatus, setFormStatus]=useState('');
     
+    const selectedLabel= options.find(opt=> opt.value === value)?.label || placeholder;
     return(
         <>
-         <CustomSelectContainer>
+         <CustomSelectContainer $isOpen={isSelectOpen}>
             <SelectTrigger onClick={()=>setIsSelectOpen(prev=>!prev)}>
-                {formStatus}
+                {selectedLabel}
                 <span style={{fontSize:'0.7rem', color:'#94a3b8'}}>
                     {isSelectOpen ? '▲' : '▼'}
                 </span>
@@ -23,14 +35,14 @@ export const CustomSelect = ()=>{
 
             {isSelectOpen && (
                 <SelectList>
-                    {['대기','진행','완료'].map(status=>(
-                        <SelectItem key={status}
-                        $isSelected={formStatus===status}
+                    {options.map(opt=>(
+                        <SelectItem key={opt.value}
+                        $isSelected={opt.value ===value}
                         onClick={()=>{
-                            setFormStatus(status as '대기'|'진행'|'완료');
+                            onChange(opt.value)
                             setIsSelectOpen(false);
                         }}>
-                            {status}
+                            {opt.label}
                         </SelectItem>
                     ))}
                 </SelectList>

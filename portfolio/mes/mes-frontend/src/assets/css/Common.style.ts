@@ -98,3 +98,47 @@ export const CheckboxInput = styled.input`
     transform: rotate(45deg);
   }
 `;
+
+export const ModalBg= styled.div`
+position: fixed;
+top:0;
+left:0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.3);
+z-index: 9999;
+`;
+
+export const ModalContent= styled.div`
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%,-50%);
+width: 450px;
+max-width: 90%; 
+
+height: 550px;
+max-height: 90vh; 
+z-index: 999999;
+
+padding: 8px;
+background-color: #fff;
+border-radius: 10px;
+border: 1px solid #ddd;
+box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
+display: flex;
+flex-direction: column;
+overflow: hidden;
+
+`;
+export const RightBtn= styled.div`
+display: flex;
+justify-content: flex-end;
+padding: 10px;
+
+button{
+    background: none;
+    border: none;
+}
+`;

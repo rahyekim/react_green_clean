@@ -1,7 +1,7 @@
 import styled, {css, keyframes} from "styled-components";
 
 interface StyledButtonProps{
-    $variant?: 'primary' | 'secondary' | 'danger' | 'kakao' | 'insta' |'ghost' |'white';
+    $variant?: 'primary' | 'secondary' | 'danger' | 'kakao' | 'insta' |'ghost' |'white'| 'outline';
     $size?: 'sm' | 'md' | 'lg';
     $fullWidth?: boolean;
     $width?: string;
@@ -56,23 +56,54 @@ const variantStyles ={
         }
     `,
     ghost: css`
-        background-color: transparent;
+       background-color: transparent;
         color: #475569;  
         box-shadow: none;
-        font-weight: 600;
+        font-weight: 500; 
+        border: 1px solid transparent; 
+
         &:hover:not(:disabled) {
-        background-color: rgba(0, 0, 0, 0.05); 
-        color: #1e293b;
+            background-color: #f1f5f9; 
+            color: #1e293b;
+            border-color: #e2e8f0; 
         }
+
         &:active:not(:disabled) {
-        background-color: rgba(0, 0, 0, 0.1);
+            background-color: #e2e8f0;
         }
     `,
+    //alert모달창용 
     white: css`
-        background-color:transparent;
+        background-color: rgba(255, 255, 255, 0.08);
+        color: #eee; 
+        border: 1px solid rgba(255, 255, 255, 0.15); 
+        box-shadow: none;
+
+        &:hover:not(:disabled) {
+            background-color: rgba(255, 255, 255, 0.15); 
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        &:active:not(:disabled) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    `,
+    outline: css`
+       background-color: #ffffff; 
         color: #475569;
-        border:1px solid #d1d3e2;
-        &:hover{background-color: #f8f9fa; color: #333; }
+        border: 1px solid #cbd5e1; 
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+
+        &:hover:not(:disabled) {
+            background-color: #f8fafc; 
+            color: #1e293b;
+            border-color: #94a3b8;
+        }
+
+        &:active:not(:disabled) {
+            background-color: #f1f5f9;
+        }
     `,
     kakao: css`
         background-color: #fee500;
@@ -107,7 +138,7 @@ font-weight: 500;
 border-radius: 6px;
 cursor: pointer;
 
-transition: background-color 0.2s,box-shadow 0.2s, opacity 0.2s;
+transition: all 0.2s;
 border: none;
 outline: none;
 

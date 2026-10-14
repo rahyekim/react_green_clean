@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import Button from "@/ui/Button";
 import Input from "@/ui/Input";
 import { useAlertStore } from "@/store/useAlertStore";
-import {CardBody, CardHeader, ErrorText, LineCard, LineGrid, StatusBadge} from '@/assets/css/admin/admin.style'
+import {CardBody, CardHeader, LineCard, LineGrid, StatusBadge} from '@/assets/css/admin/admin.style'
 import {
-    AdminLayout,
+    LtRtLayout,
     LeftPanel,RightPanel, Form, Title,
-    FormWrapper
+    FormWrapper,
+    SubmitBtnWrapper
 } from '@/assets/css/Style.style'
 import { createComponent, fetchComponents } from "@/api/http";
 
@@ -76,7 +76,7 @@ export default function Components(){
     }
     return(
         <>
-         <AdminLayout>
+         <LtRtLayout>
             <LeftPanel>
                 <FormWrapper>
                 <Title>부품 SCM 등록</Title>
@@ -122,8 +122,9 @@ export default function Components(){
                     value={form.supplier} 
                     onChange={handleChange}
                     />
-
-                    <Button>자재 등록</Button>
+                    <SubmitBtnWrapper>
+                        <Button type="submit" fullWidth >자재 등록</Button>
+                    </SubmitBtnWrapper>
                 </Form>
                 </FormWrapper>
             </LeftPanel>
@@ -132,20 +133,24 @@ export default function Components(){
                 <Title>핵심 부품 공급망(SCM) 현황</Title>
                 <LineGrid>
                     {components.map(item=>{
-                        const isWarning = item.stockQuantity <= item.minThreshold;
-                        const currentStatus = isWarning ? 'WARNING' : item.status;
+                        const isWarning = item.status === 'WARNING'
                         return(
-                        <LineCard key={item.id} $isWarning={isWarning} >
+                        <LineCard key={item.id} $status={item.status} >
                             <CardHeader>
                                 <strong>{item.componentName}</strong>
-                                <StatusBadge $status={currentStatus}>
+                                <StatusBadge $status={item.status}>
                                     {item.status}
                                 </StatusBadge>
                             </CardHeader>
                             <CardBody>
                                 <p>카테고리: {item.category}</p>
                                 <p>공급사: {item.supplier}</p>
-                                <p>재고: {item.stockQuantity}개</p>
+                                <p>
+                                    {isWarning &&  
+                                    <span style={{ color:'#dc2626', verticalAlign: 'super',fontSize: '0.8em'}}
+                                    >*</span>}
+                                    재고: {item.stockQuantity}개
+                                </p>
                                 <p>안전기준: {item.minThreshold}개</p>
                             </CardBody>
                         </LineCard>
@@ -153,7 +158,7 @@ export default function Components(){
                     })}
                 </LineGrid>
             </RightPanel>
-        </AdminLayout>
+        </LtRtLayout>
         </>
     )
 }

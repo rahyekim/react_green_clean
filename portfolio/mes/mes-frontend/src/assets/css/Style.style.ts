@@ -60,13 +60,26 @@ margin-bottom: 1.5rem;
 line-height: 1.5;
 `;
 
+export const FormWrapper = styled.div`
+background-color: #ffffff;
+border: 1px solid #e2e8f0;       
+border-radius: 0.75rem;          //12px
+padding: 30px 20px;   
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); 
+
+display: flex;
+flex-direction: column;
+align-items: center;
+`;
+
 export const Form= styled.form`
 display: flex;
 flex-direction: column;
-gap: 1rem;
+gap: 1.2rem;
 width: 100%;
 
 max-width: 500px;
+
 `;
 export const RowGroup = styled.div`
 display: flex;
@@ -339,19 +352,10 @@ text-align: center;
 
 `;
 
-export const FormWrapper = styled.div`
-background-color: #fff;
-display: flex;
-flex-direction: column;
-align-items: center;
-border: 1px solid rgba(0, 0, 0, 0.06);
-border-radius: 14px;
-padding: 28px;
-box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-`;
+
 
 // mypage 레이아웃
-export const AdminLayout = styled.div`
+export const LtRtLayout = styled.div`
   // 좌우 패널을 가로로 배치하고 간격을 주는 
   display: flex;
   gap: 24px;
@@ -383,56 +387,6 @@ export const RightPanel = styled.div`
   }
 `;
 
-// sidebar 내부 컴포넌트
-export const AsideContainer = styled.div`
-  // 사이드바 내부 전체를 감싸는 세로 정렬 박스 
-width: 100%;
-height: 100%;
-padding: 24px 0;
-
-display: flex;
-flex-direction: column;
-
-background-color:#fff;
-`;
-
-export const MenuSection = styled.div`
-margin-bottom: 24px;
-`;
-
-export const SectionTitle = styled.h3`
-  // 섹션 제목(카테고리명) 
-color: #94a3b8;
-font-size: 0.75rem;  
-font-weight: 700;
-margin-bottom: 5px;
-padding: 0px 24px;
-letter-spacing: 0.05em;
-`;
-
-export const MenuList = styled.ul`
-  // 기본 리스트 스타일을 제거하는 메뉴 목록 
-  margin: 0;
-  padding: 0;
-  list-style: none;
-`;
-
-export const MenuItem = styled(Link)`
-  // 라우터 링크를 활용한 개별 메뉴 아이템  (호버 효과 포함)
-display: block;
-padding: 10px 24px;
-color: #475569;
-font-size: 0.95rem;
-font-weight: 500;
-text-decoration: none;
-transition: background-color 0.2s ease, color 0.2s ease;
-
-  &:hover{
-    color: #2563eb;
-    background-color: #f1f5f9;
-    border-right: 3px solid #2563eb;
-  }
-`;
 
 //calendar 캘린더달력
 export const CalTopMargin = styled.div`
@@ -576,79 +530,18 @@ ${({ $isToday }) =>
   
 `;
 
-//일정모달 
-export const ModalOverlay= styled.div`
-position: fixed;
-top:0;
-left: 0; 
-right: 0;
-bottom: 0; //inset:0
-width: 100%;
-height: 100%;
-background-color: rgba(0,0,0,.5);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 10;
-`;
-export const ModalContainer= styled.div`
-background-color: #eee;
-max-width: 400px;
-width: 100%;
-padding: 24px;
-border-radius: 20px;
-box-shadow: 0 4px 12px rgba(0,0,0,.2);
-
-`;
-export const ModalHeader= styled.div`
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 1rem;
-`;
-export const ModalTitle= styled.h3`
-margin: 0;
-font-size: 1.2rem;
-font-weight: 700;
-color: #333;
-`;
-export const CloseButton= styled.button`
-transform: rotate(45deg);
-font-size: 2rem;
-color: #666;
-border: none;
-font-weight: 300;
-line-height: 1; //회전 중심을 잡고 여백을 없애기 위해 유지 추천!
-cursor: pointer;
-
-width: 25px;
-height: 25px;
-border-radius: 50%;
-background-color: #ddd;
-display: flex;
-justify-content: center;
-align-items: center;
-
-transition: all 0.2s;
-&:hover{
-  color: #111;
-  background-color: #fff;
-}
-`;
-export const ModalBody= styled.div``;
-
 export const FormGroup= styled.div`
 display: flex;
 flex-direction: column;
 gap: 10px;
 margin-bottom: 1.3rem;
 `;
-export const Select= styled.select``;
 export const TextArea= styled.textarea`
 resize: none;
 border: none;
 outline: none;
-border-radius: 16px;
+font-family: inherit;
+border-radius: 6px;
 height: 80px;
 padding: 15px;
   border: 1px solid transparent;
@@ -663,10 +556,16 @@ export const ButtonGroup= styled.div`
 display: flex;
 justify-content: flex-end;
 gap: 8px;
+margin-top: 10px;
+`;
+
+export const SubmitBtnWrapper= styled.div`
+width: 100%;
+margin-top: 20px;
 `;
 
 export const CustomButton= styled.button<{$primary?:boolean}>`
-background-color: ${props=>props.$primary ? '#4e73df': '#858796'}  ; //
+background-color: ${props=>props.$primary ? '#3b5998': '#858796'}  ; //
 color: white;
 border: none; 
 border-radius: 20px;
@@ -678,7 +577,7 @@ white-space: nowrap;
 
 transition: background-color 0.15s ease-in-out;
 &:hover{
-  background-color:${props=>props.$primary ? '#2e59d9': '#717384'} 
+  background-color:${props=>props.$primary ? '#536692': '#717384'} 
 }
 `;
 
@@ -744,7 +643,7 @@ padding: 4px 12px;
 cursor: pointer;
 transition: border-color 0.2s;
 &:hover{
-  border-color: #777;
+  border-color: #536692;
 }
 `;
 export const ScheduleDot= styled.div`
@@ -754,73 +653,6 @@ background-color: pink;
 border-radius: 20px;
 `;
 
-//
-// 🌟💙🌟커스텀 셀렉트 박스 컨테이너🌟💙🌟
-export const CustomSelectContainer = styled.div`
-  /* 💡 여기에 필요한 위치(position)와 너비, z-index를 채워보세요! */
-  position: relative;
-  width: 100%;
-  z-index: 999;
-`;
-
-export const SelectTrigger = styled.div`
-  padding: 10px 20px;
-  background-color: #fff;
-  border-radius: 20px;
-  border: 1px solid #d1d3e2;
-  font-size: 0.8rem;
-  color: #333;
-  cursor: pointer;
-
-  display: flex;
-  justify-content: space-between;
-  &:hover{
-      border-color: #bac8f3;
-
-  }
-`;
-
-// 💙드롭다운 리스트 영역💙
-export const SelectList = styled.ul`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-
-  padding: 0; //💙
-  margin: -1px 0 0 0;
-
-  border-radius: 16px;
-  background-color: #fff;
-  border: 1px solid #e2e8f0;
-  list-style: none;
-  box-shadow: 0 4px 6px rgba(0,0,0,.1);
-  z-index: 999;
-  overflow: hidden;
-  cursor: pointer;
-`;
-
-interface SelectItemProps {
-    $isSelected?: boolean;
-}
-
-// 드롭다운 개별 항목
-export const SelectItem = styled.li<SelectItemProps>`
-  /* 💡 기본 패딩, 폰트 사이즈, cursor 채우기 */
-  padding: 10px 20px;
-  font-size: 0.85rem;
-  color: #475569;
-  
-  ${({$isSelected})=> $isSelected && `
-    color: #4e73df;
-    background-color: #f8f9fc;
-    font-weight: bold;
-  ` } 
-
-  &:hover{
-    background-color: #f1f5f9;
-  }
-`;
 
 export const CircleButton = styled.div`
 width: 23px;

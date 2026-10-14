@@ -1,6 +1,6 @@
 'use client'
 
-import * as S from '@/assets/css/Style.style'
+import * as S from '@/assets/css/Sidebar.style'
 import { NAV_MENUS } from '@/constants/menu'
 import { SYSTEM_MENUS } from '@/constants/menu'
 

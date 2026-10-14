@@ -110,7 +110,6 @@ justify-content: center;
 align-items: center;
 padding: 1rem 0;
 
-
 `;
 
 export const ToggleBtn = styled.button`

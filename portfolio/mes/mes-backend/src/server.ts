@@ -120,7 +120,7 @@ const verifyToken = (req:any, res:any, next:any) => {
       */
       next();
     }catch(err){
-      return res.status(403).json({success:false, 
+      return res.status(401).json({success:false, 
       message:'유효하지 않거나 만료된 토큰입니다'   
       })
     }
@@ -214,10 +214,8 @@ app.post('/api/process/lines', verifyToken, async (req: any, res: any) => {
     });
   }
 });
-console.log('🔥 공정 라우트 파일 로드됨');
 
 app.patch('/api/process/lines/:id/status', async (req:any, res:any) => {
- console.log('🔥 PATCH 요청 도착:', req.originalUrl);
   
     try {
         const { id } = req.params;
@@ -314,13 +312,35 @@ app.get('/api/equipment/status', verifyToken, async (req: any, res: any) => {
   }
 });
 
-
 app.post('/api/equipment/status', verifyToken, async (req: any, res: any) => {
+  console.log("🔥 설비 등록 API 진입 성공! 받은 데이터:", req.body);
   try {
-    const { equipmentName, cleanroomZone, temperature, humidity, status } = req.body;
+    const { equipmentName, cleanroomZone, temperature, humidity } = req.body;
+    
+    //백엔드에서 온/습도 기준으로 판정 
+    let status = 'NORMAL';
+    
+    // 예시 기준: 온도가 15도 미만이거나 30도를 넘거나, 습도가 60%를 넘으면 WARNING
+    const temp = parseFloat(temperature);
+    const humi = parseFloat(humidity);
+
+    if ((temp < 18 || temp > 26) || (humi < 30 || humi > 60)) {
+      status = 'WARNING';
+    }
+    // 더 심각한 조건이라면 DANGER 등급 부여 가능
+    if (temp < 10 || temp > 35) {
+      status = 'DANGER';
+    }
+
+    console.log("🔥 최종 판정된 상태:", status);
     const equipment = await Equipment.create({
-     equipmentName, cleanroomZone, temperature, humidity, status
+      equipmentName, 
+      cleanroomZone, 
+      temperature: temp, 
+      humidity: humi, 
+      status // 👈 서버가 판정한 상태로 저장
     });
+
     return res.status(201).json({
       success: true, equipment
     });

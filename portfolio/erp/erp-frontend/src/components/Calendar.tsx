@@ -44,6 +44,10 @@ export default function Calendar(
     //해당 월의 마지막 날짜(총 일수) 
     const daysInMonth= targetYearMonth.daysInMonth;
 
+    
+    const [currentYear, setCurrentYear] = useState(year);
+    const [currentMonth, setCurrentMonth] = useState(month);
+
     const [holidays,setHolidays]=useState<Holiday[]>([]);
     
     //🔹모달에 관련된 추가 

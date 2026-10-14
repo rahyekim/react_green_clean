@@ -7,7 +7,7 @@ import * as S from '@/assets/css/Style.style'
 export default function Dashboard(){
 
     return(
-        <S.AdminLayout>
+        <S.LtRtLayout>
             <S.LeftPanel>
                 <SmallCalendar/>
             </S.LeftPanel>
@@ -15,6 +15,6 @@ export default function Dashboard(){
             <S.RightPanel>
                 <Calendar/>
             </S.RightPanel>
-        </S.AdminLayout>
+        </S.LtRtLayout>
     )
 }

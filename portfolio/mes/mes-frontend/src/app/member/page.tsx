@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import * as S from "@/assets/css/Style.style";
 import { useAlertStore } from "@/store/useAlertStore";
-import { PageTitle, Divider , DividerText} from '@/assets/css/Common.style'
+import { Divider , DividerText , ModalBg, ModalContent, RightBtn} from '@/assets/css/Common.style'
 import Button from '@/ui/Button'
 import Input from '@/ui/Input'
+import { createMember } from "@/api/http";
 
 const handleInstargramLogin = () => {
     // 인스타그램 로그인 로직
@@ -42,6 +42,9 @@ export default function Member() {
 
     const {showAlert} = useAlertStore();
     const router = useRouter();
+    
+    const postcodeRef = useRef<HTMLDivElement>(null);
+    const [isPostcodeOpen, setIsPostcodeOpen] =useState(false);
 
     const [formData, setFormData] = useState<FormData>({
         firstName: "",
@@ -57,7 +60,24 @@ export default function Member() {
         gender: "",
     });
 
-    // 1. 입력값 변경 핸들러 완성
+    useEffect(()=>{
+        if(isPostcodeOpen && window.daum && window.daum.Postcode && postcodeRef.current){
+            new window.daum.Postcode({
+                oncomplete: function (data: any) {
+                    // 도로명 주소 또는 지번 주소 선택 시 address 상태 업데이트
+                    const fullAddress = data.roadAddress || data.jibunAddress;
+                    setFormData(prev => ({
+                        ...prev,
+                        address:fullAddress,
+                    }));   
+                    setIsPostcodeOpen(false);
+                },
+                width: '100%',   // ⭐ 
+                height: '100%',   
+            }).embed(postcodeRef.current);   
+        }
+    }, [isPostcodeOpen])
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -66,21 +86,11 @@ export default function Member() {
         }));
     };
 
-    // 2. 다음 우편번호 검색 API 핸들러 완성
+    // 다음 우편번호 검색 API 핸들러
     const handleAddressSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (window.daum && window.daum.Postcode) {
-            new window.daum.Postcode({
-                oncomplete: function (data: any) {
-                 // 도로명 주소 또는 지번 주소 선택 시 address 상태 업데이트
-                    const fullAddress = data.roadAddress || data.jibunAddress;
-                    setFormData(prev => ({
-                        ...prev,
-                        address:fullAddress,
-                        }));   
-                },    
-            }).open();   
-
+            setIsPostcodeOpen(true);
         }else{
             showAlert("주소 검색 스크립트가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요."); 
         }
@@ -96,12 +106,9 @@ export default function Member() {
             return;
         }
 
-        //node로 데이터 전송
         try {
-            // Spring Boot 서버로 POST 요청 (CORS 설정 및 포트에 맞게 URL 수정 필요)
-            const res = await axios.post("http://localhost:4000/api/auth/register", formData);
-            
-            if (res.data.success) {
+            const data = await createMember(formData);
+            if (data.success) {
                 showAlert("회원가입이 완료되었습니다!",()=>{
                     router.push("/"); // 로그인 페이지로 이동
                 });
@@ -114,6 +121,7 @@ export default function Member() {
     };
 
     return (
+        <>
         <S.Container>
             {/* Next.js Script 컴포넌트를 사용한 비동기 로드 */}
             <Script
@@ -123,7 +131,7 @@ export default function Member() {
             <S.Card>
                 <S.ImgColumn />
                 <S.FormColumn>
-                    <PageTitle>회원가입</PageTitle>
+                    <S.Title>회원가입</S.Title>
                     <S.Form onSubmit={handleSubmit}>
                         <S.RowGroup>
                             <Input
@@ -282,9 +290,23 @@ export default function Member() {
                         <span>|</span>
                         <S.StyledLink href='/'>로그인</S.StyledLink>
                     </S.LinkWrapper>
-                    
                 </S.FormColumn>
             </S.Card>
         </S.Container>
-    );
+
+        {isPostcodeOpen && (
+            <ModalBg onClick={() => setIsPostcodeOpen(false)}>
+                <ModalContent onClick={e => e.stopPropagation()}>
+                    <RightBtn>
+                        <button onClick={() => setIsPostcodeOpen(false)}>
+                            X
+                        </button>
+                    </RightBtn>
+                    <div ref={postcodeRef} style={{ flex: 1, height: '500px'}}/>
+                </ModalContent>
+                    
+            </ModalBg>
+        )}
+        </>
+    )
 }

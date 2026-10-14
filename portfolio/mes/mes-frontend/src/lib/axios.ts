@@ -39,10 +39,12 @@ api.interceptors.response.use(
         //401 (인증 실패/세션 만료) 또는 403 (권한 없음)
         if(error.response){  
             const status = error.response.status;
+            const serverMessage = error.response.data?.message;
+
             if(status ===401 || status ===403){
-                const message = status===401
+                const message = serverMessage || (status===401
                 ? '로그인 세션이 만료되었습니다. 다시 로그인해주세요.'
-                : '접근 권한이 없습니다.';
+                : '접근 권한이 없습니다.');
                 useAlertStore.getState().showAlert(message);
                 // 🌟 훅 대신 getState()를 사용해서 커스텀 알림 호출!
             }
@@ -52,7 +54,10 @@ api.interceptors.response.use(
                 localStorage.removeItem('username');
                 delete axios.defaults.headers.common['Authorization'];
                 // 로그인 페이지로 강제 이동
-                window.location.href = '/login';
+                window.location.href = '/';
+            }
+            if(status === 403){
+                window.location.href = '/';
             }
         }
         return Promise.reject(error);

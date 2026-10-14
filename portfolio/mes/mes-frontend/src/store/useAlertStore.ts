@@ -4,7 +4,8 @@ interface AlertState {
     isOpen:boolean;
     message: string;
     onConfirm?: ()=>void;
-    showAlert: (message:string, onConfirm?:()=>void)=>void;
+    onClose?:()=>void;
+    showAlert: (message:string, onConfirm?:()=>void, onClose?:()=>void)=>void;
     hideAlert: ()=>void;
 }
 
@@ -13,15 +14,19 @@ export const useAlertStore = create<AlertState>(set=>({
     isOpen: false,
     message:'',
     onConfirm:undefined,
-
-    showAlert: (message, onConfirm)=> set({ //💡 상태를 바꿀 때 무조건 set
+    onClose: undefined,
+    
+    //💡 상태를 바꿀 때 무조건 set
+    showAlert: (message, onConfirm, onClose)=> set({ 
         isOpen:true,
         message,
-        onConfirm
+        onConfirm,
+        onClose,
     }),
     hideAlert: ()=>set({
         isOpen:false,
         message:'',
-        onConfirm: undefined
+        onConfirm: undefined,
+        onClose:undefined
     }),
 }))

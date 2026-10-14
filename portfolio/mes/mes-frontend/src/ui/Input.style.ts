@@ -9,7 +9,7 @@ width: ${({$fullWidth})=> $fullWidth ? '100%': 'auto'};
 
 export const Label = styled.div`
 font-size: 13px;
-font-weight: 400;
+font-weight: 500;
 color: ${p=> p.theme.colors.label};
 `;
 
@@ -33,14 +33,13 @@ box-sizing: border-box;
     color: #94a3b8;
   }
 
-  /* 호버 상태 */
+  /* 호버 상태
   &:hover:not(:disabled) {
     border-color: #94a3b8;
-  }
+  } */
 
   &:focus:not(:disabled) {
     border-color: #3b5998;
-    box-shadow: inset 0 0 1px rgba(59, 89, 152, 0.08), 0 0 0 1px #3b5998;
   }
 
   /* 에러가 있을 때 테두리와 포커스 색상 변경 */
