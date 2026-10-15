@@ -16,10 +16,15 @@ http://127.0.0.1:8000/docs    =>  Swagger API
 ✨pydantic 프론트에서 넘어온 데이터(메세지)의 형식이 맞는지 검사
 pydantic 라이브러리에서 BaseModel 클래스 가져옴...
 '''
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 app = FastAPI()  #FastAPI 앱(서버) 인스턴스 생성 => 모든설정과 API는 이 app에 등록
 
 #app에 cors미들웨어를 추가
@@ -56,7 +61,7 @@ async def chat_endpoint(request: ChatRequest):
     #open ai 를 여기에...
 
     temp_reply = f"사용자님이 `{user_message}`라고 말씀 하셨군요! 파이썬 백엔드가 메세지를 잘 받앗습니다.."
-
+    
     #ChatResponse 객체를 생성해서 전환
     return ChatResponse(reply=temp_reply)
 

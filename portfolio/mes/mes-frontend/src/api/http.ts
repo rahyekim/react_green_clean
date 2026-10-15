@@ -1,5 +1,7 @@
 import { api } from "@/lib/axios";
 
+//auth 쿠키일때 : 서버액션 쓰려면 쿠키직접토스해줘야함 (클라이언트 브라우저에선 알아서 자동으로 넣어줌)
+//options?:{headers?: Record<string,string>}
 //회원가입
 export const createMember = async(formData:any)=>{
     const response = await api.post('/api/auth/register', formData)
@@ -25,6 +27,13 @@ export const createProcessLine = async (formData: any) => {
     const response = await api.post('/api/process/lines', formData);
     return response.data;
 };
+//쿠키일때..
+
+// export const createProcessLine = async (formData: any, options?: {headers?: Record<string, string> }) => {
+    
+//     const response = await api.post('/api/process/lines', formData);
+//     return response.data;
+// };
 
 // 공정라인 상태변경
 export const updateLineStatus = async (id: number, status: string) => {

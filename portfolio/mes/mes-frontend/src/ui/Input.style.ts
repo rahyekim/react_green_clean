@@ -49,8 +49,8 @@ font-family: inherit; //상속받아야함
     css`
       border: 1.5px solid #ef4444 !important;
       &:focus {
-      box-shadow: none !important; 
-      border-color: #dc2626 !important;
+      /* box-shadow: none !important;  */
+      /* border-color: #dc2626 !important; */
       }
     `}
 
@@ -76,5 +76,5 @@ font-family: inherit; //상속받아야함
 export const HelperText = styled.span<{$hasError: boolean}>`
   font-size: 12px;
   margin-top: 2px;
-  color: ${({ $hasError }) => ( $hasError ? '#dc2626' : '#64748b')}
+  color: ${({ $hasError }) => ( $hasError ? '#ef4444' : '#64748b')}
 `;

@@ -44,12 +44,12 @@ secondary: css`
     }
   `,
   danger: css`
-    background-color: ${p=>p.theme.colors.alert};
+    background-color: #ef4444;
     color: #ffffff;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 
     &:hover:not(:disabled) {
-      background-color: ${p=>p.theme.colors.alertHover};
+      background-color: #dc2626;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 

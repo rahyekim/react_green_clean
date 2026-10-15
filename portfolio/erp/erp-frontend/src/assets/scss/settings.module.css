@@ -1,0 +1,17 @@
+@import '@/assets/scss/variables';
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+
+    .header{
+        @include flex-between;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid $border-color;
+        h2{
+            color: $text-main;
+        }
+    }
+}

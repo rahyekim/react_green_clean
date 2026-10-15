@@ -3,7 +3,7 @@
 Next.js 13버전 이상에서 이파일이 클라이언트(브라우저)측에서 실행되는 컴포넌트임을 명시
 React의 useState, useEffect같은 훅을 사용하려면 필요....
  */
-
+import ReactMarkdown from "react-markdown";
 //리액트 라이브러리에서 기본기능과 상태관리(useState), 참조(useRef), 생명주기(useEffect) 훅 가져오기
 import React, {useState, useEffect, useRef } from "react"
 
@@ -193,7 +193,7 @@ export default function Home(){
              >
               {/* whiteSpace: 엔터와 띄어쓰기를 그대로 살리면서 예쁘게 줄바꿈 */}
               <p className="small mb-0" style={{lineHeight:"1.5", whiteSpace: "pre-wrap"}}>
-                {msg.text}
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
               </p>
             </div>
             

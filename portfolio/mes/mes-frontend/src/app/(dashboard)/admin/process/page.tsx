@@ -13,7 +13,8 @@ import {
 } from '@/assets/css/Style.style'
 
 import { LineGrid,LineCard,StatusBadge, CardHeader, CardBody, ButtonGroup } from '@/assets/css/admin/admin.style'
-import { createProcessLine, fetchProcessLines, updateLineStatus } from "@/api/http";
+import { fetchProcessLines, updateLineStatus } from "@/api/http";
+import { createProcessLineAction } from "@/lib/actions";
 
 
 interface ProcessLine{
@@ -24,20 +25,13 @@ interface ProcessLine{
     currentProduct:string;
     operator:string;
 }
-const INITIAL_STATE={
-    lineName: "",
-    processType: "",
-    status:"RUNNING",
-    currentProduct:"",
-    operator:"",
-}
+
 export default function Process(){
 
     const {showAlert} =useAlertStore();
 
     const [lines, setLines]=useState<ProcessLine[]>([]);
-
-    const [form, setForm]= useState(INITIAL_STATE);
+    const [errors, setErrors]=useState<Record<string,string>>({});
     
     const loadLines = async ()=>{
         try{
@@ -55,26 +49,28 @@ export default function Process(){
         loadLines();
     }, []);
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-        const { name ,value } = e.target;
-        setForm(prev=> ({
-            ...prev,
-            [name]: value,
-        }))
-    }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
 
+        setErrors({});
+        
+        const formElement = e.currentTarget; //부모: form엘리먼트그자체!
+        const formData = new FormData(formElement);
         try{
-            await createProcessLine(form);
-            showAlert('공정라인이 등록되었습니다');
-            setForm(INITIAL_STATE); //초기화
-            loadLines();
+            const result = await  createProcessLineAction(formData);
+            if(result.success){
+                showAlert('공정라인이 등록되었습니다');
+                formElement.reset();  //초기화
+                loadLines();          //새로고침
+            }else{
+                setErrors(result.errors || {});
+            }
 
         }catch(err){
             showAlert('잠시후 다시시도해주세요')
         }
     }
+
 
     return(
         <LtRtLayout>
@@ -82,34 +78,33 @@ export default function Process(){
             <LeftPanel>
                 <FormWrapper>
                 <Title>라인 공정 등록</Title>
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} 
+                onChange={()=>{
+                    if(Object.keys(errors).length>0) setErrors({});
+                }}>
                     <Input
                     type="text"
                     name="lineName"
                     placeholder="라인명 (예: AP SMT Line 1)"
-                    value={form.lineName}
-                    onChange={handleChange}
+                    error={errors?.lineName}
                     />
                     <Input
                     type="text"
                     name="processType"
                     placeholder="공정 타입 (예: SMT, CNC)"
-                    value={form.processType}
-                    onChange={handleChange}
+                    error={errors?.processType}
                     />
                     <Input
                     type="text"
                     name="currentProduct"
                     placeholder="생산 모델 (예: iPhone Duo)"
-                    value={form.currentProduct}
-                    onChange={handleChange}
+                    error={errors?.currentProduct}
                     />
                     <Input
                     type="text"
                     name="operator"
                     placeholder="담당 오퍼레이터"
-                    value={form.operator}
-                    onChange={handleChange}
+                    error={errors?.operator}
                     />
 
                     <SubmitBtnWrapper>

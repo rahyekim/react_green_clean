@@ -1,5 +1,6 @@
 
 import type { Metadata } from "next";
+import '@/app/globals.css';
 import StyledComponentsRegistry from "@/app/lib/registry";
 import ThemeProviderWrapper from "@/components/ThemeProviderWrapper";
 import ConditionalLayout from "@/components/ConditionalLayout";
@@ -23,15 +24,15 @@ export default function RootLayout({ children }: Readonly<{children: React.React
           rel="stylesheet"
         />
       </head>
-      <body>
-        <StyledComponentsRegistry>
-          <ThemeProviderWrapper>
+      <body className="h-full m-0 bg-gray-50 text-gray-900 antialiased">
+        {/* <StyledComponentsRegistry>
+          <ThemeProviderWrapper> */}
             <ConditionalLayout>
                 {children}
                 <GlobalAlert />
             </ConditionalLayout>
-          </ThemeProviderWrapper>
-        </StyledComponentsRegistry>
+          {/* </ThemeProviderWrapper>
+        </StyledComponentsRegistry> */}
       </body>
     </html>
   );

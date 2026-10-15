@@ -18,6 +18,13 @@ export const IsEmpty = (value:string | null | undefined): boolean =>{
     return value.trim() === '';
 }
 
+export const isNumberEmpty = (value: unknown): boolean =>{
+    if(value == null || value === undefined || typeof value!== 'number'){
+        return true;
+    }
+    return Number.isNaN(value); //NaN 인경우 체크 ( Number. 자동형변환없이 엄격)
+}
+
 //휴대폰번호 형식 검증
 export const isValidPhone = (phone: string): boolean => {
     //하이픈- 전부제거
