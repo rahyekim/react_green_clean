@@ -346,7 +346,7 @@ cursor: pointer;
 
 `;
 //mypage
-export const CalendarLayout= styled.div`
+export const LtRtLayout= styled.div`
 display:flex;
 gap: 24px;
 

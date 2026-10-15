@@ -16,6 +16,7 @@ color: ${p=> p.theme.colors.label};
 
 export const StyledInput = styled.input<{$hasError:boolean}>`
 box-sizing: border-box;
+font-family: inherit; //상속받아야함
   width: 100%;
   height: 42px;
   padding: 0 14px;

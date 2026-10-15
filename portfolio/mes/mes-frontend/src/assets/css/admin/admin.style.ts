@@ -4,25 +4,15 @@ import styled,{css} from "styled-components";
 const getStatusTheme = (status?: string) => {
     switch (status?.toUpperCase()) {
         case 'PASS':
-        case 'RUNNING':
-            return {
-                border: '#22c55e', 
-            };
+        case 'RUNNING':return { border: '#22c55e'};
+
         case 'FAIL':
         case 'DANGER':
-        case 'STOPPED':
-            return {
-                border: '#ef4444', 
-            };
+        case 'STOPPED': return { border: '#ef4444', };
+
         case 'WARNING':
-        case 'MAINTENANCE':
-            return {
-                border: '#fbbf24',
-            };
-        default:
-            return {
-               border: '#cbd5e1',
-            };
+        case 'MAINTENANCE': return { border: '#fbbf24'};
+        default: return { border: '#cbd5e1',};
     }
 };
 
@@ -72,7 +62,8 @@ const getStatusColor = (status?: string) => {
         case 'FAIL':
         case 'DANGER':
         case 'STOPPED': 
-            return { bg: '#fee2e2', text: '#991b1b' }; 
+            // return { bg: '#fee2e2', text: '#991b1b' }; 
+            return { bg: ' #fee2e2', text: '#ef4444' }; 
         case 'MAINTENANCE': 
             return { bg: '#fef3c7', text: '#d97706' }; 
         case 'WARNING': 

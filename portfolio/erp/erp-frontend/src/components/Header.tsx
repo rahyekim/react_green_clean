@@ -10,10 +10,10 @@ import Button from '@/ui/Button';
 import { useAlertStore } from '@/store/useAlertStore';
 
 const NAV_MENUS = [
-  { href: '/production', label: '생산관리' },
-  { href: '/material', label: '자재관리' },
-  { href: '/quality', label: '품질관리' },
-  { href: '/equipment', label: '설비관리' },
+  { href: '/dashboard/production', label: '생산관리' },
+  { href: '/dashboard/inventory', label: '자재관리' },
+  { href: '/dashboard/hr', label: '인사관리' },
+  { href: '/dashboard/settings', label: '기준정보' },
 ]
 
 export default function Header() {
@@ -49,7 +49,7 @@ export default function Header() {
 
   return (
     <S.HeaderContainer>
-      <S.Logo>Smart MES</S.Logo>
+      <S.Logo>Smart ERP</S.Logo>
 
       {/* 데스크탑 네비게이션 */}
       <S.DesktopNav>

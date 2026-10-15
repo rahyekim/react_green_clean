@@ -27,7 +27,6 @@ export default function NotFound(){
                 <Button variant="sub" 
                 as={Link} href='/'
                 >메인화면으로 이동</Button>
-               
             </ButtonGroup>
         </Wrapper>
     )

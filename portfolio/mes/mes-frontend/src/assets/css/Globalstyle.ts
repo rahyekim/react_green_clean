@@ -78,7 +78,6 @@ body{
     font-family: 'Escoredream';
     font-weight: 400;
     font-size: 14px;
-
 }
 
 a{
@@ -90,5 +89,10 @@ ol, ul , li {
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+input, button, textarea, select{
+    font-family: inherit;
+    font-size: inherit;
 }
 `;

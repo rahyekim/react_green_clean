@@ -7,14 +7,14 @@ import * as S from '@/assets/css/Style.style'
 
 export default function Dashboard(){
     return(
-        <S.CalendarLayout>
+        <S.LtRtLayout>
             <S.LeftPanel>
                 <SmallCalendar/>
             </S.LeftPanel>
             <S.RightPanel>
                 <Calendar/>
             </S.RightPanel>
-        </S.CalendarLayout>
+        </S.LtRtLayout>
     )
 }
 
