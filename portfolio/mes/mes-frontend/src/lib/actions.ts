@@ -25,9 +25,7 @@ export const createProcessLineAction= async(formData: FormData)=>{
     }
     try{
         await createProcessLine(formData);
-        //새로고침(pth 재평가)
-        revalidatePath('/admin/process')
-        
+       
         return {success:true};
         
     }catch(error){
