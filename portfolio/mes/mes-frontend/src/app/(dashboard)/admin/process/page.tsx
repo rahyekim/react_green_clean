@@ -82,7 +82,7 @@ export default function Process(){
         }
     }
 
-    const handleStatusChage = async (id: number, status: ProcessLine['status'])=>{
+    const handleStatusChange = async (id: number, status: ProcessLine['status'])=>{
         try{
             await updateLineStatus(id, status);
             loadLines();
@@ -118,19 +118,19 @@ export default function Process(){
                         <ButtonGroup>
                         {line.status !== 'STOPPED' && (
                             <Button size="sm" variant="ghost"
-                            onClick={()=>handleStatusChage(line.id,'STOPPED')}
+                            onClick={()=>handleStatusChange(line.id,'STOPPED')}
                             > 정지
                             </Button>
                         )}
                         {line.status !== 'RUNNING' && (
                             <Button size="sm"  variant="secondary"
-                            onClick={()=>handleStatusChage(line.id,'RUNNING')}
+                            onClick={()=>handleStatusChange(line.id,'RUNNING')}
                             > 가동
                             </Button>
                         )}
                             {line.status !== 'MAINTENANCE' && (
                             <Button size="sm"  variant="outline"
-                            onClick={()=>handleStatusChage(line.id,'MAINTENANCE')}
+                            onClick={()=>handleStatusChange(line.id,'MAINTENANCE')}
                             > 점검
                             </Button>
                         )}
