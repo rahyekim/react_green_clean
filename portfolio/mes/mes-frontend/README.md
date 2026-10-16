@@ -34,3 +34,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+# 🏥 성형외과 예약 시스템 포트폴리오
+## 🏛️ 시스템 아키텍처
+![아키텍처 그림](./public/architecture.png)
+
+### 1. 프론트엔드 구조
+
+## 🛠️ 사용 기술 스택
+- **프론트엔드**: React, TypeScript, Tailwind
+
+```markdown
+const name = "홍길동";

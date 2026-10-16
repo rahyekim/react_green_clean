@@ -109,12 +109,13 @@ gap: 0.8rem;
 
 border-left: 5px solid ${({ $status }) => getStatusTheme($status).border}; /* 왼쪽 포인트 라인도 통일감 있게! */
 
-
-   
 `;
 
 
-// export const = styled.div``;
+export const EmptyText= styled.div`
+text-align: center;
+color: ${p=>p.theme.colors.text};
+`;
 // export const = styled.div``;
 // export const = styled.div``;
 // export const = styled.div``;

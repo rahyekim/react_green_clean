@@ -19,3 +19,6 @@ npm install -D nodemon ts-node
     "dev": "nodemon --watch src/**/*.ts --exec ts-node src/server.ts"
 
 npm install -D tsx typescript 
+
+
+
