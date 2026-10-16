@@ -34,8 +34,8 @@ export default function Reservation (){
         }
     }
 
-    const handleSelect = ()=>{
-
+    const handleSelect=async(id:number)=>{
+        const res = await axios.get(`/api/customers/${id}`)
     }
     
     return(
@@ -54,7 +54,9 @@ export default function Reservation (){
                     setIsDropDownOpen(true);
                 }}
                 onKeyDown={e=> { 
-                    if(e.key === 'Enter') 
+                    if(e.key === 'Enter') {
+                        handleSearch()
+                    }
                 }}
                 />
                 {/* 검색아이콘 버튼 */}
