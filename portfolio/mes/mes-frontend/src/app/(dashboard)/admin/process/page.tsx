@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import Button from "@/ui/Button";
 import Input from "@/ui/Input";
@@ -37,7 +37,7 @@ export default function Process(){
     const [lines, setLines]=useState<ProcessLine[]>([]);
     const [errors, setErrors]=useState<Record<string,string>>({});
     
-    const loadLines = async ()=>{
+    const loadLines = useCallback(async ()=>{
         try{
             const data = await fetchProcessLines();
             if(data.success){
@@ -50,10 +50,12 @@ export default function Process(){
         }finally{
             setIsLoading(false);
         }
-    }
+
+    },[showAlert]);
+
     useEffect(()=>{
         loadLines();
-    }, []);
+    }, [loadLines]);
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
@@ -72,10 +74,21 @@ export default function Process(){
             }else{
                 setErrors(result.errors || {});
             }
-        }catch(err){
+        }catch(error:any){
             showAlert('잠시후 다시시도해주세요')
+            console.error(error)
         }finally{
             setIsSubmitting(false);
+        }
+    }
+
+    const handleStatusChage = async (id: number, status: ProcessLine['status'])=>{
+        try{
+            await updateLineStatus(id, status);
+            loadLines();
+        }catch(err:unknown){
+            showAlert('공정라인 상태변경에 실패했습니다.');
+            console.error(err);
         }
     }
 
@@ -105,28 +118,19 @@ export default function Process(){
                         <ButtonGroup>
                         {line.status !== 'STOPPED' && (
                             <Button size="sm" variant="ghost"
-                            onClick={async()=>{
-                                await updateLineStatus(line.id, 'STOPPED');
-                                loadLines();
-                            }}
+                            onClick={()=>handleStatusChage(line.id,'STOPPED')}
                             > 정지
                             </Button>
                         )}
                         {line.status !== 'RUNNING' && (
                             <Button size="sm"  variant="secondary"
-                            onClick={async()=>{
-                                await updateLineStatus(line.id, 'RUNNING');
-                                loadLines();
-                            }}
+                            onClick={()=>handleStatusChage(line.id,'RUNNING')}
                             > 가동
                             </Button>
                         )}
                             {line.status !== 'MAINTENANCE' && (
                             <Button size="sm"  variant="outline"
-                            onClick={async()=>{
-                                await updateLineStatus(line.id, 'MAINTENANCE');
-                                loadLines();
-                            }}
+                            onClick={()=>handleStatusChage(line.id,'MAINTENANCE')}
                             > 점검
                             </Button>
                         )}
@@ -182,7 +186,7 @@ export default function Process(){
 
         {/* 우측 패널: 등록된 공정 라인들의 실시간 가동 상태를 보여주는 모니터링 영역 */}
             <RightPanel>
-                <Title> iphone Duo 라인 가동 현황</Title>
+                <Title> Iphone Duo 라인 가동 현황</Title>
                 {content}
             </RightPanel>
         </LtRtLayout>
