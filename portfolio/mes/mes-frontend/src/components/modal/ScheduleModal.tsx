@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Temporal } from '@js-temporal/polyfill'
 import Modal from './Modal'
 import * as S from '@/assets/css/Style.style'
-import { CustomSelect } from '@/ui/CustomSelect'
+import { Select } from '@/ui/Select/Select'
 import { useAlertStore } from '@/store/useAlertStore'
 
 // 1. 일정(Schedule) 인터페이스 정의
@@ -44,16 +44,13 @@ export default function ScheduleModal({
         const [formStatus, setFormStatus]=useState<'대기' | '진행' |'완료'>('대기');
         const [editingId, setEditingId]=useState<string|null>(null);
 
-        //커스텀셀렉트 
-        const [isSelectOpen, setIsSelectOpen]=useState(false);
-        // 4. 모달이 열리거나 날짜가 바뀔 때 입력창 초기화 (useEffect)
+        // 모달이 열리거나 날짜가 바뀔 때 입력창 초기화 (useEffect)
         useEffect(()=>{
            // isOpen이 true일 때 상태들 초기화하기
            if(isOpen){
                setFormContent('');
                setFormStatus('대기');
                setEditingId(null);
-               setIsSelectOpen(false);
            }
         },[isOpen, selectedDate])
 
@@ -90,7 +87,6 @@ export default function ScheduleModal({
             setFormContent('');
             setEditingId(null);
             setFormStatus('대기');
-            setIsSelectOpen(false);
         };
 
         // 6. 수정 모드=> 폼 채워넣기
@@ -126,11 +122,13 @@ export default function ScheduleModal({
             > 
                 {/* 입력 폼 영역 (Select, TextArea) */}
                 <S.FormGroup>
-                    <CustomSelect
-                    options={SELECT_OPTIONS}
-                    value={formStatus}
-                    onChange={newValue=> setFormStatus(newValue as '대기' | '진행' | '완료')}
-                    />
+                    <Select 
+                    id='status'
+                    options={SELECT_OPTIONS} value={formStatus}
+                    onChange={newValue=> setFormStatus(newValue as '대기' | '진행' | '완료')}>
+                        <Select.Toggle/>
+                        <Select.Menu/>
+                    </Select>
                     <S.TextArea
                     placeholder='일정 내용을 입력하세요'
                     value={formContent}

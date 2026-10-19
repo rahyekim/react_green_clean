@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 // 🌟💙🌟커스텀 셀렉트 박스 컨테이너🌟💙🌟
-export const CustomSelectContainer = styled.div<{$isOpen:boolean}>`
+export const CustomSelectContainer = styled.div<{$isOpen?:boolean}>`
   position: relative;
   width: 100%;
-  z-index: ${props=> props.$isOpen ? 9999999 : 1};
+  z-index: ${props=> props.$isOpen ? 9999: 1 };
 `;
 
 export const SelectTrigger = styled.div`

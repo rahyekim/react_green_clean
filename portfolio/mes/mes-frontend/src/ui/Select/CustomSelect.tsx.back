@@ -25,7 +25,7 @@ export const CustomSelect = ({
     const selectedLabel= options.find(opt=> opt.value === value)?.label || placeholder;
     return(
         <>
-         <CustomSelectContainer $isOpen={isSelectOpen}>
+         <CustomSelectContainer>
             <SelectTrigger onClick={()=>setIsSelectOpen(prev=>!prev)}>
                 {selectedLabel}
                 <span style={{fontSize:'0.7rem', color:'#94a3b8'}}>
