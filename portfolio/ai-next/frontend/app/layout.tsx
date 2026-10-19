@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {Inter} from "next/font/google"
 import './globals.css'
+import Providers from "./providers";
 
 // import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 // import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -36,8 +37,11 @@ export default function RootLayout({
           rel="stylesheet"
         />      
       </head>
-      <body className={`${inter.className} h-full m-0 bg-gray-50 text-gray-900 antialiased`}
-      >{children}</body>
+      <body className={`${inter.className} h-full m-0 bg-gray-50 text-gray-900 antialiased`}>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }
