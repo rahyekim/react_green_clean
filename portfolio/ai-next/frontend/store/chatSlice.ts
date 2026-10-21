@@ -1,72 +1,102 @@
-//Redux Toolkit 을 사용하여 챗봇의 전역상태(state)와 액션(action)을 정의하는 파일
-
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-
-interface Message{
-    id:number;
-    text:string;
-    sender: "user" | "ai";
+/*
+Redux Toolkit을 사용하여
+챗봇의 전역 상태(state)와 액션(actions)을
+정의하는 파일입니다.
+*/
+import {createSlice, PayloadAction
+    } from "@reduxjs/toolkit"
+//메시지 데이터 타입 정의
+interface Message {
+id:number; text:string;
+sender: "user" | "ai";
+}
+//PlaceInfo 모델과 1:1로 매칭되는 장소 데이터 타입 정의
+export interface PlaceInfo {
+name:string;
+category:string;
+address:string;
+lat:number;
+lng:number;
+is_registered:boolean;
+description:string;
 }
 
-//챗봇이 관리할 전체
-//상태의 형태(interface)정의
 
-interface ChatState {
-    messages: Message[];
-    inputText: string;
-    isLoading:boolean;
-    showMap: boolean;
+
+//챗봇이 관리할 전체
+//상태의 형태(Interface) 정의
+interface ChatState{
+messages:Message[];
+inputText:string;
+isLoading:boolean;
+showMap:boolean;
+places:PlaceInfo[];
+mobileView:"chat" | "map";
+selectedDistrict:string;//선택된 구에 전역상태
 }
 
 //초기 상태값 설정
-const initialState: ChatState ={
-    messages: [
+const initialState: ChatState = {
+    messages:[
         {
-            id: 1,
-            text: "안녕하세요! 노원구 맛집이나 학원을 물어보세요.AI 어시스턴트입니다!",
-            sender: "ai"
-        },
+        id: 1,
+        text: "안녕하세요! 노원구 맛집이나 학원을 물어보세요. AI 어시스턴트입니다!",
+        sender: "ai",
+        }
     ],
     inputText: "",
     isLoading: false,
     showMap: false,
-}
+    places:[],
+    mobileView:"chat",
+    selectedDistrict:"노원구",
+};
 
 export const chatSlice = createSlice({
-    name: "chat",
-    initialState,
-    reducers:{
-        // 입력창 텍스트 변경 액션
-        setInputText:(state, action:PayloadAction<string>)=>{
-            state.inputText = action.payload;
-        },
-        // 로딩 상태 변경 액션
-        setIsLoading:(state, action:PayloadAction<boolean>)=>{
-            state.isLoading = action.payload;
-        },
-        // 지도 표시 여부 변경 액션
-        setShowMap:(state, action:PayloadAction<boolean>)=>{
-            state.showMap = action.payload;
-        },
-        // 새 메시지 추가 액션
-        addMessage:(state, action:PayloadAction<Message>)=>{
-            state.messages.push(action.payload);
-        },
-    }
+name:"chat",
+initialState,
+reducers:{
+// 입력창 텍스트 변경 액션
+setInputText:(state, action:PayloadAction<string>) => {
+state.inputText = action.payload;
+},
+// 로딩 상태 변경 액션
+setIsLoading:(state, action:PayloadAction<boolean>) => {
+state.isLoading = action.payload
+},
+// 지도 표시 여부 변경 액션
+setShowMap:(state, action:PayloadAction<boolean>) => {
+state.showMap = action.payload;
+},
+// 새 메시지 추가 액션
+addMessage:(state, action:PayloadAction<Message>) => {
+state.messages.push(action.payload);
+},
+setPlaces:(state, action:PayloadAction<PlaceInfo[]>) => {
+state.places = action.payload;
+},
+setMobileView:(state, action:PayloadAction<"chat" | "map">) => {
+state.mobileView = action.payload;
+},
+setSelectedDistrict:(state, action:PayloadAction<string>) => {
+state.selectedDistrict=action.payload;
+},
+},
 });
 
-//dispatch할수있도록 액션 내보내기
-export const {setInputText, setIsLoading, setShowMap, addMessage} = chatSlice.actions;
+// 컴포넌트에서 dispatch할 수 있도록 액션 내보내기
+export const {
+    setInputText,
+    setIsLoading,
+    setShowMap,
+    addMessage,
+    setPlaces,
+    setMobileView,
+    setSelectedDistrict
+} =chatSlice.actions;
 
-//스토어 등록을 위한 리듀서 내보내기
+// 스토어 등록을 위한 리듀서 내보내기
 export default chatSlice.reducer;
-
-/*
-리덕스 스토어(Redux Store)
-: 애플리케이션의 전체 상태(state)를 담고 있는 하나의 중앙 저장소(객체)
-리듀서(Reducer)
-:
- */
 
 /*
 리덕스 스토어(Redux Store)

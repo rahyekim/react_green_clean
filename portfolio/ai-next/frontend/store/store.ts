@@ -1,16 +1,14 @@
-
-//스토어 생성해서 앱전체에 상태 공급
+//스토어 생성해서 앱전체 에 상태 공급
 
 import { configureStore } from "@reduxjs/toolkit";
-import chatReducer from './chatSlice'
+import chatReducer from './chatSlice';
 
 export const store = configureStore({
     reducer:{
         chat: chatReducer,
     },
-})
+});
 
-export type RootState= ReturnType<typeof store.getState>;
-export type AppDispatch =typeof store.dispatch;
-
-
+// TypeScript에서 사용할 RootState 및 AppDispatch 타입 정의
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

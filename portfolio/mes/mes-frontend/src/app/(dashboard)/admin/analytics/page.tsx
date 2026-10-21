@@ -14,6 +14,7 @@ import {
 } from '@/assets/css/Style.style'
 import { createRecords, fetchRecords } from "@/api/http";
 import { IsEmpty } from "@/lib/validators";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface AnalyticsRecord {
     id: number;
@@ -39,24 +40,48 @@ const getYieldStatus = (rate:number)=>{
 export default function AnalyticsPage(){
 
     const {showAlert} =useAlertStore();
-    const [records, setRecords] = useState<AnalyticsRecord[]>([]);
+    // const [records, setRecords] = useState<AnalyticsRecord[]>([]);
     const [form ,setForm]=useState(INITIAL_STATE);
 
-    useEffect(()=>{
-        loadRecords();
-    }, [])
+    // useEffect(()=>{
+    //     loadRecords();
+    // }, [])
 
-    const loadRecords = async()=>{
-        try{
-            const data= await fetchRecords();
+    const queryClient = useQueryClient();
+
+    const {data: records=[] } = useQuery<AnalyticsRecord[]>({
+        queryKey: ['analyticsRecords'],
+        queryFn: async()=>{
+            const data = await fetchRecords();
             if(data.success){
-                setRecords(data.records);
+                return data.records;
             }
-        }catch(err){
-            console.error("생산 실적 조회 실패", err);
-            showAlert('잠시후 다시 시도해주세요')
+            throw new Error("데이터 조회 실패");
         }
-    }
+    })
+    
+    const {mutate, isPending} = useMutation({
+        mutationFn: createRecords,
+        onSuccess: ()=>{
+            showAlert('생산 실적이 성공적으로 등록되었습니다.');
+            setForm(INITIAL_STATE);
+            queryClient.invalidateQueries({queryKey: ['analyticsRecords'] })
+        },
+        onError: (err)=>{
+            console.error("생산 실적 등록 실패", err);
+            showAlert('잠시 후 다시 시도해주세요');
+        }
+    })
+    
+     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
+            e.preventDefault();
+
+            if(IsEmpty(form.lineName)){
+                showAlert('라인명을 입력해주세요');
+                return;
+            }
+           mutate(form);
+        }
 
      const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
             const { name ,value } = e.target;
@@ -65,23 +90,7 @@ export default function AnalyticsPage(){
                 [name]: name === 'lineName'? value : Number(value),
             }))
         }
-        const handleSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
-            e.preventDefault();
-
-            if(IsEmpty(form.lineName)){
-                showAlert('라인명을 입력해주세요');
-                return;
-            }
-            try{
-                await createRecords(form);
-                showAlert('생산 실적이 성공적으로 등록되었습니다.');
-                setForm(INITIAL_STATE); //초기화
-                loadRecords();
-    
-            }catch(err){
-                showAlert('잠시후 다시시도해주세요');
-            }
-        }
+       
 
     return(
         <>
