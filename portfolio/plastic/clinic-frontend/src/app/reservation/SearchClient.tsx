@@ -19,48 +19,6 @@ interface TodayPatient{
     memo?: string;
 }
 
-export const DEMO_PATIENTS: TodayPatient[] = [
-  {
-    id: 1,
-    name: '김민수',
-    phone: '010-1234-5678',
-    chartNo: 'P-2026-001',
-    birthDate: '900512',
-    gender: 'M',
-    status: 'WAITING', 
-    lastVisitDate: '2026-05-10',
-  },
-  {
-    id: 2,
-    name: '김민수', // 동명이인 (생년월일로 구분)
-    phone: '010-9876-5432',
-    chartNo: 'P-2026-002',
-    birthDate: '851125',
-    gender: 'M',
-    status: 'TREATING', // 시술 중
-    lastVisitDate: '2026-06-01',
-  },
-  {
-    id: 3,
-    name: '이영희',
-    phone: '010-1111-2222',
-    chartNo: 'P-2026-003',
-    birthDate: '950320',
-    gender: 'F',
-    status: 'COMPLETED', // 시술 완료 (끝난 환자)
-    lastVisitDate: '2026-06-15',
-  },
-  {
-    id: 4,
-    name: '박철수',
-    phone: '010-3333-4444',
-    chartNo: 'P-2026-004',
-    birthDate: '881204',
-    gender: 'M',
-    status: 'RESERVED', // 예약만 됨
-    lastVisitDate: '2025-12-20',
-  },
-];
 
 export default function SearchModalComponent() {
 
