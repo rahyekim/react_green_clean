@@ -1,6 +1,9 @@
 import { useState } from "react"
 import { Navigate } from 'react-router-dom'
 import { Temporal } from "@js-temporal/polyfill";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "@/store/authSlice";
+import { RootState } from "@/store/store";
 
 // type props={
 //     children: React.ReactNode;
@@ -9,16 +12,23 @@ import { Temporal } from "@js-temporal/polyfill";
 
 export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
 
+    const dispatch = useDispatch();
+
+    const isAuthenticated= useSelector((state:RootState)=> state.auth.isAuthenticated);
+    
     //1.브라우저 금고(localStorage)에서 로그인정보(userName)를 꺼냄
     const userName = localStorage.getItem('userName');
     //1.금고에서 만료 시간 꺼내기
     const expiryStr = localStorage.getItem('loginExpiry');
     
-    //아예 로그인한적이 없거나 만료시간이 없는경우
-    if(!userName || !expiryStr){
+    if(!isAuthenticated || !expiryStr){
         alert("관리자 로그인이 필요한 페이지입니다");
         return <Navigate to='/login'replace/>;
     } //🌟replace는 뒤로 가기 했을 때 이상한 페이지로 꼬이는 걸 방지
+    
+
+    // //아예 로그인한적이 없거나 만료시간이 없는경우
+    // if(!userName || !expiryStr){
     
     //🛡️try-catch 필수적인방어막
     try{ 
@@ -33,15 +43,18 @@ export const ProtectedRoute = ({children}:{children:React.ReactNode})=>{
         // A가 시간상 앞이면 -1, 같으면 0, 시간상 더 뒤면(나중) 1을 반환해
         if(Temporal.Instant.compare(now, expiryTime) >= 0){
             alert('세션이 만료되었습니다 안전을 위해 다시 로그인 해주세요 ')
-            localStorage.removeItem('userName');
-            localStorage.removeItem('loginExpiry');
+            // localStorage.removeItem('userName');
+            // localStorage.removeItem('loginExpiry');
+            dispatch(setLogout());
 
             return <Navigate to='/login' replace/>
         }
     }catch(err){
-        localStorage.removeItem('userName');
-        localStorage.removeItem('loginExpiry');
+        // localStorage.removeItem('userName');
+        // localStorage.removeItem('loginExpiry');
+        dispatch(setLogout());
         return <Navigate to='/login' replace/>
+
     }
 
     //유효기간이 안 지났다면 무사히 통과 
