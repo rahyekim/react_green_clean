@@ -63,7 +63,6 @@ export default function News() {
             openPopup('입력 확인', '이름과 이미지를 모두 등록해주세요.');
             return;
         }
-
         const formData = new FormData();
         formData.append('categoryImg', selectedFile);
         formData.append('title', newCategory.title);

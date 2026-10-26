@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import StyledProvider from "./StyledProvider";
+import ReduxProvider from "@/store/ReduxProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -13,9 +14,11 @@ export default function RootLayout({ children }: Readonly<{children: React.React
   return (
     <html lang="ko">
       <body>
+        <ReduxProvider>
         <StyledProvider>
               {children}
         </StyledProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

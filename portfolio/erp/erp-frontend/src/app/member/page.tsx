@@ -9,6 +9,9 @@ import { PageTitle, Divider , DividerText} from '@/assets/css/Common.style'
 import Button from '@/ui/Button'
 import Input from '@/ui/Input'
 
+import { useDispatch } from "react-redux";
+import { setLogin } from "@/store/authSlice";
+
 const handleInstargramLogin = () => {
     // 인스타그램 로그인 로직
 };
@@ -39,6 +42,8 @@ declare global {
 
 export default function Member() {
     const router = useRouter();
+    const dispatch= useDispatch();
+    
     const [formData, setFormData] = useState<FormData>({
         firstName: "",
         lastName: "",
@@ -108,7 +113,15 @@ export default function Member() {
             
             if (response.status === 200 || response.status === 201) {
                 alert("회원가입이 완료되었습니다!");
-                router.push("/"); // 로그인 페이지로 이동
+                const token = response.data.token;
+                if(token){
+                    dispatch(setLogin({token}));
+                    axios.defaults.headers.common['Authorization']=
+                    `Bearer ${token}`;
+                    router.push("/dashboard"); // 메인페이지로
+                }else{
+                    router.push('/'); //토큰이없다면 로그인페이지로
+                 }
             }
         } catch (error) {
             console.error("회원가입 에러:", error);

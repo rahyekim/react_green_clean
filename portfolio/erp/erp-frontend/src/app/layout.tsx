@@ -6,6 +6,9 @@ import ThemeProviderWrapper from "@/components/ThemeProviderWrapper";
 import ConditionalLayout from "@/components/ConditionalLayout";
 
 import GlobalAlert from "@/components/modal/GlobalAlert";
+import ReduxProvider from "@/store/ReduxProvider";
+
+
 
 export const metadata: Metadata = {
   title: { 
@@ -27,10 +30,12 @@ export default function RootLayout({ children }: Readonly<{children: React.React
       <body className="h-full m-0 bg-gray-50 text-gray-900 antialiased">
         {/* <StyledComponentsRegistry>
           <ThemeProviderWrapper> */}
+          <ReduxProvider>
             <ConditionalLayout>
                 {children}
                 <GlobalAlert />
             </ConditionalLayout>
+            </ReduxProvider>
           {/* </ThemeProviderWrapper>
         </StyledComponentsRegistry> */}
       </body>

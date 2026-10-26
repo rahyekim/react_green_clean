@@ -160,6 +160,14 @@ export default function ReservationDashboardComponent() {
       ))
     }
 
+    const displayedData={
+      'WAITING': todayPatientList.filter(p => p.status === 'WAITING'),
+      'TREATING': todayPatientList.filter(p => p.status === 'TREATING'),
+      'COMPLETED': todayPatientList.filter(p => p.status === 'COMPLETED'),
+      'RESERVED': todayPatientList.filter(p => p.status === 'RESERVED'),
+    }
+    
+
     const waitingList = todayPatientList.filter(p => p.status === 'WAITING');
     const treatingList = todayPatientList.filter(p => p.status === 'TREATING');
     const completedList = todayPatientList.filter(p => p.status === 'COMPLETED');

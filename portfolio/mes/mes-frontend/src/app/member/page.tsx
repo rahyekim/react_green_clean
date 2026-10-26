@@ -2,13 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import Script from "next/script";
+import axios from "axios";
+
 import * as S from "@/assets/css/Style.style";
 import { useAlertStore } from "@/store/useAlertStore";
 import { Divider , DividerText , ModalBg, ModalContent, RightBtn} from '@/assets/css/Common.style'
 import Button from '@/ui/Button'
 import Input from '@/ui/Input'
 import { createMember } from "@/api/http";
+import { setLogin } from "@/store/authSlice";
 
 const handleInstargramLogin = () => {
     // 인스타그램 로그인 로직
@@ -42,7 +46,8 @@ export default function Member() {
 
     const {showAlert} = useAlertStore();
     const router = useRouter();
-    
+    const dispatch = useDispatch();
+
     const postcodeRef = useRef<HTMLDivElement>(null);
     const [isPostcodeOpen, setIsPostcodeOpen] =useState(false);
 
@@ -109,6 +114,14 @@ export default function Member() {
         try {
             const data = await createMember(formData);
             if (data.success) {
+                const token = data.token;
+                if(token){
+                    dispatch(setLogin({token}));
+                    axios.defaults.headers.common['Authorization']=
+                    `Bearer ${token}`
+                }else{
+                    router.push('/')
+                }
                 showAlert("회원가입이 완료되었습니다!",()=>{
                     router.push("/"); // 로그인 페이지로 이동
                 });

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 
 import * as S from '@/assets/css/Style.style'
 import Button from '@/ui/Button';
@@ -10,6 +11,7 @@ import { useAlertStore } from '@/store/useAlertStore';
 
 import { Metadata } from 'next';
 import { loginMember } from '@/api/http';
+import { setLogin } from '@/store/authSlice';
 
 // export const metadata : Metadata = { title: '로그인'} //'use client'랑쓸수없음
 
@@ -17,6 +19,7 @@ export default function Home() {
 
   const {showAlert} =useAlertStore();
   const router =useRouter();
+  const dispatch = useDispatch();
 
   // 입력값 상태 관리
   const [email, setEmail] = useState("");
@@ -49,7 +52,16 @@ export default function Home() {
         // 백엔드에서 발급한 JWT 토큰을 localStorage에 저장
         const { token, user } = data;
 
-        localStorage.setItem("token", token);
+        dispatch(setLogin({token, userInfo:{ 
+          email:user.email,
+          firstName: user.firstName, 
+          lastName: user.lastName,
+        }}));
+
+        //모든 axios 요청 헤더에 JWT 토큰을 자동 포함하도록 설정
+        axios.defaults.headers.common['Authorization']=`Bearer ${token}`;
+
+        // localStorage.setItem("token", token);
         localStorage.setItem("name", user.lastName + user.firstName);
 
         if(rememberMe){
@@ -57,9 +69,6 @@ export default function Home() {
         }else{
           localStorage.removeItem('email');
         }
-        //모든 axios 요청 헤더에 JWT 토큰을 자동 포함하도록 설정
-        axios.defaults.headers.common["Authorization"]= `Bearer ${token}`;
-
         showAlert(`${user.firstName}님 환영합니다!`, ()=>{
           router.push('/dashboard');
         });
